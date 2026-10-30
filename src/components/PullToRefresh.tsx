@@ -99,7 +99,7 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
           opacity: pullDistance / PULL_THRESHOLD,
         }}
       >
-        <div className={`bg-surface-2 p-2 rounded-full shadow-lg border border-line`}>
+        <div className={`bg-surface p-2 rounded-md border border-line`}>
           <RefreshCw
             size={20}
             className={`text-accent-ink ${isRefreshing ? 'animate-spin' : ''}`}

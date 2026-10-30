@@ -11,6 +11,7 @@ import {
   Sun,
 } from 'lucide-react';
 import { useThemeStore } from '@/stores/themeStore';
+import { focusRingClasses } from '@/lib/utils';
 
 interface NavbarProps {
   currentTab: string;
@@ -35,18 +36,18 @@ const NavItem: React.FC<{
   <motion.button
     type="button"
     onClick={onClick}
-    className={`relative flex items-center transition-colors ${
+    className={`relative flex items-center transition-colors duration-fast ease-standard ${
       isMobile
-        ? 'flex-1 flex-col gap-0.5 py-1.5 rounded-lg text-[11px] leading-tight justify-center'
-        : 'gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium justify-start'
+        ? 'flex-1 flex-col gap-0.5 py-1.5 rounded-sm text-label leading-tight justify-center'
+        : 'gap-3 w-full px-3 py-2.5 rounded-sm text-body-sm font-medium justify-start'
     } ${
       isActive ? 'text-ink bg-surface-2' : `text-ink-muted hover:text-ink-soft hover:bg-surface-2`
-    }`}
+    } ${focusRingClasses}`}
   >
     {isActive && !isMobile && (
       <motion.div
         layoutId="nav-indicator-desktop"
-        className="absolute left-0 top-2 bottom-2 w-[3px] bg-accent rounded-full"
+        className="absolute left-0 top-2 bottom-2 w-[3px] bg-accent rounded-xs"
         transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
       />
     )}
@@ -64,10 +65,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
   return (
     <>
       {/* Desktop sidebar */}
-      <div className="hidden md:flex flex-col w-60 h-screen bg-surface border-r border-line fixed left-0 top-0 z-30 pt-safe">
+      <div className="hidden md:flex flex-col w-[248px] h-screen bg-surface border-r border-line fixed left-0 top-0 z-30 pt-safe">
         <div className="p-5 border-b border-line flex flex-col items-center">
           <img src="/logo_text.png" alt="ShiftPay" className="h-8 object-contain" />
-          <span className="text-[11px] text-ink-muted mt-0.5">
+          <span className="text-label text-ink-muted mt-0.5">
             Made by{' '}
             <a
               href="https://github.com/dexter826/dexter826"
@@ -95,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
           <button
             type="button"
             onClick={onLogout}
-            className="flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-red-500 hover:text-red-400 hover:bg-red-500/10"
+            className={`flex-1 flex items-center gap-3 px-3 py-2.5 rounded-sm text-body-sm font-medium transition-colors duration-fast ease-standard text-danger hover:bg-danger/10 ${focusRingClasses}`}
           >
             <LogOut size={18} />
             <span>Đăng xuất</span>
@@ -106,8 +107,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex items-center justify-center w-10 h-10 rounded-lg transition-colors text-ink-muted hover:text-ink-soft hover:bg-surface-2"
-            title={theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
+            aria-label={
+              theme === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'
+            }
+            className={`flex items-center justify-center w-10 h-10 rounded-sm transition-colors duration-fast ease-standard text-ink-muted hover:text-ink-soft hover:bg-surface-2 ${focusRingClasses}`}
           >
             {theme === 'dark' ? <Sun size={18} className="text-accent-ink" /> : <Moon size={18} />}
           </button>
@@ -130,7 +133,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
                 animate={{ x: `${idx * 100}%` }}
                 transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
               >
-                <div className="w-8 h-[3px] bg-accent rounded-full" />
+                <div className="w-8 h-[3px] bg-accent rounded-xs" />
               </motion.div>
             ) : null;
           })()}

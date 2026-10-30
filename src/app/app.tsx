@@ -241,7 +241,7 @@ function AppContent({
   return (
     <div className="min-h-dynamic bg-canvas">
       <Navbar currentTab={currentTab} setTab={(tab) => navigate(`/${tab}`)} onLogout={onLogout} />
-      <main className="md:pl-60">
+      <main className="md:pl-[248px]">
         <PullToRefresh
           onRefresh={() => {
             if (user) refreshData(user.uid);
