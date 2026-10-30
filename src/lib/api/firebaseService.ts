@@ -104,6 +104,21 @@ export async function executeBatchQuery<T>(q: Query, schema?: z.ZodSchema<T>): P
   return rawData as T[];
 }
 
+const RETRYABLE_FIRESTORE_CODES = new Set([
+  'aborted',
+  'cancelled',
+  'deadline-exceeded',
+  'internal',
+  'resource-exhausted',
+  'unavailable',
+  'unknown',
+]);
+
+function isRetryableError(error: unknown): boolean {
+  const code = (error as { code?: string } | null)?.code;
+  return typeof code === 'string' && RETRYABLE_FIRESTORE_CODES.has(code);
+}
+
 export async function executeBatchWithRetry(
   batchOperation: () => Promise<void>,
   maxRetries: number = 3,
@@ -119,11 +134,17 @@ export async function executeBatchWithRetry(
       lastError = error instanceof Error ? error : new Error('Unknown error');
       console.warn(`Batch operation failed (attempt ${attempt + 1}/${maxRetries}):`, error);
 
+      if (!isRetryableError(error)) {
+        throw error;
+      }
+
       if (attempt < maxRetries - 1) {
         await new Promise((resolve) => setTimeout(resolve, delayMs * (attempt + 1)));
       }
     }
   }
 
-  throw new Error(`Batch operation failed sau ${maxRetries} lần thử: ${lastError?.message}`);
+  throw new Error(`Batch operation failed sau ${maxRetries} lần thử: ${lastError?.message}`, {
+    cause: lastError,
+  });
 }
