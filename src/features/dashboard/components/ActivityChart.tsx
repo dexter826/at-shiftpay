@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { CalendarRange, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PAYMENT_COLORS } from '@/config/colors';
+import { focusRingClasses } from '@/lib/utils';
 import ChartTooltip from '@/features/dashboard/components/ChartTooltip';
 
 interface ActivityChartProps {
@@ -22,7 +23,7 @@ interface ActivityChartProps {
 const TrendIndicator = ({ value }: { value: number | null }) => {
   if (value === null) {
     return (
-      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-500/10 text-slate-400">
+      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-xs text-label font-medium bg-surface-2 text-ink-muted">
         —
       </span>
     );
@@ -31,7 +32,7 @@ const TrendIndicator = ({ value }: { value: number | null }) => {
   const isPositive = value >= 0;
   return (
     <span
-      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold ${isPositive ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}
+      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-xs text-label font-medium ${isPositive ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}
     >
       {isPositive ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
       {isPositive ? '+' : ''}
@@ -42,44 +43,59 @@ const TrendIndicator = ({ value }: { value: number | null }) => {
 
 const ActivityChart: React.FC<ActivityChartProps> = memo(
   ({ data, growthStats, monthName, onPrevMonth, onNextMonth, onGoToToday, onMonthClick }) => (
-    <div className="p-4 bg-surface border border-line rounded-lg min-h-[340px] flex flex-col">
+    <div className="p-4 bg-surface border border-line rounded-md min-h-[340px] flex flex-col">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="flex items-center justify-between sm:block">
-          <h3 className="text-sm font-semibold text-ink">Hoạt động</h3>
+          <h3 className="text-body-sm text-ink">Hoạt động</h3>
           <div className="flex items-center gap-2 mt-1 sm:mt-1">
             <TrendIndicator value={growthStats.eventGrowth} />
             <TrendIndicator value={growthStats.shiftGrowth} />
           </div>
         </div>
-        <div className="flex items-center justify-between sm:justify-start gap-1 bg-surface-2 border border-line rounded-lg p-0.5 w-full sm:w-auto">
+        <div className="flex items-center justify-between sm:justify-start gap-1 bg-surface-2 border border-line rounded-sm p-0.5 w-full sm:w-auto">
           <button
+            type="button"
             onClick={onGoToToday}
-            className="flex-1 sm:flex-none px-2 py-1 text-[10px] font-medium text-ink-soft hover:text-ink rounded transition-colors whitespace-nowrap"
+            className={`flex-1 sm:flex-none px-2 py-1 text-label font-medium text-ink-soft hover:text-ink rounded-xs transition-colors duration-fast ease-standard whitespace-nowrap ${focusRingClasses}`}
           >
             Hôm nay
           </button>
           <div className="h-3 w-px bg-line shrink-0" />
           <button
+            type="button"
             onClick={onPrevMonth}
             aria-label="Tháng trước"
-            className="p-1 text-ink-muted hover:text-ink rounded transition-colors shrink-0"
+            className={`p-1 text-ink-muted hover:text-ink rounded-xs transition-colors duration-fast ease-standard shrink-0 ${focusRingClasses}`}
           >
             <ChevronLeft size={14} />
           </button>
           <button
+            type="button"
             onClick={onMonthClick}
-            className="flex-1 sm:flex-none text-[11px] font-medium text-ink min-w-[80px] text-center px-1 whitespace-nowrap"
+            className={`flex-1 sm:flex-none text-label font-medium text-ink min-w-[80px] text-center px-1 whitespace-nowrap rounded-xs transition-colors duration-fast ease-standard hover:bg-surface-2 ${focusRingClasses}`}
           >
             {monthName}
           </button>
           <button
+            type="button"
             onClick={onNextMonth}
             aria-label="Tháng sau"
-            className="p-1 text-ink-muted hover:text-ink rounded transition-colors shrink-0"
+            className={`p-1 text-ink-muted hover:text-ink rounded-xs transition-colors duration-fast ease-standard shrink-0 ${focusRingClasses}`}
           >
             <ChevronRight size={14} />
           </button>
         </div>
+      </div>
+
+      <div className="flex items-center gap-4 mb-3">
+        <span className="flex items-center gap-1.5 text-label text-ink-muted">
+          <span className="w-2 h-2 rounded-xs bg-success" />
+          Sự kiện
+        </span>
+        <span className="flex items-center gap-1.5 text-label text-ink-muted">
+          <span className="w-2 h-2 rounded-xs bg-info" />
+          Số công
+        </span>
       </div>
 
       <div className="flex-1">
@@ -121,7 +137,7 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
         ) : (
           <div className="h-full flex flex-col items-center justify-center gap-2 text-ink-muted">
             <CalendarRange size={28} strokeWidth={1.5} />
-            <p className="text-sm">Chưa có dữ liệu</p>
+            <p className="text-body-sm">Chưa có dữ liệu</p>
           </div>
         )}
       </div>

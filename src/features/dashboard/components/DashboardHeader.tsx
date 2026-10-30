@@ -16,14 +16,14 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ user, onOpenExport })
           <img
             src={user?.photoURL || '/avatar.png'}
             alt="Avatar"
-            className="w-10 h-10 rounded-full object-cover border-2 border-accent"
+            className="w-10 h-10 rounded-full object-cover border border-line"
             onError={(e) => {
               e.currentTarget.src = '/avatar.png';
             }}
           />
           <div>
-            <p className={`text-sm text-ink-soft`}>Xin chào,</p>
-            <h2 className={`text-lg font-semibold text-ink`}>
+            <p className={`text-body-sm text-ink-soft`}>Xin chào,</p>
+            <h2 className={`text-title text-ink`}>
               {user?.displayName || user?.email?.split('@')[0] || 'Người dùng'}
             </h2>
           </div>
