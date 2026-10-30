@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { User, onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { create } from 'zustand';
+import { User, onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 interface SavedUser {
   email: string;
@@ -21,26 +21,27 @@ interface AuthState {
   init: () => () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   savedUser: null,
   loading: true,
   setUser: (user) => set({ user }),
   setLoading: (loading) => set({ loading }),
   saveUserInfo: (userInfo) => {
-    localStorage.setItem("saved_user_info", JSON.stringify(userInfo));
+    localStorage.setItem('saved_user_info', JSON.stringify(userInfo));
     set({ savedUser: userInfo });
   },
   clearSavedUserInfo: () => {
-    localStorage.removeItem("saved_user_info");
+    localStorage.removeItem('saved_user_info');
     set({ savedUser: null });
   },
   logout: async () => {
     try {
       await signOut(auth);
-      localStorage.removeItem("user_info");
     } catch (error) {
-      console.error("Logout error", error);
+      console.error('Logout error', error);
+    } finally {
+      get().clearSavedUserInfo();
     }
   },
   refreshUser: async () => {
@@ -51,9 +52,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   init: () => {
-    const saved = localStorage.getItem("saved_user_info");
+    const saved = localStorage.getItem('saved_user_info');
     if (saved) {
-      set({ savedUser: JSON.parse(saved) });
+      try {
+        set({ savedUser: JSON.parse(saved) });
+      } catch {
+        localStorage.removeItem('saved_user_info');
+      }
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {

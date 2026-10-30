@@ -1,0 +1,145 @@
+import { db } from '@/lib/firebase';
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+  Unsubscribe,
+  getDocs,
+  where,
+  limit,
+  writeBatch,
+  deleteField,
+} from 'firebase/firestore';
+import { Location } from '@/types/index';
+import { createRealtimeSubscription } from '@/lib/api/firebaseService';
+import { LocationSchema } from '@/utils/validation';
+
+export const locationService = {
+  subscribeLocations(
+    userId: string,
+    callback: (locations: Location[]) => void,
+    onError?: (error: unknown) => void
+  ): Unsubscribe {
+    const q = query(
+      collection(db, 'locations'),
+      where('userId', '==', userId),
+      orderBy('name', 'asc')
+    );
+    return createRealtimeSubscription<Location>(
+      q,
+      callback,
+      'subscribeLocations',
+      LocationSchema,
+      onError
+    );
+  },
+
+  async addLocation(
+    data: {
+      name: string;
+      address?: string;
+      latitude?: number;
+      longitude?: number;
+      review?: 'high' | 'low';
+      reviewNote?: string;
+    },
+    userId: string
+  ): Promise<string> {
+    try {
+      const cleanData = Object.fromEntries(
+        Object.entries(data).filter(([_, v]) => v !== undefined)
+      );
+
+      const docRef = await addDoc(collection(db, 'locations'), {
+        ...cleanData,
+        createdAt: new Date().toISOString(),
+        userId,
+      });
+      return docRef.id;
+    } catch (error) {
+      console.error('addLocation error:', error);
+      throw new Error(
+        `Không thể thêm địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
+    }
+  },
+
+  async updateLocation(id: string, data: Partial<Location>): Promise<void> {
+    try {
+      const docRef = doc(db, 'locations', id);
+      const updateData = Object.fromEntries(
+        Object.entries(data).map(([k, v]) => [k, v === undefined ? deleteField() : v])
+      );
+      await updateDoc(docRef, updateData);
+    } catch (error) {
+      console.error('updateLocation error:', error);
+      throw new Error(
+        `Không thể cập nhật địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
+    }
+  },
+
+  async deleteLocation(id: string): Promise<void> {
+    try {
+      await deleteDoc(doc(db, 'locations', id));
+    } catch (error) {
+      console.error('deleteLocation error:', error);
+      throw new Error(
+        `Không thể xóa địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
+    }
+  },
+
+  async findOrCreateLocation(
+    userId: string,
+    name: string,
+    reviewData?: { review?: 'high' | 'low'; reviewNote?: string }
+  ): Promise<string> {
+    try {
+      const q = query(
+        collection(db, 'locations'),
+        where('userId', '==', userId),
+        where('name', '==', name),
+        limit(1)
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const locationDoc = querySnapshot.docs[0];
+        const locationId = locationDoc.id;
+
+        // Cập nhật review nếu có dữ liệu đánh giá
+        if (reviewData) {
+          const reviewUpdate: Partial<Location> = {};
+          if (reviewData.review !== undefined) {
+            reviewUpdate.review = reviewData.review;
+          }
+          if (reviewData.reviewNote !== undefined && reviewData.reviewNote !== '') {
+            reviewUpdate.reviewNote = reviewData.reviewNote;
+          }
+          if (Object.keys(reviewUpdate).length > 0) {
+            await this.updateLocation(locationId, reviewUpdate);
+          }
+        }
+
+        return locationId;
+      }
+
+      // Tạo mới nếu chưa có
+      return await this.addLocation(
+        {
+          name,
+          ...reviewData,
+        },
+        userId
+      );
+    } catch (error) {
+      console.error('findOrCreateLocation error:', error);
+      throw error;
+    }
+  },
+};

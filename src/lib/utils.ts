@@ -5,5 +5,5 @@ import { twMerge } from 'tailwind-merge';
  * Kết hợp các class Tailwind và xử lý xung đột.
  */
 export function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs));
 }

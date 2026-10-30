@@ -1,13 +1,10 @@
-import { create } from "zustand";
-import {
-  Employee,
-  Event,
-  Shift,
-  UserSettings,
-  DEFAULT_SETTINGS,
-  Location,
-} from "../types";
-import { dbService } from "../services";
+import { create } from 'zustand';
+import { Employee, Event, Shift, UserSettings, DEFAULT_SETTINGS, Location } from '@/types/index';
+import { eventService } from '@/lib/api/eventService';
+import { shiftService } from '@/lib/api/shiftService';
+import { employeeService } from '@/lib/api/employeeService';
+import { locationService } from '@/lib/api/locationService';
+import { settingsService } from '@/lib/api/settingsService';
 
 interface AppDataState {
   // Data
@@ -20,14 +17,9 @@ interface AppDataState {
   // UI State
   isLoading: boolean;
   isCalendarLoading: boolean;
+  dataError: string | null;
   viewDate: Date;
-  activeTab:
-    | "dashboard"
-    | "calendar"
-    | "employees"
-    | "payroll"
-    | "settings"
-    | "locations";
+  activeTab: 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 
   // Computed
   totalDebt: number;
@@ -40,8 +32,9 @@ interface AppDataState {
   setSettings: (settings: UserSettings) => void;
   setIsLoading: (loading: boolean) => void;
   setIsCalendarLoading: (loading: boolean) => void;
+  setDataError: (message: string | null) => void;
   setViewDate: (date: Date) => void;
-  setActiveTab: (tab: AppDataState["activeTab"]) => void;
+  setActiveTab: (tab: AppDataState['activeTab']) => void;
 
   // Subscriptions
   _subscriptions: Map<string, () => void>;
@@ -56,6 +49,7 @@ interface AppDataState {
   };
   _unpaidShifts: Shift[];
   _extraEvents: Event[];
+  _activeUserId: string;
 
   initSubscriptions: (userId: string) => void;
   cleanupSubscriptions: () => void;
@@ -75,10 +69,9 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
   // UI State
   isLoading: true,
   isCalendarLoading: true,
+  dataError: null,
   viewDate: new Date(),
-  activeTab:
-    (localStorage.getItem("activeTab") as AppDataState["activeTab"]) ||
-    "dashboard",
+  activeTab: (localStorage.getItem('activeTab') as AppDataState['activeTab']) || 'dashboard',
 
   // Computed
   totalDebt: 0,
@@ -89,16 +82,17 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
   setEvents: (events) => set({ events }),
   setShifts: (shifts) => {
     const totalDebt = shifts
-      .filter((s) => s.status === "unpaid")
+      .filter((s) => s.status === 'unpaid')
       .reduce((sum, s) => sum + s.amount, 0);
     set({ shifts, totalDebt });
   },
   setSettings: (settings) => set({ settings }),
   setIsLoading: (isLoading) => set({ isLoading }),
   setIsCalendarLoading: (isCalendarLoading) => set({ isCalendarLoading }),
+  setDataError: (dataError) => set({ dataError }),
   setViewDate: (viewDate) => set({ viewDate }),
   setActiveTab: (activeTab) => {
-    localStorage.setItem("activeTab", activeTab);
+    localStorage.setItem('activeTab', activeTab);
     set({ activeTab });
   },
 
@@ -115,6 +109,7 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
   },
   _unpaidShifts: [],
   _extraEvents: [],
+  _activeUserId: '',
 
   refreshData: (userId) => {
     const state = get();
@@ -129,28 +124,35 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
       return;
     }
 
-    const isBaseLoaded = (flags: AppDataState["_loadedFlags"]) => {
+    set({ _activeUserId: userId });
+
+    const reportLoadError = () => {
+      if (get().dataError) return;
+      set({ dataError: 'Không thể tải dữ liệu. Kiểm tra kết nối và thử lại.' });
+    };
+
+    const isBaseLoaded = (flags: AppDataState['_loadedFlags']) => {
       return !!(flags.employees && flags.locations && flags.settings);
     };
 
-    const isMonthLoaded = (flags: AppDataState["_loadedFlags"]) => {
+    const isMonthLoaded = (flags: AppDataState['_loadedFlags']) => {
       return !!(flags.targetEvents && flags.targetShifts);
     };
 
     const state = get();
     const { viewDate, _subscriptions, _dataCache } = state;
 
-    const month = viewDate.getMonth();
+    const month = viewDate.getMonth() + 1;
     const year = viewDate.getFullYear();
     const now = new Date();
-    const currentMonth = now.getMonth();
+    const currentMonth = now.getMonth() + 1;
     const currentYear = now.getFullYear();
 
     const targetKey = `${month}-${year}`;
     const hasCache = _dataCache.has(targetKey);
 
     const monthLoaded = state._monthLoaded.get(targetKey);
-    const nextLoadedFlags: AppDataState["_loadedFlags"] = {
+    const nextLoadedFlags: AppDataState['_loadedFlags'] = {
       ...state._loadedFlags,
       targetEvents: monthLoaded?.events ?? false,
       targetShifts: monthLoaded?.shifts ?? false,
@@ -179,7 +181,7 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
       const shiftsArray = Array.from(allShifts.values());
       const eventsArray = Array.from(allEvents.values());
       const totalDebt = shiftsArray
-        .filter((s) => s.status === "unpaid")
+        .filter((s) => s.status === 'unpaid')
         .reduce((sum, s) => sum + s.amount, 0);
 
       set({
@@ -196,8 +198,8 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
 
     const needed = [
       { m: month, y: year },
-      { m: month === 0 ? 11 : month - 1, y: month === 0 ? year - 1 : year },
-      { m: month === 11 ? 0 : month + 1, y: month === 11 ? year + 1 : year },
+      { m: month === 1 ? 12 : month - 1, y: month === 1 ? year - 1 : year },
+      { m: month === 12 ? 1 : month + 1, y: month === 12 ? year + 1 : year },
       { m: currentMonth, y: currentYear },
     ];
 
@@ -205,8 +207,8 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
 
     // Xóa subscription cũ
     _subscriptions.forEach((unsub, key) => {
-      if (key === "app-data") return;
-      const [m, y] = key.split("-").map(Number);
+      if (key === 'app-data') return;
+      const [m, y] = key.split('-').map(Number);
       const dist = Math.abs(y * 12 + m - (year * 12 + month));
       if (dist > 2 && !neededKeys.has(key)) {
         unsub();
@@ -215,19 +217,19 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
       }
     });
 
-    const markLoadedBase = (key: "employees" | "locations" | "settings") => {
+    const markLoadedBase = (key: 'employees' | 'locations' | 'settings') => {
       const current = get()._loadedFlags;
       if (current[key]) return;
 
-      const updated: AppDataState["_loadedFlags"] = { ...current, [key]: true };
+      const updated: AppDataState['_loadedFlags'] = { ...current, [key]: true };
       set({ _loadedFlags: updated, isLoading: !isBaseLoaded(updated) });
     };
 
-    const markLoadedMonth = (key: "targetEvents" | "targetShifts") => {
+    const markLoadedMonth = (key: 'targetEvents' | 'targetShifts') => {
       const current = get()._loadedFlags;
       if (current[key]) return;
 
-      const updated: AppDataState["_loadedFlags"] = { ...current, [key]: true };
+      const updated: AppDataState['_loadedFlags'] = { ...current, [key]: true };
       set({
         _loadedFlags: updated,
         isCalendarLoading: !isMonthLoaded(updated),
@@ -237,7 +239,7 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
     needed.forEach(({ m, y }) => {
       const key = `${m}-${y}`;
       if (!_subscriptions.has(key)) {
-        const unsubEvt = dbService.subscribeEventsByMonth(
+        const unsubEvt = eventService.subscribeEventsByMonth(
           userId,
           m,
           y,
@@ -252,11 +254,15 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
             state._monthLoaded.set(key, { ...monthState, events: true });
 
             updateGlobalState();
-            if (key === targetKey) markLoadedMonth("targetEvents");
+            if (key === targetKey) markLoadedMonth('targetEvents');
+          },
+          () => {
+            reportLoadError();
+            markLoadedMonth('targetEvents');
           }
         );
 
-        const unsubShf = dbService.subscribeShiftsByMonth(
+        const unsubShf = shiftService.subscribeShiftsByMonth(
           userId,
           m,
           y,
@@ -271,7 +277,11 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
             state._monthLoaded.set(key, { ...monthState, shifts: true });
 
             updateGlobalState();
-            if (key === targetKey) markLoadedMonth("targetShifts");
+            if (key === targetKey) markLoadedMonth('targetShifts');
+          },
+          () => {
+            reportLoadError();
+            markLoadedMonth('targetShifts');
           }
         );
 
@@ -282,50 +292,77 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
       }
     });
 
-    if (!_subscriptions.has("app-data")) {
-      const unsubEmp = dbService.subscribeEmployees(userId, (data) => {
-        set({ employees: data });
-        markLoadedBase("employees");
-      });
-
-      const unsubLoc = dbService.subscribeLocations(userId, (data) => {
-        set({ locations: data });
-        markLoadedBase("locations");
-      });
-
-      const unsubSet = dbService.subscribeSettings(userId, (data) => {
-        if (data) set({ settings: data });
-        markLoadedBase("settings");
-      });
-
-      const unsubUnp = dbService.subscribeUnpaidShifts(userId, async (data) => {
-        const currentState = get();
-        currentState._unpaidShifts = data;
-
-        const eventIds = Array.from(
-          new Set(data.filter((s) => s.eventId).map((s) => s.eventId))
-        );
-        const existingIds = new Set(
-          Array.from(currentState._dataCache.values()).flatMap((c) =>
-            c.events.map((e) => e.id)
-          )
-        );
-        const missing = eventIds.filter((id) => id && !existingIds.has(id));
-
-        if (missing.length > 0) {
-          try {
-            currentState._extraEvents = await dbService.getEventsByIds(
-              userId,
-              missing
-            );
-          } catch (e) {
-            console.error(e);
-          }
+    if (!_subscriptions.has('app-data')) {
+      const unsubEmp = employeeService.subscribeEmployees(
+        userId,
+        (data) => {
+          set({ employees: data });
+          markLoadedBase('employees');
+        },
+        () => {
+          reportLoadError();
+          markLoadedBase('employees');
         }
-        updateGlobalState();
-      });
+      );
 
-      _subscriptions.set("app-data", () => {
+      const unsubLoc = locationService.subscribeLocations(
+        userId,
+        (data) => {
+          set({ locations: data });
+          markLoadedBase('locations');
+        },
+        () => {
+          reportLoadError();
+          markLoadedBase('locations');
+        }
+      );
+
+      const unsubSet = settingsService.subscribeSettings(
+        userId,
+        (data) => {
+          if (data) set({ settings: data });
+          markLoadedBase('settings');
+        },
+        () => {
+          reportLoadError();
+          markLoadedBase('settings');
+        }
+      );
+
+      const unsubUnp = shiftService.subscribeUnpaidShifts(
+        userId,
+        async (data) => {
+          if (get()._activeUserId !== userId) return;
+
+          const currentState = get();
+          currentState._unpaidShifts = data;
+
+          const eventIds = Array.from(new Set(data.filter((s) => s.eventId).map((s) => s.eventId)));
+          const existingIds = new Set(
+            Array.from(currentState._dataCache.values()).flatMap((c) => c.events.map((e) => e.id))
+          );
+          const missing = eventIds.filter((id) => id && !existingIds.has(id));
+
+          let extraEvents: Event[] = [];
+          if (missing.length > 0) {
+            try {
+              extraEvents = await eventService.getEventsByIds(userId, missing);
+            } catch (e) {
+              console.error(e);
+            }
+          }
+
+          if (get()._activeUserId !== userId) return;
+
+          if (extraEvents.length > 0) {
+            currentState._extraEvents = extraEvents;
+          }
+          updateGlobalState();
+        },
+        () => reportLoadError()
+      );
+
+      _subscriptions.set('app-data', () => {
         unsubEmp();
         unsubLoc();
         unsubSet();
@@ -343,6 +380,14 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
     _dataCache.clear();
     _monthLoaded.clear();
     set({
+      employees: [],
+      locations: [],
+      events: [],
+      shifts: [],
+      settings: DEFAULT_SETTINGS,
+      totalDebt: 0,
+      dataError: null,
+      _activeUserId: '',
       _unpaidShifts: [],
       _extraEvents: [],
       _loadedFlags: {

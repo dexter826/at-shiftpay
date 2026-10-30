@@ -37,10 +37,12 @@ export const EventSchema = z.object({
   note: z.string().optional(),
   amount: z.number().optional(),
   surcharge: z.number().optional(),
-  surchargeDistribution: z.object({
-    type: z.enum(['equal', 'selected']),
-    selectedEmployeeIds: z.array(z.string()).optional(),
-  }).optional(),
+  surchargeDistribution: z
+    .object({
+      type: z.enum(['equal', 'selected']),
+      selectedEmployeeIds: z.array(z.string()).optional(),
+    })
+    .optional(),
   locationId: z.string().optional(),
   userId: z.string(),
 });
@@ -103,7 +105,8 @@ export function validateUserSettings(data: unknown) {
 export function safeValidate<T>(schema: z.ZodSchema<T>, data: unknown): T | null {
   const result = schema.safeParse(data);
   if (!result.success) {
-    console.warn('Validation failed for data:', data, 'Errors:', result.error.issues);
+    const fields = result.error.issues.map((issue) => issue.path.join('.')).join(', ');
+    console.warn(`Validation failed for fields: ${fields}`);
     return null;
   }
   return result.data;

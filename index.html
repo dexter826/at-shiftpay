@@ -1,60 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>ShiftPay</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShiftPay</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon and Apple Touch Icon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-  <!-- Favicon and Apple Touch Icon -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#ecb52d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ShiftPay" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="ShiftPay" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/src/index.css" />
 
-  <!-- PWA Meta Tags -->
-  <meta name="theme-color" content="#ecb52d" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="ShiftPay" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="application-name" content="ShiftPay" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="stylesheet" href="/src/index.css">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ShiftPay" />
+    <meta property="og:description" content="Nền tảng thanh toán và quản lý tài chính ShiftPay" />
+    <meta property="og:image" content="/og_image.png" />
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="ShiftPay" />
-  <meta property="og:description" content="Nền tảng thanh toán và quản lý tài chính ShiftPay" />
-  <meta property="og:image" content="/og_image.png" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ShiftPay" />
+    <meta name="twitter:description" content="Nền tảng thanh toán và quản lý tài chính ShiftPay" />
+    <meta name="twitter:image" content="/twitter_image.png" />
+  </head>
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="ShiftPay" />
-  <meta name="twitter:description" content="Nền tảng thanh toán và quản lý tài chính ShiftPay" />
-  <meta name="twitter:image" content="/twitter_image.png" />
-</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
 
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/index.tsx"></script>
-
-  <!-- PWA Service Worker Registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then((registration) => {
-          })
-          .catch((registrationError) => {
-            console.log('SW registration failed: ', registrationError);
-          });
-      });
-    }
-  </script>
-</body>
-
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {})
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+  </body>
 </html>

@@ -1,0 +1,324 @@
+import React, { useMemo, useState, useCallback, useRef, useEffect, memo } from 'react';
+import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/types/index';
+import { paymentService } from '@/lib/api/paymentService';
+
+import { useToast } from '@/components/ui/ToastProvider';
+import { PaymentModal } from '@/features/payroll/components/PaymentModal';
+import { SettlementModal } from '@/features/payroll/components/SettlementModal';
+import { useAuthStore } from '@/stores/authStore';
+import { DropdownOption } from '@/components/ui/Dropdown';
+
+// Import extracted components
+import PayrollStats from '@/features/payroll/components/PayrollStats';
+import PayrollFilters from '@/features/payroll/components/PayrollFilters';
+import PayrollList from '@/features/payroll/components/PayrollList';
+import HistoryList from '@/features/payroll/components/HistoryList';
+import EmployeeDetailModal from '@/features/payroll/components/PayrollEmployeeDetailModal';
+import TransactionDetailModal from '@/features/payroll/components/TransactionDetailModal';
+import PayrollMonthPickerModal from '@/features/payroll/components/PayrollMonthPickerModal';
+import { usePayrollData } from '@/features/payroll/hooks/usePayrollData';
+
+interface PayrollViewProps {
+  shifts: Shift[];
+  employees: any[];
+  events: Event[];
+  locations: Location[];
+  loading?: boolean;
+}
+
+const PayrollView: React.FC<PayrollViewProps> = ({
+  shifts,
+  employees,
+  events,
+  locations,
+  loading = false,
+}) => {
+  const [activeTab, setActiveTab] = useState<'payroll' | 'history'>('payroll');
+  const [paymentHistory, setPaymentHistory] = useState<PaymentTransaction[]>([]);
+
+  const [selectedEmpId, setSelectedEmpId] = useState<string | null>(null);
+  const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterDate, setFilterDate] = useState('');
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [viewYear, setViewYear] = useState(new Date().getFullYear());
+  const [selectedShiftIds, setSelectedShiftIds] = useState<string[]>([]);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showSettlementModal, setShowSettlementModal] = useState(false);
+  const [payrollVisibleCount, setPayrollVisibleCount] = useState(15);
+  const { user } = useAuthStore();
+  const userId = user?.uid || '';
+
+  const {
+    summary,
+    filteredAndSortedSummary,
+    stats,
+    searchTerm: payrollSearchTerm,
+    setSearchTerm: setPayrollSearchTerm,
+    sortBy: payrollSortBy,
+    setSortBy: setPayrollSortBy,
+  } = usePayrollData({ shifts, employees, events });
+
+  const {
+    totalDebt,
+    totalAdvanced,
+    totalEarned,
+    totalShifts,
+    totalUnpaidShifts,
+    totalAdvancedShifts,
+    totalFees,
+  } = stats;
+
+  // Reset phan trang khi doi tim kiem hoac tab
+  useEffect(() => {
+    if (activeTab === 'payroll') {
+      setPayrollVisibleCount(15);
+    }
+  }, [activeTab, payrollSearchTerm, payrollSortBy]);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const unsubscribe = paymentService.subscribePayments(userId, (payments) => {
+      setPaymentHistory(payments);
+    });
+
+    return () => unsubscribe();
+  }, [userId]);
+
+  // Hook style đồng bộ theme
+
+  // Preload avatar nhân viên
+  useEffect(() => {
+    if (employees.length > 0) {
+      employees.forEach((emp) => {
+        const empImage = emp.imageUrl || emp.avatar;
+        if (empImage) {
+          const img = new Image();
+          img.src = empImage;
+        }
+      });
+    }
+  }, [employees]);
+
+  const { showToast } = useToast();
+
+  // Chọn/Bỏ chọn
+  const handleSelectAll = () => {
+    if (selectedShiftIds.length === selectedUnpaidShifts.length) {
+      setSelectedShiftIds([]);
+    } else {
+      setSelectedShiftIds(selectedUnpaidShifts.map((shift) => shift.id));
+    }
+  };
+
+  // Chọn/Bỏ chọn từng ca
+  const handleSelectShift = (shiftId: string) => {
+    setSelectedShiftIds((prev) =>
+      prev.includes(shiftId) ? prev.filter((id) => id !== shiftId) : [...prev, shiftId]
+    );
+  };
+
+  const selectedEmployeeSummary = selectedEmpId
+    ? summary.find((s) => s.employeeId === selectedEmpId)
+    : null;
+  const selectedUnpaidShifts = useMemo(() => {
+    if (!selectedEmpId) return [];
+    return shifts
+      .filter((s) => s.employeeId === selectedEmpId && s.status === 'unpaid')
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }, [selectedEmpId, shifts]);
+
+  const selectedAdvancedShifts = useMemo(() => {
+    if (!selectedEmpId) return [];
+    return shifts
+      .filter((s) => s.employeeId === selectedEmpId && s.status === 'advanced')
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }, [selectedEmpId, shifts]);
+
+  const selectedTransaction = useMemo(() => {
+    if (!selectedTransactionId) return null;
+    return paymentHistory.find((p) => p.id === selectedTransactionId);
+  }, [selectedTransactionId, paymentHistory]);
+
+  // Reset theo nhân viên
+  React.useEffect(() => {
+    if (selectedEmpId && selectedUnpaidShifts.length > 0) {
+      // Mặc định chọn tất cả khi mở modal
+      setSelectedShiftIds(selectedUnpaidShifts.map((shift) => shift.id));
+    } else {
+      setSelectedShiftIds([]);
+    }
+  }, [selectedEmpId, selectedUnpaidShifts]);
+
+  const transactionShifts = useMemo(() => {
+    if (!selectedTransaction) return [];
+    return (
+      selectedTransaction.shiftIds
+        ?.map((shiftId) => shifts.find((s) => s.id === shiftId))
+        .filter(Boolean) || []
+    );
+  }, [selectedTransaction, shifts]);
+
+  // Lịch sử giao dịch
+  const filteredHistory = useMemo(() => {
+    return paymentHistory.filter((payment) => {
+      const matchesSearch = payment.employeeName.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesDate = filterDate
+        ? payment.date >= new Date(filterDate).getTime() &&
+          payment.date < new Date(filterDate).setMonth(new Date(filterDate).getMonth() + 1)
+        : true;
+      return matchesSearch && matchesDate;
+    });
+  }, [paymentHistory, searchTerm, filterDate]);
+
+  return (
+    <div className={`pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-screen`}>
+      {/* Tiêu đề & Stats */}
+      <div className={`py-4 px-4 md:px-6 border-b border-[var(--border-color)]`}>
+        <div className="flex justify-between items-center">
+          {activeTab === 'payroll' && summary.length > 0 && null}
+        </div>
+        <PayrollStats
+          loading={loading}
+          totalEarned={totalEarned}
+          totalDebt={totalDebt}
+          totalAdvanced={totalAdvanced}
+          totalShifts={totalShifts}
+          totalFees={totalFees}
+          totalUnpaidShifts={totalUnpaidShifts}
+          totalAdvancedShifts={totalAdvancedShifts}
+        />
+      </div>
+
+      {/* Tabs chuyển đổi */}
+      <div className="flex px-4 md:px-6 pt-5 md:pt-6 pb-2 gap-4">
+        <button
+          onClick={() => setActiveTab('payroll')}
+          className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'payroll' ? 'border-primary text-primary' : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
+        >
+          Chưa thanh toán
+        </button>
+        <button
+          onClick={() => setActiveTab('history')}
+          className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'history' ? 'border-primary text-primary' : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
+        >
+          Lịch sử
+        </button>
+      </div>
+
+      {/* Bộ lọc */}
+      <PayrollFilters
+        activeTab={activeTab}
+        payrollSearchTerm={payrollSearchTerm}
+        setPayrollSearchTerm={setPayrollSearchTerm}
+        payrollSortBy={payrollSortBy}
+        setPayrollSortBy={setPayrollSortBy}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filterDate={filterDate}
+        onOpenFilterModal={() => setIsFilterModalOpen(true)}
+        setViewYear={setViewYear}
+        currentYear={viewYear}
+      />
+
+      {/* Danh sách */}
+      <div className="px-4 md:px-6 pt-2 pb-4 md:pb-6 space-y-2">
+        {activeTab === 'payroll' ? (
+          <PayrollList
+            loading={loading}
+            items={filteredAndSortedSummary}
+            employees={employees}
+            visibleCount={payrollVisibleCount}
+            setVisibleCount={setPayrollVisibleCount}
+            onSelectEmployee={setSelectedEmpId}
+            onPaymentClick={(id) => {
+              setSelectedEmpId(id);
+              setShowPaymentModal(true);
+            }}
+            searchTerm={payrollSearchTerm}
+          />
+        ) : (
+          <HistoryList
+            loading={loading}
+            items={filteredHistory}
+            onSelectTransaction={setSelectedTransactionId}
+          />
+        )}
+      </div>
+
+      {/* Modal chi tiết nhân viên */}
+      <EmployeeDetailModal
+        isOpen={!!selectedEmpId}
+        onClose={() => setSelectedEmpId(null)}
+        selectedEmployeeSummary={selectedEmployeeSummary}
+        selectedUnpaidShifts={selectedUnpaidShifts}
+        selectedAdvancedShifts={selectedAdvancedShifts}
+        onPayment={() => {
+          setSelectedShiftIds(selectedUnpaidShifts.map((s) => s.id));
+          setShowPaymentModal(true);
+        }}
+        onSettlement={() => setShowSettlementModal(true)}
+        events={events}
+        locations={locations}
+      />
+
+      {/* Chi tiết giao dịch */}
+      <TransactionDetailModal
+        isOpen={!!selectedTransactionId}
+        onClose={() => setSelectedTransactionId(null)}
+        selectedTransaction={selectedTransaction}
+        transactionShifts={transactionShifts}
+        events={events}
+        locations={locations}
+      />
+
+      {/* Chọn tháng */}
+      <PayrollMonthPickerModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        filterDate={filterDate}
+        setFilterDate={setFilterDate}
+        viewYear={viewYear}
+        setViewYear={setViewYear}
+      />
+
+      {/* Modal thanh toán */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => {
+          setShowPaymentModal(false);
+          setShowPaymentModal(false);
+          setSelectedEmpId(null);
+          setSelectedShiftIds([]);
+        }}
+        employeeSummary={selectedEmployeeSummary}
+        shifts={shifts}
+        selectedShiftIds={selectedShiftIds}
+        onShiftSelect={handleSelectShift}
+        onSelectAll={handleSelectAll}
+        events={events}
+        employees={employees}
+        locations={locations}
+        onSuccess={() => {}}
+      />
+
+      {/* Modal quyết toán */}
+      {selectedEmpId && (
+        <SettlementModal
+          isOpen={showSettlementModal}
+          onClose={() => setShowSettlementModal(false)}
+          employeeId={selectedEmpId}
+          employeeName={selectedEmployeeSummary?.employeeName || ''}
+          shifts={shifts}
+          paymentHistory={paymentHistory}
+          events={events}
+          locations={locations}
+          onSuccess={() => {}}
+        />
+      )}
+    </div>
+  );
+};
+
+export default memo(PayrollView);
