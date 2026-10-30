@@ -2,12 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Employee, Event, Shift, UserSettings, Location } from '@/types/index';
 
-import Dashboard from '@/app/routes/dashboard';
+import DashboardView from '@/app/routes/dashboard';
 import CalendarView from '@/app/routes/calendar';
-import EmployeeManager from '@/app/routes/employees';
+import EmployeeView from '@/app/routes/employees';
 import PayrollView from '@/app/routes/payroll';
 import SettingsView from '@/app/routes/settings';
-import LocationManager from '@/app/routes/locations';
+import LocationView from '@/app/routes/locations';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 
@@ -50,7 +50,7 @@ export function AppRouter({
     {
       id: 'dashboard',
       component: (
-        <Dashboard
+        <DashboardView
           user={user}
           employees={employees}
           events={events}
@@ -83,7 +83,7 @@ export function AppRouter({
     {
       id: 'employees',
       component: (
-        <EmployeeManager
+        <EmployeeView
           employees={employees}
           shifts={shifts}
           events={events}
@@ -106,7 +106,7 @@ export function AppRouter({
     {
       id: 'locations',
       component: (
-        <LocationManager
+        <LocationView
           locations={locations}
           events={events}
           loading={loading}

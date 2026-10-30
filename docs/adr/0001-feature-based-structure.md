@@ -1,6 +1,6 @@
 # Feature-based source layout
 
-The `src/` tree mixed screens, feature UI, and data access under `components/pages`, so ownership was ambiguous and imports drifted. We adopted the Bulletproof React project structure verbatim — `app/` (routes, router, shell), `features/<feature>/` for the seven domains (`auth`, `calendar`, `dashboard`, `employees`, `locations`, `payroll`, `settings`), and shared code in `components/`, `hooks/`, `lib/`, `stores/`, `types/`, `utils/`, `config/`, `assets/` — because it gives each domain one home and keeps the shared-to-feature-to-app flow one-directional.
+The `src/` tree mixed screens, feature UI, and data access under `components/pages`, so ownership was ambiguous and imports drifted. We adopted the Bulletproof React project structure verbatim — `app/` (routes, router, shell), `features/<feature>/` for the seven domains (`auth`, `calendar`, `dashboard`, `employee`, `location`, `payroll`, `settings`), and shared code in `components/`, `hooks/`, `lib/`, `stores/`, `types/`, `utils/`, `config/`, `assets/` — because it gives each domain one home and keeps the shared-to-feature-to-app flow one-directional.
 
 ## Consequences
 

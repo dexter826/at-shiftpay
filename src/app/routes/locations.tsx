@@ -13,22 +13,22 @@ import { Modal } from '@/components/ui/Modal';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 // Import extracted components
-import LocationStats from '@/features/locations/components/LocationStats';
-import LocationToolbar from '@/features/locations/components/LocationToolbar';
-import LocationList from '@/features/locations/components/LocationList';
-import LocationFormModal from '@/features/locations/components/LocationFormModal';
-import LocationDetailModal from '@/features/locations/components/LocationDetailModal';
+import LocationStats from '@/features/location/components/LocationStats';
+import LocationToolbar from '@/features/location/components/LocationToolbar';
+import LocationList from '@/features/location/components/LocationList';
+import LocationFormModal from '@/features/location/components/LocationFormModal';
+import LocationDetailModal from '@/features/location/components/LocationDetailModal';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 
-interface LocationManagerProps {
+interface LocationViewProps {
     locations: Location[];
     events: Event[];
     loading?: boolean;
     onBack?: () => void;
 }
 
-const LocationManager: React.FC<LocationManagerProps> = ({
+const LocationView: React.FC<LocationViewProps> = ({
     locations,
     events,
     loading = false,
@@ -258,4 +258,4 @@ const LocationManager: React.FC<LocationManagerProps> = ({
     );
 };
 
-export default memo(LocationManager);
+export default memo(LocationView);

@@ -16,7 +16,7 @@ import HistoryList from '@/features/payroll/components/HistoryList';
 import EmployeeDetailModal from '@/features/payroll/components/PayrollEmployeeDetailModal';
 import TransactionDetailModal from '@/features/payroll/components/TransactionDetailModal';
 import ConfirmPaymentModal from '@/features/payroll/components/ConfirmPaymentModal';
-import MonthPickerModal from '@/features/payroll/components/MonthPickerModal';
+import PayrollMonthPickerModal from '@/features/payroll/components/PayrollMonthPickerModal';
 import { usePayrollData } from '@/features/payroll/hooks/usePayrollData';
 
 interface PayrollViewProps {
@@ -326,7 +326,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
       />
 
       {/* Chọn tháng */}
-      <MonthPickerModal
+      <PayrollMonthPickerModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
         filterDate={filterDate}

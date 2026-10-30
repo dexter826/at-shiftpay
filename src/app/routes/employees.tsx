@@ -7,19 +7,19 @@ import Button from '@/components/ui/Button';
 import { useAuthStore } from '@/stores/authStore';
 
 // Import extracted components
-import EmployeeToolbar from '@/features/employees/components/EmployeeToolbar';
-import EmployeeList from '@/features/employees/components/EmployeeList';
-import EmployeeFormModal from '@/features/employees/components/EmployeeFormModal';
-import EmployeeDetailModal from '@/features/employees/components/EmployeeDetailModal';
+import EmployeeToolbar from '@/features/employee/components/EmployeeToolbar';
+import EmployeeList from '@/features/employee/components/EmployeeList';
+import EmployeeFormModal from '@/features/employee/components/EmployeeFormModal';
+import EmployeeDetailModal from '@/features/employee/components/EmployeeDetailModal';
 
-interface EmployeeManagerProps {
+interface EmployeeViewProps {
   employees: Employee[];
   shifts: Shift[];
   events?: { id: string; date: string }[];
   loading?: boolean;
 }
 
-const EmployeeManager: React.FC<EmployeeManagerProps> = ({ employees, shifts, events = [], loading = false }) => {
+const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events = [], loading = false }) => {
   const { showToast } = useToast();
   const { user } = useAuthStore();
   const userId = user?.uid || '';
@@ -219,4 +219,4 @@ const EmployeeManager: React.FC<EmployeeManagerProps> = ({ employees, shifts, ev
   );
 };
 
-export default memo(EmployeeManager);
+export default memo(EmployeeView);

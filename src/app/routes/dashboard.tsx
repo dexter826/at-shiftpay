@@ -13,7 +13,7 @@ import ActivityChart from '@/features/dashboard/components/ActivityChart';
 import PaymentChart from '@/features/dashboard/components/PaymentChart';
 import { MonthPickerModal } from '@/features/dashboard/components/MonthPickerModal';
 
-interface DashboardProps {
+interface DashboardViewProps {
     user: any;
     employees: Employee[];
     events: Event[];
@@ -25,7 +25,7 @@ interface DashboardProps {
     onOpenExport: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ 
+const DashboardView: React.FC<DashboardViewProps> = ({ 
     user, 
     employees, 
     events: initialEvents, 
@@ -266,4 +266,4 @@ const Dashboard: React.FC<DashboardProps> = ({
     );
 };
 
-export default memo(Dashboard);
+export default memo(DashboardView);

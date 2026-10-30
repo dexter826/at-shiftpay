@@ -4,7 +4,7 @@ import ChevronLeftIcon from '@/components/ui/icons/chevron-left-icon';
 import ChevronRightIcon from '@/components/ui/icons/chevron-right-icon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
-interface MonthPickerModalProps {
+interface PayrollMonthPickerModalProps {
   isOpen: boolean;
   onClose: () => void;
   filterDate: string;
@@ -13,7 +13,7 @@ interface MonthPickerModalProps {
   setViewYear: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
+const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
   isOpen,
   onClose,
   filterDate,
@@ -96,4 +96,4 @@ const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
   );
 };
 
-export default memo(MonthPickerModal);
+export default memo(PayrollMonthPickerModal);
