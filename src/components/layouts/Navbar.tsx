@@ -74,17 +74,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
       <div className="hidden md:flex flex-col w-[var(--sidebar-width)] h-screen bg-surface border-r border-line fixed left-0 top-0 z-30 pt-safe">
         <div className="p-5 border-b border-line flex flex-col items-center">
           <img src="/logo_text.png" alt="ShiftPay" className="h-8 object-contain" />
-          <span className="text-label text-ink-muted mt-0.5">
-            Made by{' '}
-            <a
-              href="https://github.com/dexter826/dexter826"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent-ink transition-colors"
-            >
-              MOB
-            </a>
-          </span>
         </div>
 
         <nav className="flex-1 p-3 space-y-1 relative" aria-label="Điều hướng chính">
