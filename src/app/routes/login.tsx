@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { auth } from '@/lib/firebase';
 import {
   signInWithEmailAndPassword,
@@ -36,8 +36,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [verificationSent, setVerificationSent] = useState(false);
-  const [verificationEmail, setVerificationEmail] = useState('');
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
   const {
@@ -50,26 +48,13 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   } = useAuthStore();
   const { showToast } = useToast();
 
-  const [showQuickLogin, setShowQuickLogin] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (savedUser && !showQuickLogin && !password) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate the login screen from the saved profile
-      setShowQuickLogin(true);
-    }
-  }, [savedUser, showQuickLogin, password]);
+  const [manualFormOpen, setManualFormOpen] = useState(false);
+  const showQuickLogin = Boolean(savedUser) && !manualFormOpen && !isSignUp;
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [fullNameError, setFullNameError] = useState('');
-
-  useEffect(() => {
-    if (savedUser && showQuickLogin) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate the login screen from the saved profile
-      setEmail(savedUser.email);
-    }
-  }, [savedUser, showQuickLogin]);
 
   const validateEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -128,7 +113,9 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     e.preventDefault();
     setError('');
 
-    const isEmailValid = validateEmail(email);
+    const effectiveEmail = !isSignUp && showQuickLogin && savedUser ? savedUser.email : email;
+
+    const isEmailValid = validateEmail(effectiveEmail);
     const isPasswordValid = validatePassword(password);
 
     if (isSignUp) {
@@ -147,14 +134,12 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         await updateProfile(userCredential.user, { displayName: fullName.trim() });
         await sendEmailVerification(userCredential.user);
         showToast('Email xác thực đã được gửi!', 'success');
-        setVerificationEmail(email);
-        setVerificationSent(true);
       } else {
         await setPersistence(
           auth,
           rememberMe ? browserLocalPersistence : browserSessionPersistence
         );
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, effectiveEmail, password);
         if (!userCredential.user.emailVerified) {
           showToast('Tài khoản chưa được xác thực email.', 'warning');
           return;
@@ -192,11 +177,10 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setPasswordError('');
     setConfirmPasswordError('');
     setFullNameError('');
-    setVerificationSent(false);
   };
 
   const handleSwitchAccount = () => {
-    setShowQuickLogin(false);
+    setManualFormOpen(true);
     setEmail('');
     setPassword('');
     setError('');
@@ -208,18 +192,14 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   const handleBackToQuickLogin = () => {
-    if (savedUser) {
-      setEmail(savedUser.email);
-      setShowQuickLogin(true);
-      setError('');
-      setPassword('');
-    }
+    setManualFormOpen(false);
+    setError('');
+    setPassword('');
   };
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
     if (emailError) validateEmail(value);
-    if (verificationSent) setVerificationSent(false);
   };
 
   const handleResendEmail = async () => {
@@ -296,8 +276,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   savedUser={savedUser}
                   showQuickLogin={showQuickLogin}
                   onBackToQuickLogin={handleBackToQuickLogin}
-                  verificationSent={verificationSent}
-                  verificationEmail={verificationEmail}
                   onSubmit={handleSubmit}
                   email={email}
                   onEmailChange={handleEmailChange}
