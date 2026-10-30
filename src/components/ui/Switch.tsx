@@ -12,7 +12,7 @@ const Switch = () => {
       aria-checked={isDark}
       onClick={toggleTheme}
       className="relative w-11 h-6 rounded-full transition-colors duration-fast bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-      aria-label={isDark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'}
+      aria-label="Chế độ tối"
     >
       <span
         className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-ink shadow-sm flex items-center justify-center transition-transform duration-fast ${

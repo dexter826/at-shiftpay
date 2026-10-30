@@ -92,6 +92,7 @@
 }
 
 html.light {
+  --color-ring: var(--palette-paper-900);
   --color-canvas: var(--palette-paper-50);
   --color-surface: var(--palette-paper-0);
   --color-surface-2: var(--palette-paper-150);

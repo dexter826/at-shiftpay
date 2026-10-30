@@ -30,10 +30,11 @@ export const useThemeStore = create<ThemeState>()(
       },
     }),
     {
+      // index.html mirrors this storage key and JSON shape for the pre-paint script.
       name: 'theme',
       onRehydrateStorage: () => (state) => {
         if (state) {
-          applyTheme(state.theme);
+          applyTheme(state.theme === 'light' ? 'light' : 'dark');
         }
       },
     }

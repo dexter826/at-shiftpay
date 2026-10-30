@@ -13,6 +13,7 @@ colors:
   accent: oklch(0.79 0.145 82)
   accent-ink: oklch(0.82 0.14 82)
   on-accent: oklch(0.2 0.015 80)
+  ring: oklch(0.79 0.145 82)
   success: oklch(0.74 0.13 150)
   warning: oklch(0.82 0.14 92)
   danger: oklch(0.66 0.17 27)
@@ -27,6 +28,7 @@ colors:
   accent-light: oklch(0.76 0.15 82)
   accent-ink-light: oklch(0.55 0.15 82)
   on-accent-light: oklch(0.2 0.015 80)
+  ring-light: oklch(0.24 0.012 80)
   success-light: oklch(0.53 0.13 150)
   warning-light: oklch(0.55 0.14 92)
   danger-light: oklch(0.55 0.19 27)
@@ -134,7 +136,7 @@ Two token tiers back this: raw palette steps (graphite, paper, amber, status, il
 
 ## Colors
 
-Semantic roles only. The accent is a signal, not a surface: it appears on the primary action, the active navigation marker, the current-day chart bar, and focus rings — nowhere else. Text never sits on the accent except `on-accent` (dark ink), which replaces the previous white-on-amber failure. `accent-ink` is the accent's text-safe variant for links and labels, dark enough to read on light surfaces. Status colors carry state and nothing else. Both themes clear AA: body text 14.9–16.2:1, secondary text 5.1–8.9:1, accent buttons 8.3–9.3:1, status text at least 4.7:1 on surfaces.
+Semantic roles only. The accent is a signal, not a surface: it appears on the primary action, the active navigation marker, the current-day chart bar, and focus rings — nowhere else. Text never sits on the accent except `on-accent` (dark ink), which replaces the previous white-on-amber failure. `accent-ink` is the accent's text-safe variant for links and labels, dark enough to read on light surfaces. Status colors carry state and nothing else. The focus ring uses `ring` — accent in dark, ink in light — so it clears 3:1 against both canvases. Both themes clear AA: body text 14.9–16.2:1, secondary text 5.1–8.9:1, accent buttons 8.3–9.3:1, status text at least 4.7:1 on surfaces.
 
 ## Typography
 
