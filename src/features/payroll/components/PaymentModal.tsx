@@ -164,9 +164,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
       <div className="space-y-5">
         {/* Thông tin nhân viên & Ngân hàng */}
         <div
-          className={`p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-sm relative overflow-hidden`}
+          className={`p-4 bg-surface border border-line rounded-2xl shadow-sm relative overflow-hidden`}
         >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12" />
+          <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full -mr-12 -mt-12" />
 
           <div className="flex items-center gap-4 relative">
             <div className="relative shrink-0">
@@ -174,45 +174,39 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 <img
                   src={currentEmployee.imageUrl}
                   alt={employeeSummary.employeeName}
-                  className="w-16 h-16 rounded-2xl object-cover border-2 border-[var(--bg-card)] shadow-sm"
+                  className="w-16 h-16 rounded-2xl object-cover border-2 border-surface shadow-sm"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-white shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center text-on-accent shadow-sm">
                   <User size={32} />
                 </div>
               )}
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-[var(--bg-card)] rounded-full" />
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-surface rounded-full" />
             </div>
 
             <div className="min-w-0 flex-1 space-y-0.5">
-              <h3
-                className={`text-lg font-black text-[var(--text-primary)] leading-tight truncate`}
-              >
+              <h3 className={`text-lg font-black text-ink leading-tight truncate`}>
                 {employeeSummary.employeeName}
               </h3>
               {currentEmployee?.bankAccount ? (
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-1.5">
-                    <Building2 size={12} className="text-primary shrink-0" />
-                    <p className={`text-xs font-bold text-primary truncate`}>
+                    <Building2 size={12} className="text-accent-ink shrink-0" />
+                    <p className={`text-xs font-bold text-accent-ink truncate`}>
                       {currentEmployee.bankAccount.bankName}
                     </p>
                   </div>
-                  <p
-                    className={`text-xs font-mono font-medium text-[var(--text-secondary)] tracking-wider`}
-                  >
+                  <p className={`text-xs font-mono font-medium text-ink-soft tracking-wider`}>
                     {currentEmployee.bankAccount.accountNumber}
                   </p>
                   <p
-                    className={`text-[10px] font-medium ${'text-[var(--text-secondary)]'} uppercase opacity-80 truncate`}
+                    className={`text-[10px] font-medium ${'text-ink-soft'} uppercase opacity-80 truncate`}
                   >
                     {currentEmployee.bankAccount.accountName}
                   </p>
                 </div>
               ) : (
-                <p className={`text-xs ${'text-[var(--text-secondary)]'} italic`}>
-                  Chưa cập nhật ngân hàng
-                </p>
+                <p className={`text-xs ${'text-ink-soft'} italic`}>Chưa cập nhật ngân hàng</p>
               )}
             </div>
           </div>
@@ -220,38 +214,32 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
         {/* Loại thanh toán */}
         <div className="space-y-3">
-          <h4 className={`text-sm font-bold ${'text-[var(--text-primary)]'} px-1`}>
-            Loại thanh toán:
-          </h4>
+          <h4 className={`text-sm font-bold ${'text-ink'} px-1`}>Loại thanh toán:</h4>
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => setPaymentType('regular')}
               className={`p-3 rounded-2xl border-2 transition-all relative text-center ${
-                paymentType === 'regular'
-                  ? 'border-primary bg-primary/10'
-                  : 'border-[var(--border-color)] bg-[var(--bg-card)]'
+                paymentType === 'regular' ? 'border-accent bg-accent/10' : 'border-line bg-surface'
               }`}
             >
               {paymentType === 'regular' && (
-                <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                <div className="absolute top-2 right-2 w-5 h-5 bg-accent rounded-full flex items-center justify-center">
                   <Check size={12} className="text-white" />
                 </div>
               )}
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Banknote
                   size={16}
-                  className={
-                    paymentType === 'regular' ? 'text-primary' : 'text-[var(--text-secondary)]'
-                  }
+                  className={paymentType === 'regular' ? 'text-accent-ink' : 'text-ink-soft'}
                 />
                 <span
-                  className={`font-bold text-sm ${paymentType === 'regular' ? 'text-primary' : 'text-[var(--text-primary)]'}`}
+                  className={`font-bold text-sm ${paymentType === 'regular' ? 'text-accent-ink' : 'text-ink'}`}
                 >
                   Thanh toán
                 </span>
               </div>
               <p
-                className={`text-[10px] leading-tight ${paymentType === 'regular' ? 'text-primary/80' : 'text-[var(--text-secondary)]'}`}
+                className={`text-[10px] leading-tight ${paymentType === 'regular' ? 'text-accent-ink/80' : 'text-ink-soft'}`}
               >
                 Nguồn tiền tiệc
               </p>
@@ -262,7 +250,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               className={`p-3 rounded-2xl border-2 transition-all relative text-center ${
                 paymentType === 'advance'
                   ? 'border-orange-500 bg-orange-500/10'
-                  : 'border-[var(--border-color)] bg-[var(--bg-card)]'
+                  : 'border-line bg-surface'
               }`}
             >
               {paymentType === 'advance' && (
@@ -273,18 +261,16 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Wallet
                   size={16}
-                  className={
-                    paymentType === 'advance' ? 'text-orange-500' : 'text-[var(--text-secondary)]'
-                  }
+                  className={paymentType === 'advance' ? 'text-orange-500' : 'text-ink-soft'}
                 />
                 <span
-                  className={`font-bold text-sm ${paymentType === 'advance' ? 'text-orange-500' : 'text-[var(--text-primary)]'}`}
+                  className={`font-bold text-sm ${paymentType === 'advance' ? 'text-orange-500' : 'text-ink'}`}
                 >
                   Ứng tiền
                 </span>
               </div>
               <p
-                className={`text-[10px] leading-tight ${paymentType === 'advance' ? 'text-orange-500/80' : 'text-[var(--text-secondary)]'}`}
+                className={`text-[10px] leading-tight ${paymentType === 'advance' ? 'text-orange-500/80' : 'text-ink-soft'}`}
               >
                 Nguồn cá nhân
               </p>
@@ -295,17 +281,15 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         {/* Mã QR */}
         {currentEmployee?.bankAccount && selectedTotal > 0 && (
           <div
-            className={`p-4 ${'bg-[var(--bg-card)]'} border-2 border-primary/30 rounded-2xl flex flex-col items-center justify-center space-y-3`}
+            className={`p-4 ${'bg-surface'} border-2 border-accent/30 rounded-2xl flex flex-col items-center justify-center space-y-3`}
           >
             <div className="flex items-center gap-2">
-              <QrCode size={18} className="text-primary" />
-              <h4 className={`font-semibold ${'text-[var(--text-primary)]'}`}>
-                Quét mã chuyển khoản
-              </h4>
+              <QrCode size={18} className="text-accent-ink" />
+              <h4 className={`font-semibold ${'text-ink'}`}>Quét mã chuyển khoản</h4>
             </div>
 
             {qrCodeUrl && !qrError ? (
-              <div className={`bg-[var(--bg-secondary)] p-3 rounded-2xl shadow-sm`}>
+              <div className={`bg-surface-2 p-3 rounded-2xl shadow-sm`}>
                 <img
                   src={qrCodeUrl}
                   alt="Mã QR chuyển khoản"
@@ -314,27 +298,25 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               </div>
             ) : (
               <div
-                className={`w-48 h-48 flex items-center justify-center bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl`}
+                className={`w-48 h-48 flex items-center justify-center bg-surface border border-line rounded-2xl`}
               >
                 <div className="text-center p-4">
                   {qrError ? (
                     <>
                       <AlertTriangle size={32} className="mx-auto mb-2 text-orange-500" />
-                      <p className={`text-xs ${'text-[var(--text-secondary)]'}`}>{qrError}</p>
+                      <p className={`text-xs ${'text-ink-soft'}`}>{qrError}</p>
                     </>
                   ) : (
                     <>
                       <QrCode size={32} className="mx-auto mb-2 text-slate-400" />
-                      <p className={`text-xs ${'text-[var(--text-secondary)]'}`}>
-                        Đang tạo mã QR...
-                      </p>
+                      <p className={`text-xs ${'text-ink-soft'}`}>Đang tạo mã QR...</p>
                     </>
                   )}
                 </div>
               </div>
             )}
 
-            <p className={`text-[10px] ${'text-[var(--text-secondary)]'} text-center italic`}>
+            <p className={`text-[10px] ${'text-ink-soft'} text-center italic`}>
               Nội dung: THANH TOAN TIEN LUONG {selectedShiftIds.length} CONG
             </p>
           </div>
@@ -355,20 +337,18 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         {/* Danh sách ca chọn */}
         <div className="space-y-3">
           <div className="flex justify-between items-center px-1">
-            <h4 className={`text-sm font-bold ${'text-[var(--text-primary)]'}`}>
+            <h4 className={`text-sm font-bold ${'text-ink'}`}>
               Ca được chọn ({selectedShiftIds.length})
             </h4>
             <button
               onClick={onSelectAll}
-              className="text-xs font-medium text-primary hover:text-primary/80"
+              className="text-xs font-medium text-accent-ink hover:text-accent-ink/80"
             >
               {selectedShiftIds.length === unpaidShifts.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
             </button>
           </div>
 
-          <div
-            className={`max-h-64 overflow-y-auto border border-[var(--border-color)] rounded-2xl`}
-          >
+          <div className={`max-h-64 overflow-y-auto border border-line rounded-2xl`}>
             {unpaidShifts.map((shift) => {
               const breakdown = getShiftBreakdown(shift);
               const event = events.find((e) => e.id === shift.eventId);
@@ -376,13 +356,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 <div
                   key={shift.id}
                   onClick={() => onShiftSelect(shift.id)}
-                  className={`flex items-center gap-3 p-3 border-b border-[var(--border-color)] last:border-b-0 cursor-pointer hover:bg-[var(--border-color)]`}
+                  className={`flex items-center gap-3 p-3 border-b border-line last:border-b-0 cursor-pointer hover:bg-line`}
                 >
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
                       selectedShiftIds.includes(shift.id)
-                        ? 'bg-primary border-primary'
-                        : 'border-[var(--border-color)]'
+                        ? 'bg-accent border-accent'
+                        : 'border-line'
                     }`}
                   >
                     {selectedShiftIds.includes(shift.id) && (
@@ -390,12 +370,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium ${'text-[var(--text-primary)]'} truncate`}>
+                    <p className={`text-sm font-medium ${'text-ink'} truncate`}>
                       {event?.title || 'Không rõ'}
                     </p>
-                    <div
-                      className={`text-xs ${'text-[var(--text-secondary)]'} flex items-center gap-1 truncate`}
-                    >
+                    <div className={`text-xs ${'text-ink-soft'} flex items-center gap-1 truncate`}>
                       <MapPin size={12} className="shrink-0" />
                       <span className="truncate">
                         {locations.find((l) => l.id === event?.locationId)?.name ||
@@ -404,14 +382,14 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <div className={`text-sm font-bold ${'text-[var(--text-primary)]'}`}>
+                    <div className={`text-sm font-bold ${'text-ink'}`}>
                       {formatCurrency(shift.amount)}
                     </div>
-                    <div className={`text-[10px] ${'text-[var(--text-secondary)]'} mt-0.5`}>
+                    <div className={`text-[10px] ${'text-ink-soft'} mt-0.5`}>
                       {formatShiftDate(shift.date, shift.session)}
                     </div>
                     {breakdown.surcharge > 0 && (
-                      <div className={`text-[9px] ${'text-[var(--text-secondary)]'} opacity-80`}>
+                      <div className={`text-[9px] ${'text-ink-soft'} opacity-80`}>
                         {formatCurrency(breakdown.base)} + {formatCurrency(breakdown.surcharge)}
                       </div>
                     )}
@@ -423,26 +401,22 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         </div>
 
         {/* Tổng hợp thanh toán */}
-        <div
-          className={`p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl space-y-4`}
-        >
+        <div className={`p-4 bg-surface border border-line rounded-2xl space-y-4`}>
           <div className="flex justify-between items-center">
             <div>
-              <span className={`text-xs ${'text-[var(--text-secondary)]'} block`}>
-                Tổng chưa thanh toán
-              </span>
-              <span className={`text-[10px] font-medium ${'text-[var(--text-secondary)]'}`}>
+              <span className={`text-xs ${'text-ink-soft'} block`}>Tổng chưa thanh toán</span>
+              <span className={`text-[10px] font-medium ${'text-ink-soft'}`}>
                 {employeeSummary.unpaidCount} ca làm việc
               </span>
             </div>
-            <span className={`font-bold ${'text-[var(--text-primary)]'}`}>
+            <span className={`font-bold ${'text-ink'}`}>
               {formatCurrency(employeeSummary.totalUnpaid)}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
             <div>
-              <span className={`text-xs ${'text-[var(--text-secondary)]'} block`}>Tổng đã ứng</span>
+              <span className={`text-xs ${'text-ink-soft'} block`}>Tổng đã ứng</span>
               <span className={`text-[10px] font-medium text-orange-500`}>
                 {employeeSummary.advancedCount} ca làm việc
               </span>
@@ -452,16 +426,14 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
             </span>
           </div>
 
-          <div className="pt-4 border-t border-dashed border-[var(--border-color)] flex justify-between items-center">
+          <div className="pt-4 border-t border-dashed border-line flex justify-between items-center">
             <div>
-              <span className={`text-sm font-bold ${'text-[var(--text-primary)]'} block`}>
-                Thanh toán đang chọn
-              </span>
-              <span className={`text-[10px] font-bold text-primary uppercase tracking-wider`}>
+              <span className={`text-sm font-bold ${'text-ink'} block`}>Thanh toán đang chọn</span>
+              <span className={`text-[10px] font-bold text-accent-ink uppercase tracking-wider`}>
                 {selectedShiftIds.length} ca làm việc
               </span>
             </div>
-            <span className={`text-2xl font-black text-primary`}>
+            <span className={`text-2xl font-black text-accent-ink`}>
               {formatCurrency(selectedTotal)}
             </span>
           </div>

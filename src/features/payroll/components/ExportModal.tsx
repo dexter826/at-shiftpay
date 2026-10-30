@@ -51,7 +51,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
       }
     >
       <div className="space-y-4">
-        <p className={`text-sm text-[var(--text-secondary)]`}>
+        <p className={`text-sm text-ink-soft`}>
           Chọn thời gian để xuất báo cáo lương và lịch tiệc.
         </p>
 
@@ -59,18 +59,18 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         <div className="flex justify-between items-center px-2 py-2">
           <button
             onClick={() => setSelectedYear((prev) => (prev === 0 ? currentYear : prev - 1))}
-            className={`p-1 rounded-full hover:bg-[var(--border-color)]`}
+            className={`p-1 rounded-full hover:bg-line`}
           >
-            <ChevronLeft size={20} className="text-[var(--text-secondary)]" />
+            <ChevronLeft size={20} className="text-ink-soft" />
           </button>
-          <span className={`text-lg font-bold text-[var(--text-primary)]`}>
+          <span className={`text-lg font-bold text-ink`}>
             {selectedYear === 0 ? 'Tất cả các năm' : `Năm ${selectedYear}`}
           </span>
           <button
             onClick={() => setSelectedYear((prev) => (prev === 0 ? currentYear : prev + 1))}
-            className={`p-1 rounded-full hover:bg-[var(--border-color)]`}
+            className={`p-1 rounded-full hover:bg-line`}
           >
-            <ChevronRight size={20} className="text-[var(--text-secondary)]" />
+            <ChevronRight size={20} className="text-ink-soft" />
           </button>
         </div>
 
@@ -81,8 +81,8 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                         flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all
                         ${
                           onlyDebt
-                            ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
-                            : `border-[var(--border-color)] bg-[var(--bg-secondary)]`
+                            ? 'border-accent bg-accent/5 ring-1 ring-accent/20'
+                            : `border-line bg-surface-2`
                         }
                     `}
         >
@@ -92,17 +92,15 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                             p-2 rounded-lg border transition-colors
                             ${
                               onlyDebt
-                                ? 'bg-primary/10 border-primary/30 text-primary'
-                                : 'bg-[var(--bg-card)] border-[var(--border-color)] text-slate-400'
+                                ? 'bg-accent/10 border-accent/30 text-accent-ink'
+                                : 'bg-surface border-line text-slate-400'
                             }
                         `}
             >
               <CalendarDays size={18} />
             </div>
             <div>
-              <p
-                className={`text-sm font-bold ${onlyDebt ? 'text-primary' : 'text-[var(--text-primary)]'}`}
-              >
+              <p className={`text-sm font-bold ${onlyDebt ? 'text-accent-ink' : 'text-ink'}`}>
                 Chỉ xuất sự kiện còn nợ
               </p>
               <p className="text-xs text-slate-500">Lọc các sự kiện chưa thanh toán hết</p>
@@ -111,7 +109,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
           <div
             className={`
                         w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all
-                        ${onlyDebt ? 'border-primary bg-primary' : 'border-slate-300'}
+                        ${onlyDebt ? 'border-accent bg-accent' : 'border-slate-300'}
                     `}
           >
             {onlyDebt && <div className="w-2 h-2 rounded-full bg-white" />}
@@ -132,10 +130,10 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                            col-span-3 py-3 rounded-lg text-sm font-medium transition-colors border
                            ${
                              isAllSelected
-                               ? 'bg-primary text-white border-primary'
+                               ? 'bg-accent text-on-accent border-accent'
                                : `
-                                  bg-[var(--bg-secondary)] hover:bg-[var(--border-color)]
-                                  border-[var(--border-color)] text-[var(--text-secondary)]
+                                  bg-surface-2 hover:bg-line
+                                  border-line text-ink-soft
                                `
                            }
                         `}
@@ -160,11 +158,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                             py-3 rounded-lg text-sm font-medium transition-colors border
                             ${
                               isSelected
-                                ? 'bg-primary text-white border-primary'
+                                ? 'bg-accent text-on-accent border-accent'
                                 : `
-                                  bg-[var(--bg-secondary)] hover:bg-[var(--border-color)]
-                                  border-[var(--border-color)] text-[var(--text-secondary)]
-                                  ${isCurrentMonth ? 'border-primary/50 text-primary' : ''}
+                                  bg-surface-2 hover:bg-line
+                                  border-line text-ink-soft
+                                  ${isCurrentMonth ? 'border-accent/50 text-accent-ink' : ''}
                                `
                             }
                         `}

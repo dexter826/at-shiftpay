@@ -18,10 +18,8 @@ const ChartTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) 
   if (active && payload && payload.length) {
     const isPieChart = !label;
     return (
-      <div className="bg-[var(--bg-card)]/95 border-[var(--border-color)] border p-3 rounded-lg shadow-xl z-50">
-        {!isPieChart && (
-          <p className="text-xs font-bold text-[var(--text-secondary)] mb-2">Ngày {label}</p>
-        )}
+      <div className="bg-surface/95 border-line border p-3 rounded-lg shadow-xl z-50">
+        {!isPieChart && <p className="text-xs font-bold text-ink-soft mb-2">Ngày {label}</p>}
         <div className="space-y-1.5">
           {payload.map((entry: ChartTooltipEntry, index: number) => (
             <div key={index} className="flex items-center justify-between gap-4">
@@ -30,11 +28,9 @@ const ChartTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) 
                   className="w-1.5 h-1.5 rounded-full"
                   style={{ backgroundColor: entry.payload?.fill || entry.color || entry.fill }}
                 />
-                <span className="text-[11px] font-medium text-[var(--text-primary)]">
-                  {entry.name}
-                </span>
+                <span className="text-[11px] font-medium text-ink">{entry.name}</span>
               </div>
-              <span className="text-[11px] font-bold text-[var(--text-primary)]">
+              <span className="text-[11px] font-bold text-ink">
                 {entry.value} {isPieChart ? 'công' : ''}
               </span>
             </div>

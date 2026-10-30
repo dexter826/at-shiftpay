@@ -24,19 +24,19 @@ const SearchInput: React.FC<SearchInputProps> = ({
     <div className={`relative ${containerClassName}`}>
       <Search
         size={16}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none"
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none"
       />
       <input
         value={value}
         onChange={onChange}
-        className={`w-full pl-9 pr-9 h-10 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-primary transition-colors ${className}`}
+        className={`w-full pl-9 pr-9 h-10 bg-surface-2 border border-line rounded-lg text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent transition-colors ${className}`}
         {...props}
       />
       {hasValue && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-ink-muted hover:text-ink transition-colors"
         >
           <X size={14} />
         </button>

@@ -95,7 +95,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
           </p>
         </div>
 
-        <p className={`text-sm text-[var(--text-muted)] leading-relaxed`}>
+        <p className={`text-sm text-ink-muted leading-relaxed`}>
           Toàn bộ dữ liệu về nhân viên, ca làm, sự kiện và lịch sử thanh toán của bạn sẽ bị xóa vĩnh
           viễn khỏi hệ thống.
         </p>
@@ -103,7 +103,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
         <div className="pt-2">
           <label
             htmlFor="delete-account-confirm"
-            className={`block text-sm font-medium text-[var(--text-primary)] mb-2`}
+            className={`block text-sm font-medium text-ink mb-2`}
           >
             Nhập <span className="font-bold text-red-500">"{REQUIRED_CONFIRM_TEXT}"</span> để xác
             nhận:
@@ -114,7 +114,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
             placeholder={REQUIRED_CONFIRM_TEXT}
-            className={`w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-transparent text-[var(--text-primary)] focus:outline-none focus:border-red-500 transition-colors text-sm`}
+            className={`w-full px-4 py-3 rounded-lg border border-line bg-transparent text-ink focus:outline-none focus:border-red-500 transition-colors text-sm`}
             autoFocus
           />
         </div>
@@ -122,7 +122,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
         <div>
           <label
             htmlFor="delete-account-password"
-            className={`block text-sm font-medium text-[var(--text-primary)] mb-2`}
+            className={`block text-sm font-medium text-ink mb-2`}
           >
             Mật khẩu hiện tại
           </label>
@@ -133,9 +133,9 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
             placeholder="Nhập mật khẩu để xác thực lại"
-            className={`w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-transparent text-[var(--text-primary)] focus:outline-none focus:border-red-500 transition-colors text-sm`}
+            className={`w-full px-4 py-3 rounded-lg border border-line bg-transparent text-ink focus:outline-none focus:border-red-500 transition-colors text-sm`}
           />
-          <p className={`mt-2 text-xs text-[var(--text-muted)]`}>
+          <p className={`mt-2 text-xs text-ink-muted`}>
             Cần xác thực lại mật khẩu trước khi xóa vĩnh viễn.
           </p>
         </div>

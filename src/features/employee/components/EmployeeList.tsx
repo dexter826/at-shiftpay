@@ -43,7 +43,7 @@ const EmployeeList: React.FC<EmployeeListProps> = ({
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
                 <div
                   key={i}
-                  className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg aspect-square p-3 flex flex-col items-center justify-center gap-2"
+                  className="bg-surface border border-line rounded-lg aspect-square p-3 flex flex-col items-center justify-center gap-2"
                 >
                   <Skeleton variant="circular" width={48} height={48} />
                   <Skeleton variant="text" width="60%" height={14} />
@@ -73,7 +73,7 @@ const EmployeeList: React.FC<EmployeeListProps> = ({
             </div>
 
             {employees.length === 0 && !loading && (
-              <div className="text-center py-12 text-[var(--text-muted)]">
+              <div className="text-center py-12 text-ink-muted">
                 <Users size={24} className="mx-auto mb-2 opacity-50" />
                 <p className="text-sm">
                   {searchTerm ? 'Không tìm thấy nhân viên nào' : 'Chưa có nhân viên nào'}

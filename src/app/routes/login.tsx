@@ -233,13 +233,13 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const isUnverified = currentUser && !currentUser.emailVerified;
 
   return (
-    <div className="min-h-dynamic bg-[var(--bg-primary)] flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-dynamic bg-canvas flex items-center justify-center p-4 relative overflow-hidden">
       {/* Decorative blobs */}
-      <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/[0.04] pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-primary/[0.03] pointer-events-none" />
+      <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-accent/[0.04] pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-accent/[0.03] pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-6">
+        <div className="bg-surface border border-line rounded-lg p-6">
           <LoginHeader />
 
           <div className="mt-4">
@@ -309,13 +309,13 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         </div>
 
-        <p className="text-xs text-[var(--text-muted)] text-center mt-6 flex items-center justify-center gap-1.5">
+        <p className="text-xs text-ink-muted text-center mt-6 flex items-center justify-center gap-1.5">
           Made with <Heart size={11} className="text-red-500 fill-red-500" /> by
           <a
             href="https://github.com/dexter826/dexter826"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-primary hover:text-[#f0c654] transition-colors"
+            className="font-semibold text-accent-ink hover:text-ink transition-colors"
           >
             MOB
           </a>

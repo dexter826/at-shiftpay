@@ -23,15 +23,15 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id }) => 
         />
         <div
           className={`w-4 h-4 rounded border transition-colors ${
-            checked ? 'bg-primary border-primary' : 'border-[var(--border-color)] bg-transparent'
-          } peer-focus-visible:ring-2 peer-focus-visible:ring-primary/20`}
+            checked ? 'bg-accent border-accent' : 'border-line bg-transparent'
+          } peer-focus-visible:ring-2 peer-focus-visible:ring-accent/20`}
         >
           {checked && (
             <Check size={12} className="text-white absolute inset-0 m-auto" strokeWidth={3} />
           )}
         </div>
       </div>
-      {label && <span className="text-xs text-[var(--text-muted)]">{label}</span>}
+      {label && <span className="text-xs text-ink-muted">{label}</span>}
     </label>
   );
 };

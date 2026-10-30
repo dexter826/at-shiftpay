@@ -15,7 +15,7 @@ export const Splashscreen: React.FC<SplashscreenProps> = ({ onComplete }) => {
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bg-primary)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-canvas">
       <div className="w-full max-w-md px-4">
         <Lottie animationData={splashScreenAnimation} loop={false} autoplay />
       </div>

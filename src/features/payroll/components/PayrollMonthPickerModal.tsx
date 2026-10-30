@@ -35,7 +35,7 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
             setFilterDate('');
             onClose();
           }}
-          className={`w-full py-2.5 rounded-lg text-sm font-medium border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--border-color)] transition-colors`}
+          className={`w-full py-2.5 rounded-lg text-sm font-medium border border-line text-ink-soft hover:bg-line transition-colors`}
         >
           Xem tất cả lịch sử
         </button>
@@ -47,26 +47,18 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
             onClick={() => setViewYear((prev) => prev - 1)}
             onMouseEnter={() => prevMonthRef.current?.startAnimation()}
             onMouseLeave={() => prevMonthRef.current?.stopAnimation()}
-            className={`p-1 rounded-full hover:bg-[var(--border-color)]`}
+            className={`p-1 rounded-full hover:bg-line`}
           >
-            <ChevronLeftIcon
-              ref={prevMonthRef}
-              size={20}
-              className="text-[var(--text-secondary)]"
-            />
+            <ChevronLeftIcon ref={prevMonthRef} size={20} className="text-ink-soft" />
           </button>
-          <span className={`text-lg font-bold text-[var(--text-primary)]`}>{viewYear}</span>
+          <span className={`text-lg font-bold text-ink`}>{viewYear}</span>
           <button
             onClick={() => setViewYear((prev) => prev + 1)}
             onMouseEnter={() => nextMonthRef.current?.startAnimation()}
             onMouseLeave={() => nextMonthRef.current?.stopAnimation()}
-            className={`p-1 rounded-full hover:bg-[var(--border-color)]`}
+            className={`p-1 rounded-full hover:bg-line`}
           >
-            <ChevronRightIcon
-              ref={nextMonthRef}
-              size={20}
-              className="text-[var(--text-secondary)]"
-            />
+            <ChevronRightIcon ref={nextMonthRef} size={20} className="text-ink-soft" />
           </button>
         </div>
 
@@ -89,10 +81,10 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
                          py-3 rounded-lg text-sm font-medium transition-colors border
                          ${
                            isSelected
-                             ? 'bg-primary text-white border-primary'
-                             : `hover:bg-[var(--border-color)]
-                               border-[var(--border-color)] text-[var(--text-secondary)]
-                               ${isCurrentMonth ? 'border-primary/50 text-primary' : ''}`
+                             ? 'bg-accent text-on-accent border-accent'
+                             : `hover:bg-line
+                               border-line text-ink-soft
+                               ${isCurrentMonth ? 'border-accent/50 text-accent-ink' : ''}`
                          }
                       `}
               >

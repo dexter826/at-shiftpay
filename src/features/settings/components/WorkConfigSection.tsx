@@ -48,40 +48,32 @@ const WorkConfigSection: React.FC<WorkConfigSectionProps> = ({ userUid, settings
   return (
     <section>
       <div
-        className={`flex items-center gap-2 mb-4 px-1 text-[var(--text-muted)] text-sm font-medium uppercase tracking-wider`}
+        className={`flex items-center gap-2 mb-4 px-1 text-ink-muted text-sm font-medium uppercase tracking-wider`}
       >
         <Briefcase size={16} />
         <span>Cấu hình công việc</span>
       </div>
 
-      <div className={`bg-[var(--bg-card)] rounded-lg border border-[var(--border-color)]`}>
+      <div className={`bg-surface rounded-lg border border-line`}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {/* Mức lương */}
-          <div className={`p-4 border-b sm:border-r lg:border-b-0 border-[var(--border-color)]`}>
+          <div className={`p-4 border-b sm:border-r lg:border-b-0 border-line`}>
             <div className="flex items-center justify-between mb-2">
-              <label className={`font-medium text-[var(--text-primary)]`}>Mức lương / ca</label>
-              <span
-                className={`text-xs text-[var(--text-muted)] px-2 py-1 rounded bg-[var(--border-color)]`}
-              >
-                VNĐ
-              </span>
+              <label className={`font-medium text-ink`}>Mức lương / ca</label>
+              <span className={`text-xs text-ink-muted px-2 py-1 rounded bg-line`}>VNĐ</span>
             </div>
             <input
               type="number"
               value={editSettings.shiftRate}
               onChange={(e) => handleChange('shiftRate', Number(e.target.value))}
-              className={`w-full p-3 rounded-lg border border-[var(--border-color)] bg-transparent text-[var(--text-primary)] focus:outline-none focus:border-primary transition-colors`}
+              className={`w-full p-3 rounded-lg border border-line bg-transparent text-ink focus:outline-none focus:border-accent transition-colors`}
             />
-            <p className={`text-xs text-[var(--text-muted)] mt-2`}>
-              Áp dụng cho các ca làm việc mới
-            </p>
+            <p className={`text-xs text-ink-muted mt-2`}>Áp dụng cho các ca làm việc mới</p>
           </div>
 
           {/* Giờ trực - Sáng */}
-          <div className={`p-4 border-b lg:border-r lg:border-b-0 border-[var(--border-color)]`}>
-            <label className={`block font-medium text-[var(--text-primary)] mb-3`}>
-              Giờ bắt đầu ca sáng
-            </label>
+          <div className={`p-4 border-b lg:border-r lg:border-b-0 border-line`}>
+            <label className={`block font-medium text-ink mb-3`}>Giờ bắt đầu ca sáng</label>
             <TimePicker
               value={editSettings.morningTime}
               onChange={(v) => handleChange('morningTime', v)}
@@ -90,9 +82,7 @@ const WorkConfigSection: React.FC<WorkConfigSectionProps> = ({ userUid, settings
 
           {/* Giờ trực - Chiều */}
           <div className="p-4">
-            <label className={`block font-medium text-[var(--text-primary)] mb-3`}>
-              Giờ bắt đầu ca chiều
-            </label>
+            <label className={`block font-medium text-ink mb-3`}>Giờ bắt đầu ca chiều</label>
             <TimePicker
               value={editSettings.afternoonTime}
               onChange={(v) => handleChange('afternoonTime', v)}
@@ -109,9 +99,7 @@ const WorkConfigSection: React.FC<WorkConfigSectionProps> = ({ userUid, settings
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <div
-                className={`p-4 border-t border-[var(--border-color)] flex items-center justify-end gap-3`}
-              >
+              <div className={`p-4 border-t border-line flex items-center justify-end gap-3`}>
                 <Button onClick={handleCancelSettings} disabled={saving} variant="outline">
                   Hủy
                 </Button>

@@ -28,16 +28,12 @@ export const Tiles = React.memo(
         {rowsArray.map((_, i) => (
           <div
             key={`row-${i}`}
-            className={cn(
-              tileSizes[tileSize],
-              'border-l dark:border-neutral-800 border-neutral-200 relative',
-              tileClassName
-            )}
+            className={cn(tileSizes[tileSize], 'border-l border-line relative', tileClassName)}
           >
             {colsArray.map((_, j) => (
               <motion.div
                 whileHover={{
-                  backgroundColor: `var(--tile)`,
+                  backgroundColor: `var(--color-accent)`,
                   transition: { duration: 0 },
                 }}
                 animate={{
@@ -46,7 +42,7 @@ export const Tiles = React.memo(
                 key={`col-${j}`}
                 className={cn(
                   tileSizes[tileSize],
-                  'border-r border-t dark:border-neutral-800 border-neutral-200 relative',
+                  'border-r border-t border-line relative',
                   tileClassName
                 )}
               />

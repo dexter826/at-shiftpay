@@ -1,48 +1,40 @@
-// Hệ thống màu sắc thống nhất cho ứng dụng
+// Semantic palette for charts and status-driven styles, backed by design tokens.
 
 export const PAYMENT_COLORS = {
-  // Màu chủ đạo của ứng dụng
-  PRIMARY: '#ecb52d',
+  PRIMARY: 'var(--color-accent)',
 
-  // Màu sắc cho các trạng thái thanh toán
-  UNPAID: '#ecb52d', // Còn cần trả (vàng chủ đạo)
-  PAID: '#10b981', // Đã thanh toán (xanh lá)
-  ADVANCED: '#f97316', // Đã ứng tiền (cam)
-  TOTAL_EARNED: '#3b82f6', // Tổng đã làm (xanh dương)
+  UNPAID: 'var(--color-accent)', // Còn cần trả
+  PAID: 'var(--color-success)', // Đã thanh toán
+  ADVANCED: 'var(--color-warning)', // Đã ứng tiền
+  TOTAL_EARNED: 'var(--color-info)', // Tổng đã làm
 
-  // Màu sắc cho các loại giao dịch
-  REGULAR_PAYMENT: '#10b981', // Thanh toán thường
-  ADVANCE_PAYMENT: '#f97316', // Ứng tiền
-  SETTLEMENT: '#3b82f6', // Quyết toán
+  REGULAR_PAYMENT: 'var(--color-success)',
+  ADVANCE_PAYMENT: 'var(--color-warning)',
+  SETTLEMENT: 'var(--color-info)',
 
-  // Màu sắc cho trạng thái
-  SUCCESS: '#10b981',
-  WARNING: '#f59e0b',
-  ERROR: '#ef4444',
-  INFO: '#3b82f6',
+  SUCCESS: 'var(--color-success)',
+  WARNING: 'var(--color-warning)',
+  ERROR: 'var(--color-danger)',
+  INFO: 'var(--color-info)',
 } as const;
 
 export const PAYMENT_COLOR_CLASSES = {
-  // Text colors
-  UNPAID_TEXT: 'text-primary',
-  PAID_TEXT: 'text-emerald-500',
-  ADVANCED_TEXT: 'text-orange-500',
-  TOTAL_EARNED_TEXT: 'text-blue-500',
+  UNPAID_TEXT: 'text-accent-ink',
+  PAID_TEXT: 'text-success',
+  ADVANCED_TEXT: 'text-warning',
+  TOTAL_EARNED_TEXT: 'text-info',
 
-  // Background colors
-  UNPAID_BG: 'bg-primary/10',
-  PAID_BG: 'bg-emerald-50 dark:bg-emerald-900/20',
-  ADVANCED_BG: 'bg-orange-50 dark:bg-orange-900/20',
-  TOTAL_EARNED_BG: 'bg-blue-50 dark:bg-blue-900/20',
+  UNPAID_BG: 'bg-accent/10',
+  PAID_BG: 'bg-success/10',
+  ADVANCED_BG: 'bg-warning/10',
+  TOTAL_EARNED_BG: 'bg-info/10',
 
-  // Border colors
-  UNPAID_BORDER: 'border-primary/20',
-  PAID_BORDER: 'border-emerald-200 dark:border-emerald-800',
-  ADVANCED_BORDER: 'border-orange-200 dark:border-orange-800',
-  TOTAL_EARNED_BORDER: 'border-blue-200 dark:border-blue-800',
+  UNPAID_BORDER: 'border-accent/20',
+  PAID_BORDER: 'border-success/20',
+  ADVANCED_BORDER: 'border-warning/20',
+  TOTAL_EARNED_BORDER: 'border-info/20',
 } as const;
 
-// Hàm helper để lấy màu theo trạng thái
 export const getPaymentStatusColor = (status: 'unpaid' | 'paid' | 'advanced') => {
   switch (status) {
     case 'unpaid':
@@ -56,7 +48,6 @@ export const getPaymentStatusColor = (status: 'unpaid' | 'paid' | 'advanced') =>
   }
 };
 
-// Hàm helper để lấy class CSS theo trạng thái
 export const getPaymentStatusClass = (status: 'unpaid' | 'paid' | 'advanced') => {
   switch (status) {
     case 'unpaid':

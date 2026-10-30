@@ -35,7 +35,7 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ activeTab }) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           onClick={scrollToTop}
-          className={`fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40 p-3 rounded-full shadow-2xl border border-primary/20 transition-all active:scale-90 bg-primary text-white hover:bg-primary/90 hover:shadow-primary/40`}
+          className={`fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40 p-3 rounded-full shadow-2xl border border-accent/20 transition-all active:scale-90 bg-accent text-on-accent hover:bg-accent/90 hover:shadow-accent/40`}
           title="Cuộn lên đầu trang"
         >
           <ArrowUp size={24} />

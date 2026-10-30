@@ -9,7 +9,7 @@ const Switch = () => {
     <button
       onClick={toggleTheme}
       className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
-        isDark ? 'bg-[var(--border-color)]' : 'bg-slate-300'
+        isDark ? 'bg-line' : 'bg-slate-300'
       }`}
       aria-label={isDark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'}
     >

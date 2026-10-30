@@ -18,7 +18,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   const theme = useThemeStore((state) => state.theme);
 
   // Nền cơ bản
-  const baseClasses = `relative overflow-hidden bg-[var(--border-color)]`;
+  const baseClasses = `relative overflow-hidden bg-line`;
 
   // Hiệu ứng shimmer theo theme
   const shimmerGradient =

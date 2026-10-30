@@ -202,9 +202,9 @@ const PayrollView: React.FC<PayrollViewProps> = ({
   };
 
   return (
-    <div className={`pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-screen`}>
+    <div className={`pb-28 md:pb-0 bg-canvas min-h-screen`}>
       {/* Tiêu đề & Stats */}
-      <div className={`py-4 px-4 md:px-6 border-b border-[var(--border-color)]`}>
+      <div className={`py-4 px-4 md:px-6 border-b border-line`}>
         <div className="flex justify-between items-center">
           {activeTab === 'payroll' && summary.length > 0 && null}
         </div>
@@ -224,13 +224,13 @@ const PayrollView: React.FC<PayrollViewProps> = ({
       <div className="flex px-4 md:px-6 pt-5 md:pt-6 pb-2 gap-4">
         <button
           onClick={() => setActiveTab('payroll')}
-          className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'payroll' ? 'border-primary text-primary' : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
+          className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'payroll' ? 'border-accent text-accent-ink' : 'border-transparent text-ink-muted hover:text-ink-soft'}`}
         >
           Chưa thanh toán
         </button>
         <button
           onClick={() => setActiveTab('history')}
-          className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'history' ? 'border-primary text-primary' : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
+          className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'history' ? 'border-accent text-accent-ink' : 'border-transparent text-ink-muted hover:text-ink-soft'}`}
         >
           Lịch sử
         </button>

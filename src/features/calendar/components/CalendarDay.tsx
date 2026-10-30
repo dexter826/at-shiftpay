@@ -32,10 +32,10 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
       whileTap={{ scale: 0.95 }}
       className={`aspect-square lg:aspect-auto flex flex-col items-center justify-center rounded-lg text-sm transition-all duration-200 relative overflow-hidden ${
         isSelected
-          ? 'bg-primary text-white shadow-lg shadow-primary/30'
+          ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
           : isToday
-            ? 'bg-primary/10 text-primary font-bold ring-2 ring-primary/20'
-            : `${isCurrentMonth ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)] opacity-40'} hover:bg-[var(--border-color)]`
+            ? 'bg-accent/10 text-accent-ink font-bold ring-2 ring-accent/20'
+            : `${isCurrentMonth ? 'text-ink' : 'text-ink-muted opacity-40'} hover:bg-line`
       }`}
     >
       <span className="relative z-10">{date.getDate()}</span>
@@ -44,7 +44,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
         <div className="absolute top-1 right-1 flex flex-col gap-0.5 pointer-events-none">
           {events.length > 1 && (
             <div
-              className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold ${isSelected ? 'bg-white text-primary' : 'bg-primary text-white shadow-sm'}`}
+              className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold ${isSelected ? 'bg-on-accent text-accent' : 'bg-accent text-on-accent shadow-sm'}`}
             >
               {events.length}
             </div>
@@ -64,7 +64,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
                   <ThumbsDown size={10} className={isSelected ? 'text-white' : 'text-red-500'} />
                 ) : (
                   <div
-                    className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white/60' : 'bg-primary/60'}`}
+                    className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white/60' : 'bg-accent/60'}`}
                   />
                 )}
               </div>

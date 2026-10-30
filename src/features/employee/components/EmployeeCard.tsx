@@ -28,11 +28,11 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
 
   return (
     <div
-      className="relative bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg overflow-hidden hover:border-primary/30 transition-colors group cursor-pointer aspect-square"
+      className="relative bg-surface border border-line rounded-lg overflow-hidden hover:border-accent/30 transition-colors group cursor-pointer aspect-square"
       onClick={() => onClick(employee)}
     >
       {/* Background */}
-      <div className="absolute inset-0 bg-[var(--bg-primary)]">
+      <div className="absolute inset-0 bg-canvas">
         {hasPhoto ? (
           <img
             src={employee.imageUrl}
@@ -41,7 +41,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-[var(--text-muted)]">
+          <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-ink-muted">
             {initials}
           </div>
         )}

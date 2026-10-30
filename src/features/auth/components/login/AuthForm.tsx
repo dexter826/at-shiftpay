@@ -75,8 +75,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
 }) => {
   const inputClass = (hasError: boolean) =>
     `w-full bg-transparent pl-9 pr-9 py-2 rounded-lg border text-sm transition-colors ${
-      hasError ? 'border-red-500' : 'border-[var(--border-color)] focus:border-primary'
-    } focus:outline-none text-[var(--text-primary)]`;
+      hasError ? 'border-red-500' : 'border-line focus:border-accent'
+    } focus:outline-none text-ink`;
 
   return (
     <motion.div
@@ -89,13 +89,13 @@ const AuthForm: React.FC<AuthFormProps> = ({
       {!isSignUp && savedUser && !showQuickLogin && (
         <button
           onClick={onBackToQuickLogin}
-          className="mb-4 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-primary transition-colors"
+          className="mb-4 p-1.5 rounded-lg text-ink-muted hover:text-accent-ink transition-colors"
         >
           <ChevronLeft size={20} />
         </button>
       )}
 
-      <h2 className="text-2xl font-bold text-primary text-center mb-5">
+      <h2 className="text-2xl font-bold text-accent-ink text-center mb-5">
         {isSignUp ? 'Đăng ký' : 'Đăng nhập'}
       </h2>
 
@@ -116,12 +116,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
 
       <form onSubmit={onSubmit} className="space-y-3">
         <div className="space-y-1">
-          <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">Email</label>
+          <label className="text-xs font-medium text-ink-soft ml-1">Email</label>
           <div className="relative">
-            <User
-              size={14}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
-            />
+            <User size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted" />
             <input
               type="email"
               value={email}
@@ -137,13 +134,11 @@ const AuthForm: React.FC<AuthFormProps> = ({
 
         {isSignUp && (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">
-              Họ và tên
-            </label>
+            <label className="text-xs font-medium text-ink-soft ml-1">Họ và tên</label>
             <div className="relative">
               <User
                 size={14}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted"
               />
               <input
                 type="text"
@@ -163,12 +158,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
         )}
 
         <div className="space-y-1">
-          <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">Mật khẩu</label>
+          <label className="text-xs font-medium text-ink-soft ml-1">Mật khẩu</label>
           <div className="relative">
-            <Lock
-              size={14}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
-            />
+            <Lock size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted" />
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
@@ -184,7 +176,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-ink-muted hover:text-ink transition-colors"
             >
               {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
             </button>
@@ -194,13 +186,11 @@ const AuthForm: React.FC<AuthFormProps> = ({
 
         {isSignUp && (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">
-              Xác nhận mật khẩu
-            </label>
+            <label className="text-xs font-medium text-ink-soft ml-1">Xác nhận mật khẩu</label>
             <div className="relative">
               <Lock
                 size={14}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted"
               />
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
@@ -217,7 +207,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-ink-muted hover:text-ink transition-colors"
               >
                 {showConfirmPassword ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
@@ -232,7 +222,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
             <button
               type="button"
               onClick={onForgotPassword}
-              className="text-xs text-primary hover:underline font-medium"
+              className="text-xs text-accent-ink hover:underline font-medium"
             >
               Quên mật khẩu?
             </button>
@@ -244,11 +234,14 @@ const AuthForm: React.FC<AuthFormProps> = ({
         </Button>
       </form>
 
-      <div className="mt-5 pt-4 border-t border-[var(--border-color)] text-center">
-        <p className="text-xs text-[var(--text-muted)] mb-2">
+      <div className="mt-5 pt-4 border-t border-line text-center">
+        <p className="text-xs text-ink-muted mb-2">
           {isSignUp ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}
         </p>
-        <button onClick={onSwitchMode} className="text-primary hover:underline text-sm font-medium">
+        <button
+          onClick={onSwitchMode}
+          className="text-accent-ink hover:underline text-sm font-medium"
+        >
           {isSignUp ? 'Đăng nhập ngay' : 'Tạo tài khoản mới'}
         </button>
       </div>

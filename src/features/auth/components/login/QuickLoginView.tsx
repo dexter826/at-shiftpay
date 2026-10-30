@@ -47,7 +47,7 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
     className="flex flex-col items-center text-center space-y-5"
   >
     <div className="relative">
-      <div className="w-20 h-20 rounded-full border-2 border-primary/30 overflow-hidden">
+      <div className="w-20 h-20 rounded-full border-2 border-accent/30 overflow-hidden">
         <img
           src={savedUser.photoURL || '/avatar.png'}
           alt={savedUser.displayName}
@@ -64,9 +64,9 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
     </div>
 
     <div>
-      <h2 className="text-xl font-bold text-primary">Xin chào!</h2>
-      <p className="text-sm text-[var(--text-secondary)] mt-0.5">{savedUser.displayName}</p>
-      <p className="text-xs text-[var(--text-muted)] mt-0.5">{savedUser.email}</p>
+      <h2 className="text-xl font-bold text-accent-ink">Xin chào!</h2>
+      <p className="text-sm text-ink-soft mt-0.5">{savedUser.displayName}</p>
+      <p className="text-xs text-ink-muted mt-0.5">{savedUser.email}</p>
     </div>
 
     <form onSubmit={onSubmit} className="w-full space-y-3">
@@ -80,10 +80,7 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
       />
       <div className="text-left space-y-1">
         <div className="relative">
-          <Lock
-            size={14}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
-          />
+          <Lock size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted" />
           <input
             type={showPassword ? 'text' : 'password'}
             value={password}
@@ -91,7 +88,7 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
               setPassword(e.target.value);
               if (passwordError) onValidatePassword(e.target.value);
             }}
-            className={`w-full bg-transparent pl-9 pr-9 py-2 rounded-lg border text-sm transition-colors ${passwordError ? 'border-red-500' : 'border-[var(--border-color)] focus:border-primary'} focus:outline-none text-[var(--text-primary)]`}
+            className={`w-full bg-transparent pl-9 pr-9 py-2 rounded-lg border text-sm transition-colors ${passwordError ? 'border-red-500' : 'border-line focus:border-accent'} focus:outline-none text-ink`}
             placeholder="Nhập mật khẩu"
             autoComplete="current-password"
             autoFocus
@@ -99,7 +96,7 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-ink-muted hover:text-ink"
           >
             {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
           </button>
@@ -127,7 +124,7 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
         <button
           type="button"
           onClick={onForgotPassword}
-          className="text-xs text-primary hover:underline font-medium"
+          className="text-xs text-accent-ink hover:underline font-medium"
         >
           Quên mật khẩu?
         </button>
@@ -140,7 +137,7 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
       <button
         type="button"
         onClick={onSwitchAccount}
-        className="text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors flex items-center justify-center gap-1 mx-auto"
+        className="text-xs text-ink-muted hover:text-ink-soft transition-colors flex items-center justify-center gap-1 mx-auto"
       >
         <span>Đăng nhập tài khoản khác</span>
         <ChevronRight size={12} />

@@ -267,14 +267,12 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
           <div className="flex flex-col items-center justify-center pb-2">
             <div
               onClick={() => !isUploading && fileInputRef.current?.click()}
-              className={`relative w-24 h-24 rounded-full overflow-hidden border-2 border-[var(--border-color)] bg-[var(--border-color)] cursor-pointer group transition-all hover:border-primary`}
+              className={`relative w-24 h-24 rounded-full overflow-hidden border-2 border-line bg-line cursor-pointer group transition-all hover:border-accent`}
             >
               {imageUrl ? (
                 <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
               ) : (
-                <div
-                  className={`w-full h-full flex items-center justify-center text-[var(--text-muted)]`}
-                >
+                <div className={`w-full h-full flex items-center justify-center text-ink-muted`}>
                   <Camera size={24} />
                 </div>
               )}
@@ -298,21 +296,21 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               accept="image/*"
               className="hidden"
             />
-            <p className={`text-[10px] text-[var(--text-muted)] mt-2`}>Click để thay đổi ảnh</p>
+            <p className={`text-[10px] text-ink-muted mt-2`}>Click để thay đổi ảnh</p>
           </div>
 
           <div>
-            <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>Họ tên</label>
+            <label className={`block text-xs text-ink-muted mb-1.5`}>Họ tên</label>
             <input
               type="text"
               placeholder="Nhập họ tên"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={`w-full p-2.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] placeholder-slate-500 focus:outline-none focus:border-primary`}
+              className={`w-full p-2.5 bg-surface-2 border border-line rounded-lg text-sm text-ink-soft placeholder-slate-500 focus:outline-none focus:border-accent`}
             />
           </div>
           <div>
-            <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
+            <label className={`block text-xs text-ink-muted mb-1.5`}>
               Số điện thoại (tùy chọn)
             </label>
             <input
@@ -321,15 +319,15 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
               maxLength={11}
-              className={`w-full p-2.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] placeholder-slate-500 focus:outline-none focus:border-primary`}
+              className={`w-full p-2.5 bg-surface-2 border border-line rounded-lg text-sm text-ink-soft placeholder-slate-500 focus:outline-none focus:border-accent`}
             />
           </div>
 
-          <div className={`pt-3 border-t border-[var(--border-color)]`}>
+          <div className={`pt-3 border-t border-line`}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Building2 size={14} className="text-primary" />
-                <label className={`text-xs font-medium text-[var(--text-primary)]`}>
+                <Building2 size={14} className="text-accent-ink" />
+                <label className={`text-xs font-medium text-ink`}>
                   Thông tin ngân hàng (tùy chọn)
                 </label>
               </div>
@@ -341,7 +339,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                   setAccountNumber('');
                   setAccountName('');
                 }}
-                className={`flex items-center gap-1 px-2 py-1 rounded bg-[var(--bg-card)] hover:bg-primary/10 text-primary hover:text-primary/80 transition-colors text-xs`}
+                className={`flex items-center gap-1 px-2 py-1 rounded bg-surface hover:bg-accent/10 text-accent-ink hover:text-accent-ink/80 transition-colors text-xs`}
                 title="Làm mới thông tin ngân hàng"
               >
                 <RotateCcw size={12} />
@@ -351,7 +349,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
 
             <div className="space-y-3">
               <div>
-                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>Ngân hàng</label>
+                <label className={`block text-xs text-ink-muted mb-1.5`}>Ngân hàng</label>
                 <Dropdown
                   options={[
                     { value: '', label: '-- Chọn ngân hàng --' },
@@ -375,30 +373,26 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               </div>
 
               <div>
-                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
-                  Số tài khoản
-                </label>
+                <label className={`block text-xs text-ink-muted mb-1.5`}>Số tài khoản</label>
                 <input
                   type="text"
                   placeholder="Nhập số tài khoản"
                   value={accountNumber}
                   onChange={(e) => setAccountNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                  className={`w-full p-2.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] placeholder-slate-500 focus:outline-none focus:border-primary`}
+                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-lg text-sm text-ink-soft placeholder-slate-500 focus:outline-none focus:border-accent`}
                 />
               </div>
 
               <div>
-                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
-                  Tên chủ tài khoản
-                </label>
+                <label className={`block text-xs text-ink-muted mb-1.5`}>Tên chủ tài khoản</label>
                 <input
                   type="text"
                   placeholder="Nhập tên chủ tài khoản"
                   value={accountName}
                   onChange={(e) => setAccountName(e.target.value.toUpperCase())}
-                  className={`w-full p-2.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] placeholder-slate-500 focus:outline-none focus:border-primary`}
+                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-lg text-sm text-ink-soft placeholder-slate-500 focus:outline-none focus:border-accent`}
                 />
-                <p className={`text-[10px] text-[var(--text-muted)] mt-1`}>Viết hoa không dấu</p>
+                <p className={`text-[10px] text-ink-muted mt-1`}>Viết hoa không dấu</p>
               </div>
             </div>
           </div>

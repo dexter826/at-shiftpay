@@ -115,28 +115,28 @@ export const Dropdown: React.FC<DropdownProps> = ({
         onMouseEnter={() => chevronRef.current?.startAnimation()}
         onMouseLeave={() => chevronRef.current?.stopAnimation()}
         disabled={disabled}
-        className={`w-full h-full flex items-center gap-2 px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] hover:border-primary/50 focus:outline-none focus:border-primary disabled:opacity-50 transition-colors ${minWidth}`}
+        className={`w-full h-full flex items-center gap-2 px-3 py-2 bg-surface-2 border border-line rounded-lg text-sm text-ink-soft hover:border-accent/50 focus:outline-none focus:border-accent disabled:opacity-50 transition-colors ${minWidth}`}
       >
-        {icon && <span className="text-[var(--text-muted)]">{icon}</span>}
+        {icon && <span className="text-ink-muted">{icon}</span>}
         <span className="flex-1 text-left truncate">
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-          <ChevronIcon ref={chevronRef} size={16} className="text-[var(--text-muted)]" />
+          <ChevronIcon ref={chevronRef} size={16} className="text-ink-muted" />
         </motion.div>
       </button>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className={`absolute top-full left-0 right-0 mt-1 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg shadow-lg z-50 flex flex-col overflow-hidden`}
+            className={`absolute top-full left-0 right-0 mt-1 bg-surface border border-line rounded-lg shadow-lg z-50 flex flex-col overflow-hidden`}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.15 }}
           >
             {searchable && (
-              <div className={`p-2 border-b border-[var(--border-color)]`}>
+              <div className={`p-2 border-b border-line`}>
                 <div
                   className="relative"
                   onMouseEnter={() => searchIconRef.current?.startAnimation()}
@@ -145,7 +145,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   <MagnifierIcon
                     ref={searchIconRef}
                     size={14}
-                    className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]`}
+                    className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted`}
                   />
                   <input
                     ref={searchInputRef}
@@ -153,7 +153,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     placeholder={searchPlaceholder}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className={`w-full pl-8 pr-8 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-md text-xs text-[var(--text-secondary)] focus:outline-none focus:border-primary`}
+                    className={`w-full pl-8 pr-8 py-1.5 bg-surface-2 border border-line rounded-md text-xs text-ink-soft focus:outline-none focus:border-accent`}
                   />
                   {searchTerm && (
                     <button
@@ -161,7 +161,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                       onClick={() => setSearchTerm('')}
                       onMouseEnter={() => xIconRef.current?.startAnimation()}
                       onMouseLeave={() => xIconRef.current?.stopAnimation()}
-                      className={`absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-[var(--border-color)] text-[var(--text-muted)]`}
+                      className={`absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-line text-ink-muted`}
                     >
                       <XIcon ref={xIconRef} size={12} />
                     </button>
@@ -177,19 +177,19 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     type="button"
                     key={option.value}
                     onClick={() => handleSelect(option.value)}
-                    className={`w-full px-3 py-2.5 text-left text-sm transition-colors hover:bg-primary/10 ${value === option.value ? `bg-primary/10 text-primary font-medium` : `text-[var(--text-secondary)]`}`}
+                    className={`w-full px-3 py-2.5 text-left text-sm transition-colors hover:bg-accent/10 ${value === option.value ? `bg-accent/10 text-accent-ink font-medium` : `text-ink-soft`}`}
                   >
                     <div className="flex items-center gap-2 group/opt">
                       {option.icon && <span className="text-current">{option.icon}</span>}
                       <span className="flex-1 truncate">{option.label}</span>
                       {value === option.value && (
-                        <SimpleCheckedIcon size={14} className="text-primary" />
+                        <SimpleCheckedIcon size={14} className="text-accent-ink" />
                       )}
                     </div>
                   </button>
                 ))
               ) : (
-                <div className={`px-3 py-4 text-center text-xs text-[var(--text-muted)]`}>
+                <div className={`px-3 py-4 text-center text-xs text-ink-muted`}>
                   Không tìm thấy kết quả
                 </div>
               )}

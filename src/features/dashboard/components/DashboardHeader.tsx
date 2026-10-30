@@ -10,20 +10,20 @@ interface DashboardHeaderProps {
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({ user, onOpenExport }) => {
   return (
-    <div className={`hidden md:block py-4 px-6 border-b border-[var(--border-color)]`}>
+    <div className={`hidden md:block py-4 px-6 border-b border-line`}>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
           <img
             src={user?.photoURL || '/avatar.png'}
             alt="Avatar"
-            className="w-10 h-10 rounded-full object-cover border-2 border-primary"
+            className="w-10 h-10 rounded-full object-cover border-2 border-accent"
             onError={(e) => {
               e.currentTarget.src = '/avatar.png';
             }}
           />
           <div>
-            <p className={`text-sm text-[var(--text-secondary)]`}>Xin chào,</p>
-            <h2 className={`text-lg font-semibold text-[var(--text-primary)]`}>
+            <p className={`text-sm text-ink-soft`}>Xin chào,</p>
+            <h2 className={`text-lg font-semibold text-ink`}>
               {user?.displayName || user?.email?.split('@')[0] || 'Người dùng'}
             </h2>
           </div>

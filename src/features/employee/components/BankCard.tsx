@@ -16,22 +16,20 @@ const BankCard: React.FC<BankCardProps> = ({
 
   return (
     <div className="w-full max-w-[320px] aspect-[1.586/1] relative self-center isolate">
-      <div className="absolute inset-0 rounded-2xl shadow-2xl border border-[var(--border-color)] bg-[var(--bg-card)] overflow-hidden">
+      <div className="absolute inset-0 rounded-2xl shadow-2xl border border-line bg-surface overflow-hidden">
         <div className="relative h-full p-5 flex flex-col justify-between">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/10 rounded-full -ml-12 -mb-12 blur-xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 rounded-full -ml-12 -mb-12 blur-xl pointer-events-none" />
 
           <div>
             <div className="flex justify-between items-start mb-6">
               <div className="space-y-1">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-[var(--text-secondary)]">
+                <p className="text-[10px] uppercase tracking-widest font-bold text-ink-soft">
                   Hệ thống thanh toán
                 </p>
-                <h3 className="text-lg font-black italic tracking-tighter text-[var(--text-primary)]">
-                  {bankName}
-                </h3>
+                <h3 className="text-lg font-black italic tracking-tighter text-ink">{bankName}</h3>
               </div>
-              <div className="w-10 h-8 rounded-md bg-yellow-500 relative overflow-hidden border border-yellow-700/30 flex-shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.5)] text-yellow-900/80">
+              <div className="w-10 h-8 rounded-md bg-yellow-500 relative overflow-hidden border border-yellow-700/30 flex-shrink-0 shadow-inner text-yellow-900/80">
                 <svg
                   viewBox="0 0 40 32"
                   className="w-full h-full opacity-60 pointer-events-none"
@@ -51,10 +49,10 @@ const BankCard: React.FC<BankCardProps> = ({
             </div>
 
             <div className="mb-4">
-              <p className="text-[8px] uppercase tracking-widest mb-1 font-semibold text-[var(--text-muted)]">
+              <p className="text-[8px] uppercase tracking-widest mb-1 font-semibold text-ink-muted">
                 Số tài khoản
               </p>
-              <p className="text-xl font-mono font-bold tracking-[0.12em] text-[var(--text-primary)] drop-shadow-sm">
+              <p className="text-xl font-mono font-bold tracking-[0.12em] text-ink drop-shadow-sm">
                 {accountNumber}
               </p>
             </div>
@@ -62,12 +60,10 @@ const BankCard: React.FC<BankCardProps> = ({
 
           <div className="flex justify-between items-end">
             <div className="flex-1 min-w-0">
-              <p className="text-[8px] uppercase tracking-widest mb-0.5 font-semibold text-[var(--text-muted)]">
+              <p className="text-[8px] uppercase tracking-widest mb-0.5 font-semibold text-ink-muted">
                 Chủ tài khoản
               </p>
-              <p className="text-sm font-bold truncate uppercase text-[var(--text-primary)]">
-                {accountName}
-              </p>
+              <p className="text-sm font-bold truncate uppercase text-ink">{accountName}</p>
             </div>
 
             <div className="flex -space-x-3 opacity-95 flex-shrink-0">

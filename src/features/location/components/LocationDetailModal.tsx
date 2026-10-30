@@ -109,9 +109,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
         {/* Header Section */}
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start gap-4">
-            <h3
-              className={`text-2xl font-black tracking-tight text-[var(--text-primary)] leading-tight`}
-            >
+            <h3 className={`text-2xl font-black tracking-tight text-ink leading-tight`}>
               {location.name}
             </h3>
             {renderReviewBadge()}
@@ -126,7 +124,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
             {!hasCoords && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/10">
                 <span
-                  className={`bg-[var(--bg-card)] bg-opacity-90 px-4 py-2 rounded-lg text-xs font-bold text-[var(--text-primary)] shadow-sm border border-[var(--border-color)]`}
+                  className={`bg-surface bg-opacity-90 px-4 py-2 rounded-lg text-xs font-bold text-ink shadow-sm border border-line`}
                 >
                   Chưa có tọa độ chính xác
                 </span>
@@ -134,16 +132,16 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
             )}
             <button
               onClick={handleOpenInGoogleMaps}
-              className="absolute bottom-3 right-3 p-2.5 rounded-lg bg-[var(--bg-card)]/90 shadow-lg border border-white/20 hover:scale-105 transition-transform active:scale-95"
+              className="absolute bottom-3 right-3 p-2.5 rounded-lg bg-surface/90 shadow-lg border border-white/20 hover:scale-105 transition-transform active:scale-95"
               title="Mở trong Google Maps"
             >
               <ExternalLink size={20} className="text-blue-500" />
             </button>
           </div>
 
-          <div className="flex items-start gap-3 p-4 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
-            <MapPin size={20} className="text-primary shrink-0 mt-0.5" />
-            <span className={`text-sm leading-relaxed text-[var(--text-secondary)]`}>
+          <div className="flex items-start gap-3 p-4 rounded-2xl bg-surface-2 border border-line">
+            <MapPin size={20} className="text-accent-ink shrink-0 mt-0.5" />
+            <span className={`text-sm leading-relaxed text-ink-soft`}>
               {location.address || 'Địa chỉ chưa xác định'}
             </span>
           </div>
@@ -151,9 +149,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
           {location.reviewNote && (
             <div className="flex items-start gap-3 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 italic">
               <MessageSquare size={18} className="text-amber-500 shrink-0 mt-1" />
-              <p className={`text-sm text-[var(--text-secondary)] leading-relaxed`}>
-                "{location.reviewNote}"
-              </p>
+              <p className={`text-sm text-ink-soft leading-relaxed`}>"{location.reviewNote}"</p>
             </div>
           )}
         </div>
@@ -161,13 +157,11 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
         {/* History Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3 px-1">
-            <div className="h-px flex-1 bg-[var(--border-color)] opacity-30" />
-            <h4
-              className={`text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)]`}
-            >
+            <div className="h-px flex-1 bg-line opacity-30" />
+            <h4 className={`text-[10px] font-black uppercase tracking-[0.2em] text-ink-muted`}>
               Lịch sử công việc
             </h4>
-            <div className="h-px flex-1 bg-[var(--border-color)] opacity-30" />
+            <div className="h-px flex-1 bg-line opacity-30" />
           </div>
 
           <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
@@ -182,23 +176,19 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
                 return (
                   <div
                     key={event.id}
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-colors hover:bg-[var(--border-color)] border-[var(--border-color)]`}
+                    className={`flex items-center justify-between p-3 rounded-lg border transition-colors hover:bg-line border-line`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                      <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent-ink">
                         <Calendar size={20} />
                       </div>
                       <div>
-                        <div className={`text-sm font-bold text-[var(--text-primary)]`}>
-                          {event.title}
-                        </div>
-                        <div className={`text-[11px] text-[var(--text-secondary)]`}>
-                          {eventDate}
-                        </div>
+                        <div className={`text-sm font-bold text-ink`}>{event.title}</div>
+                        <div className={`text-[11px] text-ink-soft`}>{eventDate}</div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className={`text-xs font-black text-[var(--text-primary)]`}>
+                      <div className={`text-xs font-black text-ink`}>
                         {event.amount?.toLocaleString('vi-VN')}đ
                       </div>
                     </div>

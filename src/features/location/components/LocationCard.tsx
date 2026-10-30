@@ -51,7 +51,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
       onClick={() => onViewDetail(location)}
-      className={`group relative flex flex-col rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer bg-[var(--bg-card)] border border-[var(--border-color)]`}
+      className={`group relative flex flex-col rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer bg-surface border border-line`}
     >
       {/* Phần hình ảnh */}
       <div className="h-[200px] overflow-hidden relative">
@@ -65,7 +65,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
         {!hasCoords && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/10">
             <span
-              className={`bg-[var(--bg-card)] bg-opacity-90 px-4 py-2 rounded-lg text-xs font-bold text-[var(--text-primary)] shadow-sm border border-[var(--border-color)]`}
+              className={`bg-surface bg-opacity-90 px-4 py-2 rounded-lg text-xs font-bold text-ink shadow-sm border border-line`}
             >
               Chưa có địa chỉ chính xác
             </span>
@@ -110,12 +110,12 @@ const LocationCard: React.FC<LocationCardProps> = ({
       {/* Phần thông tin */}
       <div className="flex-1 p-5">
         <div className="space-y-1.5">
-          <h3 className={`text-lg font-bold text-[var(--text-primary)] leading-tight line-clamp-1`}>
+          <h3 className={`text-lg font-bold text-ink leading-tight line-clamp-1`}>
             {location.name}
           </h3>
           <div className="flex items-center gap-1.5">
             <MapPin size={14} className="text-blue-500 shrink-0" />
-            <span className={`text-xs text-[var(--text-secondary)] line-clamp-1`}>
+            <span className={`text-xs text-ink-soft line-clamp-1`}>
               {location.address || 'Địa chỉ chưa xác định'}
             </span>
           </div>
@@ -123,32 +123,24 @@ const LocationCard: React.FC<LocationCardProps> = ({
           {location.reviewNote ? (
             <div className="flex items-start gap-1.5 mt-2">
               <MessageSquare size={14} className="text-gray-400 shrink-0 mt-0.5" />
-              <p className={`text-xs text-[var(--text-muted)] line-clamp-2 italic`}>
+              <p className={`text-xs text-ink-muted line-clamp-2 italic`}>
                 "{location.reviewNote}"
               </p>
             </div>
           ) : (
             <div className="flex items-start gap-1.5 mt-2 opacity-50">
               <MessageSquare size={14} className="text-gray-300 shrink-0 mt-0.5" />
-              <p className={`text-xs text-[var(--text-muted)] italic`}>Chưa có ghi chú</p>
+              <p className={`text-xs text-ink-muted italic`}>Chưa có ghi chú</p>
             </div>
           )}
 
-          <div
-            className={`flex items-center gap-4 pt-3 mt-auto border-t border-[var(--border-color)]`}
-          >
+          <div className={`flex items-center gap-4 pt-3 mt-auto border-t border-line`}>
             <div className="flex flex-col">
-              <span className={`text-[10px] uppercase text-[var(--text-muted)] font-semibold`}>
-                Lịch sử
-              </span>
-              <span className={`text-sm font-bold text-[var(--text-primary)]`}>
-                {stats.workCount} ca làm
-              </span>
+              <span className={`text-[10px] uppercase text-ink-muted font-semibold`}>Lịch sử</span>
+              <span className={`text-sm font-bold text-ink`}>{stats.workCount} ca làm</span>
             </div>
             <div className="flex flex-col">
-              <span className={`text-[10px] uppercase text-[var(--text-muted)] font-semibold`}>
-                Đánh giá
-              </span>
+              <span className={`text-[10px] uppercase text-ink-muted font-semibold`}>Đánh giá</span>
               {location.review ? (
                 <span
                   className={`text-sm font-bold ${location.review === 'high' ? 'text-green-500' : 'text-red-500'}`}
@@ -156,7 +148,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
                   {location.review === 'high' ? 'Tốt' : 'Kém'}
                 </span>
               ) : (
-                <span className={`text-sm font-bold text-[var(--text-muted)]`}>Thường</span>
+                <span className={`text-sm font-bold text-ink-muted`}>Thường</span>
               )}
             </div>
           </div>

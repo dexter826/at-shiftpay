@@ -430,12 +430,12 @@ export const EventModal: React.FC<EventModalProps> = ({
         {/* Tên & Thời gian */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
+            <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
               Tên sự kiện
             </label>
             <div className="relative">
               <Type
-                className={`absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]`}
+                className={`absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted`}
                 size={18}
               />
               <input
@@ -450,14 +450,14 @@ export const EventModal: React.FC<EventModalProps> = ({
                 className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none ${
                   titleError
                     ? 'border-red-500 focus:border-red-500'
-                    : `border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`
+                    : `border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`
                 }`}
               />
             </div>
             {titleError && <p className="text-red-500 text-xs mt-1">{titleError}</p>}
           </div>
           <div>
-            <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
+            <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
               Thời gian bắt đầu
             </label>
             <TimePicker value={time} onChange={setTime} />
@@ -466,12 +466,10 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Địa điểm */}
         <div className="space-y-2">
-          <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
-            Địa điểm
-          </label>
+          <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>Địa điểm</label>
           <div className="relative">
             <MapPin
-              className={`absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]`}
+              className={`absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted`}
               size={18}
             />
             <input
@@ -479,7 +477,7 @@ export const EventModal: React.FC<EventModalProps> = ({
               placeholder="Nhập địa điểm"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`}
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`}
             />
           </div>
 
@@ -501,7 +499,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                   {/* Autocomplete Suggestions */}
                   {suggestions.length > 0 && (
                     <div
-                      className={`mt-1 border border-[var(--border-color)] rounded-lg overflow-hidden bg-[var(--bg-card)] shadow-sm max-h-32 overflow-y-auto`}
+                      className={`mt-1 border border-line rounded-lg overflow-hidden bg-surface shadow-sm max-h-32 overflow-y-auto`}
                     >
                       {suggestions.slice(0, 5).map((loc, idx) => (
                         <button
@@ -512,7 +510,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                             setReview(loc.review ?? undefined);
                             setReviewNote(loc.reviewNote || '');
                           }}
-                          className={`w-full px-3 py-2 text-left text-xs hover:bg-[var(--border-color)] transition-colors border-b last:border-0 border-[var(--border-color)] text-[var(--text-secondary)]`}
+                          className={`w-full px-3 py-2 text-left text-xs hover:bg-line transition-colors border-b last:border-0 border-line text-ink-soft`}
                         >
                           📍 {loc.name}
                         </button>
@@ -528,7 +526,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                           ? 'bg-red-500/10 border-red-500/20 text-red-600'
                           : exactMatch.review === 'high'
                             ? 'bg-green-500/10 border-green-500/20 text-green-600'
-                            : `bg-slate-500/10 border-slate-500/20 text-[var(--text-secondary)]`
+                            : `bg-slate-500/10 border-slate-500/20 text-ink-soft`
                       }`}
                     >
                       <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
@@ -556,23 +554,21 @@ export const EventModal: React.FC<EventModalProps> = ({
         </div>
 
         <div>
-          <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
-            Ghi chú
-          </label>
+          <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>Ghi chú</label>
           <div className="relative">
-            <FileText className={`absolute left-3 top-3 text-[var(--text-muted)]`} size={18} />
+            <FileText className={`absolute left-3 top-3 text-ink-muted`} size={18} />
             <textarea
               placeholder="Nhập ghi chú"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none h-20 resize-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`}
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none h-20 resize-none border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`}
             />
           </div>
         </div>
 
         {/* Đánh giá sự kiện */}
         <div>
-          <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
+          <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
             Đánh giá sự kiện
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -582,7 +578,7 @@ export const EventModal: React.FC<EventModalProps> = ({
               className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 review === 'high'
                   ? 'border-green-500/50 bg-green-500/10 text-green-500'
-                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+                  : `border-line text-ink-muted hover:border-accent/50`
               }`}
             >
               <ThumbsUp size={16} />
@@ -593,8 +589,8 @@ export const EventModal: React.FC<EventModalProps> = ({
               onClick={() => setReview(undefined)}
               className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 review === undefined
-                  ? 'border-primary/50 bg-primary/10 text-primary'
-                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+                  ? 'border-accent/50 bg-accent/10 text-accent-ink'
+                  : `border-line text-ink-muted hover:border-accent/50`
               }`}
             >
               <Minus size={16} />
@@ -606,7 +602,7 @@ export const EventModal: React.FC<EventModalProps> = ({
               className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 review === 'low'
                   ? 'border-red-500/50 bg-red-500/10 text-red-500'
-                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-red-500/50`
+                  : `border-line text-ink-muted hover:border-red-500/50`
               }`}
             >
               <ThumbsDown size={16} />
@@ -617,21 +613,21 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Lý do đánh giá */}
         <div className="space-y-1.5 pt-1">
-          <label className={`block text-xs font-semibold text-[var(--text-muted)]`}>
+          <label className={`block text-xs font-semibold text-ink-muted`}>
             Lý do đánh giá ({review === 'high' ? 'Tốt' : review === 'low' ? 'Kém' : 'Thường'})
           </label>
           <div className="relative">
-            <FileText className={`absolute left-3 top-3 text-[var(--text-muted)]`} size={18} />
+            <FileText className={`absolute left-3 top-3 text-ink-muted`} size={18} />
             <textarea
               placeholder="Nhập lý do hoặc nhận xét cụ thể..."
               value={reviewNote}
               onChange={(e) => setReviewNote(e.target.value)}
-              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none h-20 resize-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 ${
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none h-20 resize-none border-line bg-surface-2 text-ink placeholder-slate-500 ${
                 review === 'high'
                   ? 'focus:border-green-500/50'
                   : review === 'low'
                     ? 'focus:border-red-500/50'
-                    : 'focus:border-primary'
+                    : 'focus:border-accent'
               }`}
             />
           </div>
@@ -639,9 +635,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Chọn ca */}
         <div>
-          <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
-            Ca làm việc
-          </label>
+          <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>Ca làm việc</label>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
@@ -649,7 +643,7 @@ export const EventModal: React.FC<EventModalProps> = ({
               className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 selectedSession === 'morning'
                   ? 'border-orange-500/50 bg-orange-500/10 text-orange-500'
-                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+                  : `border-line text-ink-muted hover:border-accent/50`
               }`}
             >
               <Sun size={16} />
@@ -660,8 +654,8 @@ export const EventModal: React.FC<EventModalProps> = ({
               onClick={() => selectSession('afternoon')}
               className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 selectedSession === 'afternoon'
-                  ? 'border-primary/50 bg-primary/10 text-primary'
-                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+                  ? 'border-accent/50 bg-accent/10 text-accent-ink'
+                  : `border-line text-ink-muted hover:border-accent/50`
               }`}
             >
               <Moon size={16} />
@@ -674,37 +668,35 @@ export const EventModal: React.FC<EventModalProps> = ({
         {selectedSession && (
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
+              <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
                 Lương/người
               </label>
               <div className="relative">
                 <Banknote
                   size={18}
-                  className={`absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]`}
+                  className={`absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted`}
                 />
                 <input
                   type="number"
                   value={amount || ''}
                   onChange={(e) => setAmount(e.target.value === '' ? 0 : Number(e.target.value))}
-                  className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`}
+                  className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`}
                 />
               </div>
             </div>
             <div>
-              <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
-                Phụ phí
-              </label>
+              <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>Phụ phí</label>
               <div className="relative">
                 <Banknote
                   size={18}
-                  className={`absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]`}
+                  className={`absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted`}
                 />
                 <input
                   type="number"
                   value={surcharge || ''}
                   onChange={(e) => setSurcharge(e.target.value === '' ? 0 : Number(e.target.value))}
                   placeholder="0"
-                  className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`}
+                  className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`}
                 />
               </div>
             </div>
@@ -731,9 +723,9 @@ export const EventModal: React.FC<EventModalProps> = ({
                   value="equal"
                   checked={surchargeDistributionType === 'equal'}
                   onChange={() => setSurchargeDistributionType('equal')}
-                  className="accent-primary"
+                  className="accent-accent"
                 />
-                <span className={`text-sm text-[var(--text-secondary)]`}>Chia đều cho tất cả</span>
+                <span className={`text-sm text-ink-soft`}>Chia đều cho tất cả</span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer">
@@ -745,16 +737,16 @@ export const EventModal: React.FC<EventModalProps> = ({
                   onChange={() => {
                     setSurchargeDistributionType('selected');
                   }}
-                  className="accent-primary"
+                  className="accent-accent"
                 />
-                <span className={`text-sm text-[var(--text-secondary)]`}>Chọn người nhận</span>
+                <span className={`text-sm text-ink-soft`}>Chọn người nhận</span>
               </label>
             </div>
 
             {/* Danh sách người nhận */}
             {surchargeDistributionType === 'selected' && (
               <div
-                className={`border rounded-lg divide-y max-h-32 overflow-y-auto border-[var(--border-color)] divide-[var(--border-color)]`}
+                className={`border rounded-lg divide-y max-h-32 overflow-y-auto border-line divide-line`}
               >
                 {Object.entries(assignments)
                   .filter(([_, isAssigned]) => isAssigned)
@@ -768,22 +760,18 @@ export const EventModal: React.FC<EventModalProps> = ({
                       <div
                         key={empId}
                         onClick={() => toggleSurchargeEmployee(empId)}
-                        className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-primary/5 ${
-                          isSelected ? 'bg-primary/10' : ''
+                        className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-accent/5 ${
+                          isSelected ? 'bg-accent/10' : ''
                         }`}
                       >
                         <span
-                          className={`text-sm text-[var(--text-secondary)] ${
-                            isSelected ? 'font-medium' : ''
-                          }`}
+                          className={`text-sm text-ink-soft ${isSelected ? 'font-medium' : ''}`}
                         >
                           {emp.name}
                         </span>
                         <div
                           className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                            isSelected
-                              ? 'bg-primary border-primary'
-                              : 'border-[var(--border-color)]'
+                            isSelected ? 'bg-accent border-accent' : 'border-line'
                           }`}
                         >
                           {isSelected && <Check size={12} className="text-white" />}
@@ -796,7 +784,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
             {/* Hiển thị tính toán */}
             {surchargeDistributionType === 'selected' && (
-              <p className={`text-xs mt-2 text-[var(--text-muted)]`}>
+              <p className={`text-xs mt-2 text-ink-muted`}>
                 {Object.values(surchargeSelectedEmployees).filter(Boolean).length} người được chọn -{' '}
                 {getSurchargePerPerson().toLocaleString('vi-VN')} VND/người
               </p>
@@ -807,7 +795,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         {/* Danh sách nhân viên */}
         {selectedSession && (
           <div>
-            <label className={`block text-xs mb-1.5 text-[var(--text-muted)]`}>
+            <label className={`block text-xs mb-1.5 text-ink-muted`}>
               Chọn người làm ({getSelectedCount()})
             </label>
 

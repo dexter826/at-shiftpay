@@ -19,21 +19,21 @@ const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout })
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   return (
-    <div className="pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-dynamic">
+    <div className="pb-28 md:pb-0 bg-canvas min-h-dynamic">
       <div className="p-4 md:p-6 space-y-4">
         <AccountSection user={user} onChangePassword={() => setShowPasswordModal(true)} />
 
         {user?.uid && <WorkConfigSection userUid={user.uid} settings={settings} />}
 
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg overflow-hidden">
+        <div className="bg-surface border border-line rounded-lg overflow-hidden">
           <div className="flex items-center justify-between p-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 flex items-center justify-center rounded-md bg-[var(--border-color)] text-[var(--text-secondary)]">
+              <div className="w-8 h-8 flex items-center justify-center rounded-md bg-line text-ink-soft">
                 {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
               </div>
               <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">Giao diện</p>
-                <p className="text-[11px] text-[var(--text-muted)]">
+                <p className="text-sm font-medium text-ink">Giao diện</p>
+                <p className="text-[11px] text-ink-muted">
                   {theme === 'dark' ? 'Chế độ tối' : 'Chế độ sáng'}
                 </p>
               </div>
@@ -42,7 +42,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout })
           </div>
         </div>
 
-        <div className="bg-[var(--bg-card)] border border-red-500/20 rounded-lg overflow-hidden">
+        <div className="bg-surface border border-red-500/20 rounded-lg overflow-hidden">
           <button
             onClick={onLogout}
             className="w-full flex items-center gap-3 p-3.5 hover:bg-red-500/5 transition-colors text-left"

@@ -33,7 +33,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const inputStyle = `flex-1 ml-3 bg-transparent text-[var(--text-primary)] focus:outline-none text-sm`;
+  const inputStyle = `flex-1 ml-3 bg-transparent text-ink focus:outline-none text-sm`;
 
   const resetForm = () => {
     setCurrentPassword('');
@@ -159,13 +159,13 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
 
         {/* Mật khẩu hiện tại */}
         <div>
-          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>
+          <label className={`block text-xs font-medium text-ink-muted mb-1.5`}>
             Mật khẩu hiện tại
           </label>
           <div
-            className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}
+            className={`flex items-center border-b-2 border-line pb-2 transition-colors focus-within:border-accent`}
           >
-            <Lock size={18} className="text-[var(--text-muted)]" />
+            <Lock size={18} className="text-ink-muted" />
             <input
               type={showCurrentPassword ? 'text' : 'password'}
               value={currentPassword}
@@ -185,7 +185,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
                 if (showCurrentPassword) currentEyeOffRef.current?.stopAnimation();
                 else currentEyeRef.current?.stopAnimation();
               }}
-              className={`text-[var(--text-muted)] hover:text-primary transition-colors`}
+              className={`text-ink-muted hover:text-accent-ink transition-colors`}
             >
               {showCurrentPassword ? (
                 <EyeOffIcon ref={currentEyeOffRef} size={18} />
@@ -198,13 +198,11 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
 
         {/* Mật khẩu mới */}
         <div>
-          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>
-            Mật khẩu mới
-          </label>
+          <label className={`block text-xs font-medium text-ink-muted mb-1.5`}>Mật khẩu mới</label>
           <div
-            className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}
+            className={`flex items-center border-b-2 border-line pb-2 transition-colors focus-within:border-accent`}
           >
-            <Lock size={18} className="text-[var(--text-muted)]" />
+            <Lock size={18} className="text-ink-muted" />
             <input
               type={showNewPassword ? 'text' : 'password'}
               value={newPassword}
@@ -224,7 +222,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
                 if (showNewPassword) newEyeOffRef.current?.stopAnimation();
                 else newEyeRef.current?.stopAnimation();
               }}
-              className={`text-[var(--text-muted)] hover:text-primary transition-colors`}
+              className={`text-ink-muted hover:text-accent-ink transition-colors`}
             >
               {showNewPassword ? (
                 <EyeOffIcon ref={newEyeOffRef} size={18} />
@@ -237,13 +235,13 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
 
         {/* Xác nhận mật khẩu mới */}
         <div>
-          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>
+          <label className={`block text-xs font-medium text-ink-muted mb-1.5`}>
             Xác nhận mật khẩu mới
           </label>
           <div
-            className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}
+            className={`flex items-center border-b-2 border-line pb-2 transition-colors focus-within:border-accent`}
           >
-            <Lock size={18} className="text-[var(--text-muted)]" />
+            <Lock size={18} className="text-ink-muted" />
             <input
               type={showConfirmPassword ? 'text' : 'password'}
               value={confirmPassword}
@@ -263,7 +261,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
                 if (showConfirmPassword) confirmEyeOffRef.current?.stopAnimation();
                 else confirmEyeRef.current?.stopAnimation();
               }}
-              className={`text-[var(--text-muted)] hover:text-primary transition-colors`}
+              className={`text-ink-muted hover:text-accent-ink transition-colors`}
             >
               {showConfirmPassword ? (
                 <EyeOffIcon ref={confirmEyeOffRef} size={18} />

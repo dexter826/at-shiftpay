@@ -140,12 +140,12 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
     <Modal title="Xác nhận quyết toán" isOpen={isOpen} onClose={onClose}>
       <div className="space-y-6">
         <div
-          className={`p-6 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl flex flex-col items-center text-center`}
+          className={`p-6 bg-surface border border-line rounded-2xl flex flex-col items-center text-center`}
         >
           {isLoadingAdvances ? (
             <div className="py-4 space-y-3">
-              <Loader2 size={32} className="animate-spin text-primary mx-auto" />
-              <p className={`text-sm text-[var(--text-secondary)]`}>Đang kiểm tra dữ liệu...</p>
+              <Loader2 size={32} className="animate-spin text-accent-ink mx-auto" />
+              <p className={`text-sm text-ink-soft`}>Đang kiểm tra dữ liệu...</p>
             </div>
           ) : advancesError ? (
             <div className="py-4 space-y-3 text-red-500">
@@ -154,28 +154,26 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
             </div>
           ) : (
             <>
-              <div className="mb-4 p-3 bg-primary/10 rounded-full">
-                <Calculator size={32} className="text-primary" />
+              <div className="mb-4 p-3 bg-accent/10 rounded-full">
+                <Calculator size={32} className="text-accent-ink" />
               </div>
 
-              <h3 className={`text-lg font-medium text-[var(--text-primary)] mb-2`}>
+              <h3 className={`text-lg font-medium text-ink mb-2`}>
                 Quyết toán cho {employeeName}?
               </h3>
 
               <div className="my-4">
-                <p
-                  className={`text-sm text-[var(--text-secondary)] mb-1 uppercase tracking-wide font-medium`}
-                >
+                <p className={`text-sm text-ink-soft mb-1 uppercase tracking-wide font-medium`}>
                   Số tiền cần trả thêm
                 </p>
                 <p
-                  className={`text-3xl font-bold ${advanceBalance.balance >= 0 ? 'text-primary' : 'text-orange-500'}`}
+                  className={`text-3xl font-bold ${advanceBalance.balance >= 0 ? 'text-accent-ink' : 'text-orange-500'}`}
                 >
                   {formatCurrency(advanceBalance.balance)}
                 </p>
               </div>
 
-              <p className={`text-sm text-[var(--text-secondary)] max-w-xs mx-auto`}>
+              <p className={`text-sm text-ink-soft max-w-xs mx-auto`}>
                 Hành động này sẽ gạch nợ tất cả các khoản ứng và xác nhận thanh toán các ca làm việc
                 hiện tại.
               </p>

@@ -65,7 +65,7 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
       }
     >
       <div className="space-y-4">
-        <div className={`relative w-full h-64 bg-[var(--border-color)] rounded-lg overflow-hidden`}>
+        <div className={`relative w-full h-64 bg-line rounded-lg overflow-hidden`}>
           <Cropper
             image={image}
             crop={crop}
@@ -81,8 +81,8 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
 
         <div className="space-y-1">
           <div className="flex justify-between text-xs font-medium">
-            <span className="text-[var(--text-muted)]">Phóng to</span>
-            <span className="text-[var(--text-muted)]">{Math.round(zoom * 100)}%</span>
+            <span className="text-ink-muted">Phóng to</span>
+            <span className="text-ink-muted">{Math.round(zoom * 100)}%</span>
           </div>
           <input
             type="range"
@@ -92,11 +92,11 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
             step={0.1}
             aria-label="Phóng to"
             onChange={(e) => setZoom(Number(e.target.value))}
-            className={`w-full h-2 bg-[var(--border-color)] rounded-lg appearance-none cursor-pointer accent-primary`}
+            className={`w-full h-2 bg-line rounded-lg appearance-none cursor-pointer accent-accent`}
           />
         </div>
 
-        <p className={`text-xs text-[var(--text-muted)] text-center`}>
+        <p className={`text-xs text-ink-muted text-center`}>
           Kéo hình ảnh để canh chỉnh vùng hiển thị
         </p>
       </div>

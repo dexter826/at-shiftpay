@@ -79,16 +79,16 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
         <div className="flex justify-between items-center px-4 py-2 bg-slate-500/5 rounded-lg border border-dashed border-slate-500/10">
           <button
             onClick={() => setTempYear((prev) => prev - 1)}
-            className={`p-2 rounded-lg hover:bg-[var(--border-color)] transition-colors`}
+            className={`p-2 rounded-lg hover:bg-line transition-colors`}
           >
-            <ChevronLeft size={18} className="text-[var(--text-secondary)]" />
+            <ChevronLeft size={18} className="text-ink-soft" />
           </button>
-          <span className={`text-base font-bold text-[var(--text-primary)]`}>Năm {tempYear}</span>
+          <span className={`text-base font-bold text-ink`}>Năm {tempYear}</span>
           <button
             onClick={() => setTempYear((prev) => prev + 1)}
-            className={`p-2 rounded-lg hover:bg-[var(--border-color)] transition-colors`}
+            className={`p-2 rounded-lg hover:bg-line transition-colors`}
           >
-            <ChevronRight size={18} className="text-[var(--text-secondary)]" />
+            <ChevronRight size={18} className="text-ink-soft" />
           </button>
         </div>
 
@@ -108,14 +108,14 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
                                     py-3 rounded-lg text-xs font-semibold transition-all border
                                     ${
                                       isSelected
-                                        ? 'bg-primary text-white border-primary shadow-sm shadow-primary/20 scale-[0.98]'
+                                        ? 'bg-accent text-on-accent border-accent shadow-sm shadow-accent/20 scale-[0.98]'
                                         : `
                                             ${
                                               theme === 'dark'
                                                 ? 'bg-slate-800/40 hover:bg-slate-800 border-slate-700/50 text-slate-300'
                                                 : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600'
                                             }
-                                            ${isCurrentMonth ? 'border-primary/45 text-primary bg-primary/5' : ''}
+                                            ${isCurrentMonth ? 'border-accent/45 text-accent-ink bg-accent/5' : ''}
                                         `
                                     }
                                 `}

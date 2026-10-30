@@ -42,20 +42,20 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: number) => void }> = ({
   }, [toast.id, toast.duration, onRemove]);
 
   const icons = {
-    success: <CheckCircle size={18} className="text-primary" />,
+    success: <CheckCircle size={18} className="text-accent-ink" />,
     error: <XCircle size={18} className="text-red-500" />,
     warning: <AlertCircle size={18} className="text-amber-500" />,
   };
 
   const bgColors = {
-    success: 'bg-primary/10 border-primary/30',
+    success: 'bg-accent/10 border-accent/30',
     error: 'bg-red-500/10 border-red-500/30',
     warning: 'bg-amber-500/10 border-amber-500/30',
   };
 
   return (
     <motion.div
-      className={`flex items-center gap-3 px-4 py-3 rounded-lg border ${bgColors[toast.type]} shadow-lg bg-[var(--bg-card)]/90`}
+      className={`flex items-center gap-3 px-4 py-3 rounded-lg border ${bgColors[toast.type]} shadow-lg bg-surface/90`}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -63,10 +63,10 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: number) => void }> = ({
       layout
     >
       {icons[toast.type]}
-      <span className={`text-sm text-[var(--text-primary)] flex-1`}>{toast.message}</span>
+      <span className={`text-sm text-ink flex-1`}>{toast.message}</span>
       <button
         onClick={() => onRemove(toast.id)}
-        className={`text-[var(--text-muted)] hover:text-primary transition-colors`}
+        className={`text-ink-muted hover:text-accent-ink transition-colors`}
       >
         <X size={16} />
       </button>

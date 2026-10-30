@@ -37,15 +37,11 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
   }, [employees, searchTerm, initialSelectedIds, shiftCounts]);
 
   return (
-    <div
-      className={`border rounded-lg divide-y max-h-48 overflow-y-auto border-[var(--border-color)] divide-[var(--border-color)]`}
-    >
+    <div className={`border rounded-lg divide-y max-h-48 overflow-y-auto border-line divide-line`}>
       {employees.length === 0 ? (
-        <div className={`p-3 text-center text-xs text-[var(--text-muted)]`}>Chưa có nhân viên</div>
+        <div className={`p-3 text-center text-xs text-ink-muted`}>Chưa có nhân viên</div>
       ) : sortedEmployees.length === 0 ? (
-        <div className={`p-3 text-center text-xs text-[var(--text-muted)]`}>
-          Không tìm thấy nhân viên
-        </div>
+        <div className={`p-3 text-center text-xs text-ink-muted`}>Không tìm thấy nhân viên</div>
       ) : (
         sortedEmployees.map((employee) => {
           const shiftCount = shiftCounts[employee.id] || 0;
@@ -55,29 +51,25 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
             <div
               key={employee.id}
               onClick={() => onToggle(employee.id)}
-              className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-primary/5 ${
-                isSelected ? 'bg-primary/10' : ''
+              className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-accent/5 ${
+                isSelected ? 'bg-accent/10' : ''
               }`}
             >
               <div className="flex items-center gap-2 flex-1">
                 <span
-                  className={`text-sm truncate text-[var(--text-secondary)] ${
-                    isSelected ? 'font-medium' : ''
-                  }`}
+                  className={`text-sm truncate text-ink-soft ${isSelected ? 'font-medium' : ''}`}
                 >
                   {employee.name}
                 </span>
                 {shiftCount > 0 && (
-                  <span
-                    className={`text-xs px-1.5 py-0.5 rounded-full bg-[var(--border-color)] text-[var(--text-muted)]`}
-                  >
+                  <span className={`text-xs px-1.5 py-0.5 rounded-full bg-line text-ink-muted`}>
                     {shiftCount}
                   </span>
                 )}
               </div>
               <div
                 className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                  isSelected ? 'bg-primary border-primary' : 'border-[var(--border-color)]'
+                  isSelected ? 'bg-accent border-accent' : 'border-line'
                 }`}
               >
                 {isSelected && <Check size={12} className="text-white" />}

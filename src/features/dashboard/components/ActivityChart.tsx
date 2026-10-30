@@ -42,40 +42,40 @@ const TrendIndicator = ({ value }: { value: number | null }) => {
 
 const ActivityChart: React.FC<ActivityChartProps> = memo(
   ({ data, growthStats, monthName, onPrevMonth, onNextMonth, onGoToToday, onMonthClick }) => (
-    <div className="p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg min-h-[340px] flex flex-col">
+    <div className="p-4 bg-surface border border-line rounded-lg min-h-[340px] flex flex-col">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="flex items-center justify-between sm:block">
-          <h3 className="text-sm font-semibold text-[var(--text-primary)]">Hoạt động</h3>
+          <h3 className="text-sm font-semibold text-ink">Hoạt động</h3>
           <div className="flex items-center gap-2 mt-1 sm:mt-1">
             <TrendIndicator value={growthStats.eventGrowth} />
             <TrendIndicator value={growthStats.shiftGrowth} />
           </div>
         </div>
-        <div className="flex items-center justify-between sm:justify-start gap-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg p-0.5 w-full sm:w-auto">
+        <div className="flex items-center justify-between sm:justify-start gap-1 bg-surface-2 border border-line rounded-lg p-0.5 w-full sm:w-auto">
           <button
             onClick={onGoToToday}
-            className="flex-1 sm:flex-none px-2 py-1 text-[10px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded transition-colors whitespace-nowrap"
+            className="flex-1 sm:flex-none px-2 py-1 text-[10px] font-medium text-ink-soft hover:text-ink rounded transition-colors whitespace-nowrap"
           >
             Hôm nay
           </button>
-          <div className="h-3 w-px bg-[var(--border-color)] shrink-0" />
+          <div className="h-3 w-px bg-line shrink-0" />
           <button
             onClick={onPrevMonth}
             aria-label="Tháng trước"
-            className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded transition-colors shrink-0"
+            className="p-1 text-ink-muted hover:text-ink rounded transition-colors shrink-0"
           >
             <ChevronLeft size={14} />
           </button>
           <button
             onClick={onMonthClick}
-            className="flex-1 sm:flex-none text-[11px] font-medium text-[var(--text-primary)] min-w-[80px] text-center px-1 whitespace-nowrap"
+            className="flex-1 sm:flex-none text-[11px] font-medium text-ink min-w-[80px] text-center px-1 whitespace-nowrap"
           >
             {monthName}
           </button>
           <button
             onClick={onNextMonth}
             aria-label="Tháng sau"
-            className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded transition-colors shrink-0"
+            className="p-1 text-ink-muted hover:text-ink rounded transition-colors shrink-0"
           >
             <ChevronRight size={14} />
           </button>
@@ -88,17 +88,20 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
             <BarChart data={data} margin={{ top: 8, right: 4, left: -16, bottom: 0 }}>
               <XAxis
                 dataKey="day"
-                tick={{ fill: 'var(--text-muted)', fontSize: 10 }}
+                tick={{ fill: 'var(--color-ink-muted)', fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
                 dy={8}
               />
               <YAxis
-                tick={{ fill: 'var(--text-muted)', fontSize: 10 }}
+                tick={{ fill: 'var(--color-ink-muted)', fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
               />
-              <Tooltip content={<ChartTooltip />} cursor={{ fill: 'rgba(128,128,128,0.05)' }} />
+              <Tooltip
+                content={<ChartTooltip />}
+                cursor={{ fill: 'color-mix(in oklch, var(--color-line), transparent 85%)' }}
+              />
               <Bar
                 dataKey="events"
                 name="Sự kiện"
@@ -116,7 +119,7 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-full flex flex-col items-center justify-center gap-2 text-[var(--text-muted)]">
+          <div className="h-full flex flex-col items-center justify-center gap-2 text-ink-muted">
             <CalendarRange size={28} strokeWidth={1.5} />
             <p className="text-sm">Chưa có dữ liệu</p>
           </div>

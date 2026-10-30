@@ -34,10 +34,10 @@ const EmployeeToolbar: React.FC<EmployeeToolbarProps> = ({
   ];
 
   return (
-    <div className={`py-4 px-4 md:px-6 border-b border-[var(--border-color)]`}>
+    <div className={`py-4 px-4 md:px-6 border-b border-line`}>
       <div className="flex justify-between items-center">
         <div>
-          <h1 className={`text-lg font-semibold text-[var(--text-primary)]`}>
+          <h1 className={`text-lg font-semibold text-ink`}>
             {loading ? <Skeleton width={120} height={24} /> : `${employeeCount} nhân viên`}
           </h1>
         </div>

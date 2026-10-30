@@ -56,18 +56,18 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen
       }
     >
       <div className="space-y-4">
-        <p className={`text-sm text-[var(--text-secondary)]`}>
+        <p className={`text-sm text-ink-soft`}>
           Nhập email của bạn để nhận liên kết đặt lại mật khẩu.
         </p>
         <div>
-          <label className={`block text-xs text-[var(--text-secondary)] mb-1.5`}>Email</label>
+          <label className={`block text-xs text-ink-soft mb-1.5`}>Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Nhập email của bạn"
             autoComplete="email"
-            className={`w-full p-2.5 rounded-lg border focus:outline-none focus:border-primary bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-primary)]`}
+            className={`w-full p-2.5 rounded-lg border focus:outline-none focus:border-accent bg-surface-2 border-line text-ink`}
           />
         </div>
       </div>

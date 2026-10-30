@@ -40,15 +40,13 @@ const NavItem: React.FC<{
         ? 'flex-1 flex-col gap-0.5 py-1.5 rounded-lg text-[11px] leading-tight justify-center'
         : 'gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium justify-start'
     } ${
-      isActive
-        ? 'text-primary bg-primary/5'
-        : `text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--border-color)]`
+      isActive ? 'text-accent-ink bg-accent/5' : `text-ink-muted hover:text-ink-soft hover:bg-line`
     }`}
   >
     {isActive && !isMobile && (
       <motion.div
         layoutId="nav-indicator-desktop"
-        className="absolute left-0 top-2 bottom-2 w-[3px] bg-primary rounded-full"
+        className="absolute left-0 top-2 bottom-2 w-[3px] bg-accent rounded-full"
         transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
       />
     )}
@@ -66,16 +64,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
   return (
     <>
       {/* Desktop sidebar */}
-      <div className="hidden md:flex flex-col w-60 h-screen bg-[var(--bg-card)] border-r border-[var(--border-color)] fixed left-0 top-0 z-30 pt-safe">
-        <div className="p-5 border-b border-[var(--border-color)] flex flex-col items-center">
+      <div className="hidden md:flex flex-col w-60 h-screen bg-surface border-r border-line fixed left-0 top-0 z-30 pt-safe">
+        <div className="p-5 border-b border-line flex flex-col items-center">
           <img src="/logo_text.png" alt="ShiftPay" className="h-8 object-contain" />
-          <span className="text-[11px] text-[var(--text-muted)] mt-0.5">
+          <span className="text-[11px] text-ink-muted mt-0.5">
             Made by{' '}
             <a
               href="https://github.com/dexter826/dexter826"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors"
+              className="hover:text-accent-ink transition-colors"
             >
               MOB
             </a>
@@ -93,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
           ))}
         </nav>
 
-        <div className="p-4 border-t border-[var(--border-color)] flex items-center gap-1">
+        <div className="p-4 border-t border-line flex items-center gap-1">
           <button
             type="button"
             onClick={onLogout}
@@ -103,12 +101,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
             <span>Đăng xuất</span>
           </button>
 
-          <div className="w-px h-6 bg-[var(--border-color)]" />
+          <div className="w-px h-6 bg-line" />
 
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex items-center justify-center w-10 h-10 rounded-lg transition-colors text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--border-color)]"
+            className="flex items-center justify-center w-10 h-10 rounded-lg transition-colors text-ink-muted hover:text-ink-soft hover:bg-line"
             title={theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
           >
             {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
@@ -118,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
 
       {/* Mobile bottom nav */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[var(--bg-card)] border-t border-[var(--border-color)] flex items-center z-40 pb-safe px-4"
+        className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface border-t border-line flex items-center z-40 pb-safe px-4"
         aria-label="Điều hướng chính"
       >
         <div className="absolute inset-x-4 top-0 pointer-events-none">
@@ -132,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
                 animate={{ x: `${idx * 100}%` }}
                 transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
               >
-                <div className="w-8 h-[3px] bg-primary rounded-full" />
+                <div className="w-8 h-[3px] bg-accent rounded-full" />
               </motion.div>
             ) : null;
           })()}

@@ -95,7 +95,7 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
             aria-modal="true"
             aria-labelledby={titleId}
             tabIndex={-1}
-            className={`bg-[var(--bg-primary)] w-full md:max-w-md md:rounded-lg rounded-t-lg max-h-[85vh] flex flex-col border border-[var(--border-color)] outline-none`}
+            className={`bg-canvas w-full md:max-w-md md:rounded-lg rounded-t-lg max-h-[85vh] flex flex-col border border-line outline-none`}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
@@ -103,9 +103,9 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
           >
             {/* Tiêu đề */}
             <div
-              className={`px-4 py-3 border-b border-[var(--border-color)] flex justify-between items-center flex-shrink-0`}
+              className={`px-4 py-3 border-b border-line flex justify-between items-center flex-shrink-0`}
             >
-              <h3 id={titleId} className={`text-base font-semibold text-[var(--text-primary)]`}>
+              <h3 id={titleId} className={`text-base font-semibold text-ink`}>
                 {title}
               </h3>
               <button
@@ -113,7 +113,7 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
                 onMouseEnter={() => closeIconRef.current?.startAnimation()}
                 onMouseLeave={() => closeIconRef.current?.stopAnimation()}
                 aria-label="Đóng"
-                className={`p-2 text-[var(--text-muted)] hover:text-[var(--text-secondary)] rounded-md hover:bg-[var(--border-color)] transition-colors`}
+                className={`p-2 text-ink-muted hover:text-ink-soft rounded-md hover:bg-line transition-colors`}
               >
                 <XIcon ref={closeIconRef} size={18} />
               </button>
@@ -124,9 +124,7 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
 
             {/* Chân trang */}
             {footer && (
-              <div className={`px-4 py-3 border-t border-[var(--border-color)] flex-shrink-0`}>
-                {footer}
-              </div>
+              <div className={`px-4 py-3 border-t border-line flex-shrink-0`}>{footer}</div>
             )}
           </motion.div>
         </motion.div>

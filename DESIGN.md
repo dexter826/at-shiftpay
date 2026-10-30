@@ -1,30 +1,34 @@
 ---
-version: 0.1-draft
+version: '1.0'
 name: ShiftPay — Thẻ ca
-description: Warm graphite timecard direction with a single signal-amber accent, dense tabular data, flat bordered surfaces, and Be Vietnam Pro throughout. Dark is the default theme; light is a warm paper variant.
+description: Warm graphite timecard direction with a single signal-amber accent, dense tabular data, flat bordered surfaces, and Be Vietnam Pro throughout. Dark is the default theme; light is a warm paper variant. Semantic tokens live in the Tailwind v4 theme; primitives are palette steps and are never used directly.
 colors:
-  bg: oklch(0.17 0.006 80)
+  canvas: oklch(0.17 0.006 80)
   surface: oklch(0.21 0.008 80)
   surface-2: oklch(0.25 0.009 80)
-  border: oklch(0.31 0.01 80)
-  text: oklch(0.94 0.008 85)
-  text-muted: oklch(0.69 0.01 85)
+  line: oklch(0.31 0.01 80)
+  ink: oklch(0.94 0.008 85)
+  ink-soft: oklch(0.78 0.01 85)
+  ink-muted: oklch(0.63 0.01 85)
   accent: oklch(0.79 0.145 82)
+  accent-ink: oklch(0.82 0.14 82)
   on-accent: oklch(0.2 0.015 80)
   success: oklch(0.74 0.13 150)
   warning: oklch(0.82 0.14 92)
   danger: oklch(0.66 0.17 27)
   info: oklch(0.72 0.1 240)
-  bg-light: oklch(0.965 0.005 85)
+  canvas-light: oklch(0.965 0.005 85)
   surface-light: oklch(0.995 0.002 85)
   surface-2-light: oklch(0.94 0.006 85)
-  border-light: oklch(0.87 0.008 85)
-  text-light: oklch(0.24 0.012 80)
-  text-muted-light: oklch(0.48 0.01 80)
+  line-light: oklch(0.87 0.008 85)
+  ink-light: oklch(0.24 0.012 80)
+  ink-soft-light: oklch(0.42 0.01 80)
+  ink-muted-light: oklch(0.52 0.01 80)
   accent-light: oklch(0.76 0.15 82)
+  accent-ink-light: oklch(0.55 0.15 82)
   on-accent-light: oklch(0.2 0.015 80)
   success-light: oklch(0.53 0.13 150)
-  warning-light: oklch(0.62 0.14 92)
+  warning-light: oklch(0.55 0.14 92)
   danger-light: oklch(0.55 0.19 27)
   info-light: oklch(0.5 0.1 240)
 typography:
@@ -80,55 +84,57 @@ spacing:
   10: 40px
 components:
   button-primary:
-    backgroundColor: "{colors.accent}"
-    textColor: "{colors.on-accent}"
-    typography: "{typography.body-sm}"
-    rounded: "{rounded.sm}"
+    backgroundColor: '{colors.accent}'
+    textColor: '{colors.on-accent}'
+    typography: '{typography.body-sm}'
+    rounded: '{rounded.sm}'
     padding: 9px 14px
   button-ghost:
     backgroundColor: transparent
-    textColor: "{colors.text-muted}"
-    typography: "{typography.body-sm}"
-    rounded: "{rounded.sm}"
+    textColor: '{colors.ink-muted}'
+    typography: '{typography.body-sm}'
+    rounded: '{rounded.sm}'
     padding: 9px 14px
   icon-button:
     backgroundColor: transparent
-    textColor: "{colors.text-muted}"
-    rounded: "{rounded.sm}"
+    textColor: '{colors.ink-muted}'
+    rounded: '{rounded.sm}'
     size: 38px
   card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.text}"
-    rounded: "{rounded.md}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.ink}'
+    rounded: '{rounded.md}'
     padding: 16px
   stat-card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.text}"
-    rounded: "{rounded.md}"
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.ink}'
+    rounded: '{rounded.md}'
     padding: 14px 16px
   status-chip:
-    backgroundColor: "{colors.surface-2}"
-    textColor: "{colors.text-muted}"
-    typography: "{typography.label}"
-    rounded: "{rounded.xs}"
+    backgroundColor: '{colors.surface-2}'
+    textColor: '{colors.ink-muted}'
+    typography: '{typography.label}'
+    rounded: '{rounded.xs}'
     padding: 3px 8px
   nav-item-active:
-    backgroundColor: "{colors.surface-2}"
-    textColor: "{colors.text}"
-    rounded: "{rounded.sm}"
+    backgroundColor: '{colors.surface-2}'
+    textColor: '{colors.ink}'
+    rounded: '{rounded.sm}'
     padding: 9px 10px
   table-row:
-    textColor: "{colors.text}"
-    typography: "{typography.body-sm}"
+    textColor: '{colors.ink}'
+    typography: '{typography.body-sm}'
 ---
 
 ## Overview
 
 Thẻ ca (timecard) treats ShiftPay as the place where hours become money. The visual reference is the punch clock and the shift board: warm graphite surfaces, one signal-amber accent that behaves like a stamped mark, hairline structure, and figures set in tabular numerals so columns of hours and đồng align. The interface is dense but calm — managers scan it daily, so density is the feature, not a compromise. Dark is the default; light is a warm paper variant with the same structure.
 
+Two token tiers back this: raw palette steps (graphite, paper, amber, status, illustration) exist only as primitive values, and the semantic roles below are the only tokens components may reference. The illustration palette is separate and exists purely for artwork such as the loader truck and avatar.
+
 ## Colors
 
-Semantic roles only. The accent is a signal, not a surface: it appears on the primary action, the active navigation marker, the current-day chart bar, and focus rings — nowhere else. Text never sits on the accent except `on-accent` (dark ink), which replaces the previous white-on-amber failure. Status colors carry state and nothing else. Both themes are AA-checked: body text 14.9–16.0:1, muted 5.9–6.9:1, accent buttons 8.3–9.3:1.
+Semantic roles only. The accent is a signal, not a surface: it appears on the primary action, the active navigation marker, the current-day chart bar, and focus rings — nowhere else. Text never sits on the accent except `on-accent` (dark ink), which replaces the previous white-on-amber failure. `accent-ink` is the accent's text-safe variant for links and labels, dark enough to read on light surfaces. Status colors carry state and nothing else. Both themes clear AA: body text 14.9–16.2:1, secondary text 5.1–8.9:1, accent buttons 8.3–9.3:1, status text at least 4.7:1 on surfaces.
 
 ## Typography
 
@@ -140,22 +146,23 @@ Desktop uses a 248px sidebar and a 32px main gutter; content stacks at 12px gaps
 
 ## Elevation & Depth
 
-Flat by design. Hierarchy comes from three surface steps (bg → surface → surface-2) and 1px borders, never from shadows. Dashed separators mark list rows, matching the perforated edge of a timecard.
+Flat by design. Hierarchy comes from three surface steps (canvas → surface → surface-2) and 1px lines, never from shadows. Dashed separators mark list rows, matching the perforated edge of a timecard.
 
 ## Shapes
 
-Small radii: 3px for chips, 4px for buttons and navigation, 6px for cards. Borders are 1px. Nothing is pill-shaped except avatars; nothing is fully square either — the geometry should read as an index card, not a spreadsheet.
+Small radii: 3px for chips, 4px for buttons and navigation, 6px for cards. Borders are 1px. Nothing is pill-shaped except avatars; nothing is fully square either — the geometry should read as an index card, not a spreadsheet. Motion is short and quiet: 140ms for state changes, 200ms for larger surfaces, standard ease-out; reduced-motion is respected globally.
 
 ## Components
 
-Buttons are 4px-radius, 13px/600 text, 9px × 14px padding; primary uses accent with dark ink, ghost uses a border and muted text that brightens on hover. Cards and stat cards share surface, border, and radius, differing only in padding. Status chips are 3px-radius, surface-2, with a 6px colored square dot and a 12px label; the dot carries the status color, never a tinted pill. Active navigation is surface-2 with a 2px inset accent bar. Table rows use body-sm with tabular numerals for hours and money.
+Buttons are 4px-radius, 13px/600 text, 9px × 14px padding; primary uses accent with dark ink, ghost uses a line and muted text that brightens on hover. Cards and stat cards share surface, 1px line, and radius, differing only in padding. Status chips are 3px-radius, surface-2, with a 6px colored square dot and a 12px label; the dot carries the status color, never a tinted pill. Active navigation is surface-2 with a 2px inset accent bar. Table rows use body-sm with tabular numerals for hours and money.
 
 ## Do's and Don'ts
 
-- Do reference semantic roles (`bg`, `surface`, `text-muted`, `accent`) instead of raw values.
+- Do reference semantic roles (`canvas`, `surface`, `ink`, `ink-muted`, `accent`, `accent-ink`, status tokens) instead of raw values or palette steps.
 - Do keep figures tabular; hours and đồng must align vertically.
 - Do keep the accent scarce: one primary action per view.
 - Don't put white text on the accent; use `on-accent` ink.
-- Don't add shadows, gradients, or glass effects — depth is borders and surface steps.
+- Don't add shadows, gradients, or glass effects — depth is lines and surface steps.
 - Don't use uppercase labels, serif display faces, or decorative numbering.
 - Don't introduce a second accent color; status colors are not accents.
+- Don't use the illustration palette for UI roles.

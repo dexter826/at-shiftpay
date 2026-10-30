@@ -85,30 +85,22 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
     >
       <div className="space-y-4">
         {/* 1. Thời gian & Địa điểm */}
-        <div
-          className={`p-3 rounded-lg border border-[var(--border-color)] bg-[var(--border-color)] space-y-3`}
-        >
+        <div className={`p-3 rounded-lg border border-line bg-line space-y-3`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Calendar size={15} className="text-primary" />
-              <span className={`text-sm font-medium text-[var(--text-primary)]`}>
-                {formatDate(event.date)}
-              </span>
+              <Calendar size={15} className="text-accent-ink" />
+              <span className={`text-sm font-medium text-ink`}>{formatDate(event.date)}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock size={15} className="text-primary" />
-              <span className={`text-sm font-medium text-[var(--text-primary)]`}>
-                {event.time || '--:--'}
-              </span>
+              <Clock size={15} className="text-accent-ink" />
+              <span className={`text-sm font-medium text-ink`}>{event.time || '--:--'}</span>
             </div>
           </div>
 
           {locationInfo && (
-            <div
-              className={`flex items-start gap-2 pt-2 border-t border-dashed border-[var(--border-color)]`}
-            >
-              <MapPin size={15} className="text-primary mt-0.5 flex-shrink-0" />
-              <span className={`text-sm font-medium text-[var(--text-secondary)] leading-tight`}>
+            <div className={`flex items-start gap-2 pt-2 border-t border-dashed border-line`}>
+              <MapPin size={15} className="text-accent-ink mt-0.5 flex-shrink-0" />
+              <span className={`text-sm font-medium text-ink-soft leading-tight`}>
                 {locationInfo.name}
               </span>
             </div>
@@ -117,22 +109,20 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
 
         {/* 2. Tài chính */}
         <div
-          className={`p-3.5 bg-[var(--border-color)] border border-[var(--border-color)] rounded-lg flex items-center justify-between`}
+          className={`p-3.5 bg-line border border-line rounded-lg flex items-center justify-between`}
         >
           <div>
-            <p
-              className={`text-[11px] text-[var(--text-muted)] font-semibold uppercase tracking-wider mb-1`}
-            >
+            <p className={`text-[11px] text-ink-muted font-semibold uppercase tracking-wider mb-1`}>
               Tổng tiền sự kiện
             </p>
-            <p className={`text-2xl font-black text-primary`}>
+            <p className={`text-2xl font-black text-accent-ink`}>
               {formatCurrency(eventShifts.reduce((sum, shift) => sum + shift.amount, 0))}
             </p>
           </div>
           <div className="text-right space-y-1">
             <div className="flex items-center justify-end gap-1.5">
-              <span className={`text-[11px] text-[var(--text-muted)]`}>Lương:</span>
-              <span className={`text-xs font-bold text-[var(--text-primary)]`}>
+              <span className={`text-[11px] text-ink-muted`}>Lương:</span>
+              <span className={`text-xs font-bold text-ink`}>
                 {formatCurrency(
                   eventShifts.reduce((sum, shift) => sum + shiftBreakdown(shift, event).base, 0)
                 )}
@@ -153,7 +143,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               </div>
             )}
             {event.surchargeDistribution && (event.surcharge ?? 0) > 0 && (
-              <p className={`text-[10px] text-[var(--text-muted)] italic`}>
+              <p className={`text-[10px] text-ink-muted italic`}>
                 (
                 {event.surchargeDistribution.type === 'equal'
                   ? 'Chia đều'
@@ -186,7 +176,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                 </div>
                 {locationInfo.reviewNote && (
                   <div
-                    className={`text-xs italic leading-relaxed font-medium ${locationInfo.review === 'high' ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}
+                    className={`text-xs italic leading-relaxed font-medium ${locationInfo.review === 'high' ? 'text-success' : 'text-danger'}`}
                   >
                     "{locationInfo.reviewNote}"
                   </div>
@@ -195,16 +185,14 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
             )}
 
             {event.note && (
-              <div className={`p-3 rounded-lg border border-[var(--border-color)] bg-slate-500/5`}>
+              <div className={`p-3 rounded-lg border border-line bg-slate-500/5`}>
                 <p
-                  className={`text-[11px] text-[var(--text-muted)] font-bold uppercase tracking-wider mb-1.5 flex items-center gap-1.5`}
+                  className={`text-[11px] text-ink-muted font-bold uppercase tracking-wider mb-1.5 flex items-center gap-1.5`}
                 >
                   <StickyNote size={12} />
                   Ghi chú sự kiện
                 </p>
-                <p className={`text-sm text-[var(--text-secondary)] leading-relaxed`}>
-                  {event.note}
-                </p>
+                <p className={`text-sm text-ink-soft leading-relaxed`}>{event.note}</p>
               </div>
             )}
           </div>
@@ -214,9 +202,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
         {eventShifts.length > 0 && (
           <div className="space-y-2">
             <div className="flex justify-between items-center px-1">
-              <p
-                className={`text-[11px] text-[var(--text-muted)] font-bold uppercase tracking-wider`}
-              >
+              <p className={`text-[11px] text-ink-muted font-bold uppercase tracking-wider`}>
                 Nhân viên ({eventShifts.length})
               </p>
             </div>
@@ -228,14 +214,14 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                   key={shift.id}
                   className={`flex flex-col gap-0.5 p-2 ${theme === 'dark' ? 'bg-slate-800/50 border-slate-700/50' : 'bg-white border-slate-100'} border rounded-lg shadow-sm`}
                 >
-                  <span className={`text-xs font-semibold text-[var(--text-primary)] truncate`}>
+                  <span className={`text-xs font-semibold text-ink truncate`}>
                     {shift.employeeName}
                   </span>
                   <div className="flex items-center gap-1.5">
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${shift.session === 'morning' ? 'bg-orange-400' : 'bg-primary'}`}
+                      className={`w-1.5 h-1.5 rounded-full ${shift.session === 'morning' ? 'bg-orange-400' : 'bg-accent'}`}
                     ></span>
-                    <span className={`text-[9px] font-medium text-[var(--text-muted)]`}>
+                    <span className={`text-[9px] font-medium text-ink-muted`}>
                       {shift.session === 'morning' ? 'Sáng' : 'Chiều'}
                     </span>
                   </div>

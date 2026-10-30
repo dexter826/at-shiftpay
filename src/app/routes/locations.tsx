@@ -175,7 +175,7 @@ const LocationView: React.FC<LocationViewProps> = ({
   };
 
   return (
-    <div className={`pb-28 bg-[var(--bg-primary)] min-h-screen px-4 pt-5 md:px-6 md:pt-6 md:pb-8`}>
+    <div className={`pb-28 bg-canvas min-h-screen px-4 pt-5 md:px-6 md:pt-6 md:pb-8`}>
       <div className="w-full space-y-6">
         {/* Header & Stats */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -185,21 +185,15 @@ const LocationView: React.FC<LocationViewProps> = ({
                 onClick={onBack}
                 onMouseEnter={() => backIconRef.current?.startAnimation()}
                 onMouseLeave={() => backIconRef.current?.stopAnimation()}
-                className={`p-2 rounded-full transition-colors hover:bg-[var(--border-color)] flex items-center justify-center`}
+                className={`p-2 rounded-full transition-colors hover:bg-line flex items-center justify-center`}
                 title="Quay lại"
               >
-                <ArrowNarrowLeftIcon
-                  ref={backIconRef}
-                  size={20}
-                  className="text-[var(--text-primary)]"
-                />
+                <ArrowNarrowLeftIcon ref={backIconRef} size={20} className="text-ink" />
               </button>
             )}
             <div>
-              <h2 className={`text-xl font-semibold text-[var(--text-primary)]`}>
-                Quản lý địa điểm
-              </h2>
-              <p className={`text-sm text-[var(--text-secondary)] mt-0.5`}>
+              <h2 className={`text-xl font-semibold text-ink`}>Quản lý địa điểm</h2>
+              <p className={`text-sm text-ink-soft mt-0.5`}>
                 Danh sách các địa điểm và đánh giá chất lượng.
               </p>
             </div>
@@ -273,7 +267,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           </div>
         }
       >
-        <p className={`text-sm text-[var(--text-secondary)]`}>
+        <p className={`text-sm text-ink-soft`}>
           Bạn có chắc chắn muốn xóa địa điểm này? Hành động này không thể hoàn tác.
         </p>
       </Modal>

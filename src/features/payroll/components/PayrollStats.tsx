@@ -26,7 +26,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
   totalAdvancedShifts,
 }) => {
   return (
-    <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
+    <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
       {/* Mobile UI */}
       <div className="block md:hidden">
         {/* Tổng đã làm - Lên trên */}
@@ -65,9 +65,9 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
         </div>
 
         {/* Tình hình lương + Đã ứng (2 cột) */}
-        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-primary/20">
+        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-accent/20">
           <div className="text-center flex flex-col items-center">
-            <p className="text-xs text-primary uppercase tracking-wide">Tình hình lương</p>
+            <p className="text-xs text-accent-ink uppercase tracking-wide">Tình hình lương</p>
             <AnimatePresence mode="wait">
               {loading ? (
                 <motion.div
@@ -87,13 +87,13 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="text-lg font-bold text-primary mt-1 tabular-nums"
+                  className="text-lg font-bold text-accent-ink mt-1 tabular-nums"
                 >
                   {formatCurrency(totalDebt)}
                 </motion.p>
               )}
             </AnimatePresence>
-            <p className="text-xs text-primary">{totalUnpaidShifts} công</p>
+            <p className="text-xs text-accent-ink">{totalUnpaidShifts} công</p>
           </div>
 
           <div className="text-center flex flex-col items-center">
@@ -117,15 +117,13 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`text-lg font-bold mt-1 tabular-nums ${totalAdvanced > 0 ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}
+                  className={`text-lg font-bold mt-1 tabular-nums ${totalAdvanced > 0 ? 'text-orange-500' : 'text-ink-muted'}`}
                 >
                   {formatCurrency(totalAdvanced)}
                 </motion.p>
               )}
             </AnimatePresence>
-            <p
-              className={`text-xs ${totalAdvanced > 0 ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}
-            >
+            <p className={`text-xs ${totalAdvanced > 0 ? 'text-orange-500' : 'text-ink-muted'}`}>
               {totalAdvancedShifts} công
             </p>
           </div>
@@ -138,7 +136,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
           <div className="grid grid-cols-3 gap-6">
             {/* Tình hình lương */}
             <div>
-              <p className="text-xs text-primary uppercase tracking-wide">Tình hình lương</p>
+              <p className="text-xs text-accent-ink uppercase tracking-wide">Tình hình lương</p>
               <AnimatePresence mode="wait">
                 {loading ? (
                   <motion.div
@@ -158,13 +156,13 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="text-2xl font-bold text-primary mt-1"
+                    className="text-2xl font-bold text-accent-ink mt-1"
                   >
                     {formatCurrency(totalDebt)}
                   </motion.p>
                 )}
               </AnimatePresence>
-              <p className="text-xs text-primary mt-1">{totalUnpaidShifts} công</p>
+              <p className="text-xs text-accent-ink mt-1">{totalUnpaidShifts} công</p>
             </div>
 
             {/* Đã ứng */}
@@ -189,14 +187,14 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className={`text-2xl font-bold mt-1 ${totalAdvanced > 0 ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}
+                    className={`text-2xl font-bold mt-1 ${totalAdvanced > 0 ? 'text-orange-500' : 'text-ink-muted'}`}
                   >
                     {formatCurrency(totalAdvanced)}
                   </motion.p>
                 )}
               </AnimatePresence>
               <p
-                className={`text-xs mt-1 ${totalAdvanced > 0 ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}
+                className={`text-xs mt-1 ${totalAdvanced > 0 ? 'text-orange-500' : 'text-ink-muted'}`}
               >
                 {totalAdvancedShifts} công
               </p>
@@ -236,7 +234,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
             </div>
           </div>
         </div>
-        <Wallet2 size={24} className="text-primary/50" />
+        <Wallet2 size={24} className="text-accent-ink/50" />
       </div>
     </div>
   );

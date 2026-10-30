@@ -30,15 +30,13 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   );
 
   return (
-    <div
-      className={`flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]`}
-    >
+    <div className={`flex items-center justify-between px-4 py-3 border-b border-line`}>
       <div className="flex items-center gap-1">
         <button
           onClick={onGoToToday}
           onMouseEnter={() => todayIconRef.current?.startAnimation()}
           onMouseLeave={() => todayIconRef.current?.stopAnimation()}
-          className={`px-2.5 py-1.5 text-[11px] font-medium rounded border border-[var(--border-color)] hover:bg-[var(--border-color)] transition-colors mr-1 flex items-center gap-1`}
+          className={`px-2.5 py-1.5 text-[11px] font-medium rounded border border-line hover:bg-line transition-colors mr-1 flex items-center gap-1`}
         >
           <CalendarIcon ref={todayIconRef} size={12} />
           Hôm nay
@@ -48,7 +46,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
           aria-label="Tháng trước"
           onMouseEnter={() => prevMonthRef.current?.startAnimation()}
           onMouseLeave={() => prevMonthRef.current?.stopAnimation()}
-          className={`p-2 text-[var(--text-muted)] hover:bg-[var(--border-color)] rounded transition-colors`}
+          className={`p-2 text-ink-muted hover:bg-line rounded transition-colors`}
         >
           <ChevronLeftIcon ref={prevMonthRef} size={18} />
         </button>
@@ -57,12 +55,12 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
           aria-label="Tháng sau"
           onMouseEnter={() => nextMonthRef.current?.startAnimation()}
           onMouseLeave={() => nextMonthRef.current?.stopAnimation()}
-          className={`p-2 text-[var(--text-muted)] hover:bg-[var(--border-color)] rounded transition-colors`}
+          className={`p-2 text-ink-muted hover:bg-line rounded transition-colors`}
         >
           <ChevronRightIcon ref={nextMonthRef} size={18} />
         </button>
       </div>
-      <h3 className={`text-sm font-medium text-[var(--text-primary)] capitalize`}>{monthLabel}</h3>
+      <h3 className={`text-sm font-medium text-ink capitalize`}>{monthLabel}</h3>
       <div className="flex items-center gap-1">
         {onNavigateToReviews && (
           <button
@@ -70,7 +68,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
             title="Quản lý địa điểm"
             onMouseEnter={() => locationManagerRef.current?.startAnimation()}
             onMouseLeave={() => locationManagerRef.current?.stopAnimation()}
-            className={`h-9 w-9 flex items-center justify-center hover:bg-[var(--border-color)] rounded transition-colors text-primary`}
+            className={`h-9 w-9 flex items-center justify-center hover:bg-line rounded transition-colors text-accent-ink`}
           >
             <MapPinIcon ref={locationManagerRef} size={18} />
           </button>

@@ -197,13 +197,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   }, [selectedDate, shifts]);
 
   return (
-    <div className={`pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-screen relative`}>
+    <div className={`pb-28 md:pb-0 bg-canvas min-h-screen relative`}>
       <div className="px-4 pt-5 pb-4 md:px-6 md:pt-6 md:pb-6 flex flex-col lg:flex-row gap-4 lg:gap-6 lg:h-[calc(100vh-3rem)]">
         {/* Calendar Main */}
         <div className="flex-1">
-          <div
-            className={`bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg lg:h-full flex flex-col`}
-          >
+          <div className={`bg-surface border border-line rounded-lg lg:h-full flex flex-col`}>
             <CalendarHeader
               displayDate={displayDate}
               onPrevMonth={prevMonth}
@@ -279,7 +277,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           </div>
         }
       >
-        <p className="text-sm text-[var(--text-secondary)]">Bạn có chắc muốn xóa sự kiện này?</p>
+        <p className="text-sm text-ink-soft">Bạn có chắc muốn xóa sự kiện này?</p>
       </Modal>
 
       <EventDetailModal
