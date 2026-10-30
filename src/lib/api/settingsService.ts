@@ -10,9 +10,26 @@ import {
   getDocs,
   writeBatch,
   deleteDoc,
+  limit,
 } from 'firebase/firestore';
 import { UserSettings, DEFAULT_SETTINGS } from '@/types/index';
 import { UserSettingsSchema } from '@/utils/validation';
+
+const USER_DATA_COLLECTIONS = ['employees', 'locations', 'events', 'shifts', 'payments'] as const;
+const DELETE_CHUNK_SIZE = 400;
+
+async function deleteUserCollection(collectionName: string, userId: string): Promise<void> {
+  for (;;) {
+    const snapshot = await getDocs(
+      query(collection(db, collectionName), where('userId', '==', userId), limit(DELETE_CHUNK_SIZE))
+    );
+    if (snapshot.empty) return;
+
+    const batch = writeBatch(db);
+    snapshot.forEach((document) => batch.delete(document.ref));
+    await batch.commit();
+  }
+}
 
 export const settingsService = {
   subscribeSettings(
@@ -53,21 +70,11 @@ export const settingsService = {
 
   async deleteUserAccountData(userId: string): Promise<void> {
     try {
-      const batch = writeBatch(db);
+      await deleteDoc(doc(db, 'settings', userId));
 
-      batch.delete(doc(db, 'settings', userId));
-
-      const collections = ['employees', 'locations', 'events', 'shifts', 'payments'];
-
-      for (const collName of collections) {
-        const q = query(collection(db, collName), where('userId', '==', userId));
-        const snapshot = await getDocs(q);
-        snapshot.forEach((doc) => {
-          batch.delete(doc.ref);
-        });
+      for (const collectionName of USER_DATA_COLLECTIONS) {
+        await deleteUserCollection(collectionName, userId);
       }
-
-      await batch.commit();
     } catch (error) {
       console.error('deleteUserAccountData error:', error);
       throw new Error(
