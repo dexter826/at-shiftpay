@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/ToastProvider';
 import Button from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { useAuthStore } from '@/stores/authStore';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface DeleteAccountModalProps {
   isOpen: boolean;
@@ -77,25 +78,21 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             className="flex-1"
             disabled={!canDelete || isDeleting}
           >
-            {isDeleting ? (
-              <Loader2 size={18} className="animate-spin mr-2" />
-            ) : (
-              <Trash2 size={18} className="mr-2" />
-            )}
+            {isDeleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
             {isDeleting ? 'Đang xóa...' : 'Xác nhận xóa'}
           </Button>
         </div>
       }
     >
       <div className="space-y-4">
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-red-500/10 text-red-500 mb-2">
-          <AlertTriangle size={24} className="flex-shrink-0" />
-          <p className="text-sm font-medium">
-            Hành động này <span className="font-bold uppercase underline">không thể hoàn tác</span>!
+        <div className="flex items-center gap-3 p-3 rounded-sm border border-danger/30 bg-danger/5 text-ink mb-2">
+          <AlertTriangle size={24} className="flex-shrink-0 text-danger" />
+          <p className="text-body-sm font-medium">
+            Hành động này <span className="font-semibold underline">không thể hoàn tác</span>!
           </p>
         </div>
 
-        <p className={`text-sm text-ink-muted leading-relaxed`}>
+        <p className={`text-body-sm text-ink-muted leading-relaxed`}>
           Toàn bộ dữ liệu về nhân viên, ca làm, sự kiện và lịch sử thanh toán của bạn sẽ bị xóa vĩnh
           viễn khỏi hệ thống.
         </p>
@@ -103,9 +100,9 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
         <div className="pt-2">
           <label
             htmlFor="delete-account-confirm"
-            className={`block text-sm font-medium text-ink mb-2`}
+            className={`block text-label font-medium text-ink-muted mb-2`}
           >
-            Nhập <span className="font-bold text-red-500">"{REQUIRED_CONFIRM_TEXT}"</span> để xác
+            Nhập <span className="font-semibold text-danger">"{REQUIRED_CONFIRM_TEXT}"</span> để xác
             nhận:
           </label>
           <input
@@ -114,7 +111,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
             placeholder={REQUIRED_CONFIRM_TEXT}
-            className={`w-full px-4 py-3 rounded-lg border border-line bg-transparent text-ink focus:outline-none focus:border-red-500 transition-colors text-sm`}
+            className={`w-full px-3 py-2.5 min-h-10 rounded-sm border border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard text-body-sm ${focusRingOnSurfaceClasses}`}
             autoFocus
           />
         </div>
@@ -122,7 +119,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
         <div>
           <label
             htmlFor="delete-account-password"
-            className={`block text-sm font-medium text-ink mb-2`}
+            className={`block text-label font-medium text-ink-muted mb-2`}
           >
             Mật khẩu hiện tại
           </label>
@@ -133,9 +130,9 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
             placeholder="Nhập mật khẩu để xác thực lại"
-            className={`w-full px-4 py-3 rounded-lg border border-line bg-transparent text-ink focus:outline-none focus:border-red-500 transition-colors text-sm`}
+            className={`w-full px-3 py-2.5 min-h-10 rounded-sm border border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard text-body-sm ${focusRingOnSurfaceClasses}`}
           />
-          <p className={`mt-2 text-xs text-ink-muted`}>
+          <p className={`mt-2 text-body-sm text-ink-muted`}>
             Cần xác thực lại mật khẩu trước khi xóa vĩnh viễn.
           </p>
         </div>

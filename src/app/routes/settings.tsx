@@ -14,6 +14,9 @@ interface SettingsViewProps {
   onLogout: () => void;
 }
 
+const rowFocus =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset';
+
 const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout }) => {
   const { theme } = useThemeStore();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -25,15 +28,15 @@ const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout })
 
         {user?.uid && <WorkConfigSection userUid={user.uid} settings={settings} />}
 
-        <div className="bg-surface border border-line rounded-lg overflow-hidden">
+        <div className="bg-surface border border-line rounded-md overflow-hidden">
           <div className="flex items-center justify-between p-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 flex items-center justify-center rounded-md bg-line text-ink-soft">
+              <div className="w-8 h-8 flex items-center justify-center rounded-sm bg-surface-2 text-ink-soft">
                 {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
               </div>
               <div>
-                <p className="text-sm font-medium text-ink">Giao diện</p>
-                <p className="text-[11px] text-ink-muted">
+                <p className="text-body-sm font-medium text-ink">Giao diện</p>
+                <p className="text-label font-medium text-ink-muted">
                   {theme === 'dark' ? 'Chế độ tối' : 'Chế độ sáng'}
                 </p>
               </div>
@@ -42,17 +45,18 @@ const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout })
           </div>
         </div>
 
-        <div className="bg-surface border border-red-500/20 rounded-lg overflow-hidden">
+        <div className="bg-surface border border-line rounded-md overflow-hidden">
           <button
+            type="button"
             onClick={onLogout}
-            className="w-full flex items-center gap-3 p-3.5 hover:bg-red-500/5 transition-colors text-left"
+            className={`w-full flex items-center gap-3 p-3.5 hover:bg-danger/5 transition-colors duration-fast ease-standard text-left ${rowFocus}`}
           >
-            <div className="w-8 h-8 flex items-center justify-center rounded-md bg-red-500/10 text-red-500">
+            <div className="w-8 h-8 flex items-center justify-center rounded-sm bg-surface-2 text-danger">
               <LogOut size={16} />
             </div>
             <div>
-              <p className="text-sm font-medium text-red-500">Đăng xuất</p>
-              <p className="text-[11px] text-red-400/70">Kết thúc phiên làm việc</p>
+              <p className="text-body-sm font-medium text-ink">Đăng xuất</p>
+              <p className="text-label font-medium text-ink-muted">Kết thúc phiên làm việc</p>
             </div>
           </button>
         </div>

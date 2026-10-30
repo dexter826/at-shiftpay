@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { AlertCircle, Check, Eye, EyeOff, Lock } from 'lucide-react';
+import { AlertCircle, Check, CheckCircle, Eye, EyeOff, Lock } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 
@@ -23,7 +23,8 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const inputStyle = `flex-1 ml-3 bg-transparent text-ink focus:outline-none text-sm`;
+  const inputStyle = `flex-1 min-w-0 bg-transparent text-ink placeholder:text-ink-muted focus:outline-none text-body-sm`;
+  const fieldGroupStyle = `flex items-center gap-2 px-3 min-h-10 rounded-sm border border-line bg-surface-2 transition-colors duration-fast ease-standard focus-within:border-ink-muted focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-surface`;
 
   const resetForm = () => {
     setCurrentPassword('');
@@ -134,40 +135,43 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
           autoComplete="username"
         />
         {error && (
-          <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-sm rounded-lg">
-            <AlertCircle size={16} />
+          <div className="flex items-center gap-2 p-3 bg-danger/5 border border-danger/30 text-ink text-body-sm rounded-sm">
+            <AlertCircle size={16} className="shrink-0 text-danger" />
             <p>{error}</p>
           </div>
         )}
 
         {success && (
-          <div className="flex items-center gap-2 p-3 bg-green-500/10 border border-green-500/20 text-green-500 text-sm rounded-lg">
-            <AlertCircle size={16} />
+          <div className="flex items-center gap-2 p-3 bg-success/5 border border-success/20 text-success text-body-sm rounded-sm">
+            <CheckCircle size={16} className="shrink-0" />
             <p>{success}</p>
           </div>
         )}
 
         {/* Mật khẩu hiện tại */}
         <div>
-          <label className={`block text-xs font-medium text-ink-muted mb-1.5`}>
+          <label
+            htmlFor="change-current-password"
+            className={`block text-label font-medium text-ink-muted mb-1.5`}
+          >
             Mật khẩu hiện tại
           </label>
-          <div
-            className={`flex items-center border-b-2 border-line pb-2 transition-colors focus-within:border-accent`}
-          >
-            <Lock size={18} className="text-ink-muted" />
+          <div className={fieldGroupStyle}>
+            <Lock size={18} className="text-ink-muted shrink-0" />
             <input
+              id="change-current-password"
               type={showCurrentPassword ? 'text' : 'password'}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               className={inputStyle}
               placeholder="Nhập mật khẩu hiện tại"
+              autoComplete="current-password"
             />
             <button
               type="button"
-              tabIndex={-1}
               onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-              className={`text-ink-muted hover:text-accent-ink transition-colors`}
+              aria-label={showCurrentPassword ? 'Ẩn mật khẩu hiện tại' : 'Hiện mật khẩu hiện tại'}
+              className={`flex h-10 w-10 items-center justify-center rounded-xs text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
             >
               {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -176,23 +180,28 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
 
         {/* Mật khẩu mới */}
         <div>
-          <label className={`block text-xs font-medium text-ink-muted mb-1.5`}>Mật khẩu mới</label>
-          <div
-            className={`flex items-center border-b-2 border-line pb-2 transition-colors focus-within:border-accent`}
+          <label
+            htmlFor="change-new-password"
+            className={`block text-label font-medium text-ink-muted mb-1.5`}
           >
-            <Lock size={18} className="text-ink-muted" />
+            Mật khẩu mới
+          </label>
+          <div className={fieldGroupStyle}>
+            <Lock size={18} className="text-ink-muted shrink-0" />
             <input
+              id="change-new-password"
               type={showNewPassword ? 'text' : 'password'}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className={inputStyle}
               placeholder="Nhập mật khẩu mới (min 6 ký tự)"
+              autoComplete="new-password"
             />
             <button
               type="button"
-              tabIndex={-1}
               onClick={() => setShowNewPassword(!showNewPassword)}
-              className={`text-ink-muted hover:text-accent-ink transition-colors`}
+              aria-label={showNewPassword ? 'Ẩn mật khẩu mới' : 'Hiện mật khẩu mới'}
+              className={`flex h-10 w-10 items-center justify-center rounded-xs text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
             >
               {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -201,25 +210,28 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
 
         {/* Xác nhận mật khẩu mới */}
         <div>
-          <label className={`block text-xs font-medium text-ink-muted mb-1.5`}>
+          <label
+            htmlFor="change-confirm-password"
+            className={`block text-label font-medium text-ink-muted mb-1.5`}
+          >
             Xác nhận mật khẩu mới
           </label>
-          <div
-            className={`flex items-center border-b-2 border-line pb-2 transition-colors focus-within:border-accent`}
-          >
-            <Lock size={18} className="text-ink-muted" />
+          <div className={fieldGroupStyle}>
+            <Lock size={18} className="text-ink-muted shrink-0" />
             <input
+              id="change-confirm-password"
               type={showConfirmPassword ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className={inputStyle}
               placeholder="Nhập lại mật khẩu mới"
+              autoComplete="new-password"
             />
             <button
               type="button"
-              tabIndex={-1}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className={`text-ink-muted hover:text-accent-ink transition-colors`}
+              aria-label={showConfirmPassword ? 'Ẩn mật khẩu xác nhận' : 'Hiện mật khẩu xác nhận'}
+              className={`flex h-10 w-10 items-center justify-center rounded-xs text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
             >
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
