@@ -138,11 +138,11 @@ Semantic roles only. The accent is a signal, not a surface: it appears on the pr
 
 ## Typography
 
-One family — Be Vietnam Pro — chosen for Vietnamese diacritics. Display is 24px/600, data figures 26px/600 with tabular numerals, body 15px/400, labels 12px/500. Negative tracking is capped at -0.02em and used only on short numerals or headings; running Vietnamese text keeps normal spacing so diacritics never collide. No all-caps labels, no eyebrow labels.
+One family — Be Vietnam Pro — chosen for Vietnamese diacritics. Display is 24px/600, data figures 26px/600 with tabular numerals, body 15px/400, labels 12px/500. These are theme text tokens: `text-display`, `text-title`, `text-body`, `text-body-sm`, `text-label`, `text-data`. Negative tracking is capped at -0.02em and used only on short numerals or headings; running Vietnamese text keeps normal spacing so diacritics never collide. No all-caps labels, no eyebrow labels.
 
 ## Layout
 
-Desktop uses a 248px sidebar and a 32px main gutter; content stacks at 12px gaps, larger sections at 20px. Stats form a four-column band (two columns on mobile); the dashboard pairs a wide chart card with a narrow list card. Mobile drops the sidebar for a compact top strip with icon-only navigation and 16px page padding. Every control is at least 38px tall; primary actions sit in the page header.
+Desktop uses a 248px sidebar and a 32px main gutter; content stacks at 12px gaps, larger sections at 20px. Spacing uses Tailwind's 4px spacing scale. Stats form a four-column band (two columns on mobile); the dashboard pairs a wide chart card with a narrow list card. Mobile drops the sidebar for a compact top strip with icon-only navigation and 16px page padding. Every control is at least 38px tall; primary actions sit in the page header.
 
 ## Elevation & Depth
 
@@ -150,7 +150,7 @@ Flat by design. Hierarchy comes from three surface steps (canvas → surface →
 
 ## Shapes
 
-Small radii: 3px for chips, 4px for buttons and navigation, 6px for cards. Borders are 1px. Nothing is pill-shaped except avatars; nothing is fully square either — the geometry should read as an index card, not a spreadsheet. Motion is short and quiet: 140ms for state changes, 200ms for larger surfaces, standard ease-out; reduced-motion is respected globally.
+Small radii: 3px for chips, 4px for buttons and navigation, 6px for cards. Borders are 1px. Nothing is pill-shaped except avatars; nothing is fully square either — the geometry should read as an index card, not a spreadsheet. Motion is short and quiet: 140ms for state changes (`duration-fast`), 200ms for larger surfaces (`duration-base`), `ease-standard`; reduced-motion is respected globally.
 
 ## Components
 

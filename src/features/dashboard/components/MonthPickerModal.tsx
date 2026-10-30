@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
-import { useThemeStore } from '@/stores/themeStore';
 
 interface MonthPickerModalProps {
   isOpen: boolean;
@@ -20,8 +19,6 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
   selectedDate,
   onChange,
 }) => {
-  const theme = useThemeStore((state) => state.theme);
-
   const [tempYear, setTempYear] = useState<number>(selectedDate.getFullYear());
 
   useEffect(() => {
@@ -76,17 +73,17 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
     >
       <div className="space-y-6 py-2">
         {/* Chọn năm */}
-        <div className="flex justify-between items-center px-4 py-2 bg-slate-500/5 rounded-lg border border-dashed border-slate-500/10">
+        <div className="flex justify-between items-center px-4 py-2 bg-surface-2 rounded-lg border border-dashed border-line">
           <button
             onClick={() => setTempYear((prev) => prev - 1)}
-            className={`p-2 rounded-lg hover:bg-line transition-colors`}
+            className={`p-2 rounded-lg hover:bg-surface-2 transition-colors`}
           >
             <ChevronLeft size={18} className="text-ink-soft" />
           </button>
           <span className={`text-base font-bold text-ink`}>Năm {tempYear}</span>
           <button
             onClick={() => setTempYear((prev) => prev + 1)}
-            className={`p-2 rounded-lg hover:bg-line transition-colors`}
+            className={`p-2 rounded-lg hover:bg-surface-2 transition-colors`}
           >
             <ChevronRight size={18} className="text-ink-soft" />
           </button>
@@ -110,12 +107,8 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
                                       isSelected
                                         ? 'bg-accent text-on-accent border-accent shadow-sm shadow-accent/20 scale-[0.98]'
                                         : `
-                                            ${
-                                              theme === 'dark'
-                                                ? 'bg-slate-800/40 hover:bg-slate-800 border-slate-700/50 text-slate-300'
-                                                : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600'
-                                            }
-                                            ${isCurrentMonth ? 'border-accent/45 text-accent-ink bg-accent/5' : ''}
+                                            ${'bg-surface-2 hover:bg-surface border-line text-ink-soft'}
+                                            ${isCurrentMonth ? 'border-accent/45 text-accent-ink' : ''}
                                         `
                                     }
                                 `}

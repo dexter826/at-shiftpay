@@ -27,7 +27,7 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id }) => 
           } peer-focus-visible:ring-2 peer-focus-visible:ring-accent/20`}
         >
           {checked && (
-            <Check size={12} className="text-white absolute inset-0 m-auto" strokeWidth={3} />
+            <Check size={12} className="text-on-accent absolute inset-0 m-auto" strokeWidth={3} />
           )}
         </div>
       </div>

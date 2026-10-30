@@ -25,3 +25,14 @@
 - `DESIGN.md` finalized at v1.0 against the real tokens.
 - Verification (static only, per user): `tsc --noEmit`, `eslint .`, `vite build` pass; built CSS contains the semantic tokens and both theme override blocks; audit finds 0 legacy token references, 0 hex/rgba literals in source outside token definitions, and 0 `[var(--…)]` utility classes.
 - Not verified here: per-screen visual QA (tickets 10–16); theme switching and pre-paint are ticket 04.
+
+2026-10-30 — Review fixes (post code-review).
+
+- White-on-accent remnants removed: checkbox, calendar day icons, payment modal selection marks, settlement button, sidebar add button, offline banner now use `on-accent`; status fills with `on-accent` ink measure 4.8–10.1:1.
+- Accent no longer carries status or tinted surfaces: unpaid status maps to warning; active nav, today cell, toast states, and month-picker states use `surface-2`/semantic status tokens.
+- Ten flagged files converted from raw Tailwind palette to semantic tokens. Remaining raw palette (~100 occurrences across 28 screen files) is deferred to screen tickets 10–16.
+- Illustration colors exposed as semantic `--color-illustration-*` aliases; components no longer read `--palette-*` directly.
+- Added `--color-ring`, a text scale (`text-display/title/body/body-sm/label/data`), and `duration-fast`/`duration-base` utilities backed by motion tokens; base transitions consume them. Removed unused `light` variant and `text-2xs`.
+- Dead `${'…'}` interpolations cleaned from PaymentModal; unused theme hooks removed from calendar sidebar, event detail, month picker, and skeleton.
+- ADR 0002 consequence updated (`useThemeStyles` touched by the rename, still unused); DESIGN.md typography/motion/spacing reference the real token utilities; PWA theme-color aligned to the dark canvas hex (meta tags cannot reference CSS variables).
+- Re-verified statically: `tsc` 0, `eslint` 0, `vite build` 0; built CSS contains `duration-fast`, `duration-base`, `text-display`, `ease-standard`, and illustration utilities; zero legacy tokens, hex literals, arbitrary `[var(--…)]` classes, or white-on-accent pairs in source.

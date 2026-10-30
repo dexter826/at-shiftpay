@@ -47,7 +47,7 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
           )}
           {selectedEmployeeSummary && selectedEmployeeSummary.advancedCount > 0 && (
             <Button onClick={onSettlement} className="flex-1">
-              <Calculator size={16} className="text-white" />
+              <Calculator size={16} className="text-on-accent" />
               Quyết toán
             </Button>
           )}
@@ -98,7 +98,7 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
                 return (
                   <div
                     key={s.id}
-                    className={`flex justify-between items-center p-3 border rounded-lg hover:bg-line border-line`}
+                    className={`flex justify-between items-center p-3 border rounded-lg hover:bg-surface-2 border-line`}
                   >
                     <div className="flex items-center gap-3">
                       <Calendar size={16} className="text-orange-500" />
@@ -149,7 +149,7 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
               return (
                 <div
                   key={s.id}
-                  className={`flex justify-between items-center p-3 border rounded-lg hover:bg-line border-line`}
+                  className={`flex justify-between items-center p-3 border rounded-lg hover:bg-surface-2 border-line`}
                 >
                   <div className="flex items-center gap-3">
                     <Calendar size={16} className="text-ink-muted" />

@@ -14,4 +14,4 @@ The UI layer was ad hoc: color variables without spacing, radius, shadow, or mot
 - The token commit is large and mechanical (663 arbitrary-value classes plus 68 hex literals) and changes every screen at once, because values change even where markup does not.
 - Tailwind v4 raises the browser floor (Safari 16.4+, Chrome 111+, Firefox 128+) and replaces the JS theme config with `@theme`; the PostCSS setup changes with it.
 - Contrast on the primary accent (white text on `#ecb52d`) fails today; the new palette must clear WCAG AA in both themes.
-- `src/hooks/useThemeStyles.ts` is pre-existing dead code, noted but left alone by this work.
+- `src/hooks/useThemeStyles.ts` is pre-existing dead code; the token rename rewrote its strings so they stay valid, but it remains unused.

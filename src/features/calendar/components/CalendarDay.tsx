@@ -34,8 +34,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
         isSelected
           ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
           : isToday
-            ? 'bg-accent/10 text-accent-ink font-bold ring-2 ring-accent/20'
-            : `${isCurrentMonth ? 'text-ink' : 'text-ink-muted opacity-40'} hover:bg-line`
+            ? 'bg-surface-2 text-accent-ink font-bold ring-2 ring-line'
+            : `${isCurrentMonth ? 'text-ink' : 'text-ink-muted opacity-40'} hover:bg-surface-2`
       }`}
     >
       <span className="relative z-10">{date.getDate()}</span>
@@ -59,9 +59,15 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
             return (
               <div key={i} className="flex items-center">
                 {loc?.review === 'high' ? (
-                  <ThumbsUp size={10} className={isSelected ? 'text-white' : 'text-green-500'} />
+                  <ThumbsUp
+                    size={10}
+                    className={isSelected ? 'text-on-accent' : 'text-green-500'}
+                  />
                 ) : loc?.review === 'low' ? (
-                  <ThumbsDown size={10} className={isSelected ? 'text-white' : 'text-red-500'} />
+                  <ThumbsDown
+                    size={10}
+                    className={isSelected ? 'text-on-accent' : 'text-red-500'}
+                  />
                 ) : (
                   <div
                     className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white/60' : 'bg-accent/60'}`}

@@ -40,7 +40,7 @@ const NavItem: React.FC<{
         ? 'flex-1 flex-col gap-0.5 py-1.5 rounded-lg text-[11px] leading-tight justify-center'
         : 'gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium justify-start'
     } ${
-      isActive ? 'text-accent-ink bg-accent/5' : `text-ink-muted hover:text-ink-soft hover:bg-line`
+      isActive ? 'text-ink bg-surface-2' : `text-ink-muted hover:text-ink-soft hover:bg-surface-2`
     }`}
   >
     {isActive && !isMobile && (
@@ -101,12 +101,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
             <span>Đăng xuất</span>
           </button>
 
-          <div className="w-px h-6 bg-line" />
+          <div className="w-px h-6 bg-surface-2" />
 
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex items-center justify-center w-10 h-10 rounded-lg transition-colors text-ink-muted hover:text-ink-soft hover:bg-line"
+            className="flex items-center justify-center w-10 h-10 rounded-lg transition-colors text-ink-muted hover:text-ink-soft hover:bg-surface-2"
             title={theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
           >
             {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}

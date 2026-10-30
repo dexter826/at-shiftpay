@@ -15,7 +15,7 @@ export const ValidationError: React.FC<ValidationErrorProps> = ({ message }) => 
         transition={{ duration: 0.2 }}
         className="overflow-hidden"
       >
-        <p className="text-red-500 text-xs ml-1 font-medium leading-tight">{message}</p>
+        <p className="text-danger text-xs ml-1 font-medium leading-tight">{message}</p>
       </motion.div>
     )}
   </AnimatePresence>

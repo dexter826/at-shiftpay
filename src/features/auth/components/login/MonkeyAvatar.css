@@ -48,7 +48,7 @@
   width: calc(var(--sz-svg) / 3.889);
   height: calc(var(--sz-svg) / 5.833);
   border: 0;
-  border-bottom: calc(var(--sz-svg) * (4 / 100)) solid var(--palette-avatar-feature);
+  border-bottom: calc(var(--sz-svg) * (4 / 100)) solid var(--color-illustration-feature);
   bottom: 20%;
   position: absolute;
   transition: all 0.2s ease;
@@ -59,7 +59,7 @@
   width: calc(var(--sz-svg) * (9 / 100));
   height: 0;
   border-radius: 50%;
-  border-bottom: calc(var(--sz-svg) * (10 / 100)) solid var(--palette-avatar-feature);
+  border-bottom: calc(var(--sz-svg) * (10 / 100)) solid var(--color-illustration-feature);
 }
 
 .monkey-avatar.is-focusing:not(.is-blind) svg#monkey {

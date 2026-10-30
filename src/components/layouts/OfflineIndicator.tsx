@@ -34,14 +34,14 @@ export const OfflineIndicator: React.FC = () => {
       {show && (
         <motion.div
           className={`fixed top-0 left-0 right-0 z-50 pt-safe ${
-            isOnline ? 'bg-emerald-600' : 'bg-red-600'
+            isOnline ? 'bg-success' : 'bg-danger'
           }`}
           initial={{ y: -40 }}
           animate={{ y: 0 }}
           exit={{ y: -40 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
         >
-          <div className="flex items-center justify-center gap-2 px-4 py-1.5 text-white text-xs font-medium">
+          <div className="flex items-center justify-center gap-2 px-4 py-1.5 text-on-accent text-xs font-medium">
             {isOnline ? (
               <>
                 <Wifi size={14} />
