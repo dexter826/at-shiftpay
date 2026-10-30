@@ -22,3 +22,13 @@
 - Focus rings added to day cells, sidebar icon buttons, and every event-modal input/toggle using the surface-aware variant; inputs use `placeholder:text-ink-muted`.
 - Transitions moved to `duration-fast ease-standard`; nav and hover motion continues to honor `MotionConfig reducedMotion="user"`.
 - Composition, flows, and data behavior untouched. Gates: `tsc` 0, `eslint` 0, `vite build` 0; grep finds no raw palette, hex, uppercase, shadow, off-scale radii or px text in the calendar files.
+
+2026-10-30 — Review fixes.
+
+- Type scale finished: `text-xs`/`text-sm` → `text-label`/`text-body-sm`; the money total moved from `text-2xl font-black` to `text-data font-semibold tabular-nums`; bare `rounded` → `rounded-xs`.
+- 38px control floor met on the calendar header (Hôm nay, month steppers, locations) and sidebar (add/edit/delete/empty-state); every button carries `type="button"`, a focus ring, and `duration-fast ease-standard`.
+- Accent stopped being a surface: assignment and surcharge selection rows use `surface-2`, `hover:bg-line` (border token used as fill) → `surface-2`, sidebar card hover border → `ink-muted`.
+- Click-to-select rows are real `<button>`s with `aria-pressed` (`EmployeeAssignmentList`, EventModal surcharge rows), so the promised focus rings can actually appear.
+- Dead `theme === 'dark' ? 'text-ink-muted' : 'text-ink-muted'` ternary removed along with the now-unused theme store hook in EventModal.
+- Day-cell event badge uses `leading-none` with `min-w-4 px-1` so two digits fit; still flagged for the deferred visual pass.
+- Known debt left in place: EventModal duplicates the employee-assignment list, and the review→color mapping repeats in four components. Both are candidates for the ticket 17 sweep.

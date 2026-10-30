@@ -48,7 +48,11 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
               className="grid grid-cols-7 gap-1 col-span-7 h-full w-full"
             >
               {Array.from({ length: 35 }).map((_, i) => (
-                <Skeleton key={i} className="aspect-square lg:aspect-auto rounded" height="100%" />
+                <Skeleton
+                  key={i}
+                  className="aspect-square lg:aspect-auto rounded-xs"
+                  height="100%"
+                />
               ))}
             </motion.div>
           ) : (

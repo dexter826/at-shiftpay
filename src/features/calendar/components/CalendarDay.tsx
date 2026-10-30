@@ -45,7 +45,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
         <div className="absolute top-1 right-1 flex flex-col gap-0.5 pointer-events-none">
           {events.length > 1 && (
             <div
-              className={`w-4 h-4 rounded-xs flex items-center justify-center text-label font-semibold ${isSelected ? 'bg-on-accent text-accent' : 'bg-accent text-on-accent'}`}
+              className={`min-w-4 h-4 px-1 rounded-xs flex items-center justify-center text-label leading-none font-semibold ${isSelected ? 'bg-on-accent text-accent' : 'bg-accent text-on-accent'}`}
             >
               {events.length}
             </div>

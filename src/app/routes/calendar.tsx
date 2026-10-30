@@ -276,7 +276,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           </div>
         }
       >
-        <p className="text-sm text-ink-soft">Bạn có chắc muốn xóa sự kiện này?</p>
+        <p className="text-body-sm text-ink-soft">Bạn có chắc muốn xóa sự kiện này?</p>
       </Modal>
 
       <EventDetailModal

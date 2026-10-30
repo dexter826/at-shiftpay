@@ -85,18 +85,18 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Calendar size={15} className="text-accent-ink" />
-              <span className={`text-sm font-medium text-ink`}>{formatDate(event.date)}</span>
+              <span className={`text-body-sm font-medium text-ink`}>{formatDate(event.date)}</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock size={15} className="text-accent-ink" />
-              <span className={`text-sm font-medium text-ink`}>{event.time || '--:--'}</span>
+              <span className={`text-body-sm font-medium text-ink`}>{event.time || '--:--'}</span>
             </div>
           </div>
 
           {locationInfo && (
             <div className={`flex items-start gap-2 pt-2 border-t border-dashed border-line`}>
               <MapPin size={15} className="text-accent-ink mt-0.5 flex-shrink-0" />
-              <span className={`text-sm font-medium text-ink-soft leading-tight`}>
+              <span className={`text-body-sm font-medium text-ink-soft leading-tight`}>
                 {locationInfo.name}
               </span>
             </div>
@@ -104,19 +104,17 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
         </div>
 
         {/* 2. Tài chính */}
-        <div
-          className={`p-3.5 bg-surface-2 border border-line rounded-sm flex items-center justify-between`}
-        >
+        <div className="p-3.5 bg-surface-2 border border-line rounded-sm flex items-center justify-between">
           <div>
             <p className={`text-label text-ink-muted font-semibold mb-1`}>Tổng tiền sự kiện</p>
-            <p className={`text-2xl font-black text-accent-ink`}>
+            <p className={`text-data font-semibold tabular-nums text-ink`}>
               {formatCurrency(eventShifts.reduce((sum, shift) => sum + shift.amount, 0))}
             </p>
           </div>
           <div className="text-right space-y-1">
             <div className="flex items-center justify-end gap-1.5">
               <span className={`text-label text-ink-muted`}>Lương:</span>
-              <span className={`text-xs font-semibold text-ink`}>
+              <span className={`text-label font-semibold text-ink`}>
                 {formatCurrency(
                   eventShifts.reduce((sum, shift) => sum + shiftBreakdown(shift, event).base, 0)
                 )}
@@ -125,7 +123,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
             {(event.surcharge ?? 0) > 0 && (
               <div className="flex items-center justify-end gap-1.5 text-info">
                 <span className="text-label font-medium">Phụ phí:</span>
-                <span className="text-xs font-semibold">
+                <span className="text-label font-semibold">
                   +
                   {formatCurrency(
                     eventShifts.reduce(
@@ -157,12 +155,12 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               >
                 <div className="flex items-center gap-2 mb-2.5">
                   {locationInfo.review === 'high' ? (
-                    <div className="flex items-center gap-2 text-success font-semibold text-sm">
+                    <div className="flex items-center gap-2 text-success font-semibold text-body-sm">
                       <ThumbsUp size={16} fill="currentColor" />
                       <span>Đánh giá địa điểm: Tốt</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 text-danger font-semibold text-sm">
+                    <div className="flex items-center gap-2 text-danger font-semibold text-body-sm">
                       <ThumbsDown size={16} fill="currentColor" />
                       <span>Đánh giá địa điểm: Kém</span>
                     </div>
@@ -170,7 +168,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                 </div>
                 {locationInfo.reviewNote && (
                   <div
-                    className={`text-xs italic leading-relaxed font-medium ${locationInfo.review === 'high' ? 'text-success' : 'text-danger'}`}
+                    className={`text-label italic leading-relaxed font-medium ${locationInfo.review === 'high' ? 'text-success' : 'text-danger'}`}
                   >
                     "{locationInfo.reviewNote}"
                   </div>
@@ -186,7 +184,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                   <StickyNote size={12} />
                   Ghi chú sự kiện
                 </p>
-                <p className={`text-sm text-ink-soft leading-relaxed`}>{event.note}</p>
+                <p className={`text-body-sm text-ink-soft leading-relaxed`}>{event.note}</p>
               </div>
             )}
           </div>
@@ -208,7 +206,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                   key={shift.id}
                   className={`flex flex-col gap-0.5 p-2 bg-surface-2 border-line border rounded-sm`}
                 >
-                  <span className={`text-xs font-semibold text-ink truncate`}>
+                  <span className={`text-label font-semibold text-ink truncate`}>
                     {shift.employeeName}
                   </span>
                   <div className="flex items-center gap-1.5">

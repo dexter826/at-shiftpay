@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import { Check } from 'lucide-react';
 import { Employee } from '@/types/index';
 
@@ -48,12 +49,14 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
           const isSelected = assignments[employee.id] || false;
 
           return (
-            <div
+            <button
               key={employee.id}
+              type="button"
+              aria-pressed={isSelected}
               onClick={() => onToggle(employee.id)}
-              className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-accent/5 ${
-                isSelected ? 'bg-accent/10' : ''
-              }`}
+              className={`w-full text-left p-2.5 flex items-center justify-between transition-colors duration-fast ease-standard hover:bg-surface-2/70 ${
+                isSelected ? 'bg-surface-2' : ''
+              } ${focusRingOnSurfaceClasses}`}
             >
               <div className="flex items-center gap-2 flex-1">
                 <span
@@ -70,13 +73,13 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
                 )}
               </div>
               <div
-                className={`w-5 h-5 rounded-xs border-2 flex items-center justify-center transition-colors ${
+                className={`w-5 h-5 rounded-xs border-2 flex items-center justify-center transition-colors duration-fast ease-standard ${
                   isSelected ? 'bg-accent border-accent' : 'border-line'
                 }`}
               >
                 {isSelected && <Check size={12} className="text-on-accent" />}
               </div>
-            </div>
+            </button>
           );
         })
       )}

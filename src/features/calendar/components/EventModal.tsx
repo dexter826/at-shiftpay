@@ -26,7 +26,6 @@ import { useToast } from '@/components/ui/ToastProvider';
 import SearchInput from '@/components/ui/SearchInput';
 import { areValuesEqual } from '@/utils/compare';
 import { useAuthStore } from '@/stores/authStore';
-import { useThemeStore } from '@/stores/themeStore';
 
 interface EventModalProps {
   date: string;
@@ -52,7 +51,6 @@ export const EventModal: React.FC<EventModalProps> = ({
   onSuccess,
 }) => {
   const { user } = useAuthStore();
-  const { theme } = useThemeStore();
   const userId = user?.uid || '';
   const { showToast } = useToast();
   const [title, setTitle] = useState('');
@@ -431,7 +429,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         {/* Tên & Thời gian */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
+            <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>
               Tên sự kiện
             </label>
             <div className="relative">
@@ -455,10 +453,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                 }`}
               />
             </div>
-            {titleError && <p className="text-danger text-xs mt-1">{titleError}</p>}
+            {titleError && <p className="text-danger text-label mt-1">{titleError}</p>}
           </div>
           <div>
-            <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
+            <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>
               Thời gian bắt đầu
             </label>
             <TimePicker value={time} onChange={setTime} />
@@ -467,7 +465,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Địa điểm */}
         <div className="space-y-2">
-          <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>Địa điểm</label>
+          <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>Địa điểm</label>
           <div className="relative">
             <MapPin
               className={`absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted`}
@@ -511,7 +509,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                             setReview(loc.review ?? undefined);
                             setReviewNote(loc.reviewNote || '');
                           }}
-                          className={`w-full px-3 py-2 text-left text-xs hover:bg-line transition-colors border-b last:border-0 border-line text-ink-soft`}
+                          className={`w-full px-3 py-2 text-left text-label hover:bg-surface-2 transition-colors duration-fast ease-standard border-b last:border-0 border-line text-ink-soft`}
                         >
                           📍 {loc.name}
                         </button>
@@ -531,7 +529,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                       }`}
                     >
                       <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
-                      <div className="text-xs">
+                      <div className="text-label">
                         <p>
                           Địa điểm này từng được đánh giá{' '}
                           <strong>
@@ -555,7 +553,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         </div>
 
         <div>
-          <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>Ghi chú</label>
+          <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>Ghi chú</label>
           <div className="relative">
             <FileText className={`absolute left-3 top-3 text-ink-muted`} size={18} />
             <textarea
@@ -569,17 +567,17 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Đánh giá sự kiện */}
         <div>
-          <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
+          <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>
             Đánh giá sự kiện
           </label>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => setReview('high')}
-              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 min-h-10 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 review === 'high'
                   ? 'border-success/50 bg-success/10 text-success'
-                  : `border-line text-ink-muted hover:border-accent/50`
+                  : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >
               <ThumbsUp size={16} />
@@ -588,10 +586,10 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => setReview(undefined)}
-              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 min-h-10 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 review === undefined
-                  ? 'border-accent/50 bg-accent/10 text-accent-ink'
-                  : `border-line text-ink-muted hover:border-accent/50`
+                  ? 'border-ink-muted bg-surface-2 text-ink'
+                  : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >
               <Minus size={16} />
@@ -600,7 +598,7 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => setReview('low')}
-              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 min-h-10 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 review === 'low'
                   ? 'border-danger/50 bg-danger/10 text-danger'
                   : `border-line text-ink-muted hover:border-danger/50`
@@ -614,7 +612,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Lý do đánh giá */}
         <div className="space-y-1.5 pt-1">
-          <label className={`block text-xs font-semibold text-ink-muted`}>
+          <label className={`block text-label font-semibold text-ink-muted`}>
             Lý do đánh giá ({review === 'high' ? 'Tốt' : review === 'low' ? 'Kém' : 'Thường'})
           </label>
           <div className="relative">
@@ -636,15 +634,17 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Chọn ca */}
         <div>
-          <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>Ca làm việc</label>
+          <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>
+            Ca làm việc
+          </label>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => selectSession('morning')}
-              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 min-h-10 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 selectedSession === 'morning'
                   ? 'border-warning/50 bg-warning/10 text-warning'
-                  : `border-line text-ink-muted hover:border-accent/50`
+                  : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >
               <Sun size={16} />
@@ -653,10 +653,10 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => selectSession('afternoon')}
-              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 min-h-10 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 selectedSession === 'afternoon'
-                  ? 'border-accent/50 bg-accent/10 text-accent-ink'
-                  : `border-line text-ink-muted hover:border-accent/50`
+                  ? 'border-ink-muted bg-surface-2 text-ink'
+                  : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >
               <Moon size={16} />
@@ -669,7 +669,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         {selectedSession && (
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
+              <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>
                 Lương/người
               </label>
               <div className="relative">
@@ -686,7 +686,9 @@ export const EventModal: React.FC<EventModalProps> = ({
               </div>
             </div>
             <div>
-              <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>Phụ phí</label>
+              <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>
+                Phụ phí
+              </label>
               <div className="relative">
                 <Banknote
                   size={18}
@@ -707,13 +709,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         {/* Phân phối phụ phí */}
         {selectedSession && surcharge > 0 && (
           <div>
-            <label
-              className={`block text-xs mb-1.5 ${
-                theme === 'dark' ? 'text-ink-muted' : 'text-ink-muted'
-              }`}
-            >
-              Phân phối phụ phí
-            </label>
+            <label className="block text-label mb-1.5 text-ink-muted">Phân phối phụ phí</label>
 
             {/* Radio buttons */}
             <div className="grid grid-cols-2 gap-2 mb-3">
@@ -726,7 +722,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                   onChange={() => setSurchargeDistributionType('equal')}
                   className="accent-accent"
                 />
-                <span className={`text-sm text-ink-soft`}>Chia đều cho tất cả</span>
+                <span className={`text-body-sm text-ink-soft`}>Chia đều cho tất cả</span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer">
@@ -740,7 +736,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                   }}
                   className="accent-accent"
                 />
-                <span className={`text-sm text-ink-soft`}>Chọn người nhận</span>
+                <span className={`text-body-sm text-ink-soft`}>Chọn người nhận</span>
               </label>
             </div>
 
@@ -758,26 +754,28 @@ export const EventModal: React.FC<EventModalProps> = ({
                     const isSelected = surchargeSelectedEmployees[empId] || false;
 
                     return (
-                      <div
+                      <button
                         key={empId}
+                        type="button"
+                        aria-pressed={isSelected}
                         onClick={() => toggleSurchargeEmployee(empId)}
-                        className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-accent/5 ${
-                          isSelected ? 'bg-accent/10' : ''
-                        }`}
+                        className={`w-full text-left p-2.5 flex items-center justify-between transition-colors duration-fast ease-standard hover:bg-surface-2/70 ${
+                          isSelected ? 'bg-surface-2' : ''
+                        } ${focusRingOnSurfaceClasses}`}
                       >
                         <span
-                          className={`text-sm text-ink-soft ${isSelected ? 'font-medium' : ''}`}
+                          className={`text-body-sm text-ink-soft ${isSelected ? 'font-medium' : ''}`}
                         >
                           {emp.name}
                         </span>
                         <div
-                          className={`w-5 h-5 rounded-xs border-2 flex items-center justify-center transition-colors ${
+                          className={`w-5 h-5 rounded-xs border-2 flex items-center justify-center transition-colors duration-fast ease-standard ${
                             isSelected ? 'bg-accent border-accent' : 'border-line'
                           }`}
                         >
                           {isSelected && <Check size={12} className="text-on-accent" />}
                         </div>
-                      </div>
+                      </button>
                     );
                   })}
               </div>
@@ -785,7 +783,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
             {/* Hiển thị tính toán */}
             {surchargeDistributionType === 'selected' && (
-              <p className={`text-xs mt-2 text-ink-muted`}>
+              <p className={`text-label mt-2 text-ink-muted`}>
                 {Object.values(surchargeSelectedEmployees).filter(Boolean).length} người được chọn -{' '}
                 {getSurchargePerPerson().toLocaleString('vi-VN')} VND/người
               </p>
@@ -796,7 +794,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         {/* Danh sách nhân viên */}
         {selectedSession && (
           <div>
-            <label className={`block text-xs mb-1.5 text-ink-muted`}>
+            <label className={`block text-label mb-1.5 text-ink-muted`}>
               Chọn người làm ({getSelectedCount()})
             </label>
 
