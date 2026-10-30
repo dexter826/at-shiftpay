@@ -12,17 +12,31 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import { UserSettings, DEFAULT_SETTINGS } from '@/types/index';
+import { UserSettingsSchema } from '@/utils/validation';
 
 export const settingsService = {
-  subscribeSettings(userId: string, callback: (settings: UserSettings) => void): Unsubscribe {
+  subscribeSettings(
+    userId: string,
+    callback: (settings: UserSettings) => void,
+    onError?: (error: unknown) => void
+  ): Unsubscribe {
     const docRef = doc(db, 'settings', userId);
-    return onSnapshot(docRef, (snapshot) => {
-      if (snapshot.exists()) {
-        callback(snapshot.data() as UserSettings);
-      } else {
-        callback({ ...DEFAULT_SETTINGS, userId });
+    return onSnapshot(
+      docRef,
+      (snapshot) => {
+        const merged = {
+          ...DEFAULT_SETTINGS,
+          ...(snapshot.exists() ? snapshot.data() : {}),
+          userId,
+        };
+        const parsed = UserSettingsSchema.safeParse(merged);
+        callback(parsed.success ? parsed.data : { ...DEFAULT_SETTINGS, userId });
+      },
+      (error) => {
+        console.error('subscribeSettings error:', error);
+        onError?.(error);
       }
-    });
+    );
   },
 
   async updateSettings(userId: string, data: Partial<UserSettings>): Promise<void> {
