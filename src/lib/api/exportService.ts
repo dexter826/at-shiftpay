@@ -1,4 +1,5 @@
 import { Shift, Event, Employee, UserSettings, Location } from '@/types/index';
+import { parseDateOnly } from '@/utils/format';
 
 function escapeCsvCell(cell: string): string {
   const neutralized = /^[=+\-@\t\r]/.test(cell) ? `'${cell}` : cell;
@@ -36,7 +37,7 @@ export const exportDetailedReport = (
   const filteredShifts = shifts
     .filter((s) => {
       // Kiểm tra thời gian
-      const d = new Date(s.date);
+      const d = parseDateOnly(s.date);
       let matchesTime = true;
 
       if (month !== 0) {
@@ -54,7 +55,7 @@ export const exportDetailedReport = (
 
       return true;
     })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort((a, b) => parseDateOnly(a.date).getTime() - parseDateOnly(b.date).getTime());
 
   filteredShifts.forEach((shift) => {
     const key = `${shift.eventId}_${shift.session}`;
@@ -87,8 +88,8 @@ export const exportDetailedReport = (
 
   // Sắp xếp ngày tăng dần
   const sortedGroups = Array.from(groupedData.values()).sort((a, b) => {
-    const dateA = new Date(a.date).getTime();
-    const dateB = new Date(b.date).getTime();
+    const dateA = parseDateOnly(a.date).getTime();
+    const dateB = parseDateOnly(b.date).getTime();
     if (dateA !== dateB) return dateA - dateB;
     return a.session === 'Sáng' ? -1 : 1;
   });
