@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Loader from '@/components/ui/Loading';
-import { Navbar, OfflineIndicator } from '@/components/layouts';
+import { Navbar } from '@/components/layouts/Navbar';
+import { OfflineIndicator } from '@/components/layouts/OfflineIndicator';
 import { Login } from '@/app/routes/login';
-import { Splashscreen, PullToRefresh } from '@/components';
+import { Splashscreen } from '@/components/Splashscreen';
+import { PullToRefresh } from '@/components/PullToRefresh';
 import { AppRouter } from '@/app/router';
 import { ExportModal } from '@/features/payroll/components/ExportModal';
 import { Modal } from '@/components/ui/Modal';
