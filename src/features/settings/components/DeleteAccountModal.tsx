@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { AlertTriangle, Trash2, Loader2 } from 'lucide-react';
-import { settingsService } from '@/lib/api/settingsService';
-import { auth } from '@/lib/firebase';
+import { AlertTriangle } from 'lucide-react';
 import { deleteUser, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-import { useToast } from '@/components/ui/ToastProvider';
-import Button from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { Field } from '@/components/ui/Field';
+import { Input } from '@/components/ui/Input';
+import { PasswordToggle } from '@/components/ui/PasswordToggle';
+import { useToast } from '@/components/ui/ToastProvider';
+import { auth } from '@/lib/firebase';
+import { settingsService } from '@/lib/api/settingsService';
 import { useAuthStore } from '@/stores/authStore';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface DeleteAccountModalProps {
   isOpen: boolean;
@@ -16,33 +18,44 @@ interface DeleteAccountModalProps {
 
 const REQUIRED_CONFIRM_TEXT = 'XÓA TÀI KHOẢN';
 
-function messageForDeleteError(code?: string): string {
+const messageForDeleteError = (code?: string): string => {
   switch (code) {
     case 'auth/wrong-password':
     case 'auth/invalid-credential':
-      return 'Mật khẩu không đúng';
+      return 'Mật khẩu không đúng.';
     case 'auth/too-many-requests':
-      return 'Quá nhiều lần thử. Vui lòng đợi một lúc rồi thử lại';
+      return 'Quá nhiều lần thử. Đợi một lúc rồi thử lại.';
     case 'auth/requires-recent-login':
-      return 'Phiên đăng nhập đã cũ. Vui lòng đăng xuất và đăng nhập lại';
+      return 'Phiên đăng nhập đã cũ. Đăng xuất và đăng nhập lại.';
     default:
-      return 'Có lỗi xảy ra khi xóa tài khoản';
+      return 'Không thể xóa tài khoản. Thử lại.';
   }
-}
+};
 
 export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose }) => {
   const { showToast } = useToast();
   const clearSavedUserInfo = useAuthStore((state) => state.clearSavedUserInfo);
   const [confirmText, setConfirmText] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [formError, setFormError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const canDelete = confirmText === REQUIRED_CONFIRM_TEXT && password.length > 0;
+  const canDelete =
+    confirmText.trim().toUpperCase() === REQUIRED_CONFIRM_TEXT && password.length > 0;
+  const confirmError =
+    confirmText.length > 0 && confirmText.trim().toUpperCase() !== REQUIRED_CONFIRM_TEXT
+      ? 'Cụm từ xác nhận chưa đúng.'
+      : undefined;
 
   const handleDelete = async () => {
-    if (!canDelete) return;
+    if (!canDelete || isDeleting) return;
 
     setIsDeleting(true);
+    setPasswordError('');
+    setFormError('');
+
     try {
       const user = auth.currentUser;
       if (!user?.email) throw new Error('Không tìm thấy người dùng');
@@ -51,12 +64,15 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
       await settingsService.deleteUserAccountData(user.uid);
       await deleteUser(user);
       clearSavedUserInfo();
-
-      showToast('Tài khoản đã được xóa vĩnh viễn', 'success');
+      showToast('Tài khoản đã được xóa.', 'success');
     } catch (error) {
       const code = (error as { code?: string }).code;
       console.error('Delete account failed:', code ?? 'unknown');
-      showToast(messageForDeleteError(code), 'error', 6000);
+      if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+        setPasswordError(messageForDeleteError(code));
+      } else {
+        setFormError(messageForDeleteError(code));
+      }
     } finally {
       setIsDeleting(false);
     }
@@ -64,79 +80,94 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
 
   return (
     <Modal
+      title="Xóa tài khoản?"
       isOpen={isOpen}
       onClose={onClose}
-      title="Xóa tài khoản"
       footer={
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={onClose} className="flex-1" disabled={isDeleting}>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={onClose} className="flex-1" disabled={isDeleting}>
             Hủy
           </Button>
           <Button
-            onClick={handleDelete}
+            type="submit"
+            form="delete-account-form"
             variant="danger"
             className="flex-1"
-            disabled={!canDelete || isDeleting}
+            loading={isDeleting}
+            disabled={!canDelete}
           >
-            {isDeleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
-            {isDeleting ? 'Đang xóa...' : 'Xác nhận xóa'}
+            Xóa tài khoản
           </Button>
         </div>
       }
     >
-      <div className="space-y-4">
-        <div className="flex items-center gap-3 p-3 rounded-sm border border-danger/30 bg-danger/5 text-ink mb-2">
-          <AlertTriangle size={24} className="flex-shrink-0 text-danger" />
-          <p className="text-body-sm font-medium">
-            Hành động này <span className="font-semibold underline">không thể hoàn tác</span>!
+      <form
+        id="delete-account-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void handleDelete();
+        }}
+        className="space-y-4"
+        noValidate
+      >
+        <div className="flex items-start gap-2 border border-danger/30 bg-danger/5 px-3 py-2.5">
+          <AlertTriangle size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-danger" />
+          <p className="text-body-sm text-ink">
+            Toàn bộ dữ liệu sẽ bị xóa vĩnh viễn. Không thể hoàn tác.
           </p>
         </div>
 
-        <p className={`text-body-sm text-ink-muted leading-relaxed`}>
-          Toàn bộ dữ liệu về nhân viên, ca làm, sự kiện và lịch sử thanh toán của bạn sẽ bị xóa vĩnh
-          viễn khỏi hệ thống.
+        <p className="text-body-sm leading-relaxed text-ink-soft">
+          Dữ liệu nhân viên, địa điểm, sự kiện, ca làm, thanh toán và cài đặt sẽ bị xóa. Tệp ảnh tải
+          lên không được xóa tự động.
         </p>
 
-        <div className="pt-2">
-          <label
-            htmlFor="delete-account-confirm"
-            className={`block text-label font-medium text-ink-muted mb-2`}
+        {formError && (
+          <div
+            role="alert"
+            className="rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-body-sm text-danger"
           >
-            Nhập <span className="font-semibold text-danger">"{REQUIRED_CONFIRM_TEXT}"</span> để xác
-            nhận:
-          </label>
-          <input
-            id="delete-account-confirm"
-            type="text"
+            {formError}
+          </div>
+        )}
+
+        <Field
+          label={`Gõ ${REQUIRED_CONFIRM_TEXT} để xác nhận`}
+          hint="Không phân biệt chữ hoa, chữ thường."
+          error={confirmError}
+        >
+          <Input
             value={confirmText}
-            onChange={(e) => setConfirmText(e.target.value)}
+            onChange={(event) => setConfirmText(event.target.value.toUpperCase())}
             placeholder={REQUIRED_CONFIRM_TEXT}
-            className={`w-full px-3 py-2.5 min-h-10 rounded-sm border border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard text-body-sm ${focusRingOnSurfaceClasses}`}
+            autoComplete="off"
             autoFocus
           />
-        </div>
+        </Field>
 
-        <div>
-          <label
-            htmlFor="delete-account-password"
-            className={`block text-label font-medium text-ink-muted mb-2`}
-          >
-            Mật khẩu hiện tại
-          </label>
-          <input
-            id="delete-account-password"
-            type="password"
+        <Field
+          label="Mật khẩu hiện tại"
+          hint="Cần xác thực lại mật khẩu trước khi xóa."
+          error={passwordError}
+        >
+          <Input
+            type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              if (passwordError) setPasswordError('');
+            }}
+            trailingAction={
+              <PasswordToggle
+                visible={showPassword}
+                onToggle={() => setShowPassword(!showPassword)}
+                label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              />
+            }
             autoComplete="current-password"
-            placeholder="Nhập mật khẩu để xác thực lại"
-            className={`w-full px-3 py-2.5 min-h-10 rounded-sm border border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard text-body-sm ${focusRingOnSurfaceClasses}`}
           />
-          <p className={`mt-2 text-body-sm text-ink-muted`}>
-            Cần xác thực lại mật khẩu trước khi xóa vĩnh viễn.
-          </p>
-        </div>
-      </div>
+        </Field>
+      </form>
     </Modal>
   );
 };

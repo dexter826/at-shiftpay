@@ -1,8 +1,7 @@
-import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Check, ChevronDown, Search, X } from 'lucide-react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { focusRingClasses, focusRingOnSurfaceClasses } from '@/lib/utils';
-import { DURATION_BASE, DURATION_FAST, EASE_STANDARD } from '@/lib/motion';
+import { cn, focusRingClasses, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 export interface DropdownOption {
   value: string;
@@ -21,6 +20,7 @@ interface DropdownProps {
   minWidth?: string;
   searchable?: boolean;
   searchPlaceholder?: string;
+  ariaLabel?: string;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -34,165 +34,233 @@ export const Dropdown: React.FC<DropdownProps> = ({
   minWidth = 'min-w-[120px]',
   searchable = false,
   searchPlaceholder = 'Tìm kiếm...',
+  ariaLabel,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const prefersReducedMotion = useReducedMotion();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-
-  const closeDropdown = useCallback(() => {
-    setIsOpen(false);
-    setSearchTerm('');
-  }, []);
-
-  // Đóng khi click ra ngoài
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        closeDropdown();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, closeDropdown]);
-
-  // Focus vào ô tìm kiếm khi mở
-  useEffect(() => {
-    if (isOpen && searchable && searchInputRef.current) {
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 100);
-    }
-  }, [isOpen, searchable]);
-
-  // Đóng khi nhấn Esc
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        closeDropdown();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [isOpen, closeDropdown]);
-
-  const filteredOptions = useMemo(() => {
-    if (!searchable || !searchTerm) return options;
-    return options.filter((option) =>
-      option.label.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [options, searchTerm, searchable]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const listboxId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const optionRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const selectedOption = options.find((option) => option.value === value);
 
-  const handleSelect = (optionValue: string) => {
-    onChange(optionValue);
-    closeDropdown();
+  const filteredOptions = useMemo(() => {
+    if (!searchable || !searchTerm) return options;
+    const term = searchTerm.toLowerCase();
+    return options.filter((option) => option.label.toLowerCase().includes(term));
+  }, [options, searchable, searchTerm]);
+
+  const currentIndex =
+    filteredOptions.length === 0 ? -1 : Math.min(activeIndex, filteredOptions.length - 1);
+  const activeId = currentIndex >= 0 ? `${listboxId}-option-${currentIndex}` : undefined;
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (open) {
+      setSearchTerm('');
+      const index = options.findIndex((option) => option.value === value);
+      setActiveIndex(index >= 0 ? index : 0);
+    }
+  };
+
+  const close = useCallback(() => setIsOpen(false), []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const timer = window.setTimeout(() => {
+      if (searchable) inputRef.current?.focus();
+      else listRef.current?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [isOpen, searchable]);
+
+  useEffect(() => {
+    if (!isOpen || currentIndex < 0) return;
+    optionRefs.current[currentIndex]?.scrollIntoView({ block: 'nearest' });
+  }, [currentIndex, isOpen]);
+
+  const selectOption = (option: DropdownOption) => {
+    onChange(option.value);
+    close();
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (!isOpen) return;
+    const length = filteredOptions.length;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        if (length) setActiveIndex((currentIndex + 1) % length);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        if (length) setActiveIndex((currentIndex - 1 + length) % length);
+        break;
+      case 'Home':
+        event.preventDefault();
+        if (length) setActiveIndex(0);
+        break;
+      case 'End':
+        event.preventDefault();
+        if (length) setActiveIndex(length - 1);
+        break;
+      case 'Enter':
+        event.preventDefault();
+        if (currentIndex >= 0) selectOption(filteredOptions[currentIndex]);
+        break;
+      case 'Escape':
+        event.preventDefault();
+        close();
+        break;
+      case 'Tab':
+        close();
+        break;
+      default:
+        break;
+    }
   };
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
-      <button
-        type="button"
-        onClick={() => (isOpen ? closeDropdown() : setIsOpen(true))}
-        disabled={disabled}
-        aria-expanded={isOpen}
-        className={`w-full h-full flex items-center gap-2 px-3 py-2 bg-surface-2 border border-line rounded-sm text-body-sm text-ink-soft hover:border-ink-muted focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-fast ease-standard ${focusRingClasses} ${minWidth}`}
-      >
-        {icon && <span className="text-ink-muted">{icon}</span>}
-        <span className="flex-1 text-left truncate">
-          {selectedOption ? selectedOption.label : placeholder}
-        </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{
-            duration: prefersReducedMotion ? 0 : DURATION_BASE,
-            ease: EASE_STANDARD,
-          }}
-        >
-          <ChevronDown size={16} className="text-ink-muted" />
-        </motion.div>
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className={`absolute top-full left-0 right-0 mt-1 bg-surface border border-line rounded-sm z-50 flex flex-col overflow-hidden`}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{
-              duration: prefersReducedMotion ? 0 : DURATION_FAST,
-              ease: EASE_STANDARD,
-            }}
-          >
-            {searchable && (
-              <div className={`p-2 border-b border-line`}>
-                <div className="relative">
-                  <Search
-                    size={14}
-                    className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted`}
-                  />
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    placeholder={searchPlaceholder}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={`w-full h-10 pl-8 pr-12 bg-surface-2 border border-line rounded-sm text-label font-medium text-ink-soft placeholder:text-ink-muted transition-colors duration-fast ease-standard focus:outline-none ${focusRingOnSurfaceClasses}`}
-                  />
-                  {searchTerm && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchTerm('')}
-                      aria-label="Xoá tìm kiếm"
-                      className={`absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-sm text-ink-muted hover:bg-surface hover:text-ink transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
-                    >
-                      <X size={12} />
-                    </button>
-                  )}
-                </div>
-              </div>
+    <PopoverPrimitive.Root open={isOpen} onOpenChange={handleOpenChange}>
+      <div className={cn('relative', className)}>
+        <PopoverPrimitive.Trigger asChild>
+          <button
+            type="button"
+            disabled={disabled}
+            aria-haspopup="listbox"
+            aria-label={ariaLabel}
+            className={cn(
+              'flex min-h-11 w-full items-center gap-2 rounded-sm border border-line bg-surface px-3 py-2 text-body-sm text-ink-soft transition-colors duration-fast ease-standard hover:border-line-strong',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+              focusRingClasses,
+              minWidth
             )}
+          >
+            {icon && <span className="text-ink-muted">{icon}</span>}
+            <span className="flex-1 truncate text-left">
+              {selectedOption ? selectedOption.label : placeholder}
+            </span>
+            <ChevronDown
+              size={16}
+              aria-hidden="true"
+              className={cn(
+                'text-ink-muted transition-transform duration-fast ease-standard',
+                isOpen && 'rotate-180'
+              )}
+            />
+          </button>
+        </PopoverPrimitive.Trigger>
+      </div>
 
-            <div className="max-h-60 overflow-y-auto scrollbar-thin">
-              {filteredOptions.length > 0 ? (
-                filteredOptions.map((option) => (
+      <PopoverPrimitive.Portal>
+        <PopoverPrimitive.Content
+          side="bottom"
+          align="start"
+          sideOffset={4}
+          collisionPadding={8}
+          onOpenAutoFocus={(event) => event.preventDefault()}
+          className={cn(
+            'z-[80] max-w-[min(360px,calc(100vw-2rem))] overflow-hidden rounded-sm border border-line bg-surface shadow-none data-[state=open]:animate-pop-in',
+            'min-w-[var(--radix-popover-trigger-width)]',
+            minWidth
+          )}
+        >
+          {searchable && (
+            <div className="border-b border-line p-2">
+              <div className="relative">
+                <Search
+                  size={14}
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted"
+                />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  role="combobox"
+                  aria-expanded="true"
+                  aria-controls={listboxId}
+                  aria-autocomplete="list"
+                  aria-activedescendant={activeId}
+                  aria-label={ariaLabel ? `${ariaLabel} — tìm kiếm` : searchPlaceholder}
+                  placeholder={searchPlaceholder}
+                  value={searchTerm}
+                  onChange={(event) => {
+                    setSearchTerm(event.target.value);
+                    setActiveIndex(0);
+                  }}
+                  onKeyDown={handleKeyDown}
+                  className={cn(
+                    'h-11 w-full rounded-sm border border-line bg-surface px-3 pl-8 pr-10 text-base text-ink placeholder:text-ink-muted focus:outline-none',
+                    focusRingOnSurfaceClasses
+                  )}
+                />
+                {searchTerm && (
                   <button
                     type="button"
-                    key={option.value}
-                    onClick={() => handleSelect(option.value)}
-                    className={`w-full px-3 py-2.5 text-left text-body-sm transition-all duration-fast ease-standard hover:brightness-110 ${value === option.value ? `bg-surface-2 text-ink font-medium` : `text-ink-soft`}`}
+                    onClick={() => {
+                      setSearchTerm('');
+                      setActiveIndex(0);
+                      inputRef.current?.focus();
+                    }}
+                    aria-label="Xoá tìm kiếm"
+                    className={cn(
+                      'absolute right-0 top-0 flex h-11 w-11 items-center justify-center rounded-sm text-ink-muted hover:text-ink',
+                      focusRingOnSurfaceClasses
+                    )}
                   >
-                    <div className="flex items-center gap-2 group/opt">
-                      {option.icon && <span className="text-current">{option.icon}</span>}
-                      <span className="flex-1 truncate">{option.label}</span>
-                      {value === option.value && <Check size={14} className="text-accent-ink" />}
-                    </div>
+                    <X size={13} aria-hidden="true" />
                   </button>
-                ))
-              ) : (
-                <div className={`px-3 py-4 text-center text-label text-ink-muted`}>
-                  Không tìm thấy kết quả
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          )}
+
+          <div
+            ref={listRef}
+            id={listboxId}
+            role="listbox"
+            aria-label={ariaLabel ?? placeholder}
+            aria-activedescendant={searchable ? undefined : activeId}
+            tabIndex={-1}
+            onKeyDown={handleKeyDown}
+            className="max-h-[264px] overflow-y-auto scrollbar-thin focus:outline-none"
+          >
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option, index) => (
+                <div
+                  key={option.value}
+                  id={`${listboxId}-option-${index}`}
+                  ref={(element) => {
+                    optionRefs.current[index] = element;
+                  }}
+                  role="option"
+                  aria-selected={option.value === value}
+                  onClick={() => selectOption(option)}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  className={cn(
+                    'flex min-h-11 cursor-pointer items-center gap-2 px-3 py-2.5 text-body-sm text-ink-soft transition-colors duration-fast ease-standard',
+                    index === currentIndex && 'bg-surface-2',
+                    option.value === value && 'font-medium text-ink'
+                  )}
+                >
+                  {option.icon && <span className="text-current">{option.icon}</span>}
+                  <span className="flex-1 truncate">{option.label}</span>
+                  {option.value === value && (
+                    <Check size={14} aria-hidden="true" className="text-accent-ink" />
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="px-3 py-4 text-center text-label text-ink-muted">
+                Không tìm thấy kết quả
+              </div>
+            )}
+          </div>
+        </PopoverPrimitive.Content>
+      </PopoverPrimitive.Portal>
+    </PopoverPrimitive.Root>
   );
 };

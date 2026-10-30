@@ -25,10 +25,11 @@ const EmployeeView = lazy(() => import('@/app/routes/employees'));
 const LocationView = lazy(() => import('@/app/routes/locations'));
 const PayrollView = lazy(() => import('@/app/routes/payroll'));
 const SettingsView = lazy(() => import('@/app/routes/settings'));
+const Gallery = import.meta.env.DEV ? lazy(() => import('@/dev/Gallery')) : null;
 
 const TAB_NAMES = {
   dashboard: 'Tổng quan',
-  calendar: 'Lịch tiệc',
+  calendar: 'Lịch sự kiện',
   employees: 'Nhân sự',
   payroll: 'Thanh toán',
   locations: 'Địa điểm',
@@ -60,7 +61,6 @@ function AppShell() {
     isCalendarLoading,
     viewDate,
     setViewDate,
-    totalDebt,
     initSubscriptions,
     cleanupSubscriptions,
     refreshData,
@@ -155,7 +155,7 @@ function AppShell() {
       <DataErrorWatcher />
       <OfflineIndicator />
       {authLoading ? (
-        <div className="flex items-center justify-center h-screen bg-canvas">
+        <div className="flex min-h-dvh items-center justify-center bg-canvas">
           <Loader />
         </div>
       ) : !user || !user.emailVerified ? (
@@ -173,7 +173,6 @@ function AppShell() {
           isCalendarLoading={isCalendarLoading}
           viewDate={viewDate}
           setViewDate={setViewDate}
-          totalDebt={totalDebt}
           refreshData={refreshData}
           onOpenExport={handleOpenExport}
           isExportModalOpen={isExportModalOpen}
@@ -201,7 +200,6 @@ function AppContent({
   isCalendarLoading,
   viewDate,
   setViewDate,
-  totalDebt,
   refreshData,
   onOpenExport,
   isExportModalOpen,
@@ -223,7 +221,6 @@ function AppContent({
   isCalendarLoading: boolean;
   viewDate: Date;
   setViewDate: (date: Date) => void;
-  totalDebt: number;
   refreshData: (userId: string) => void;
   onOpenExport: () => void;
   isExportModalOpen: boolean;
@@ -240,8 +237,23 @@ function AppContent({
 
   return (
     <div className="min-h-dynamic bg-canvas">
-      <Navbar currentTab={currentTab} setTab={(tab) => navigate(`/${tab}`)} onLogout={onLogout} />
-      <main className="md:pl-[var(--sidebar-width)]">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-sm focus:border focus:border-line focus:bg-surface focus:px-4 focus:py-2 focus:text-body-sm focus:text-ink focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-canvas"
+      >
+        Bỏ qua điều hướng
+      </a>
+      <Navbar
+        currentTab={currentTab}
+        setTab={(tab) => navigate(`/${tab}`)}
+        onLogout={onLogout}
+        user={user}
+      />
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="pb-[calc(64px+env(safe-area-inset-bottom))] focus:outline-none md:pl-[var(--rail-width)] md:pb-0"
+      >
         <PullToRefresh
           onRefresh={() => {
             if (user) refreshData(user.uid);
@@ -254,14 +266,11 @@ function AppContent({
                 path="/dashboard"
                 element={
                   <DashboardView
-                    user={user}
                     employees={employees}
                     events={events}
                     shifts={shifts}
-                    settings={settings}
+                    locations={locations}
                     loading={isLoading}
-                    onLogout={onLogout}
-                    onNavigateToSettings={() => navigate('/settings')}
                     onOpenExport={onOpenExport}
                   />
                 }
@@ -274,36 +283,20 @@ function AppContent({
                     shifts={shifts}
                     employees={employees}
                     locations={locations}
-                    totalDebt={totalDebt}
                     settings={settings}
                     currentDate={viewDate}
                     onDateChange={setViewDate}
-                    onNavigateToReviews={() => navigate('/locations')}
                     loading={isLoading || isCalendarLoading}
                   />
                 }
               />
               <Route
                 path="/employees"
-                element={
-                  <EmployeeView
-                    employees={employees}
-                    shifts={shifts}
-                    events={events}
-                    loading={isLoading}
-                  />
-                }
+                element={<EmployeeView employees={employees} shifts={shifts} loading={isLoading} />}
               />
               <Route
                 path="/locations"
-                element={
-                  <LocationView
-                    locations={locations}
-                    events={events}
-                    loading={isLoading}
-                    onBack={() => navigate('/calendar')}
-                  />
-                }
+                element={<LocationView locations={locations} events={events} loading={isLoading} />}
               />
               <Route
                 path="/payroll"
@@ -314,6 +307,7 @@ function AppContent({
                     events={events}
                     locations={locations}
                     loading={isLoading}
+                    onOpenExport={onOpenExport}
                   />
                 }
               />
@@ -375,6 +369,14 @@ function App() {
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem('splashscreen_shown');
   });
+
+  if (Gallery && window.location.pathname === '/gallery') {
+    return (
+      <Suspense fallback={<Loader fullScreen={false} />}>
+        <Gallery />
+      </Suspense>
+    );
+  }
 
   if (showSplash) {
     return <Splashscreen onComplete={() => setShowSplash(false)} />;

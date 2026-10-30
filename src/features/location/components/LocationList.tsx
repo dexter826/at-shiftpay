@@ -1,103 +1,124 @@
 import React, { memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin } from 'lucide-react';
-import { Skeleton } from '@/components/ui/Skeleton';
+import Button from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadMore } from '@/components/ui/LoadMore';
-import LocationCard from '@/features/location/components/LocationCard';
+import { Skeleton } from '@/components/ui/Skeleton';
+import LocationRow from '@/features/location/components/LocationRow';
 import { Location } from '@/types/index';
 
 interface LocationListProps {
   loading: boolean;
   locations: Location[];
+  totalLocations: number;
+  hasActiveFilters: boolean;
   visibleCount: number;
   onLoadMore: () => void;
-  workCounts: Record<string, number>;
-  onEdit: (loc: Location) => void;
-  onDelete: (id: string) => void;
-  onViewDetail: (loc: Location) => void;
-  theme: string;
+  eventCounts: Record<string, number>;
+  onEdit: (location: Location) => void;
+  onDelete: (locationId: string) => void;
+  onViewDetail: (location: Location) => void;
+  onResetFilters: () => void;
 }
+
+const GRID_CLASSES = 'lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1.2fr)_120px_96px_96px]';
 
 const LocationList: React.FC<LocationListProps> = ({
   loading,
   locations,
+  totalLocations,
+  hasActiveFilters,
   visibleCount,
   onLoadMore,
-  workCounts,
+  eventCounts,
   onEdit,
   onDelete,
   onViewDetail,
-  theme,
+  onResetFilters,
 }) => {
   const hasMore = locations.length > visibleCount;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className={`bg-surface border border-line rounded-md overflow-hidden flex flex-col`}
-              >
-                <Skeleton width="100%" height={200} />
-                <div className="p-5 space-y-4 flex-1">
-                  <div className="space-y-2">
-                    <Skeleton width="80%" height={24} />
-                    <Skeleton width="60%" height={16} />
-                  </div>
-                  <div className="pt-4 border-t border-line flex gap-4">
-                    <div className="flex-1 space-y-2">
-                      <Skeleton width="40%" height={12} />
-                      <Skeleton width="70%" height={16} />
-                    </div>
-                    <div className="flex-1 space-y-2">
-                      <Skeleton width="40%" height={12} />
-                      <Skeleton width="70%" height={16} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : locations.length === 0 ? (
-          <motion.div
-            key="empty"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className={`col-span-full text-center py-20 text-ink-muted bg-surface border border-line rounded-md border-dashed`}
-          >
-            <MapPin size={48} className="mx-auto mb-4 text-ink-muted" />
-            <p className="text-body">Không tìm thấy địa điểm nào</p>
-          </motion.div>
-        ) : (
-          <>
-            {locations.slice(0, visibleCount).map((loc) => (
-              <LocationCard
-                key={loc.id}
-                location={loc}
-                stats={{ workCount: workCounts[loc.id] || 0 }}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onViewDetail={onViewDetail}
-                theme={theme}
-              />
-            ))}
+    <section className="border border-line bg-surface">
+      <div
+        className={`hidden gap-3 border-b border-line bg-surface-2 px-4 py-2 lg:grid ${GRID_CLASSES}`}
+      >
+        <span className="font-mono text-mono-label text-ink-muted">Địa điểm</span>
+        <span className="font-mono text-mono-label text-ink-muted">Địa chỉ</span>
+        <span className="font-mono text-mono-label text-ink-muted">Đánh giá</span>
+        <span className="font-mono text-mono-label text-ink-muted">Sự kiện</span>
+        <span className="sr-only">Thao tác</span>
+      </div>
 
-            {hasMore && (
+      {loading ? (
+        <div aria-busy="true" aria-label="Đang tải địa điểm">
+          {Array.from({ length: 8 }, (_, index) => (
+            <div
+              key={index}
+              className={`grid gap-2 border-b border-line px-4 py-3 last:border-b-0 ${GRID_CLASSES}`}
+            >
+              <Skeleton width="70%" height={16} />
+              <Skeleton width="80%" height={14} />
+              <div className="hidden lg:block">
+                <Skeleton width={56} height={22} />
+              </div>
+              <div className="hidden lg:block">
+                <Skeleton width={54} height={14} />
+              </div>
+              <div className="hidden lg:block">
+                <Skeleton width={72} height={16} />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : locations.length === 0 ? (
+        totalLocations === 0 ? (
+          <EmptyState
+            icon={<MapPin size={24} aria-hidden="true" />}
+            title="Chưa có địa điểm"
+            description="Thêm địa điểm để gắn sự kiện và lưu đánh giá."
+            className="min-h-[280px]"
+          />
+        ) : (
+          <EmptyState
+            icon={<MapPin size={24} aria-hidden="true" />}
+            title="Không tìm thấy địa điểm"
+            description="Thử từ khóa khác hoặc bỏ bộ lọc."
+            className="min-h-[280px]"
+            action={
+              hasActiveFilters ? (
+                <Button variant="outline" onClick={onResetFilters}>
+                  Xóa bộ lọc
+                </Button>
+              ) : undefined
+            }
+          />
+        )
+      ) : (
+        <>
+          {locations.slice(0, visibleCount).map((location) => (
+            <LocationRow
+              key={location.id}
+              location={location}
+              eventCount={eventCounts[location.id] || 0}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onViewDetail={onViewDetail}
+            />
+          ))}
+          {hasMore && (
+            <div className="border-t border-line p-3">
               <LoadMore
                 currentCount={visibleCount}
                 totalCount={locations.length}
                 onLoadMore={onLoadMore}
                 unit="địa điểm"
-                className="pt-2 pb-4 col-span-full"
               />
-            )}
-          </>
-        )}
-      </AnimatePresence>
-    </div>
+            </div>
+          )}
+        </>
+      )}
+    </section>
   );
 };
 

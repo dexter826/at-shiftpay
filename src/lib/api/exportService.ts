@@ -101,7 +101,7 @@ export const exportDetailedReport = (
     'Địa điểm',
     'Ca làm',
     'Ghi chú',
-    'Tổng công',
+    'Số người',
     'Người làm',
     'Lương/người',
     'Phụ phí',

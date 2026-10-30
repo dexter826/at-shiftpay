@@ -1,261 +1,212 @@
 <div align="center">
-  <img src="public/logo_text.png" alt="ShiftPay Logo" width="300"/>
-  <h3>Hệ thống Quản lý Nhân sự, Phân ca & Tính lương Tự động</h3>
-  
-  <p align="center">
+  <img src="public/brand/lockup.svg" alt="ShiftPay" width="360" />
+  <h1>ShiftPay</h1>
+  <p><strong>Ca làm rõ ràng. Lương minh bạch.</strong></p>
+  <p>Lịch sự kiện, phân công ca và thanh toán trong một cuốn sổ vận hành duy nhất.</p>
+
+  <p>
     <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
     <img src="https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Vite-6.2-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
     <img src="https://img.shields.io/badge/Firebase-12.6-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-4.3-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
     <img src="https://img.shields.io/badge/Zustand-5.0-black?style=flat-square&logo=react&logoColor=white" alt="Zustand" />
-    <img src="https://img.shields.io/badge/License-Internal_Use-green.svg?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/badge/License-Internal_Use-green?style=flat-square" alt="Internal use" />
   </p>
 </div>
 
 ---
 
-## 📖 Mục lục
+## Mục lục
 
-1. [Giới thiệu](#-giới-thiệu)
-2. [Tính năng chính](#-tính-năng-chính)
-3. [Kiến trúc tổng quan](#-kiến-trúc-tổng-quan)
-4. [Cài đặt](#-cài-đặt)
-5. [Chạy project](#-chạy-project)
-6. [Env configuration](#-env-configuration)
-7. [Cấu trúc thư mục](#-cấu-trúc-thư-mục)
-8. [Hướng dẫn đóng góp](#-hướng-dẫn-đóng-góp)
+- [Giới thiệu](#giới-thiệu)
+- [Tính năng](#tính-năng)
+- [Cách hoạt động](#cách-hoạt-động)
+- [Dành cho ai](#dành-cho-ai)
+- [Kiến trúc](#kiến-trúc)
+- [Công nghệ](#công-nghệ)
+- [Cài đặt](#cài-đặt)
+- [Cấu hình môi trường](#cấu-hình-môi-trường)
+- [Chạy dự án](#chạy-dự-án)
+- [Cấu trúc thư mục](#cấu-trúc-thư-mục)
+- [Đóng góp](#đóng-góp)
+- [Giấy phép](#giấy-phép)
 
----
+## Giới thiệu
 
-## 1. 🌟 Giới thiệu
+Công việc làm ca thường nằm rải rác giữa bảng tính, tin nhắn và sổ tay. Người quản lý phải mở nhiều nơi mới biết hôm nay ai làm, sự kiện nào còn thiếu người và ai chưa nhận lương.
 
-**ShiftPay** là giải pháp phần mềm tự động hóa quản lý nhân sự, phân ca làm việc, chấm công và tính lương. Ứng dụng chuyên phục vụ các mô hình kinh doanh F&B, nhà hàng, sự kiện và tiệc lưu động.
+ShiftPay gom những việc đó vào một chỗ:
 
-### Điểm nổi bật
+- Lịch sự kiện theo tháng, kèm danh sách ca của từng ngày.
+- Phân công ca sáng/chiều và nhìn ngay sự kiện nào còn trống.
+- Theo dõi công nợ, tiền đã ứng và thanh toán theo từng nhân viên.
+- Dữ liệu cập nhật realtime; cài được lên thiết bị và dùng theme theo hệ thống.
 
-- **⚡ Hiệu suất cao:** Xây dựng trên nền tảng React 19 và Vite mới nhất.
-- **🌐 Offline-first:** Bộ nhớ đệm cục bộ thông minh, thao tác mượt mà khi mất kết nối mạng và đồng bộ ngầm khi có Internet.
-- **💳 Chạm thanh toán:** Tự động tạo mã QR chuyển khoản chính xác đến từng đồng qua hệ thống VietQR.
+<img src="docs/images/mockup.jpg" alt="Lịch sự kiện và Sổ lương của ShiftPay trên mobile" width="100%" />
 
----
+## Tính năng
 
-## 2. 🚀 Tính năng chính
+### Lịch sự kiện
 
-```mermaid
-mindmap
-  root((ShiftPay))
-    Quản lý Nhân sự
-      Hồ sơ & Tài khoản
-      Lọc & Tìm kiếm
-    Quản lý Địa điểm
-      Lưu trữ địa chỉ
-      Đánh giá & Ghi chú
-    Lịch & Sự kiện
-      Lịch làm việc
-      Trạng thái & Dự toán
-    Phân ca & Chấm công
-      Gán ca làm việc
-      Hệ số tự động
-    Tài chính & Lương
-      Công nợ & Ứng lương
-      Thanh toán VietQR
-      Lịch sử giao dịch
-    Báo cáo & Thống kê
-      Dashboard thu chi
-      Xuất dữ liệu CSV
-```
+Xem cả tháng trong một lưới gọn. Chọn một ngày để xem sự kiện, giờ, địa điểm và số ca. Sự kiện chưa có người được đánh dấu để không bị bỏ sót.
 
-- **👥 Nhân sự & Hồ sơ:** Quản lý thông tin cá nhân, tài khoản ngân hàng và tìm kiếm nhân viên.
-- **📍 Địa điểm làm việc:** Quản lý danh sách điểm tổ chức, đánh giá chất lượng và ghi chú đặc thù.
-- **📅 Lịch & Sự kiện:** Giao diện trực quan theo dõi tiến độ sự kiện, liên kết địa điểm và dự toán chi phí.
-- **⏰ Phân ca & Chấm công:** Gán ca làm linh hoạt (Sáng/Chiều/Tối), tự động áp dụng hệ số giờ làm để tính thu nhập.
-- **💳 Tài chính & Quyết toán:** Tổng hợp công nợ, quản lý tạm ứng, tạo mã QR thanh toán nhanh qua VietQR và lưu trữ lịch sử minh bạch.
-- **📊 Báo cáo & Thống kê:** Biểu đồ trực quan theo dõi dòng tiền và hỗ trợ trích xuất dữ liệu công lương ra tệp CSV.
-- **🎨 Trải nghiệm UI/UX:** Giao diện tương thích đa thiết bị, hỗ trợ chế độ Tối/Sáng và PWA.
+### Phân công ca
 
-<br>
+Mỗi sự kiện có ca sáng và ca chiều. Chọn nhân viên, xem số ca chưa trả của họ và lưu phân công trong một lần.
 
-<img src="docs/images/mockup.jpg" alt="Mockup ứng dụng" width="100%">
+### Sổ lương
 
----
+Theo dõi từng người còn bao nhiêu ca chưa trả, đã ứng bao nhiêu và cần thanh toán bao nhiêu. Thanh toán, ứng lương và quyết toán được thực hiện ngay trong sổ.
 
-## 3. 🏗️ Kiến trúc tổng quan
+### Thanh toán QR
 
-ShiftPay ứng dụng kiến trúc **Modular Frontend** kết hợp **Service-based Repository**, tách biệt hoàn toàn logic tương tác dữ liệu khỏi giao diện hiển thị.
+Tạo mã VietQR đúng số tiền từ tài khoản ngân hàng của nhân viên. Mỗi giao dịch được lưu lại để đối soát sau.
 
-```mermaid
-flowchart TB
-    subgraph UI["Giao diện (React 19)"]
-        Pages["Trang (Dashboard, Sự kiện, Nhân sự...)"]
-        Modals["Modals & Dialogs"]
-        Components["UI Components (Button, Form...)"]
-    end
+### Địa điểm và nhân sự
 
-    subgraph State["Trạng thái (Zustand)"]
-        AppData["appDataStore (Dữ liệu Offline)"]
-        AuthStore["authStore (Phiên Đăng nhập)"]
-        ThemeStore["themeStore (Giao diện Tối/Sáng)"]
-    end
+Lưu địa chỉ, tọa độ và đánh giá địa điểm để lần xếp sau nhanh hơn. Hồ sơ nhân viên có ảnh, số điện thoại và tài khoản nhận lương.
 
-    subgraph Services["Tầng Dịch vụ (Singleton Logic)"]
-        EmpServ["employeeService"]
-        EvtServ["eventService"]
-        LocServ["locationService"]
-        PmtServ["paymentService"]
-        ShfServ["shiftService"]
-        SetServ["settingsService"]
-    end
+### Dùng như một ứng dụng
 
-    subgraph External["Dịch vụ Bên ngoài"]
-        Firebase["Firebase (Firestore & Auth)"]
-        VietQR["VietQR API (Mã QR)"]
-        ImgBB["ImgBB API (Lưu ảnh Cloud)"]
-        LocIQ["LocationIQ API (Bản đồ)"]
-    end
+Cài ShiftPay lên màn hình chính, dùng theme theo hệ thống hoặc chọn sáng/tối. Khi mất mạng, ứng dụng vẫn mở được shell đã lưu và báo trạng thái ngoại tuyến.
 
-    UI <-->|Subscribe & Dispatch| State
-    UI -->|Gọi Service| Services
-    Services <-->|Đồng bộ & Cache| State
-    Services <-->|REST / SDK API| External
+## Cách hoạt động
 
-    classDef default fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#f9fafb;
-    classDef highlight fill:#3b82f6,stroke:#1d4ed8,stroke-width:2px,color:#ffffff;
-    classDef storage fill:#10b981,stroke:#047857,stroke-width:2px,color:#ffffff;
-    class External storage;
-    class State highlight;
-```
+1. **Tạo sự kiện:** chọn ngày, giờ, địa điểm và mức lương mỗi ca.
+2. **Xếp người:** chọn ca sáng/chiều, gán nhân viên và kiểm tra lại danh sách.
+3. **Chốt sổ:** xem công nợ, xử lý ứng lương hoặc thanh toán, rồi xuất CSV khi cần.
 
-1. **Presentation Layer:** Kết xuất giao diện (React 19, Tailwind CSS, Framer Motion) và kiểm tra dữ liệu đầu vào (`Zod`).
-2. **State Management:** Lưu trữ trạng thái toàn cục với Zustand, phân tách rõ ràng giúp tối ưu hóa hiệu suất.
-3. **Service Layer:** Cầu nối xử lý nghiệp vụ, giao tiếp với cơ sở dữ liệu và tự động thử lại (retry logic) khi mạng chập chờn.
-4. **Backend & Cloud:** Cơ sở dữ liệu thời gian thực và quản lý định danh qua Firebase, tích hợp các API hình ảnh và cổng thanh toán.
+## Dành cho ai
 
----
+- Nhà hàng và đơn vị tiệc lưu động cần xếp ca theo từng sự kiện.
+- Đội vận hành phải theo dõi nhân sự, địa điểm và lương trong cùng một luồng.
+- Người quản lý muốn biết chính xác ai còn ca chưa trả và đã ứng bao nhiêu.
 
-## 4. ⚙️ Cài đặt
+## Kiến trúc
 
-- **Node.js:** `>= 20.0.0`
-- **npm:** `>= 10.0.0`
-- **Git:** Đã cài đặt trên hệ thống.
+ShiftPay dùng kiến trúc modular frontend kết hợp service-based repository. Logic truy cập dữ liệu nằm trong các service, UI chỉ đọc state và gọi hành động.
+
+Các lớp chính:
+
+1. **Giao diện:** React 19, Tailwind CSS 4, Radix UI, Framer Motion; dữ liệu đầu vào kiểm bằng Zod.
+2. **Trạng thái:** Zustand quản lý dữ liệu ứng dụng, phiên đăng nhập và theme.
+3. **Dịch vụ:** các service bọc Firestore và API ngoài, xử lý batch/transaction khi ghi dữ liệu.
+4. **Dịch vụ ngoài:** Firebase cho dữ liệu và xác thực; VietQR cho mã chuyển khoản; ImgBB cho ảnh đại diện; LocationIQ cho bản đồ.
+
+## Công nghệ
+
+React 19 · TypeScript · Vite · Firebase · Tailwind CSS 4 · Radix UI · Zustand · Framer Motion.
+
+## Cài đặt
+
+Yêu cầu:
+
+- Node.js `>= 20`
+- npm `>= 10`
+- Git
 
 ```bash
-# 1. Clone repository
 git clone https://github.com/dexter826/at_shiftpay.git
 cd at_shiftpay
-
-# 2. Cài đặt thư viện phụ thuộc
 npm install
 ```
 
----
+## Cấu hình môi trường
 
-## 5. 🏃 Chạy project
+Sao chép tệp mẫu rồi điền giá trị:
 
 ```bash
-# Khởi động máy chủ phát triển (http://localhost:5173)
-npm run dev
-
-# Kiểm tra lỗi kiểu TypeScript và đóng gói Production
-npm run build
-
-# Xem trước phiên bản Production cục bộ
-npm run preview
+cp .env.example .env
 ```
-
-> [!NOTE]
-> Môi trường phát triển hỗ trợ tính năng HMR (Hot Module Replacement) giúp cập nhật giao diện ngay lập tức khi chỉnh sửa mã nguồn.
-
----
-
-## 6. 🔐 Env configuration
-
-Tạo tệp `.env` tại thư mục gốc của dự án (ngang hàng `package.json`) với cấu trúc mẫu sau:
 
 ```env
-# 1. CẤU HÌNH HỆ THỐNG FIREBASE (BẮT BUỘC)
-VITE_FIREBASE_API_KEY=your_firebase_api_key_here
-VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id_here
-VITE_FIREBASE_APP_ID=your_app_id_here
+# Firebase (bắt buộc)
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
 
-# 2. CẤU HÌNH LƯU TRỮ HÌNH ẢNH (https://api.imgbb.com/)
-VITE_IMGBB_API_KEY=your_imgbb_api_key_here
+# ImgBB (bắt buộc khi upload ảnh đại diện)
+VITE_IMGBB_API_KEY=
 
-# 3. CẤU HÌNH BẢN ĐỒ (https://locationiq.com/)
-VITE_LOCATIONIQ_API_KEY=your_locationiq_api_key_here
+# LocationIQ (tùy chọn)
+VITE_LOCATIONIQ_API_KEY=
 ```
 
-### Bảng Mô tả Biến Môi trường
+| Biến | Trạng thái | Mô tả |
+| --- | --- | --- |
+| `VITE_FIREBASE_API_KEY` | Bắt buộc | Khóa API Firebase. |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Bắt buộc | Domain xác thực Firebase. |
+| `VITE_FIREBASE_PROJECT_ID` | Bắt buộc | ID dự án Firebase. |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Bắt buộc | Bucket lưu trữ Firebase. |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Bắt buộc | Sender ID của Firebase. |
+| `VITE_FIREBASE_APP_ID` | Bắt buộc | App ID của ứng dụng web. |
+| `VITE_IMGBB_API_KEY` | Bắt buộc khi upload ảnh | Khóa API ImgBB để upload ảnh đại diện. |
+| `VITE_LOCATIONIQ_API_KEY` | Tùy chọn | Khóa LocationIQ cho autocomplete địa chỉ và bản đồ tĩnh. Thiếu key thì dùng fallback. |
 
-| Biến môi trường              | Trạng thái | Mô tả chi tiết                                               |
-| :--------------------------- | :--------: | :----------------------------------------------------------- |
-| `VITE_FIREBASE_API_KEY`      |  Bắt buộc  | Mã khóa API giao tiếp với các dịch vụ Firebase.              |
-| `VITE_FIREBASE_AUTH_DOMAIN`  |  Bắt buộc  | Tên miền xác thực (Authentication Domain) của Firebase.      |
-| `VITE_FIREBASE_PROJECT_ID`   |  Bắt buộc  | Định danh duy nhất của dự án Firebase.                       |
-| `VITE_FIREBASE_STORAGE_...`  |  Bắt buộc  | Địa chỉ đám mây (Storage Bucket) lưu trữ tệp tin.            |
-| `VITE_FIREBASE_MESSAGING...` |  Bắt buộc  | Mã định danh người gửi tin nhắn hệ thống.                    |
-| `VITE_FIREBASE_APP_ID`       |  Bắt buộc  | Mã định danh ứng dụng web tạo trong Firebase Console.        |
-| `VITE_IMGBB_API_KEY`         |  Tùy chọn  | Khóa truy cập API lưu trữ ảnh đại diện trực tiếp lên ImgBB.  |
-| `VITE_LOCATIONIQ_API_KEY`    |  Tùy chọn  | Khóa truy cập API hỗ trợ tính năng định vị tọa độ và bản đồ. |
+Không commit tệp `.env`.
 
----
+## Chạy dự án
 
-## 7. 📁 Cấu trúc thư mục
+```bash
+# Phát triển tại http://localhost:3000
+npm run dev
+
+# Đóng gói production
+npm run build
+
+# Xem bản production cục bộ
+npm run preview
+
+# Kiểm tra chất lượng
+npm run lint
+npx tsc --noEmit
+npm run format:check
+```
+
+Dev server dùng cổng `3000` theo `vite.config.ts`.
+
+## Cấu trúc thư mục
 
 ```text
 at_shiftpay/
-├── dist/                # Mã nguồn Production đã được tối ưu hóa
-├── docs/                # Tài liệu thiết kế và hình ảnh minh họa
-├── public/              # Tài nguyên tĩnh công khai (Logo, favicon...)
-├── src/                 # KHO MÃ NGUỒN CHÍNH
-│   ├── animations/      # Cấu hình hoạt ảnh Framer Motion
-│   ├── assets/          # Dữ liệu tĩnh, hoạt ảnh Lottie
-│   ├── components/      # KHO COMPONENT REACT (auth, common, layout, modals, pages, ui)
-│   ├── constants/       # Hằng số toàn cục, mã màu sắc
-│   ├── hooks/           # Custom React Hooks
-│   ├── lib/             # Các thư viện bổ trợ
-│   ├── services/        # TẦNG DỊCH VỤ (employee, event, location, shift, payment, export...)
-│   ├── stores/          # TẦNG TRẠNG THÁI ZUSTAND (appData, auth, theme)
-│   ├── utils/           # Các hàm tiện ích format, tính toán
-│   ├── App.tsx          # Điểm neo chính kết nối Router và Providers
-│   ├── index.css        # Khai báo CSS và Tailwind
-│   └── types.ts         # Khai báo toàn bộ Interface & Type TypeScript
-├── .env                 # Khai báo biến môi trường cục bộ
-├── firebase.json        # Cấu hình quy tắc Firebase Hosting
-├── firestore.rules      # Quy tắc phân quyền bảo mật Firestore
-└── vite.config.ts       # Cấu hình đóng gói Vite
+├── src/
+│   ├── app/             # App shell, router, ErrorBoundary và các route
+│   ├── components/      # Layout, UI primitives và component dùng chung
+│   ├── features/        # auth, dashboard, calendar, employee, location, payroll, settings
+│   ├── dev/             # Gallery dành cho môi trường phát triển
+│   ├── lib/             # Firebase, API services, motion và tiện ích
+│   ├── stores/          # Zustand: appData, auth, theme
+│   ├── types/           # Interface và type dùng chung
+│   ├── utils/           # format, payrollMath, validation, cropImage, compare
+│   ├── index.css        # Token, theme và style nền
+│   └── index.tsx        # Entry point
+├── public/              # Brand, favicon, icon, manifest và service worker
+├── docs/                # Tài liệu và hình ảnh
+├── DESIGN.md            # Design system
+├── GLOSSARY.md          # Thuật ngữ nghiệp vụ
+├── firebase.json        # Cấu hình Firebase
+├── firestore.indexes.json
+├── firestore.rules
+├── .env.example
+└── vite.config.ts
 ```
 
----
+`dist/` và `node_modules/` là thư mục sinh ra khi build/cài đặt, không commit.
 
-## 8. 🤝 Hướng dẫn đóng góp
+## Đóng góp
 
-### Quy trình Đóng góp (Git Workflow)
+Mở issue hoặc pull request cho thay đổi. Trước khi gửi, chạy lint, type-check, build và format để giữ nhánh sạch.
 
-```mermaid
-gitGraph
-  commit id: "Khởi tạo"
-  commit id: "Phiên bản ổn định"
-  branch feature/them-thong-ke
-  checkout feature/them-thong-ke
-  commit id: "feat: Tạo biểu đồ"
-  checkout main
-  merge feature/them-thong-ke id: "Gộp tính năng"
-```
+## Giấy phép
 
-1. **Fork** kho lưu trữ về tài khoản GitHub cá nhân.
-2. **Tạo nhánh mới:** `git checkout -b feature/ten-tinh-nang`
-3. **Thực thi thay đổi:** Đảm bảo mã nguồn sạch, không lỗi kiểm tra cú pháp (lint).
-4. **Commit:** `git commit -m "feat: Bổ sung tính năng mới"`
-5. **Push:** `git push origin feature/ten-tinh-nang`
-6. **Tạo Pull Request (PR):** Hướng đến nhánh `main` của kho lưu trữ gốc.
+Dự án dùng nội bộ, không nhằm mục đích thương mại.
 
 ---
 
 <div align="center">
-  <i>Ứng dụng được làm ra với mục đích phục vụ nội bộ và không nhằm mục đích thương mại.</i>
+  Phát triển bởi <a href="https://github.com/dexter826">MOB</a>
 </div>
-<div align="center">Made with ❤️ by <a href="https://github.com/dexter826">MOB</a></div>

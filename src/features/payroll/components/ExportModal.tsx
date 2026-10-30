@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { focusRingOnSurfaceClasses } from '@/lib/utils';
-import { Check, Download, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import Checkbox from '@/components/ui/Checkbox';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -53,7 +54,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
     >
       <div className="space-y-4">
         <p className={`text-body-sm text-ink-soft`}>
-          Chọn thời gian để xuất báo cáo lương và lịch tiệc.
+          Chọn thời gian để xuất báo cáo lương và lịch sự kiện.
         </p>
 
         {/* Chọn năm */}
@@ -62,7 +63,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             type="button"
             onClick={() => setSelectedYear((prev) => (prev === 0 ? currentYear : prev - 1))}
             aria-label="Năm trước"
-            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+            className={`flex h-11 w-11 items-center justify-center rounded-sm hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
             <ChevronLeft size={18} className="text-ink-soft" />
           </button>
@@ -73,46 +74,38 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             type="button"
             onClick={() => setSelectedYear((prev) => (prev === 0 ? currentYear : prev + 1))}
             aria-label="Năm sau"
-            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+            className={`flex h-11 w-11 items-center justify-center rounded-sm hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
             <ChevronRight size={18} className="text-ink-soft" />
           </button>
         </div>
 
         {/* Chỉ xuất công nợ */}
-        <button
-          type="button"
-          onClick={() => setOnlyDebt(!onlyDebt)}
-          aria-pressed={onlyDebt}
-          className={`w-full flex items-center justify-between p-3 rounded-md border transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
+        <div
+          className={`w-full rounded-sm border p-3 transition-colors duration-fast ease-standard ${
             onlyDebt ? 'border-accent bg-surface-2' : 'border-line bg-surface-2'
           }`}
         >
-          <div className="flex items-center gap-3">
-            <div
-              className={`p-2 rounded-sm border transition-colors duration-fast ease-standard ${
-                onlyDebt
-                  ? 'bg-surface border-line text-accent-ink'
-                  : 'bg-surface border-line text-ink-muted'
-              }`}
-            >
-              <Calendar size={18} />
-            </div>
-            <div className="text-left">
-              <p className={`text-body-sm font-semibold text-ink`}>Chỉ xuất sự kiện còn nợ</p>
-              <p className="text-label font-medium text-ink-muted">
-                Lọc các sự kiện chưa thanh toán hết
-              </p>
-            </div>
-          </div>
-          <div
-            className={`w-5 h-5 shrink-0 rounded-xs border-2 flex items-center justify-center transition-colors duration-fast ease-standard ${
-              onlyDebt ? 'bg-accent border-accent' : 'border-ink-muted'
-            }`}
-          >
-            {onlyDebt && <Check size={12} className="text-on-accent" strokeWidth={3} />}
-          </div>
-        </button>
+          <Checkbox checked={onlyDebt} onChange={setOnlyDebt}>
+            <span className="flex items-center gap-3">
+              <span
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-line bg-surface ${
+                  onlyDebt ? 'text-accent-ink' : 'text-ink-muted'
+                }`}
+              >
+                <Calendar size={18} aria-hidden="true" />
+              </span>
+              <span className="text-left">
+                <span className="block text-body-sm font-semibold text-ink">
+                  Chỉ xuất sự kiện còn nợ
+                </span>
+                <span className="block text-label font-medium text-ink-muted">
+                  Lọc các sự kiện chưa thanh toán hết
+                </span>
+              </span>
+            </span>
+          </Checkbox>
+        </div>
 
         {/* Lưới chọn tháng */}
         <div className="grid grid-cols-3 gap-3">
@@ -126,7 +119,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
               }
             }}
             className={`
-                           col-span-3 py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses}
+                           col-span-3 min-h-11 py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses}
                            ${
                              isAllSelected
                                ? 'bg-accent text-on-accent border-accent'
@@ -152,7 +145,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                   }
                 }}
                 className={`
-                            py-2.5 rounded-sm text-body-sm font-semibold tabular-nums transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses}
+                          min-h-11 py-2.5 rounded-sm text-body-sm font-semibold tabular-nums transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses}
                             ${
                               isSelected
                                 ? 'bg-accent text-on-accent border-accent'

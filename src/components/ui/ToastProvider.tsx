@@ -1,20 +1,11 @@
-import React, {
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react';
-import { CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
-import { DURATION_FAST, EASE_STANDARD } from '@/lib/motion';
+import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import * as ToastPrimitive from '@radix-ui/react-toast';
+import { AlertCircle, CheckCircle, X, XCircle } from 'lucide-react';
+import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 type ToastType = 'success' | 'error' | 'warning';
 
-interface Toast {
+interface ToastRecord {
   id: number;
   message: string;
   type: ToastType;
@@ -34,93 +25,84 @@ export const useToast = () => {
   return context;
 };
 
-const ToastItem: React.FC<{ toast: Toast; onRemove: (id: number) => void }> = ({
-  toast,
-  onRemove,
-}) => {
-  useEffect(() => {
-    const timer = setTimeout(() => onRemove(toast.id), toast.duration);
-    return () => clearTimeout(timer);
-  }, [toast.id, toast.duration, onRemove]);
-
-  const prefersReducedMotion = useReducedMotion();
-
-  const toastStyles = {
-    success: {
-      icon: <CheckCircle size={18} className="text-success" />,
-      border: 'border-success/40',
-      role: 'status',
-    },
-    error: {
-      icon: <XCircle size={18} className="text-danger" />,
-      border: 'border-danger/40',
-      role: 'alert',
-    },
-    warning: {
-      icon: <AlertCircle size={18} className="text-warning" />,
-      border: 'border-warning/40',
-      role: 'status',
-    },
-  } as const;
-
-  const { icon, border, role } = toastStyles[toast.type];
-
-  return (
-    <motion.div
-      role={role}
-      className={`flex items-center gap-3 px-4 py-2.5 rounded-md border bg-surface ${border}`}
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{
-        duration: prefersReducedMotion ? 0 : DURATION_FAST,
-        ease: EASE_STANDARD,
-      }}
-      layout
-    >
-      {icon}
-      <span className={`text-body-sm text-ink flex-1`}>{toast.message}</span>
-      <button
-        type="button"
-        onClick={() => onRemove(toast.id)}
-        aria-label="Đóng thông báo"
-        className={`flex h-10 w-10 items-center justify-center rounded-sm text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
-      >
-        <X size={16} />
-      </button>
-    </motion.div>
-  );
+const toastStyles: Record<ToastType, { icon: React.ReactNode; border: string }> = {
+  success: {
+    icon: <CheckCircle size={18} className="text-success" aria-hidden="true" />,
+    border: 'border-l-success',
+  },
+  error: {
+    icon: <XCircle size={18} className="text-danger" aria-hidden="true" />,
+    border: 'border-l-danger',
+  },
+  warning: {
+    icon: <AlertCircle size={18} className="text-warning" aria-hidden="true" />,
+    border: 'border-l-warning',
+  },
 };
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toasts, setToasts] = useState<ToastRecord[]>([]);
   const nextIdRef = useRef(0);
 
   const showToast = useCallback(
     (message: string, type: ToastType = 'success', duration: number = 3000) => {
       nextIdRef.current += 1;
       const id = nextIdRef.current;
-      setToasts((prev) => [...prev, { id, message, type, duration }]);
+      setToasts((current) => [...current, { id, message, type, duration }]);
     },
     []
   );
 
   const removeToast = useCallback((id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+    setToasts((current) => current.filter((toast) => toast.id !== id));
   }, []);
 
   const value = useMemo(() => ({ showToast }), [showToast]);
 
   return (
     <ToastContext.Provider value={value}>
-      {children}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-[90%] max-w-sm">
-        <AnimatePresence mode="popLayout">
-          {toasts.map((toast) => (
-            <ToastItem key={toast.id} toast={toast} onRemove={removeToast} />
-          ))}
-        </AnimatePresence>
-      </div>
+      <ToastPrimitive.Provider swipeDirection="right">
+        {children}
+        <ToastPrimitive.Viewport className="fixed left-1/2 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 flex-col gap-2 outline-none">
+          {toasts.map((toast) => {
+            const styles = toastStyles[toast.type];
+            return (
+              <ToastPrimitive.Root
+                key={toast.id}
+                defaultOpen
+                duration={toast.duration}
+                type={toast.type === 'error' ? 'foreground' : 'background'}
+                onOpenChange={(open) => {
+                  if (!open) removeToast(toast.id);
+                }}
+                className={cn(
+                  'pointer-events-auto flex w-full items-center gap-3 rounded-sm border border-line border-l-2 bg-surface p-3 pl-3.5',
+                  'data-[state=open]:animate-toast-in',
+                  'data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)]',
+                  styles.border
+                )}
+              >
+                <span>{styles.icon}</span>
+                <ToastPrimitive.Title className="min-w-0 flex-1 text-body-sm text-ink">
+                  {toast.message}
+                </ToastPrimitive.Title>
+                <ToastPrimitive.Close asChild>
+                  <button
+                    type="button"
+                    aria-label="Đóng thông báo"
+                    className={cn(
+                      'flex h-11 w-11 shrink-0 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:bg-surface-2 hover:text-ink',
+                      focusRingOnSurfaceClasses
+                    )}
+                  >
+                    <X size={15} aria-hidden="true" />
+                  </button>
+                </ToastPrimitive.Close>
+              </ToastPrimitive.Root>
+            );
+          })}
+        </ToastPrimitive.Viewport>
+      </ToastPrimitive.Provider>
     </ToastContext.Provider>
   );
 };

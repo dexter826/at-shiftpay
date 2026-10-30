@@ -15,7 +15,7 @@ import { PaymentTransactionSchema } from '@/utils/validation';
 
 const ALREADY_SETTLED_MESSAGE = 'Khoản ứng đã được quyết toán';
 const SHIFT_NOT_UNPAID_MESSAGE = 'Ca làm đã được thanh toán hoặc ứng trước';
-const SHIFT_NOT_ADVANCED_MESSAGE = 'Ca làm không còn ở trạng thái ứng lương';
+const SHIFT_NOT_SETTLEABLE_MESSAGE = 'Ca làm không còn ở trạng thái chờ quyết toán';
 
 export const paymentService = {
   subscribePayments(
@@ -106,8 +106,13 @@ export const paymentService = {
 
         for (const shiftId of shiftIds) {
           const snapshot = await transaction.get(doc(db, 'shifts', shiftId));
-          if (!snapshot.exists() || snapshot.data().status !== 'advanced') {
-            throw new Error(SHIFT_NOT_ADVANCED_MESSAGE);
+          if (!snapshot.exists()) {
+            throw new Error(SHIFT_NOT_SETTLEABLE_MESSAGE);
+          }
+          const status = snapshot.data().status;
+          // Quyết toán chốt cả ca đã ứng lẫn ca chưa trả của nhân viên.
+          if (status !== 'advanced' && status !== 'unpaid') {
+            throw new Error(SHIFT_NOT_SETTLEABLE_MESSAGE);
           }
         }
 

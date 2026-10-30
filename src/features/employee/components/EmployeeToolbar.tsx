@@ -1,79 +1,62 @@
 import React, { memo } from 'react';
-import { ArrowUpDown, Plus } from 'lucide-react';
-import Button from '@/components/ui/Button';
 import SearchInput from '@/components/ui/SearchInput';
 import { Dropdown } from '@/components/ui/Dropdown';
-import { Skeleton } from '@/components/ui/Skeleton';
+
+export type EmployeeSort = 'name' | 'shifts' | 'recent';
 
 interface EmployeeToolbarProps {
-  employeeCount: number;
-  loading: boolean;
-  onAdd: () => void;
   searchTerm: string;
-  onSearchChange: (val: string) => void;
+  onSearchChange: (value: string) => void;
   onClearSearch: () => void;
-  sortBy: 'name' | 'shifts' | 'recent';
-  onSortChange: (val: 'name' | 'shifts' | 'recent') => void;
+  sortBy: EmployeeSort;
+  onSortChange: (value: EmployeeSort) => void;
+  loading?: boolean;
 }
 
+const SORT_OPTIONS = [
+  { value: 'name', label: 'Tên A–Z' },
+  { value: 'shifts', label: 'Nhiều ca chưa trả' },
+  { value: 'recent', label: 'Mới nhất' },
+];
+
 const EmployeeToolbar: React.FC<EmployeeToolbarProps> = ({
-  employeeCount,
-  loading,
-  onAdd,
   searchTerm,
   onSearchChange,
   onClearSearch,
   sortBy,
   onSortChange,
-}) => {
-  const sortOptions = [
-    { value: 'name', label: 'Tên A-Z' },
-    { value: 'shifts', label: 'Nhiều công' },
-    { value: 'recent', label: 'Mới nhất' },
-  ];
-
-  return (
-    <div className={`py-4 px-4 md:px-6 border-b border-line`}>
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className={`text-title font-semibold text-ink`}>
-            {loading ? <Skeleton width={120} height={24} /> : `${employeeCount} nhân viên`}
-          </h1>
-        </div>
-        <Button
-          onClick={onAdd}
-          disabled={loading}
-          className=""
-          icon={<Plus size={18} />}
-          aria-label="Thêm mới nhân viên"
-        >
-          <span className="hidden sm:inline">Thêm mới</span>
-        </Button>
-      </div>
-
-      <div className="mt-4 flex gap-2">
-        <SearchInput
-          placeholder="Nhập từ khóa tìm kiếm"
-          value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
-          onClear={onClearSearch}
-          disabled={loading}
-          containerClassName="flex-1"
-        />
-
-        <Dropdown
-          options={sortOptions}
-          value={sortBy}
-          onChange={(value) => {
-            if (value === 'name' || value === 'shifts' || value === 'recent') onSortChange(value);
-          }}
-          icon={<ArrowUpDown size={16} />}
-          disabled={loading}
-          className="h-10"
-        />
-      </div>
+  loading = false,
+}) => (
+  <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+    <div>
+      <p className="mb-1.5 font-mono text-mono-label text-ink-muted">Tìm kiếm</p>
+      <SearchInput
+        aria-label="Tìm nhân viên"
+        placeholder="Tên hoặc số điện thoại"
+        value={searchTerm}
+        onChange={(event) => onSearchChange(event.target.value)}
+        onClear={onClearSearch}
+        disabled={loading}
+      />
     </div>
-  );
-};
+
+    <div className="sm:max-w-56">
+      <p className="mb-1.5 font-mono text-mono-label text-ink-muted">Sắp xếp</p>
+      <Dropdown
+        options={SORT_OPTIONS}
+        value={sortBy}
+        onChange={(value) => {
+          if (value === 'name' || value === 'shifts' || value === 'recent') {
+            onSortChange(value);
+          }
+        }}
+        ariaLabel="Sắp xếp nhân viên"
+        disabled={loading}
+        className="w-full"
+        minWidth="min-w-[190px]"
+      />
+    </div>
+  </div>
+);
 
 export default memo(EmployeeToolbar);

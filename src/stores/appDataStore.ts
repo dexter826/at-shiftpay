@@ -16,9 +16,6 @@ interface AppDataState {
   dataError: string | null;
   viewDate: Date;
 
-  // Computed
-  totalDebt: number;
-
   // Actions
   setDataError: (message: string | null) => void;
   setViewDate: (date: Date) => void;
@@ -44,9 +41,6 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
   dataError: null,
   viewDate: new Date(),
 
-  // Computed
-  totalDebt: 0,
-
   // Actions
   setDataError: (dataError) => set({ dataError }),
   setViewDate: (viewDate) => set({ viewDate }),
@@ -68,7 +62,6 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
       events: [],
       shifts: [],
       settings: DEFAULT_SETTINGS,
-      totalDebt: 0,
       dataError: null,
       isLoading: false,
       isCalendarLoading: false,

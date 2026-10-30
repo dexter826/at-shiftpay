@@ -1,14 +1,17 @@
-import React, { useMemo } from 'react';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
-import { Check } from 'lucide-react';
+import React, { memo, useMemo } from 'react';
 import { Employee } from '@/types/index';
+import Checkbox from '@/components/ui/Checkbox';
+import { Tag } from '@/components/ui/Tag';
+import { cn } from '@/lib/utils';
 
 interface EmployeeAssignmentListProps {
   employees: Employee[];
   shiftCounts: Record<string, number>;
   assignments: Record<string, boolean>;
   initialSelectedIds: Set<string>;
+  lockedIds?: Set<string>;
   searchTerm: string;
+  countsLoaded?: boolean;
   onToggle: (employeeId: string) => void;
 }
 
@@ -17,15 +20,21 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
   shiftCounts,
   assignments,
   initialSelectedIds,
+  lockedIds,
   searchTerm,
+  countsLoaded = false,
   onToggle,
 }) => {
   const sortedEmployees = useMemo(() => {
-    const term = searchTerm.toLowerCase();
+    const term = searchTerm.trim().toLowerCase();
 
     return employees
       .filter((employee) => employee.name.toLowerCase().includes(term))
       .sort((a, b) => {
+        const aLocked = lockedIds?.has(a.id) ? 1 : 0;
+        const bLocked = lockedIds?.has(b.id) ? 1 : 0;
+        if (aLocked !== bLocked) return aLocked - bLocked;
+
         const aInitial = initialSelectedIds.has(a.id) ? 1 : 0;
         const bInitial = initialSelectedIds.has(b.id) ? 1 : 0;
         if (aInitial !== bInitial) return bInitial - aInitial;
@@ -33,58 +42,60 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
         const countDiff = (shiftCounts[b.id] || 0) - (shiftCounts[a.id] || 0);
         if (countDiff !== 0) return countDiff;
 
-        return a.name.localeCompare(b.name);
+        return a.name.localeCompare(b.name, 'vi');
       });
-  }, [employees, searchTerm, initialSelectedIds, shiftCounts]);
+  }, [employees, searchTerm, initialSelectedIds, lockedIds, shiftCounts]);
+
+  if (employees.length === 0) {
+    return (
+      <div className="border border-line px-3 py-4 text-center text-label text-ink-muted">
+        Chưa có nhân viên.
+      </div>
+    );
+  }
+
+  if (sortedEmployees.length === 0) {
+    return (
+      <div className="border border-line px-3 py-4 text-center text-label text-ink-muted">
+        Không tìm thấy nhân viên.
+      </div>
+    );
+  }
 
   return (
-    <div className={`border rounded-md divide-y max-h-48 overflow-y-auto border-line divide-line`}>
-      {employees.length === 0 ? (
-        <div className={`p-3 text-center text-label text-ink-muted`}>Chưa có nhân viên</div>
-      ) : sortedEmployees.length === 0 ? (
-        <div className={`p-3 text-center text-label text-ink-muted`}>Không tìm thấy nhân viên</div>
-      ) : (
-        sortedEmployees.map((employee) => {
-          const shiftCount = shiftCounts[employee.id] || 0;
-          const isSelected = assignments[employee.id] || false;
+    <div
+      role="group"
+      aria-label="Chọn nhân viên"
+      className="max-h-64 divide-y divide-line overflow-y-auto border border-line"
+    >
+      {sortedEmployees.map((employee) => {
+        const shiftCount = shiftCounts[employee.id] || 0;
+        const isSelected = assignments[employee.id] || false;
+        const isLocked = lockedIds?.has(employee.id) ?? false;
 
-          return (
-            <button
-              key={employee.id}
-              type="button"
-              aria-pressed={isSelected}
-              onClick={() => onToggle(employee.id)}
-              className={`w-full text-left p-2.5 flex items-center justify-between transition-colors duration-fast ease-standard hover:bg-surface-2/70 ${
-                isSelected ? 'bg-surface-2' : ''
-              } ${focusRingOnSurfaceClasses}`}
+        return (
+          <div key={employee.id} className={cn('px-3', isSelected && 'bg-surface-2')}>
+            <Checkbox
+              id={`employee-${employee.id}`}
+              checked={isSelected}
+              disabled={isLocked}
+              onChange={() => onToggle(employee.id)}
             >
-              <div className="flex items-center gap-2 flex-1">
-                <span
-                  className={`text-body-sm truncate text-ink-soft ${isSelected ? 'font-medium' : ''}`}
-                >
-                  {employee.name}
-                </span>
-                {shiftCount > 0 && (
-                  <span
-                    className={`text-label px-1.5 py-0.5 rounded-xs bg-surface-2 text-ink-muted`}
-                  >
-                    {shiftCount}
-                  </span>
+              <span className="flex min-w-0 items-center justify-between gap-2">
+                <span className="truncate text-body-sm text-ink">{employee.name}</span>
+                {isLocked ? (
+                  <Tag className="shrink-0">Đã chốt lương</Tag>
+                ) : (
+                  countsLoaded &&
+                  shiftCount > 0 && <Tag className="shrink-0">{shiftCount} ca chưa trả</Tag>
                 )}
-              </div>
-              <div
-                className={`w-5 h-5 rounded-xs border-2 flex items-center justify-center transition-colors duration-fast ease-standard ${
-                  isSelected ? 'bg-accent border-accent' : 'border-line'
-                }`}
-              >
-                {isSelected && <Check size={12} className="text-on-accent" />}
-              </div>
-            </button>
-          );
-        })
-      )}
+              </span>
+            </Checkbox>
+          </div>
+        );
+      })}
     </div>
   );
 };
 
-export default EmployeeAssignmentList;
+export default memo(EmployeeAssignmentList);

@@ -1,152 +1,152 @@
-import { motion, useReducedMotion } from 'framer-motion';
 import React from 'react';
 import {
-  LayoutDashboard,
   CalendarRange,
+  LayoutDashboard,
+  LogOut,
+  MapPin,
+  Moon,
+  Settings,
+  Sun,
   Users,
   Wallet,
-  Settings,
-  LogOut,
-  Moon,
-  Sun,
 } from 'lucide-react';
 import { useThemeStore } from '@/stores/themeStore';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
+import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
+import { getInitials } from '@/utils/initials';
+
+interface NavbarUser {
+  displayName?: string | null;
+  email?: string | null;
+}
 
 interface NavbarProps {
   currentTab: string;
   setTab: (tab: string) => void;
   onLogout: () => void;
+  user?: NavbarUser | null;
 }
 
 const navItems = [
   { id: 'dashboard', label: 'Tổng quan', icon: LayoutDashboard },
-  { id: 'calendar', label: 'Lịch Tiệc', icon: CalendarRange },
-  { id: 'employees', label: 'Nhân Sự', icon: Users },
-  { id: 'payroll', label: 'Thanh Toán', icon: Wallet },
+  { id: 'calendar', label: 'Lịch sự kiện', icon: CalendarRange },
+  { id: 'locations', label: 'Địa điểm', icon: MapPin },
+  { id: 'employees', label: 'Nhân sự', icon: Users },
+  { id: 'payroll', label: 'Thanh toán', icon: Wallet },
   { id: 'settings', label: 'Cài đặt', icon: Settings },
 ];
 
-const NavItem: React.FC<{
-  item: (typeof navItems)[0];
-  isActive: boolean;
-  onClick: () => void;
-  isMobile?: boolean;
-}> = ({ item, isActive, onClick, isMobile }) => {
-  const prefersReducedMotion = useReducedMotion();
-  return (
-    <motion.button
-      type="button"
-      onClick={onClick}
-      className={`relative flex items-center transition-colors duration-fast ease-standard ${
-        isMobile
-          ? 'flex-1 flex-col gap-0.5 py-1.5 rounded-sm text-label leading-tight justify-center'
-          : 'gap-3 w-full px-3 py-2.5 rounded-sm text-body-sm font-medium justify-start'
-      } ${
-        isActive ? 'text-ink bg-surface-2' : `text-ink-muted hover:text-ink-soft hover:bg-surface-2`
-      } ${focusRingOnSurfaceClasses}`}
-    >
-      {isActive && !isMobile && (
-        <motion.div
-          layoutId="nav-indicator-desktop"
-          className="absolute left-0 top-2 bottom-2 w-[2px] bg-accent rounded-none"
-          transition={
-            prefersReducedMotion ? { duration: 0 } : { type: 'spring', bounce: 0.2, duration: 0.6 }
-          }
-        />
-      )}
-      <item.icon size={isMobile ? 20 : 18} />
-      <span>{item.label}</span>
-    </motion.button>
-  );
-};
+const railFocus =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight focus-visible:ring-offset-2 focus-visible:ring-offset-rail';
 
-export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) => {
-  const { theme, toggleTheme } = useThemeStore();
-  const prefersReducedMotion = useReducedMotion();
-  const activeTabId = currentTab === 'locations' ? 'calendar' : currentTab;
-
-  const handleSetTab = (id: string) => setTab(id);
+export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout, user }) => {
+  const { resolvedTheme, toggleTheme } = useThemeStore();
+  const isDark = resolvedTheme === 'dark';
+  const displayName = user?.displayName || user?.email?.split('@')[0] || 'Người dùng';
+  const initials = getInitials(displayName, 'SP');
 
   return (
     <>
-      {/* Desktop sidebar */}
-      <div className="hidden md:flex flex-col w-[var(--sidebar-width)] h-screen bg-surface border-r border-line fixed left-0 top-0 z-30 pt-safe">
-        <div className="p-5 border-b border-line flex flex-col items-center">
-          <img src="/logo_text.png" alt="ShiftPay" className="h-8 object-contain" />
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[var(--rail-width)] flex-col border-r border-rail-line bg-rail pt-safe text-rail-ink md:flex">
+        <div className="flex h-16 shrink-0 items-center justify-center border-b border-rail-line">
+          <img src="/brand/mark-reversed.svg" alt="ShiftPay" className="h-8 w-8 object-contain" />
         </div>
 
-        <nav className="flex-1 p-3 space-y-1 relative" aria-label="Điều hướng chính">
-          {navItems.map((item) => (
-            <NavItem
-              key={item.id}
-              item={item}
-              isActive={activeTabId === item.id}
-              onClick={() => handleSetTab(item.id)}
-            />
-          ))}
+        <nav
+          className="flex flex-1 flex-col items-center gap-1 overflow-y-auto px-2 py-3"
+          aria-label="Điều hướng chính"
+        >
+          {navItems.map((item) => {
+            const isActive = currentTab === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setTab(item.id)}
+                aria-current={isActive ? 'page' : undefined}
+                className={cn(
+                  'flex min-h-[52px] w-full flex-col items-center justify-center gap-1 rounded-sm px-1 text-[9px] font-medium leading-tight transition-colors duration-fast ease-standard',
+                  isActive
+                    ? 'bg-highlight text-highlight-ink'
+                    : 'text-rail-muted hover:bg-rail-hover hover:text-rail-ink',
+                  railFocus
+                )}
+              >
+                <item.icon size={19} aria-hidden="true" />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </nav>
 
-        <div className="p-4 border-t border-line flex items-center gap-1">
-          <button
-            type="button"
-            onClick={onLogout}
-            className={`flex-1 flex items-center gap-3 px-3 py-2.5 rounded-sm text-body-sm font-medium transition-colors duration-fast ease-standard text-danger hover:bg-danger/10 ${focusRingOnSurfaceClasses}`}
+        <div className="flex shrink-0 flex-col items-center gap-1 border-t border-rail-line px-2 py-3">
+          <span
+            role="img"
+            aria-label={displayName}
+            title={displayName}
+            className="flex h-11 w-11 items-center justify-center rounded-full text-highlight-ink"
           >
-            <LogOut size={18} />
-            <span>Đăng xuất</span>
-          </button>
-
-          <div className="w-px h-6 bg-surface-2" />
-
+            <span
+              aria-hidden="true"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-highlight text-[10px] font-semibold"
+            >
+              {initials}
+            </span>
+          </span>
           <button
             type="button"
             onClick={toggleTheme}
-            aria-label={
-              theme === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'
-            }
-            className={`flex items-center justify-center w-10 h-10 rounded-sm transition-colors duration-fast ease-standard text-ink-muted hover:text-ink-soft hover:bg-surface-2 ${focusRingOnSurfaceClasses}`}
+            aria-label={isDark ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'}
+            className={cn(
+              'flex h-11 w-11 items-center justify-center rounded-sm text-rail-muted transition-colors duration-fast ease-standard hover:bg-rail-hover hover:text-rail-ink',
+              railFocus
+            )}
           >
-            {theme === 'dark' ? <Sun size={18} className="text-accent-ink" /> : <Moon size={18} />}
+            {isDark ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
+          </button>
+          <button
+            type="button"
+            onClick={onLogout}
+            aria-label="Đăng xuất"
+            className={cn(
+              'flex h-11 w-11 items-center justify-center rounded-sm text-rail-muted transition-colors duration-fast ease-standard hover:bg-rail-hover hover:text-danger',
+              railFocus
+            )}
+          >
+            <LogOut size={18} aria-hidden="true" />
           </button>
         </div>
-      </div>
+      </aside>
 
-      {/* Mobile bottom nav */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface border-t border-line flex items-center z-40 pb-safe px-4"
+        className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center border-t border-line bg-surface px-2 pb-safe md:hidden"
         aria-label="Điều hướng chính"
       >
-        <div className="absolute inset-x-4 top-0 pointer-events-none">
-          {(() => {
-            const idx = navItems.findIndex((i) => i.id === activeTabId);
-            return idx !== -1 ? (
-              <motion.div
-                className="flex justify-center"
-                style={{ width: `${100 / navItems.length}%` }}
-                initial={false}
-                animate={{ x: `${idx * 100}%` }}
-                transition={
-                  prefersReducedMotion
-                    ? { duration: 0 }
-                    : { type: 'spring', bounce: 0.2, duration: 0.6 }
-                }
-              >
-                <div className="w-8 h-[2px] bg-accent rounded-none" />
-              </motion.div>
-            ) : null;
-          })()}
-        </div>
-
-        {navItems.map((item) => (
-          <NavItem
-            key={item.id}
-            item={item}
-            isActive={activeTabId === item.id}
-            onClick={() => handleSetTab(item.id)}
-            isMobile
-          />
-        ))}
+        {navItems.map((item) => {
+          const isActive = currentTab === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setTab(item.id)}
+              aria-current={isActive ? 'page' : undefined}
+              className={cn(
+                'relative flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-sm text-[9px] font-medium transition-colors duration-fast ease-standard',
+                isActive ? 'bg-highlight text-highlight-ink' : 'text-ink-muted hover:text-ink',
+                focusRingOnSurfaceClasses
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'absolute top-0 h-0.5 w-6 rounded-full bg-highlight-ink',
+                  isActive ? 'opacity-100' : 'opacity-0'
+                )}
+              />
+              <item.icon size={20} aria-hidden="true" />
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
       </nav>
     </>
   );

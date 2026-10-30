@@ -1,253 +1,242 @@
-import React, { useState, useMemo, useEffect, memo } from 'react';
-import { ArrowLeft, Plus, Trash2, X } from 'lucide-react';
+import React, { memo, useMemo, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { Location, Event } from '@/types/index';
 import { locationService } from '@/lib/api/locationService';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useAuthStore } from '@/stores/authStore';
-import { useThemeStore } from '@/stores/themeStore';
 import Button from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
-import { focusRingClasses } from '@/lib/utils';
-
-// Import extracted components
-import LocationStats from '@/features/location/components/LocationStats';
-import LocationToolbar from '@/features/location/components/LocationToolbar';
+import LocationToolbar, {
+  type LocationFilter,
+  type LocationSort,
+} from '@/features/location/components/LocationToolbar';
 import LocationList from '@/features/location/components/LocationList';
 import LocationFormModal, {
   type LocationFormData,
 } from '@/features/location/components/LocationFormModal';
 import LocationDetailModal from '@/features/location/components/LocationDetailModal';
 
-const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
-
 interface LocationViewProps {
   locations: Location[];
   events: Event[];
   loading?: boolean;
-  onBack?: () => void;
 }
 
-const LocationView: React.FC<LocationViewProps> = ({
-  locations,
-  events,
-  loading = false,
-  onBack,
-}) => {
+const LocationView: React.FC<LocationViewProps> = ({ locations, events, loading = false }) => {
   const { user } = useAuthStore();
   const userId = user?.uid || '';
   const { showToast } = useToast();
 
-  // Filter/Sort State
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'high' | 'low'>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'count' | 'newest'>('newest');
+  const [filterType, setFilterType] = useState<LocationFilter>('all');
+  const [sortBy, setSortBy] = useState<LocationSort>('newest');
   const [visibleCount, setVisibleCount] = useState(12);
 
-  // Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
   const [viewingLocation, setViewingLocation] = useState<Location | null>(null);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Location | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setVisibleCount(12);
-  };
+  const resetPagination = () => setVisibleCount(12);
 
-  const handleFilterChange = (value: 'all' | 'high' | 'low') => {
-    setFilterType(value);
-    setVisibleCount(12);
-  };
-
-  const handleSortChange = (value: 'name' | 'count' | 'newest') => {
-    setSortBy(value);
-    setVisibleCount(12);
-  };
-
-  // Preload static maps
-  useEffect(() => {
-    if (locations.length > 0) {
-      locations.forEach((loc) => {
-        const hasCoords = loc.latitude && loc.longitude;
-        const mapUrl = hasCoords
-          ? `https://maps.locationiq.com/v3/staticmap?key=${LOCATIONIQ_API_KEY}&center=${loc.latitude},${loc.longitude}&zoom=17&size=600x400&markers=icon:large-blue-cutout|${loc.latitude},${loc.longitude}`
-          : `https://maps.locationiq.com/v3/staticmap?key=${LOCATIONIQ_API_KEY}&center=21.02776,105.83416&zoom=12&size=600x400`;
-        const img = new Image();
-        img.src = mapUrl;
-      });
-    }
-  }, [locations]);
-
-  // Derived State
-  const workCounts = useMemo(() => {
+  const eventCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    events.forEach((e) => {
-      if (e.locationId) {
-        counts[e.locationId] = (counts[e.locationId] || 0) + 1;
+    events.forEach((event) => {
+      if (event.locationId) {
+        counts[event.locationId] = (counts[event.locationId] || 0) + 1;
       }
     });
     return counts;
   }, [events]);
 
   const filteredLocations = useMemo(() => {
-    return locations
-      .filter((loc) => {
-        const searchLower = searchTerm.toLowerCase();
-        const matchSearch =
-          loc.name.toLowerCase().includes(searchLower) ||
-          (loc.address || '').toLowerCase().includes(searchLower) ||
-          (loc.reviewNote || '').toLowerCase().includes(searchLower);
+    const searchLower = searchTerm.trim().toLowerCase();
 
-        const matchFilter = filterType === 'all' || loc.review === filterType;
-        return matchSearch && matchFilter;
+    return locations
+      .filter((location) => {
+        const matchesSearch =
+          !searchLower ||
+          location.name.toLowerCase().includes(searchLower) ||
+          (location.address || '').toLowerCase().includes(searchLower) ||
+          (location.reviewNote || '').toLowerCase().includes(searchLower);
+        const matchesFilter =
+          filterType === 'all' ||
+          (filterType === 'none' ? !location.review : location.review === filterType);
+
+        return matchesSearch && matchesFilter;
       })
       .sort((a, b) => {
         if (sortBy === 'name') return a.name.localeCompare(b.name, 'vi');
-        if (sortBy === 'newest')
+        if (sortBy === 'newest') {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        if (sortBy === 'count') {
-          const countA = workCounts[a.id] || 0;
-          const countB = workCounts[b.id] || 0;
-          return countB - countA;
         }
-        return 0;
+
+        const countDiff = (eventCounts[b.id] || 0) - (eventCounts[a.id] || 0);
+        return countDiff !== 0 ? countDiff : a.name.localeCompare(b.name, 'vi');
       });
-  }, [locations, searchTerm, filterType, sortBy, workCounts]);
+  }, [locations, searchTerm, filterType, sortBy, eventCounts]);
 
   const stats = useMemo(() => {
-    const high = locations.filter((l) => l.review === 'high').length;
-    const low = locations.filter((l) => l.review === 'low').length;
+    const high = locations.filter((location) => location.review === 'high').length;
+    const low = locations.filter((location) => location.review === 'low').length;
     return { high, low, total: locations.length };
   }, [locations]);
 
-  // Handlers
+  const summary = useMemo(() => {
+    const parts = [`${stats.total} địa điểm`];
+    if (stats.high > 0) parts.push(`${stats.high} tốt`);
+    if (stats.low > 0) parts.push(`${stats.low} kém`);
+    return parts.join(' · ');
+  }, [stats]);
+
+  const hasActiveFilters = searchTerm.trim().length > 0 || filterType !== 'all';
+
+  const handleResetFilters = () => {
+    setSearchTerm('');
+    setFilterType('all');
+    resetPagination();
+  };
+
   const handleOpenAdd = () => {
     setEditingLocation(null);
-    setIsModalOpen(true);
+    setIsFormOpen(true);
   };
 
-  const handleOpenEdit = (loc: Location) => {
-    setEditingLocation(loc);
-    setIsModalOpen(true);
-  };
-
-  const handleViewDetail = (loc: Location) => {
-    setViewingLocation(loc);
-    setIsDetailModalOpen(true);
+  const handleOpenEdit = (location: Location) => {
+    setEditingLocation(location);
+    setIsFormOpen(true);
   };
 
   const handleFormSubmit = async (data: LocationFormData) => {
     try {
       if (editingLocation) {
         await locationService.updateLocation(editingLocation.id, data);
-        showToast('Cập nhật địa điểm thành công', 'success');
+        showToast('Đã cập nhật địa điểm.', 'success');
       } else {
         await locationService.addLocation(data, userId);
-        showToast('Thêm địa điểm thành công', 'success');
+        showToast('Đã thêm địa điểm.', 'success');
       }
-      setIsModalOpen(false);
+      setIsFormOpen(false);
+      setEditingLocation(null);
     } catch (error) {
       console.error(error);
-      showToast('Có lỗi xảy ra', 'error');
-      throw error; // Re-throw for modal to handle loading state if needed
+      showToast('Không thể lưu địa điểm. Thử lại.', 'error');
+      throw error;
     }
-  };
-
-  const handleDelete = (id: string) => {
-    setDeleteConfirm(id);
   };
 
   const confirmDelete = async () => {
-    if (!deleteConfirm) return;
+    if (!deleteTarget || isDeleting) return;
+
+    setIsDeleting(true);
     try {
-      await locationService.deleteLocation(deleteConfirm);
-      showToast('Xóa địa điểm thành công', 'success');
-      setDeleteConfirm(null);
-    } catch {
-      showToast('Không thể xóa địa điểm', 'error');
+      await locationService.deleteLocation(deleteTarget.id);
+      showToast('Đã xóa địa điểm.', 'success');
+      setDeleteTarget(null);
+    } catch (error) {
+      console.error(error);
+      showToast('Không thể xóa địa điểm. Thử lại.', 'error');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
+  const deleteEventCount = deleteTarget ? eventCounts[deleteTarget.id] || 0 : 0;
+
   return (
-    <div className={`pb-28 bg-canvas min-h-screen px-4 pt-5 md:px-6 md:pt-6 md:pb-8`}>
-      <div className="w-full space-y-6">
-        {/* Header & Stats */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            {onBack && (
-              <button
-                type="button"
-                onClick={onBack}
-                aria-label="Quay lại"
-                title="Quay lại"
-                className={`flex h-10 w-10 items-center justify-center rounded-sm border border-line text-ink-soft hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingClasses}`}
-              >
-                <ArrowLeft size={20} />
-              </button>
-            )}
-            <div>
-              <h2 className={`text-title font-semibold text-ink`}>Quản lý địa điểm</h2>
-              <p className={`text-body-sm text-ink-soft mt-0.5`}>
-                Danh sách các địa điểm và đánh giá chất lượng.
-              </p>
-            </div>
+    <div className="min-h-dynamic bg-canvas">
+      <div className="mx-auto max-w-[1400px] px-4 py-5 md:px-6 md:py-6">
+        <header className="flex flex-col gap-4 border-b border-line pb-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="font-mono text-mono-label text-ink-muted">
+              {loading ? 'Đang tải địa điểm' : summary}
+            </p>
+            <h1 className="mt-1 text-display text-ink">Sổ địa điểm</h1>
           </div>
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <LocationStats stats={stats} />
-            <div className="flex gap-2 flex-1 md:w-auto md:flex-none">
-              <Button
-                onClick={handleOpenAdd}
-                variant="primary"
-                fullWidth
-                className="md:w-auto flex items-center justify-center gap-2"
-                icon={<Plus size={16} />}
-              >
-                <span className="whitespace-nowrap">Thêm mới</span>
-              </Button>
-            </div>
-          </div>
+          <Button onClick={handleOpenAdd} icon={<Plus size={16} />}>
+            Thêm địa điểm
+          </Button>
+        </header>
+
+        <div className="mt-4 space-y-3">
+          <LocationToolbar
+            searchTerm={searchTerm}
+            onSearchChange={(value) => {
+              setSearchTerm(value);
+              resetPagination();
+            }}
+            onClearSearch={() => {
+              setSearchTerm('');
+              resetPagination();
+            }}
+            filterType={filterType}
+            onFilterChange={(value) => {
+              setFilterType(value);
+              resetPagination();
+            }}
+            sortBy={sortBy}
+            onSortChange={(value) => {
+              setSortBy(value);
+              resetPagination();
+            }}
+          />
+
+          <LocationList
+            loading={loading}
+            locations={filteredLocations}
+            totalLocations={locations.length}
+            hasActiveFilters={hasActiveFilters}
+            visibleCount={visibleCount}
+            onLoadMore={() =>
+              setVisibleCount((current) => Math.min(current + 12, filteredLocations.length))
+            }
+            eventCounts={eventCounts}
+            onEdit={handleOpenEdit}
+            onDelete={(locationId) => {
+              const location = locations.find((item) => item.id === locationId);
+              if (location) setDeleteTarget(location);
+            }}
+            onViewDetail={setViewingLocation}
+            onResetFilters={handleResetFilters}
+          />
         </div>
-
-        {/* Toolbar */}
-        <LocationToolbar
-          searchTerm={searchTerm}
-          onSearchChange={handleSearchChange}
-          onClearSearch={() => handleSearchChange('')}
-          filterType={filterType}
-          onFilterChange={handleFilterChange}
-          sortBy={sortBy}
-          onSortChange={handleSortChange}
-        />
-
-        {/* List */}
-        <LocationList
-          loading={loading}
-          locations={filteredLocations}
-          visibleCount={visibleCount}
-          onLoadMore={() =>
-            setVisibleCount((prev) => Math.min(prev + 12, filteredLocations.length))
-          }
-          workCounts={workCounts}
-          onEdit={handleOpenEdit}
-          onDelete={handleDelete}
-          onViewDetail={handleViewDetail}
-          theme={useThemeStore((state) => state.theme)}
-        />
       </div>
 
-      {/* Modal Xác nhận xóa */}
+      {isFormOpen && (
+        <LocationFormModal
+          isOpen
+          onClose={() => {
+            setIsFormOpen(false);
+            setEditingLocation(null);
+          }}
+          editingLocation={editingLocation}
+          locations={locations}
+          onSubmit={handleFormSubmit}
+        />
+      )}
+
+      {viewingLocation && (
+        <LocationDetailModal
+          isOpen
+          onClose={() => setViewingLocation(null)}
+          location={viewingLocation}
+          events={events}
+          onEditClick={handleOpenEdit}
+        />
+      )}
+
       <Modal
-        title="Xác nhận xóa"
-        isOpen={!!deleteConfirm}
-        onClose={() => setDeleteConfirm(null)}
+        title="Xóa địa điểm?"
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
         footer={
           <div className="flex gap-2">
             <Button
               variant="secondary"
-              onClick={() => setDeleteConfirm(null)}
+              onClick={() => setDeleteTarget(null)}
               className="flex-1"
-              icon={<X size={16} />}
+              disabled={isDeleting}
             >
               Hủy
             </Button>
@@ -255,34 +244,26 @@ const LocationView: React.FC<LocationViewProps> = ({
               variant="danger"
               onClick={confirmDelete}
               className="flex-1"
-              icon={<Trash2 size={16} />}
+              loading={isDeleting}
             >
-              Xóa
+              Xóa địa điểm
             </Button>
           </div>
         }
       >
-        <p className={`text-body-sm text-ink-soft`}>
-          Bạn có chắc chắn muốn xóa địa điểm này? Hành động này không thể hoàn tác.
-        </p>
+        {deleteTarget && (
+          <p className="text-body-sm text-ink-soft">
+            {deleteEventCount > 0 ? (
+              <>
+                “{deleteTarget.name}” và {deleteEventCount} sự kiện liên quan sẽ mất liên kết địa
+                điểm. Các sự kiện không bị xóa. Không thể hoàn tác.
+              </>
+            ) : (
+              <>“{deleteTarget.name}” sẽ bị xóa. Không thể hoàn tác.</>
+            )}
+          </p>
+        )}
       </Modal>
-
-      {/* Modal Form */}
-      <LocationFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        editingLocation={editingLocation}
-        onSubmit={handleFormSubmit}
-      />
-
-      {/* Detail Modal */}
-      <LocationDetailModal
-        isOpen={isDetailModalOpen}
-        onClose={() => setIsDetailModalOpen(false)}
-        location={viewingLocation}
-        events={events}
-        onEditClick={handleOpenEdit}
-      />
     </div>
   );
 };

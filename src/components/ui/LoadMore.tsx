@@ -24,7 +24,7 @@ export const LoadMore: React.FC<LoadMoreProps> = ({
       <button
         type="button"
         onClick={onLoadMore}
-        className={`flex items-center gap-2 px-3.5 py-2.5 rounded-sm text-body-sm font-semibold transition-all duration-fast ease-standard border border-line bg-surface text-ink hover:border-ink-muted active:scale-[0.98] ${focusRingClasses}`}
+        className={`flex min-h-11 items-center gap-2 px-3.5 py-2.5 rounded-sm text-body-sm font-semibold transition-all duration-fast ease-standard border border-line bg-surface text-ink hover:border-ink-muted active:scale-[0.98] ${focusRingClasses}`}
       >
         <span>Xem thêm</span>
         <Plus size={14} />

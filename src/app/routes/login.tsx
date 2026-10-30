@@ -9,18 +9,17 @@ import {
   browserSessionPersistence,
   sendEmailVerification,
 } from 'firebase/auth';
-import { AnimatePresence } from 'framer-motion';
-import { Heart } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 import { ForgotPasswordModal } from '@/features/auth/components/ForgotPasswordModal';
 import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/ToastProvider';
 
-import LoginHeader from '@/features/auth/components/login/LoginHeader';
+import LoginLayout from '@/features/auth/components/login/LoginLayout';
 import VerificationView from '@/features/auth/components/login/VerificationView';
 import QuickLoginView from '@/features/auth/components/login/QuickLoginView';
 import AuthForm from '@/features/auth/components/login/AuthForm';
-import { focusRingClasses } from '@/lib/utils';
+import { DURATION_BASE, EASE_STANDARD } from '@/lib/motion';
 
 interface LoginProps {
   onLogin: () => void;
@@ -60,11 +59,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const validateEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!value) {
-      setEmailError('Email không được để trống');
+      setEmailError('Email không được để trống.');
       return false;
     }
     if (!emailRegex.test(value)) {
-      setEmailError('Email không hợp lệ');
+      setEmailError('Email không hợp lệ.');
       return false;
     }
     setEmailError('');
@@ -73,11 +72,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const validatePassword = (value: string) => {
     if (!value) {
-      setPasswordError('Mật khẩu không được để trống');
+      setPasswordError('Mật khẩu không được để trống.');
       return false;
     }
     if (value.length < 6) {
-      setPasswordError('Mật khẩu phải có ít nhất 6 ký tự');
+      setPasswordError('Mật khẩu phải có ít nhất 6 ký tự.');
       return false;
     }
     setPasswordError('');
@@ -86,11 +85,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const validateFullName = (value: string) => {
     if (!value.trim()) {
-      setFullNameError('Họ tên không được để trống');
+      setFullNameError('Họ tên không được để trống.');
       return false;
     }
     if (value.trim().length < 2) {
-      setFullNameError('Họ tên phải có ít nhất 2 ký tự');
+      setFullNameError('Họ tên phải có ít nhất 2 ký tự.');
       return false;
     }
     setFullNameError('');
@@ -99,11 +98,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const validateConfirmPassword = (value: string) => {
     if (!value) {
-      setConfirmPasswordError('Vui lòng xác nhận mật khẩu');
+      setConfirmPasswordError('Vui lòng xác nhận mật khẩu.');
       return false;
     }
     if (value !== password) {
-      setConfirmPasswordError('Mật khẩu không khớp');
+      setConfirmPasswordError('Mật khẩu không khớp.');
       return false;
     }
     setConfirmPasswordError('');
@@ -134,7 +133,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(userCredential.user, { displayName: fullName.trim() });
         await sendEmailVerification(userCredential.user);
-        showToast('Email xác thực đã được gửi!', 'success');
       } else {
         await setPersistence(
           auth,
@@ -142,7 +140,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         );
         const userCredential = await signInWithEmailAndPassword(auth, effectiveEmail, password);
         if (!userCredential.user.emailVerified) {
-          showToast('Tài khoản chưa được xác thực email.', 'warning');
           return;
         }
         saveUserInfo({
@@ -155,17 +152,15 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     } catch (error) {
       const code = (error as { code?: string }).code ?? '';
       const messages: Record<string, string> = {
-        'auth/email-already-in-use': 'Email đã được sử dụng',
-        'auth/invalid-email': 'Email không hợp lệ',
-        'auth/weak-password': 'Mật khẩu quá yếu',
-        'auth/user-not-found': 'Email hoặc mật khẩu không đúng',
-        'auth/wrong-password': 'Mật khẩu không đúng',
-        'auth/invalid-credential': 'Email hoặc mật khẩu không đúng',
-        'auth/too-many-requests': 'Quá nhiều lần thử. Vui lòng thử lại sau',
+        'auth/email-already-in-use': 'Email đã được sử dụng.',
+        'auth/invalid-email': 'Email không hợp lệ.',
+        'auth/weak-password': 'Mật khẩu quá yếu.',
+        'auth/user-not-found': 'Email hoặc mật khẩu không đúng.',
+        'auth/wrong-password': 'Mật khẩu không đúng.',
+        'auth/invalid-credential': 'Email hoặc mật khẩu không đúng.',
+        'auth/too-many-requests': 'Quá nhiều lần thử. Thử lại sau.',
       };
-      const errorMessage = messages[code] || 'Đã xảy ra lỗi';
-      setError(errorMessage);
-      showToast(errorMessage, 'error');
+      setError(messages[code] || 'Không thể đăng nhập. Thử lại.');
     } finally {
       setLoading(false);
     }
@@ -210,7 +205,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       await sendEmailVerification(currentUser);
       showToast('Đã gửi lại email xác thực.', 'success');
     } catch {
-      showToast('Gửi lại email thất bại.', 'error');
+      showToast('Không thể gửi lại email. Thử lại.', 'error');
     } finally {
       setLoading(false);
     }
@@ -221,108 +216,104 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       setLoading(true);
       await refreshUser();
       if (auth.currentUser?.emailVerified) {
-        showToast('Xác thực thành công!', 'success');
+        showToast('Đã xác thực email.', 'success');
         onLogin();
       } else showToast('Email vẫn chưa được xác thực.', 'warning');
     } catch {
-      showToast('Lỗi khi kiểm tra xác thực.', 'error');
+      showToast('Không thể kiểm tra xác thực. Thử lại.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   const isUnverified = currentUser && !currentUser.emailVerified;
+  const prefersReducedMotion = useReducedMotion();
+  const authState = isUnverified
+    ? 'verification'
+    : savedUser && showQuickLogin && !isSignUp
+      ? 'quick'
+      : 'form';
 
   return (
-    <div className="min-h-dynamic bg-canvas flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="w-full max-w-md relative z-10">
-        <div className="bg-surface border border-line rounded-md p-6">
-          <LoginHeader />
-
-          <div className="mt-4">
-            <AnimatePresence mode="wait">
-              {isUnverified ? (
-                <VerificationView
-                  currentUser={currentUser}
-                  loading={loading}
-                  onCheckVerification={handleCheckVerification}
-                  onResendEmail={handleResendEmail}
-                  onLogout={logout}
-                />
-              ) : savedUser && showQuickLogin && !isSignUp ? (
-                <QuickLoginView
-                  savedUser={savedUser}
-                  onRemoveAccount={handleRemoveAccount}
-                  onSubmit={handleSubmit}
-                  onSwitchAccount={handleSwitchAccount}
-                  onForgotPassword={() => setForgotPasswordOpen(true)}
-                  password={password}
-                  setPassword={setPassword}
-                  passwordError={passwordError}
-                  onValidatePassword={validatePassword}
-                  showPassword={showPassword}
-                  setShowPassword={setShowPassword}
-                  error={error}
-                  rememberMe={rememberMe}
-                  setRememberMe={setRememberMe}
-                  loading={loading}
-                />
-              ) : (
-                <AuthForm
-                  isSignUp={isSignUp}
-                  savedUser={savedUser}
-                  showQuickLogin={showQuickLogin}
-                  onBackToQuickLogin={handleBackToQuickLogin}
-                  onSubmit={handleSubmit}
-                  email={email}
-                  onEmailChange={handleEmailChange}
-                  onValidateEmail={validateEmail}
-                  emailError={emailError}
-                  fullName={fullName}
-                  setFullName={setFullName}
-                  fullNameError={fullNameError}
-                  onValidateFullName={validateFullName}
-                  password={password}
-                  setPassword={setPassword}
-                  passwordError={passwordError}
-                  onValidatePassword={validatePassword}
-                  showPassword={showPassword}
-                  setShowPassword={setShowPassword}
-                  confirmPassword={confirmPassword}
-                  setConfirmPassword={setConfirmPassword}
-                  confirmPasswordError={confirmPasswordError}
-                  onValidateConfirmPassword={validateConfirmPassword}
-                  showConfirmPassword={showConfirmPassword}
-                  setShowConfirmPassword={setShowConfirmPassword}
-                  rememberMe={rememberMe}
-                  setRememberMe={setRememberMe}
-                  onForgotPassword={() => setForgotPasswordOpen(true)}
-                  error={error}
-                  loading={loading}
-                  onSwitchMode={handleSwitchMode}
-                />
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        <p className="text-label font-medium text-ink-muted text-center mt-6 flex items-center justify-center gap-1.5">
-          Made with <Heart size={12} className="text-ink-muted" /> by
-          <a
-            href="https://github.com/dexter826/dexter826"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`inline-flex min-h-10 items-center rounded-sm font-semibold text-ink-muted hover:text-ink transition-colors duration-fast ease-standard ${focusRingClasses}`}
-          >
-            MOB
-          </a>
-        </p>
-      </div>
+    <>
+      <LoginLayout>
+        <motion.div
+          key={authState}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: prefersReducedMotion ? 0 : DURATION_BASE,
+            ease: EASE_STANDARD,
+          }}
+        >
+          {isUnverified ? (
+            <VerificationView
+              currentUser={currentUser}
+              loading={loading}
+              onCheckVerification={handleCheckVerification}
+              onResendEmail={handleResendEmail}
+              onLogout={logout}
+            />
+          ) : savedUser && showQuickLogin && !isSignUp ? (
+            <QuickLoginView
+              savedUser={savedUser}
+              onRemoveAccount={handleRemoveAccount}
+              onSubmit={handleSubmit}
+              onSwitchAccount={handleSwitchAccount}
+              onForgotPassword={() => setForgotPasswordOpen(true)}
+              password={password}
+              setPassword={setPassword}
+              passwordError={passwordError}
+              onValidatePassword={validatePassword}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+              error={error}
+              rememberMe={rememberMe}
+              setRememberMe={setRememberMe}
+              loading={loading}
+            />
+          ) : (
+            <AuthForm
+              isSignUp={isSignUp}
+              savedUser={savedUser}
+              showQuickLogin={showQuickLogin}
+              onBackToQuickLogin={handleBackToQuickLogin}
+              onSubmit={handleSubmit}
+              email={email}
+              onEmailChange={handleEmailChange}
+              onValidateEmail={validateEmail}
+              emailError={emailError}
+              fullName={fullName}
+              setFullName={setFullName}
+              fullNameError={fullNameError}
+              onValidateFullName={validateFullName}
+              password={password}
+              setPassword={setPassword}
+              passwordError={passwordError}
+              onValidatePassword={validatePassword}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+              confirmPassword={confirmPassword}
+              setConfirmPassword={setConfirmPassword}
+              confirmPasswordError={confirmPasswordError}
+              onValidateConfirmPassword={validateConfirmPassword}
+              showConfirmPassword={showConfirmPassword}
+              setShowConfirmPassword={setShowConfirmPassword}
+              rememberMe={rememberMe}
+              setRememberMe={setRememberMe}
+              onForgotPassword={() => setForgotPasswordOpen(true)}
+              error={error}
+              loading={loading}
+              onSwitchMode={handleSwitchMode}
+            />
+          )}
+        </motion.div>
+      </LoginLayout>
 
       <ForgotPasswordModal
         isOpen={forgotPasswordOpen}
         onClose={() => setForgotPasswordOpen(false)}
       />
-    </div>
+    </>
   );
 };

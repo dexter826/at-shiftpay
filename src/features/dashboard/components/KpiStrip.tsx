@@ -1,0 +1,86 @@
+import React from 'react';
+import { cn, focusRingClasses } from '@/lib/utils';
+import { formatCurrency } from '@/utils/format';
+import type { WeekBoard } from '@/features/dashboard/dashboardData';
+
+const KpiStrip: React.FC<{ kpis: WeekBoard['kpis']; onOpenCalendar: () => void }> = ({
+  kpis,
+  onOpenCalendar,
+}) => {
+  const hasEvents = kpis.events > 0;
+  const cards = [
+    {
+      label: 'Sự kiện tuần',
+      value: String(kpis.events),
+      note: hasEvents ? 'Trong tuần' : 'Chưa có',
+    },
+    {
+      label: 'Ca đã xếp',
+      value: String(kpis.shifts),
+      note: kpis.shifts > 0 ? 'Trong tuần' : 'Chưa có',
+    },
+    {
+      label: 'Lương dự kiến',
+      value: formatCurrency(kpis.amount),
+      note: kpis.shifts > 0 ? 'Trong tuần' : 'Chưa có ca',
+    },
+    {
+      label: 'Cần xếp',
+      value: String(kpis.unassigned),
+      note: kpis.unassigned > 0 ? 'Cần xếp lịch' : hasEvents ? 'Đã xếp đủ' : 'Chưa có sự kiện',
+      highlight: kpis.unassigned > 0,
+    },
+  ];
+
+  return (
+    <section
+      aria-label="Chỉ số tuần"
+      className="grid grid-cols-2 gap-px border border-line border-t-2 border-t-ink bg-line md:grid-cols-4"
+    >
+      {cards.map((card) => {
+        const content = (
+          <>
+            <p
+              className={cn(
+                'font-mono text-mono-label',
+                card.highlight ? 'text-highlight-ink/70' : 'text-ink-muted'
+              )}
+            >
+              {card.label}
+            </p>
+            <p className="mt-0.5 font-mono text-data text-current">{card.value}</p>
+            <p
+              className={cn(
+                'mt-0.5 text-label',
+                card.highlight ? 'text-highlight-ink/70' : 'text-ink-muted'
+              )}
+            >
+              {card.note}
+            </p>
+          </>
+        );
+        const className = cn(
+          'bg-surface px-3.5 py-3 text-left',
+          card.highlight && 'bg-highlight text-highlight-ink'
+        );
+
+        return card.highlight ? (
+          <button
+            key={card.label}
+            type="button"
+            onClick={onOpenCalendar}
+            className={cn(className, focusRingClasses)}
+          >
+            {content}
+          </button>
+        ) : (
+          <div key={card.label} className={className}>
+            {content}
+          </div>
+        );
+      })}
+    </section>
+  );
+};
+
+export default KpiStrip;

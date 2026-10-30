@@ -2,30 +2,33 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>ShiftPay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>ShiftPay — Quản lý ca làm</title>
+    <meta name="theme-color" content="#F2F4F0" />
 
-    <!-- Apply the saved theme before first paint to avoid a wrong-theme flash -->
+    <!-- Apply the saved theme (or system preference) before first paint. -->
     <script>
       (function () {
-        var theme = 'dark';
+        var preference = 'system';
         try {
           var stored = localStorage.getItem('theme');
           if (stored) {
             var parsed = JSON.parse(stored);
             var saved = parsed && parsed.state && parsed.state.theme;
-            if (saved === 'light' || saved === 'dark') {
-              theme = saved;
+            if (saved === 'light' || saved === 'dark' || saved === 'system') {
+              preference = saved;
             }
           }
         } catch (error) {
-          // Corrupted storage falls back to the dark default.
+          // Corrupted storage falls back to system.
         }
-        document.documentElement.classList.add(theme);
-        document.documentElement.style.colorScheme = theme;
+        var isDark =
+          preference === 'dark' ||
+          (preference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', isDark ? '#0C1210' : '#F2F4F0');
       })();
     </script>
 
@@ -33,7 +36,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
 
@@ -42,7 +45,6 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#1a1a17" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="ShiftPay" />
@@ -54,14 +56,24 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="ShiftPay" />
-    <meta property="og:description" content="Nền tảng thanh toán và quản lý tài chính ShiftPay" />
-    <meta property="og:image" content="/og_image.png" />
+    <meta
+      property="og:description"
+      content="Quản lý ca làm, lịch sự kiện và thanh toán cho đội ngũ vận hành."
+    />
+    <meta property="og:image" content="/social-card.png" />
+    <meta
+      name="description"
+      content="Quản lý ca làm, lịch sự kiện và thanh toán cho đội ngũ vận hành."
+    />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ShiftPay" />
-    <meta name="twitter:description" content="Nền tảng thanh toán và quản lý tài chính ShiftPay" />
-    <meta name="twitter:image" content="/twitter_image.png" />
+    <meta
+      name="twitter:description"
+      content="Quản lý ca làm, lịch sự kiện và thanh toán cho đội ngũ vận hành."
+    />
+    <meta name="twitter:image" content="/social-card.png" />
   </head>
 
   <body>

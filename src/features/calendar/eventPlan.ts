@@ -12,6 +12,7 @@ export interface EventDraft {
   surchargeSelectedEmployees: Record<string, boolean>;
   assignments: Record<string, boolean>;
   session: ShiftSession;
+  originalSession?: ShiftSession | null;
   userId: string;
 }
 
@@ -68,7 +69,7 @@ export function planEventSave(
     const finalAmount = Math.round(draft.amount + (receivesSurcharge ? perPerson : 0));
 
     const previousShift = existingShifts.find(
-      (s) => s.employeeId === employeeId && s.session === draft.session
+      (s) => s.employeeId === employeeId && s.session === draft.session && s.status === 'unpaid'
     );
 
     if (previousShift) {
@@ -76,7 +77,11 @@ export function planEventSave(
         id: previousShift.id,
         data: { amount: finalAmount, employeeName: employee.name },
       });
-    } else {
+    } else if (
+      !existingShifts.some(
+        (s) => s.employeeId === employeeId && s.session === draft.session && s.status !== 'unpaid'
+      )
+    ) {
       create.push({
         eventId: '',
         date: draft.date,
@@ -90,7 +95,26 @@ export function planEventSave(
     }
   }
 
-  const remove = existingShifts.filter((s) => !update.some((u) => u.id === s.id)).map((s) => s.id);
+  // Đổi ca thì chuyển shift sang ca mới; ca khác của sự kiện (dữ liệu cũ) được giữ nguyên.
+  const updatedIds = new Set(update.map((item) => item.id));
+  const removedIds = new Set<string>();
+
+  existingShifts.forEach((shift) => {
+    if (shift.status !== 'unpaid') return;
+
+    if (shift.session === draft.session && !updatedIds.has(shift.id)) {
+      removedIds.add(shift.id);
+    }
+    if (
+      draft.originalSession &&
+      draft.originalSession !== draft.session &&
+      shift.session === draft.originalSession
+    ) {
+      removedIds.add(shift.id);
+    }
+  });
+
+  const remove = [...removedIds];
 
   const surchargeDistribution: Event['surchargeDistribution'] =
     draft.surcharge > 0 ? { type: draft.surchargeDistributionType } : undefined;

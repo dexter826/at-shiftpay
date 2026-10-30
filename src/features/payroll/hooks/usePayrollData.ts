@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
-import { Shift, Employee, PayrollSummary, Event } from '@/types/index';
-import { shiftBreakdown } from '@/utils/payrollMath';
+import { useMemo, useState } from 'react';
+import type { Employee, Event, Shift } from '@/types/index';
+import { buildPayrollSummary, calculatePayrollStats } from '@/features/payroll/payrollSummary';
 
 interface UsePayrollDataProps {
   shifts: Shift[];
@@ -12,49 +12,10 @@ export const usePayrollData = ({ shifts, employees, events }: UsePayrollDataProp
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'amount' | 'shifts' | 'name'>('amount');
 
-  const summary: PayrollSummary[] = useMemo(() => {
-    const map: Record<string, PayrollSummary & { totalFees?: number }> = {};
-
-    employees.forEach((emp) => {
-      map[emp.id] = {
-        employeeId: emp.id,
-        employeeName: emp.name,
-        phone: emp.phone,
-        unpaidCount: 0,
-        totalUnpaid: 0,
-        advancedCount: 0,
-        totalAdvanced: 0,
-        netAmount: 0,
-      };
-    });
-
-    shifts.forEach((s) => {
-      if (map[s.employeeId]) {
-        const event = events.find((e) => e.id === s.eventId);
-        const shiftFee = event ? shiftBreakdown(s, event).surcharge : 0;
-
-        if (s.status === 'unpaid') {
-          map[s.employeeId].unpaidCount += 1;
-          map[s.employeeId].totalUnpaid += s.amount;
-          if (shiftFee > 0) {
-            map[s.employeeId].totalFees = (map[s.employeeId].totalFees || 0) + shiftFee;
-          }
-        } else if (s.status === 'advanced') {
-          map[s.employeeId].advancedCount += 1;
-          map[s.employeeId].totalAdvanced += s.amount;
-          if (shiftFee > 0) {
-            map[s.employeeId].totalFees = (map[s.employeeId].totalFees || 0) + shiftFee;
-          }
-        }
-      }
-    });
-
-    Object.values(map).forEach((emp) => {
-      emp.netAmount = emp.totalUnpaid;
-    });
-
-    return Object.values(map).sort((a, b) => b.netAmount - a.netAmount);
-  }, [shifts, employees, events]);
+  const summary = useMemo(
+    () => buildPayrollSummary(shifts, employees, events),
+    [shifts, employees, events]
+  );
 
   const filteredAndSortedSummary = useMemo(() => {
     const filtered = summary.filter((item) => {
@@ -79,25 +40,7 @@ export const usePayrollData = ({ shifts, employees, events }: UsePayrollDataProp
     });
   }, [summary, searchTerm, sortBy]);
 
-  const stats = useMemo(() => {
-    const totalDebt = summary.reduce((acc, curr) => acc + curr.totalUnpaid, 0);
-    const totalAdvanced = summary.reduce((acc, curr) => acc + curr.totalAdvanced, 0);
-    const totalEarned = totalDebt + totalAdvanced;
-    const totalUnpaidShifts = summary.reduce((acc, curr) => acc + curr.unpaidCount, 0);
-    const totalAdvancedShifts = summary.reduce((acc, curr) => acc + curr.advancedCount, 0);
-    const totalShifts = totalUnpaidShifts + totalAdvancedShifts;
-    const totalFees = summary.reduce((acc, curr) => acc + (curr.totalFees || 0), 0);
-
-    return {
-      totalDebt,
-      totalAdvanced,
-      totalEarned,
-      totalShifts,
-      totalUnpaidShifts,
-      totalAdvancedShifts,
-      totalFees,
-    };
-  }, [summary]);
+  const stats = useMemo(() => calculatePayrollStats(summary), [summary]);
 
   return {
     summary,
