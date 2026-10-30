@@ -1,109 +1,108 @@
 import React, { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { AlertCircle, Check, CheckCircle, Eye, EyeOff, Lock } from 'lucide-react';
+import { Field } from '@/components/ui/Field';
+import { Input } from '@/components/ui/Input';
+import { useToast } from '@/components/ui/ToastProvider';
 import { auth } from '@/lib/firebase';
-import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface PasswordErrors {
+  current?: string;
+  next?: string;
+  confirm?: string;
+}
+
+const PasswordToggle: React.FC<{ visible: boolean; onToggle: () => void; label: string }> = ({
+  visible,
+  onToggle,
+  label,
+}) => (
+  <button
+    type="button"
+    onClick={onToggle}
+    aria-label={label}
+    className={cn(
+      'flex h-11 w-11 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:text-ink',
+      focusRingOnSurfaceClasses
+    )}
+  >
+    {visible ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
+  </button>
+);
+
 export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
+  const { showToast } = useToast();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [errors, setErrors] = useState<PasswordErrors>({});
+  const [formError, setFormError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const inputStyle = `flex-1 min-w-0 bg-transparent text-ink placeholder:text-ink-muted focus:outline-none text-body-sm`;
-  const fieldGroupStyle = `flex items-center gap-2 px-3 min-h-10 rounded-sm border border-line bg-surface-2 transition-colors duration-fast ease-standard focus-within:border-ink-muted focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-surface`;
-
-  const resetForm = () => {
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-    setError('');
-    setSuccess('');
-    setLoading(false);
+  const clearError = (key: keyof PasswordErrors) => {
+    if (errors[key]) setErrors((previous) => ({ ...previous, [key]: undefined }));
+    if (formError) setFormError('');
   };
 
-  const handleClose = () => {
-    resetForm();
-    onClose();
-  };
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (loading) return;
 
-  const validateForm = () => {
-    if (!currentPassword) {
-      setError('Vui lòng nhập mật khẩu hiện tại');
-      return false;
-    }
-    if (!newPassword) {
-      setError('Vui lòng nhập mật khẩu mới');
-      return false;
-    }
-    if (newPassword.length < 6) {
-      setError('Mật khẩu mới phải có ít nhất 6 ký tự');
-      return false;
-    }
-    if (newPassword !== confirmPassword) {
-      setError('Mật khẩu xác nhận không khớp');
-      return false;
-    }
-    return true;
-  };
+    const nextErrors: PasswordErrors = {};
+    if (!currentPassword) nextErrors.current = 'Nhập mật khẩu hiện tại.';
+    if (!newPassword) nextErrors.next = 'Nhập mật khẩu mới.';
+    else if (newPassword.length < 6) nextErrors.next = 'Mật khẩu mới phải có ít nhất 6 ký tự.';
+    if (newPassword !== confirmPassword) nextErrors.confirm = 'Mật khẩu xác nhận không khớp.';
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      return;
+    }
 
+    setErrors({});
+    setFormError('');
     setLoading(true);
-    setError('');
-    setSuccess('');
 
     const user = auth.currentUser;
-    if (!user || !user.email) {
-      setError('Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.');
+    if (!user?.email) {
+      setFormError('Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.');
       setLoading(false);
       return;
     }
 
     try {
-      // Xác thực lại tài khoản
-      const credential = EmailAuthProvider.credential(user.email, currentPassword);
-      await reauthenticateWithCredential(user, credential);
-
-      // Ghi mật khẩu mới
+      await reauthenticateWithCredential(
+        user,
+        EmailAuthProvider.credential(user.email, currentPassword)
+      );
       await updatePassword(user, newPassword);
-
-      setSuccess('Đổi mật khẩu thành công!');
-      setTimeout(() => {
-        handleClose();
-      }, 2000);
-    } catch (err) {
-      const code = (err as { code?: string }).code;
-      console.error('Change password error:', err);
-      if (code === 'auth/wrong-password') {
-        setError('Mật khẩu hiện tại không đúng');
+      showToast('Đã đổi mật khẩu.', 'success');
+      onClose();
+    } catch (error) {
+      const code = (error as { code?: string }).code;
+      console.error('Change password error:', error);
+      if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+        setErrors({ current: 'Mật khẩu hiện tại không đúng.' });
       } else if (code === 'auth/weak-password') {
-        setError('Mật khẩu quá yếu');
+        setErrors({ next: 'Mật khẩu mới quá yếu.' });
       } else if (code === 'auth/requires-recent-login') {
-        setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        setFormError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
       } else {
-        setError('Không thể đổi mật khẩu. Vui lòng thử lại sau.');
+        setFormError('Không thể đổi mật khẩu. Thử lại.');
       }
     } finally {
-      if (!success) {
-        // Giữ loading nếu thất bại
-        setLoading(false);
-      }
+      setLoading(false);
     }
   };
 
@@ -111,21 +110,19 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
     <Modal
       title="Đổi mật khẩu"
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
       footer={
-        <div className="flex gap-2 w-full">
-          <Button variant="secondary" onClick={handleClose} className="flex-1" disabled={loading}>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={onClose} className="flex-1" disabled={loading}>
             Hủy
           </Button>
-          <Button onClick={handleSubmit} className="flex-1" disabled={loading}>
-            {!loading && <Check size={16} />}
-            {loading ? 'Đang xử lý...' : 'Cập nhật'}
+          <Button type="submit" form="change-password-form" className="flex-1" loading={loading}>
+            Cập nhật
           </Button>
         </div>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4 py-2">
-        {/* Username ẩn hỗ trợ password manager */}
+      <form id="change-password-form" onSubmit={handleSubmit} className="space-y-4" noValidate>
         <input
           type="text"
           name="username"
@@ -134,106 +131,72 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
           className="hidden"
           autoComplete="username"
         />
-        {error && (
-          <div className="flex items-center gap-2 p-3 bg-danger/5 border border-danger/30 text-ink text-body-sm rounded-sm">
-            <AlertCircle size={16} className="shrink-0 text-danger" />
-            <p>{error}</p>
+
+        {formError && (
+          <div
+            role="alert"
+            className="rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-body-sm text-danger"
+          >
+            {formError}
           </div>
         )}
 
-        {success && (
-          <div className="flex items-center gap-2 p-3 bg-success/5 border border-success/20 text-success text-body-sm rounded-sm">
-            <CheckCircle size={16} className="shrink-0" />
-            <p>{success}</p>
-          </div>
-        )}
+        <Field label="Mật khẩu hiện tại" error={errors.current}>
+          <Input
+            type={showCurrent ? 'text' : 'password'}
+            value={currentPassword}
+            onChange={(event) => {
+              setCurrentPassword(event.target.value);
+              clearError('current');
+            }}
+            trailingAction={
+              <PasswordToggle
+                visible={showCurrent}
+                onToggle={() => setShowCurrent(!showCurrent)}
+                label={showCurrent ? 'Ẩn mật khẩu hiện tại' : 'Hiện mật khẩu hiện tại'}
+              />
+            }
+            autoComplete="current-password"
+          />
+        </Field>
 
-        {/* Mật khẩu hiện tại */}
-        <div>
-          <label
-            htmlFor="change-current-password"
-            className={`block text-label font-medium text-ink-muted mb-1.5`}
-          >
-            Mật khẩu hiện tại
-          </label>
-          <div className={fieldGroupStyle}>
-            <Lock size={18} className="text-ink-muted shrink-0" />
-            <input
-              id="change-current-password"
-              type={showCurrentPassword ? 'text' : 'password'}
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className={inputStyle}
-              placeholder="Nhập mật khẩu hiện tại"
-            />
-            <button
-              type="button"
-              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-              aria-label={showCurrentPassword ? 'Ẩn mật khẩu hiện tại' : 'Hiện mật khẩu hiện tại'}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
-            >
-              {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-        </div>
+        <Field label="Mật khẩu mới" hint="Ít nhất 6 ký tự." error={errors.next}>
+          <Input
+            type={showNew ? 'text' : 'password'}
+            value={newPassword}
+            onChange={(event) => {
+              setNewPassword(event.target.value);
+              clearError('next');
+            }}
+            trailingAction={
+              <PasswordToggle
+                visible={showNew}
+                onToggle={() => setShowNew(!showNew)}
+                label={showNew ? 'Ẩn mật khẩu mới' : 'Hiện mật khẩu mới'}
+              />
+            }
+            autoComplete="new-password"
+          />
+        </Field>
 
-        {/* Mật khẩu mới */}
-        <div>
-          <label
-            htmlFor="change-new-password"
-            className={`block text-label font-medium text-ink-muted mb-1.5`}
-          >
-            Mật khẩu mới
-          </label>
-          <div className={fieldGroupStyle}>
-            <Lock size={18} className="text-ink-muted shrink-0" />
-            <input
-              id="change-new-password"
-              type={showNewPassword ? 'text' : 'password'}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className={inputStyle}
-              placeholder="Nhập mật khẩu mới (min 6 ký tự)"
-            />
-            <button
-              type="button"
-              onClick={() => setShowNewPassword(!showNewPassword)}
-              aria-label={showNewPassword ? 'Ẩn mật khẩu mới' : 'Hiện mật khẩu mới'}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
-            >
-              {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Xác nhận mật khẩu mới */}
-        <div>
-          <label
-            htmlFor="change-confirm-password"
-            className={`block text-label font-medium text-ink-muted mb-1.5`}
-          >
-            Xác nhận mật khẩu mới
-          </label>
-          <div className={fieldGroupStyle}>
-            <Lock size={18} className="text-ink-muted shrink-0" />
-            <input
-              id="change-confirm-password"
-              type={showConfirmPassword ? 'text' : 'password'}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={inputStyle}
-              placeholder="Nhập lại mật khẩu mới"
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              aria-label={showConfirmPassword ? 'Ẩn mật khẩu xác nhận' : 'Hiện mật khẩu xác nhận'}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
-            >
-              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-        </div>
+        <Field label="Xác nhận mật khẩu mới" error={errors.confirm}>
+          <Input
+            type={showConfirm ? 'text' : 'password'}
+            value={confirmPassword}
+            onChange={(event) => {
+              setConfirmPassword(event.target.value);
+              clearError('confirm');
+            }}
+            trailingAction={
+              <PasswordToggle
+                visible={showConfirm}
+                onToggle={() => setShowConfirm(!showConfirm)}
+                label={showConfirm ? 'Ẩn mật khẩu xác nhận' : 'Hiện mật khẩu xác nhận'}
+              />
+            }
+            autoComplete="new-password"
+          />
+        </Field>
       </form>
     </Modal>
   );
