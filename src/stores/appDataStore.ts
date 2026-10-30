@@ -2,8 +2,6 @@ import { create } from 'zustand';
 import { Employee, Event, Shift, UserSettings, DEFAULT_SETTINGS, Location } from '@/types/index';
 import { createLedgerSession } from '@/stores/ledgerSession';
 
-type AppTab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
-
 interface AppDataState {
   // Data
   employees: Employee[];
@@ -17,7 +15,6 @@ interface AppDataState {
   isCalendarLoading: boolean;
   dataError: string | null;
   viewDate: Date;
-  activeTab: AppTab;
 
   // Computed
   totalDebt: number;
@@ -25,7 +22,6 @@ interface AppDataState {
   // Actions
   setDataError: (message: string | null) => void;
   setViewDate: (date: Date) => void;
-  setActiveTab: (tab: AppTab) => void;
   initSubscriptions: (userId: string) => void;
   cleanupSubscriptions: () => void;
   refreshData: (userId: string) => void;
@@ -47,7 +43,6 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
   isCalendarLoading: true,
   dataError: null,
   viewDate: new Date(),
-  activeTab: (localStorage.getItem('activeTab') as AppTab) || 'dashboard',
 
   // Computed
   totalDebt: 0,
@@ -55,10 +50,6 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
   // Actions
   setDataError: (dataError) => set({ dataError }),
   setViewDate: (viewDate) => set({ viewDate }),
-  setActiveTab: (activeTab) => {
-    localStorage.setItem('activeTab', activeTab);
-    set({ activeTab });
-  },
 
   initSubscriptions: (userId) => {
     session.start(userId, get().viewDate, {

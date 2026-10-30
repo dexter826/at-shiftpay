@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import type { User } from 'firebase/auth';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router';
 import { Employee, Event, Shift, Location, UserSettings } from '@/types/index';
 import Loader from '@/components/ui/Loader';
 import { Navbar } from '@/components/layouts/Navbar';
@@ -7,20 +8,45 @@ import { OfflineIndicator } from '@/components/layouts/OfflineIndicator';
 import { Login } from '@/app/routes/login';
 import { Splashscreen } from '@/components/Splashscreen';
 import { PullToRefresh } from '@/components/PullToRefresh';
-import { AppRouter } from '@/app/AppRouter';
 import { ExportModal } from '@/features/payroll/components/ExportModal';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { ToastProvider, useToast } from '@/components/ui/ToastProvider';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
-/* removed unused import from @/stores/themeStore */
 import { useAuthStore } from '@/stores/authStore';
 import { useAppDataStore } from '@/stores/appDataStore';
 import { eventService } from '@/lib/api/eventService';
 import { shiftService } from '@/lib/api/shiftService';
 import { exportDetailedReport } from '@/lib/api/exportService';
 
-type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
+const DashboardView = lazy(() => import('@/app/routes/dashboard'));
+const CalendarView = lazy(() => import('@/app/routes/calendar'));
+const EmployeeView = lazy(() => import('@/app/routes/employees'));
+const LocationView = lazy(() => import('@/app/routes/locations'));
+const PayrollView = lazy(() => import('@/app/routes/payroll'));
+const SettingsView = lazy(() => import('@/app/routes/settings'));
+
+const TAB_NAMES = {
+  dashboard: 'Tổng quan',
+  calendar: 'Lịch tiệc',
+  employees: 'Nhân sự',
+  payroll: 'Thanh toán',
+  locations: 'Địa điểm',
+  settings: 'Cài đặt',
+} as const;
+
+type Tab = keyof typeof TAB_NAMES;
+
+const currentTabFromPath = (pathname: string): Tab => {
+  const path = pathname.replace(/^\//, '');
+  return path in TAB_NAMES ? (path as Tab) : 'dashboard';
+};
+
+const RouteFallback = () => (
+  <div className="flex justify-center py-16">
+    <Loader fullScreen={false} />
+  </div>
+);
 
 function AppShell() {
   const { user, loading: authLoading, init: initAuth, logout } = useAuthStore();
@@ -35,28 +61,22 @@ function AppShell() {
     viewDate,
     setViewDate,
     totalDebt,
-    activeTab,
-    setActiveTab,
     initSubscriptions,
     cleanupSubscriptions,
     refreshData,
   } = useAppDataStore();
 
-  // Cập nhật tiêu đề trang theo Tab và cuộn lên đầu trang
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentTab = currentTabFromPath(location.pathname);
+
+  // Cập nhật tiêu đề trang theo route và cuộn lên đầu trang
   useEffect(() => {
     if (user && user.emailVerified) {
-      const tabNames: Record<Tab, string> = {
-        dashboard: 'Tổng quan',
-        calendar: 'Lịch tiệc',
-        employees: 'Nhân sự',
-        payroll: 'Thanh toán',
-        locations: 'Địa điểm',
-        settings: 'Cài đặt',
-      };
-      document.title = `${tabNames[activeTab]} - ShiftPay`;
+      document.title = `${TAB_NAMES[currentTab]} - ShiftPay`;
       window.scrollTo(0, 0);
     }
-  }, [activeTab, user]);
+  }, [currentTab, user]);
 
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -124,9 +144,10 @@ function AppShell() {
     setShowLogoutConfirm(true);
   };
 
-  const confirmLogout = () => {
+  const confirmLogout = async () => {
     setShowLogoutConfirm(false);
-    logout();
+    await logout();
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -141,8 +162,6 @@ function AppShell() {
         <Login onLogin={() => {}} />
       ) : (
         <AppContent
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
           onLogout={requestLogout}
           user={user}
           employees={employees}
@@ -171,8 +190,6 @@ function AppShell() {
 }
 
 function AppContent({
-  activeTab,
-  setActiveTab,
   onLogout,
   user,
   employees,
@@ -195,8 +212,6 @@ function AppContent({
   onCloseLogoutConfirm,
   onConfirmLogout,
 }: {
-  activeTab: Tab;
-  setActiveTab: (tab: Tab) => void;
   onLogout: () => void;
   user: User | null;
   employees: Employee[];
@@ -219,36 +234,100 @@ function AppContent({
   onCloseLogoutConfirm: () => void;
   onConfirmLogout: () => void;
 }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentTab = currentTabFromPath(location.pathname);
+
   return (
     <div className="min-h-dynamic bg-[var(--bg-primary)]">
-      <Navbar currentTab={activeTab} setTab={(t) => setActiveTab(t as Tab)} onLogout={onLogout} />
+      <Navbar currentTab={currentTab} setTab={(tab) => navigate(`/${tab}`)} onLogout={onLogout} />
       <main className="md:pl-60">
         <PullToRefresh
           onRefresh={() => {
             if (user) refreshData(user.uid);
           }}
         >
-          <AppRouter
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            user={user}
-            employees={employees}
-            locations={locations}
-            events={events}
-            shifts={shifts}
-            settings={settings}
-            loading={isLoading}
-            calendarLoading={isCalendarLoading}
-            viewDate={viewDate}
-            setViewDate={setViewDate}
-            totalDebt={totalDebt}
-            onLogout={onLogout}
-            onOpenExport={onOpenExport}
-          />
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <DashboardView
+                    user={user}
+                    employees={employees}
+                    events={events}
+                    shifts={shifts}
+                    settings={settings}
+                    loading={isLoading}
+                    onLogout={onLogout}
+                    onNavigateToSettings={() => navigate('/settings')}
+                    onOpenExport={onOpenExport}
+                  />
+                }
+              />
+              <Route
+                path="/calendar"
+                element={
+                  <CalendarView
+                    events={events}
+                    shifts={shifts}
+                    employees={employees}
+                    locations={locations}
+                    totalDebt={totalDebt}
+                    settings={settings}
+                    currentDate={viewDate}
+                    onDateChange={setViewDate}
+                    onNavigateToReviews={() => navigate('/locations')}
+                    loading={isLoading || isCalendarLoading}
+                  />
+                }
+              />
+              <Route
+                path="/employees"
+                element={
+                  <EmployeeView
+                    employees={employees}
+                    shifts={shifts}
+                    events={events}
+                    loading={isLoading}
+                  />
+                }
+              />
+              <Route
+                path="/locations"
+                element={
+                  <LocationView
+                    locations={locations}
+                    events={events}
+                    loading={isLoading}
+                    onBack={() => navigate('/calendar')}
+                  />
+                }
+              />
+              <Route
+                path="/payroll"
+                element={
+                  <PayrollView
+                    shifts={shifts}
+                    employees={employees}
+                    events={events}
+                    locations={locations}
+                    loading={isLoading}
+                  />
+                }
+              />
+              <Route
+                path="/settings"
+                element={<SettingsView user={user} settings={settings} onLogout={onLogout} />}
+              />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Suspense>
         </PullToRefresh>
       </main>
 
-      <ScrollToTopButton activeTab={activeTab} />
+      <ScrollToTopButton activeTab={currentTab} />
 
       <ExportModal
         isOpen={isExportModalOpen}
