@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AlertTriangle, Trash2, Loader2 } from 'lucide-react';
 import { settingsService } from '@/lib/api/settingsService';
 import { auth } from '@/lib/firebase';
-import { deleteUser } from 'firebase/auth';
+import { deleteUser, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { useToast } from '@/components/ui/ToastProvider';
 import Button from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -13,38 +13,49 @@ interface DeleteAccountModalProps {
   onClose: () => void;
 }
 
+const REQUIRED_CONFIRM_TEXT = 'XÓA TÀI KHOẢN';
+
+function messageForDeleteError(code?: string): string {
+  switch (code) {
+    case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+      return 'Mật khẩu không đúng';
+    case 'auth/too-many-requests':
+      return 'Quá nhiều lần thử. Vui lòng đợi một lúc rồi thử lại';
+    case 'auth/requires-recent-login':
+      return 'Phiên đăng nhập đã cũ. Vui lòng đăng xuất và đăng nhập lại';
+    default:
+      return 'Có lỗi xảy ra khi xóa tài khoản';
+  }
+}
+
 export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose }) => {
   const { showToast } = useToast();
   const clearSavedUserInfo = useAuthStore((state) => state.clearSavedUserInfo);
   const [confirmText, setConfirmText] = useState('');
+  const [password, setPassword] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const REQUIRED_CONFIRM_TEXT = 'XÓA TÀI KHOẢN';
+  const canDelete = confirmText === REQUIRED_CONFIRM_TEXT && password.length > 0;
 
   const handleDelete = async () => {
-    if (confirmText !== REQUIRED_CONFIRM_TEXT) return;
+    if (!canDelete) return;
 
     setIsDeleting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Không tìm thấy người dùng');
+      if (!user?.email) throw new Error('Không tìm thấy người dùng');
 
+      await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, password));
       await settingsService.deleteUserAccountData(user.uid);
       await deleteUser(user);
       clearSavedUserInfo();
 
       showToast('Tài khoản đã được xóa vĩnh viễn', 'success');
-    } catch (error: any) {
-      console.error('Delete account error:', error);
-      if (error.code === 'auth/requires-recent-login') {
-        showToast(
-          'Để bảo mật, vui lòng Đăng xuất và Đăng nhập lại để thực hiện thao tác này',
-          'error',
-          6000
-        );
-      } else {
-        showToast('Có lỗi xảy ra khi xóa tài khoản', 'error');
-      }
+    } catch (error) {
+      const code = (error as { code?: string }).code;
+      console.error('Delete account failed:', code ?? 'unknown');
+      showToast(messageForDeleteError(code), 'error', 6000);
     } finally {
       setIsDeleting(false);
     }
@@ -64,7 +75,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             onClick={handleDelete}
             variant="danger"
             className="flex-1"
-            disabled={confirmText !== REQUIRED_CONFIRM_TEXT || isDeleting}
+            disabled={!canDelete || isDeleting}
           >
             {isDeleting ? (
               <Loader2 size={18} className="animate-spin mr-2" />
@@ -90,11 +101,15 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
         </p>
 
         <div className="pt-2">
-          <label className={`block text-sm font-medium text-[var(--text-primary)] mb-2`}>
+          <label
+            htmlFor="delete-account-confirm"
+            className={`block text-sm font-medium text-[var(--text-primary)] mb-2`}
+          >
             Nhập <span className="font-bold text-red-500">"{REQUIRED_CONFIRM_TEXT}"</span> để xác
             nhận:
           </label>
           <input
+            id="delete-account-confirm"
             type="text"
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
@@ -102,6 +117,27 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             className={`w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-transparent text-[var(--text-primary)] focus:outline-none focus:border-red-500 transition-colors text-sm`}
             autoFocus
           />
+        </div>
+
+        <div>
+          <label
+            htmlFor="delete-account-password"
+            className={`block text-sm font-medium text-[var(--text-primary)] mb-2`}
+          >
+            Mật khẩu hiện tại
+          </label>
+          <input
+            id="delete-account-password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            placeholder="Nhập mật khẩu để xác thực lại"
+            className={`w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-transparent text-[var(--text-primary)] focus:outline-none focus:border-red-500 transition-colors text-sm`}
+          />
+          <p className={`mt-2 text-xs text-[var(--text-muted)]`}>
+            Cần xác thực lại mật khẩu trước khi xóa vĩnh viễn.
+          </p>
         </div>
       </div>
     </Modal>
