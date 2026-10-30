@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserSettings } from '@/types/index';
 import Switch from '@/components/ui/Switch';
 import { LogOut, Sun, Moon } from 'lucide-react';
 import { useThemeStore } from '@/stores/themeStore';
 import AccountSection from '@/features/settings/components/AccountSection';
 import WorkConfigSection from '@/features/settings/components/WorkConfigSection';
+import { ChangePasswordModal } from '@/features/auth/components/ChangePasswordModal';
 
 interface SettingsViewProps {
     user: any;
@@ -14,11 +15,12 @@ interface SettingsViewProps {
 
 const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout }) => {
     const { theme } = useThemeStore();
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
 
     return (
         <div className="pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-dynamic">
             <div className="p-4 md:p-6 space-y-4">
-                <AccountSection user={user} />
+                <AccountSection user={user} onChangePassword={() => setShowPasswordModal(true)} />
 
                 {user?.uid && <WorkConfigSection userUid={user.uid} settings={settings} />}
 
@@ -51,6 +53,11 @@ const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout })
                     </button>
                 </div>
             </div>
+
+            <ChangePasswordModal
+                isOpen={showPasswordModal}
+                onClose={() => setShowPasswordModal(false)}
+            />
         </div>
     );
 };

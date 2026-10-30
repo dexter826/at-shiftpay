@@ -6,7 +6,6 @@ import { imageService } from '@/lib/api/imageService';
 import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/Toast';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
-import { ChangePasswordModal } from '@/features/auth/components/ChangePasswordModal';
 import { DeleteAccountModal } from '@/features/settings/components/DeleteAccountModal';
 import KeyIcon from '@/components/ui/icons/key-icon';
 import TrashIcon from '@/components/ui/icons/trash-icon';
@@ -14,9 +13,10 @@ import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface AccountSectionProps {
     user: any;
+    onChangePassword: () => void;
 }
 
-const AccountSection: React.FC<AccountSectionProps> = ({ user }) => {
+const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword }) => {
     const itemHover = 'hover:bg-[var(--border-color)]';
     const { showToast } = useToast();
     const saveUserInfo = useAuthStore(state => state.saveUserInfo);
@@ -27,7 +27,6 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user }) => {
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
     const [cropperOpen, setCropperOpen] = useState(false);
     const [tempImage, setTempImage] = useState<string | null>(null);
-    const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -183,7 +182,7 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user }) => {
                 </div>
 
                 <button
-                    onClick={() => setShowPasswordModal(true)}
+                    onClick={onChangePassword}
                     onMouseEnter={() => passwordIconRef.current?.startAnimation()}
                     onMouseLeave={() => passwordIconRef.current?.stopAnimation()}
                     className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors text-left border-b border-[var(--border-color)]`}
@@ -219,10 +218,6 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user }) => {
                 </button>
             </div>
 
-            <ChangePasswordModal
-                isOpen={showPasswordModal}
-                onClose={() => setShowPasswordModal(false)}
-            />
             <DeleteAccountModal
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
