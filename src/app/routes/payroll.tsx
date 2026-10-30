@@ -119,9 +119,8 @@ const PayrollView: React.FC<PayrollViewProps> = ({
     );
   };
 
-  const selectedEmployeeSummary = selectedEmpId
-    ? summary.find((s) => s.employeeId === selectedEmpId)
-    : null;
+  const selectedEmployeeSummary =
+    (selectedEmpId ? summary.find((s) => s.employeeId === selectedEmpId) : null) ?? null;
   const selectedUnpaidShifts = useMemo(() => {
     if (!selectedEmpId) return [];
     return shifts
@@ -156,7 +155,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
     return (
       selectedTransaction.shiftIds
         ?.map((shiftId) => shifts.find((s) => s.id === shiftId))
-        .filter(Boolean) || []
+        .filter((s): s is Shift => s !== undefined) || []
     );
   }, [selectedTransaction, shifts]);
 

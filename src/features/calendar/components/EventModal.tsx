@@ -108,7 +108,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         // Lấy đánh giá địa điểm
         if (loc) {
-          setReview(loc.review);
+          setReview(loc.review ?? undefined);
           setReviewNote(loc.reviewNote || '');
         } else {
           setReview(undefined);
@@ -183,7 +183,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       if (existingEvent) {
         const loc = locations.find((l) => l.id === existingEvent.locationId);
         if (loc) {
-          setReview(loc.review);
+          setReview(loc.review ?? undefined);
           setReviewNote(loc.reviewNote || '');
         }
       }
@@ -611,7 +611,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                           type="button"
                           onClick={() => {
                             setLocation(loc.name);
-                            setReview(loc.review);
+                            setReview(loc.review ?? undefined);
                             setReviewNote(loc.reviewNote || '');
                           }}
                           className={`w-full px-3 py-2 text-left text-xs hover:bg-[var(--border-color)] transition-colors border-b last:border-0 border-[var(--border-color)] text-[var(--text-secondary)]`}

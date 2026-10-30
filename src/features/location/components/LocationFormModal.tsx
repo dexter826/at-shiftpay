@@ -50,7 +50,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
         setAddress(editingLocation.address || '');
         setLat(editingLocation.latitude?.toString() || '');
         setLng(editingLocation.longitude?.toString() || '');
-        setReview(editingLocation.review);
+        setReview(editingLocation.review ?? undefined);
         setReviewNote(editingLocation.reviewNote || '');
       } else {
         // Reset form

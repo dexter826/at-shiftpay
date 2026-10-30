@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Calendar, TrendingUp, Users, Wallet } from 'lucide-react';
+import { Calendar, TrendingUp, Users, Wallet, type LucideIcon } from 'lucide-react';
 import { formatCurrency } from '@/utils/format';
 
 interface DashboardStatsProps {
@@ -18,7 +18,25 @@ interface DashboardStatsProps {
   };
 }
 
-const cards = [
+type StatKey = keyof DashboardStatsProps['stats'];
+
+interface StatRow {
+  label: string;
+  key: StatKey | null;
+  subtract?: boolean;
+  currency?: boolean;
+  color?: string;
+}
+
+interface StatCard {
+  label: string;
+  value: StatKey;
+  icon: LucideIcon;
+  isCurrency?: boolean;
+  rows: StatRow[];
+}
+
+const cards: StatCard[] = [
   {
     label: 'Sự kiện',
     value: 'totalEvents',
@@ -62,7 +80,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = memo(({ stats }) => (
   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
     {cards.map((card) => {
       const Icon = card.icon;
-      const mainValue = stats[card.value as keyof typeof stats] as number;
+      const mainValue = stats[card.value];
       return (
         <div
           key={card.label}
@@ -83,14 +101,11 @@ const DashboardStats: React.FC<DashboardStatsProps> = memo(({ stats }) => (
           </p>
           <div className="pt-2 border-t border-[var(--border-color)] space-y-1">
             {card.rows.map((row) => {
-              let val: number;
-              if (row.subtract) {
-                val =
-                  (stats['totalEmployees' as keyof typeof stats] as number) -
-                  (stats['activeEmployees' as keyof typeof stats] as number);
-              } else {
-                val = stats[row.key as keyof typeof stats] as number;
-              }
+              const val = row.subtract
+                ? stats.totalEmployees - stats.activeEmployees
+                : row.key
+                  ? stats[row.key]
+                  : 0;
               return (
                 <div key={row.label} className="flex justify-between text-[11px]">
                   <span className="text-[var(--text-secondary)]">{row.label}</span>

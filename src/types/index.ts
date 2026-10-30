@@ -18,11 +18,11 @@ export interface Employee {
 export interface Location {
   id: string;
   name: string;
-  address?: string;
-  latitude?: number;
-  longitude?: number;
-  review?: 'high' | 'low';
-  reviewNote?: string;
+  address?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  review?: 'high' | 'low' | null;
+  reviewNote?: string | null;
   createdAt: string;
   userId: string;
 }

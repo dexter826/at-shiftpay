@@ -92,6 +92,8 @@ function AppShell() {
   };
 
   const handleExportReport = async (month: number, year: number, onlyDebt: boolean) => {
+    if (!user) return;
+
     try {
       setIsExporting(true);
       const [fetchedEvents, fetchedShifts] = await Promise.all([
