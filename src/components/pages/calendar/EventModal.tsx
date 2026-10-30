@@ -29,7 +29,7 @@ import { TimePicker } from "../../ui/TimePicker";
 import { useToast } from "../../ui/Toast";
 import SearchInput from "../../ui/SearchInput";
 import { areValuesEqual } from "../../../utils/compare";
-import { useAuthStore } from "../../../stores";
+import { useAuthStore, useThemeStore } from "../../../stores";
 
 interface EventModalProps {
   date: string;
@@ -55,6 +55,7 @@ export const EventModal: React.FC<EventModalProps> = ({
   onSuccess,
 }) => {
   const { user } = useAuthStore();
+  const { theme } = useThemeStore();
   const userId = user?.uid || '';
   const { showToast } = useToast();
   const [title, setTitle] = useState("");
