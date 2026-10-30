@@ -1,9 +1,7 @@
-import React, { useRef, useEffect, useId } from 'react';
+import React from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
-import { createPortal } from 'react-dom';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
-import { DURATION_BASE, EASE_STANDARD } from '@/lib/motion';
+import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface ModalProps {
   title: string;
@@ -13,127 +11,45 @@ interface ModalProps {
   footer?: React.ReactNode;
 }
 
-// Đếm số modal đang mở để quản lý scroll
-let openModalCount = 0;
-
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
 export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, footer }) => {
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const titleId = useId();
-  const prefersReducedMotion = useReducedMotion();
-  const transition = {
-    duration: prefersReducedMotion ? 0 : DURATION_BASE,
-    ease: EASE_STANDARD,
-  };
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    openModalCount++;
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      openModalCount--;
-      if (openModalCount === 0) {
-        document.body.style.overflow = '';
-      }
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const previousFocus = document.activeElement as HTMLElement | null;
-    const dialog = dialogRef.current;
-
-    if (dialog && !dialog.contains(document.activeElement)) {
-      const firstFocusable = dialog.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-      (firstFocusable ?? dialog).focus();
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.stopPropagation();
-        onClose();
-        return;
-      }
-
-      if (event.key !== 'Tab' || !dialog) return;
-
-      const focusables = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-      if (focusables.length === 0) return;
-
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      previousFocus?.focus();
-    };
-  }, [isOpen, onClose]);
-
-  return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-scrim/70 p-0 md:p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={transition}
-        >
-          <motion.div
-            ref={dialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
-            tabIndex={-1}
-            className={`bg-surface w-full md:max-w-md md:rounded-md rounded-t-md max-h-[85vh] flex flex-col border border-line outline-none`}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            transition={transition}
+  return (
+    <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay
+          className="fixed inset-0 z-50 bg-scrim/60 data-[state=open]:animate-overlay-in"
+          onClick={onClose}
+        />
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-end justify-center md:items-center md:p-4">
+          <DialogPrimitive.Content
+            aria-describedby={undefined}
+            className={cn(
+              'pointer-events-auto flex max-h-[85dvh] w-full flex-col overflow-hidden border border-line bg-surface outline-none',
+              'rounded-t-sm md:max-w-md md:rounded-sm',
+              'data-[state=open]:animate-content-in'
+            )}
           >
-            {/* Tiêu đề */}
-            <div
-              className={`px-4 py-3 border-b border-line flex justify-between items-center flex-shrink-0`}
-            >
-              <h3 id={titleId} className={`text-title text-ink`}>
-                {title}
-              </h3>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Đóng"
-                className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
-              >
-                <X size={18} />
-              </button>
+            <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line px-4 py-3">
+              <DialogPrimitive.Title className="text-title text-ink">{title}</DialogPrimitive.Title>
+              <DialogPrimitive.Close asChild>
+                <button
+                  type="button"
+                  aria-label="Đóng"
+                  className={cn(
+                    'flex h-11 w-11 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:bg-surface-2 hover:text-ink',
+                    focusRingOnSurfaceClasses
+                  )}
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </DialogPrimitive.Close>
             </div>
 
-            {/* Nội dung */}
-            <div className="overflow-y-auto p-4 flex-1">{children}</div>
+            <div className="flex-1 overflow-y-auto p-4">{children}</div>
 
-            {/* Chân trang */}
-            {footer && (
-              <div className={`px-4 py-3 border-t border-line flex-shrink-0`}>{footer}</div>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>,
-    document.body
+            {footer && <div className="shrink-0 border-t border-line px-4 py-3">{footer}</div>}
+          </DialogPrimitive.Content>
+        </div>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 };

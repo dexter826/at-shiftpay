@@ -62,7 +62,8 @@ const NavItem: React.FC<{
 };
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) => {
-  const { theme, toggleTheme } = useThemeStore();
+  const { resolvedTheme, toggleTheme } = useThemeStore();
+  const isDark = resolvedTheme === 'dark';
   const prefersReducedMotion = useReducedMotion();
   const activeTabId = currentTab === 'locations' ? 'calendar' : currentTab;
 
@@ -102,12 +103,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
           <button
             type="button"
             onClick={toggleTheme}
-            aria-label={
-              theme === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'
-            }
+            aria-label={isDark ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'}
             className={`flex items-center justify-center w-10 h-10 rounded-sm transition-colors duration-fast ease-standard text-ink-muted hover:text-ink-soft hover:bg-surface-2 ${focusRingOnSurfaceClasses}`}
           >
-            {theme === 'dark' ? <Sun size={18} className="text-accent-ink" /> : <Moon size={18} />}
+            {isDark ? <Sun size={18} className="text-accent-ink" /> : <Moon size={18} />}
           </button>
         </div>
       </div>

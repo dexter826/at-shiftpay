@@ -4,7 +4,7 @@
 
 **Blocked by:** 02, 03 (đã xong).
 
-**Status:** in-progress — chờ duyệt plan trước khi sửa `src/`.
+**Status:** in-progress — gallery chờ duyệt.
 
 ## Quyết định
 
@@ -132,3 +132,38 @@ Không sửa: screens layout, shell layout, splash/login assets, `public/`, API/
 
 - Branch `feat/ui-rebuild-v2`; `src/` chưa bị sửa; ticket 01–03 + mockup/kit nằm trong `.scratch` chưa commit. Có file `tmp_*` ở root cần dọn trước commit.
 - Nếu muốn mốc trước khi sửa code: nói "commit 01–03" — tôi commit spec/ticket/mockup/kit (không gồm `tmp_*`).
+
+
+## Kết quả triển khai
+
+2026-10-30 — Đã implement ticket 04, chưa commit, đang chờ duyệt gallery.
+
+- Token layer mới trong `src/index.css`: light base + `.dark`, teal/chalk/chartreuse, IBM Plex Sans/Mono, radius 2px, không shadow, motion 120/180ms.
+- Theme system: `themeStore` với `system | light | dark`, resolved theme, listener `prefers-color-scheme`, pre-paint script + meta theme-color; `Navbar`, `settings`, `locations`, `ThemeSwitch` đọc resolved.
+- Radix: dialog, popover, switch, checkbox, tabs, tooltip, toast, radio-group; bỏ `@ncdai/react-wheel-picker` và chunk `picker-vendor`.
+- Primitive cũ giữ API; thêm `Input`, `Textarea`, `Field`, `Tag`, `Tabs`, `Tooltip`, `RadioGroup`, `ThemeSwitch`; `Switch` generic; `TimePicker` dùng 2 Dropdown; `Dropdown` Popover + listbox ARIA; `Modal` Dialog; `ToastProvider` Radix Toast; `Loader` mới.
+- Gallery dev `/gallery` (chỉ DEV), query `?theme=light|dark|system`; ảnh QA trong `gallery/`.
+
+## Verify đã chạy
+
+- `npm run lint` — pass.
+- `npx tsc --noEmit` — pass.
+- `npm run build` — pass (3071 modules).
+- `npm run format:check` — pass (`.scratch` đã vào `.prettierignore`).
+- Gallery 1440 dark + 1440 light + 390 light: `gallery/gallery-dark.png`, `gallery/gallery-light.png`, `gallery/gallery-light-mobile.png`.
+- Theme: chuyển system → dark → light, lưu localStorage, meta `#0C1210`/`#F2F4F0`; radio 3 lựa chọn và switch đồng bộ.
+- Dropdown thường: ArrowDown + Enter đổi Pha chế → Phục vụ, focus trả về trigger.
+- Dropdown tìm kiếm: gõ "Thu" lọc còn 1 option, Enter chọn Thu ngân, đóng listbox.
+- Tabs: click và ArrowRight chuyển tab, panel đúng.
+- Modal: mở, focus nút Đóng, Escape đóng; DOM dialog đúng.
+- Toast: live region nhận "2 ca cần xác nhận."; tooltip trả "Mở cài đặt ca".
+- Field: label/hint/error + `aria-invalid`/`aria-describedby` đúng trong snapshot.
+
+## Giới hạn QA
+
+- Repo không có unit/e2e/visual regression; QA là build/lint/tsc + trình duyệt thủ công.
+- Ảnh modal không chụp được do in-app browser ẩn viewport; đã kiểm bằng snapshot DOM.
+- TimePicker dùng chung Dropdown đã test; chưa test riêng từng cặp giờ/phút.
+- Chưa emulate prefers-reduced-motion; CSS global có rule.
+- Các màn cũ đang ở trạng thái chuyển tiếp (token/font mới, layout cũ); shell/màn hình ở ticket sau.
+- Settings vẫn dùng toggle sáng/tối; control 3 lựa chọn Hệ thống/Sáng/Tối làm ở ticket settings.

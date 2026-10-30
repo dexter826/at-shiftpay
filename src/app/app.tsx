@@ -25,6 +25,7 @@ const EmployeeView = lazy(() => import('@/app/routes/employees'));
 const LocationView = lazy(() => import('@/app/routes/locations'));
 const PayrollView = lazy(() => import('@/app/routes/payroll'));
 const SettingsView = lazy(() => import('@/app/routes/settings'));
+const Gallery = import.meta.env.DEV ? lazy(() => import('@/dev/Gallery')) : null;
 
 const TAB_NAMES = {
   dashboard: 'Tổng quan',
@@ -375,6 +376,14 @@ function App() {
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem('splashscreen_shown');
   });
+
+  if (Gallery && window.location.pathname === '/gallery') {
+    return (
+      <Suspense fallback={<Loader fullScreen={false} />}>
+        <Gallery />
+      </Suspense>
+    );
+  }
 
   if (showSplash) {
     return <Splashscreen onComplete={() => setShowSplash(false)} />;

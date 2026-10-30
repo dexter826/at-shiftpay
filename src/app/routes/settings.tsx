@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { User } from 'firebase/auth';
 import { UserSettings } from '@/types/index';
-import Switch from '@/components/ui/Switch';
+import ThemeSwitch from '@/components/ui/ThemeSwitch';
 import { LogOut, Sun, Moon } from 'lucide-react';
 import { useThemeStore } from '@/stores/themeStore';
 import AccountSection from '@/features/settings/components/AccountSection';
@@ -18,7 +18,8 @@ const rowFocus =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset';
 
 const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout }) => {
-  const { theme } = useThemeStore();
+  const { resolvedTheme } = useThemeStore();
+  const isDark = resolvedTheme === 'dark';
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   return (
@@ -32,16 +33,16 @@ const SettingsView: React.FC<SettingsViewProps> = ({ user, settings, onLogout })
           <div className="flex items-center justify-between p-3.5">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 flex items-center justify-center rounded-sm bg-surface-2 text-ink-soft">
-                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                {isDark ? <Sun size={16} /> : <Moon size={16} />}
               </div>
               <div>
                 <p className="text-body-sm font-medium text-ink">Giao diện</p>
                 <p className="text-label font-medium text-ink-muted">
-                  {theme === 'dark' ? 'Chế độ tối' : 'Chế độ sáng'}
+                  {isDark ? 'Chế độ tối' : 'Chế độ sáng'}
                 </p>
               </div>
             </div>
-            <Switch />
+            <ThemeSwitch />
           </div>
         </div>
 

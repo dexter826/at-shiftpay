@@ -8,24 +8,29 @@
     />
     <title>ShiftPay</title>
 
-    <!-- Apply the saved theme before first paint to avoid a wrong-theme flash -->
+    <!-- Apply the saved theme (or system preference) before first paint. -->
     <script>
       (function () {
-        var theme = 'dark';
+        var preference = 'system';
         try {
           var stored = localStorage.getItem('theme');
           if (stored) {
             var parsed = JSON.parse(stored);
             var saved = parsed && parsed.state && parsed.state.theme;
-            if (saved === 'light' || saved === 'dark') {
-              theme = saved;
+            if (saved === 'light' || saved === 'dark' || saved === 'system') {
+              preference = saved;
             }
           }
         } catch (error) {
-          // Corrupted storage falls back to the dark default.
+          // Corrupted storage falls back to system.
         }
-        document.documentElement.classList.add(theme);
-        document.documentElement.style.colorScheme = theme;
+        var isDark =
+          preference === 'dark' ||
+          (preference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', isDark ? '#0C1210' : '#F2F4F0');
       })();
     </script>
 
@@ -33,7 +38,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
 
@@ -42,7 +47,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#1a1a17" />
+    <meta name="theme-color" content="#F2F4F0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="ShiftPay" />

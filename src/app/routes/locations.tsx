@@ -232,7 +232,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           onEdit={handleOpenEdit}
           onDelete={handleDelete}
           onViewDetail={handleViewDetail}
-          theme={useThemeStore((state) => state.theme)}
+          theme={useThemeStore((state) => state.resolvedTheme)}
         />
       </div>
 

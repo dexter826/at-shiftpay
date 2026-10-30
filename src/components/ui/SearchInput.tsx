@@ -30,7 +30,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       <input
         value={value}
         onChange={onChange}
-        className={`w-full pl-9 pr-10 h-10 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted transition-colors duration-fast ease-standard hover:border-ink-muted focus:outline-none ${focusRingClasses} disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
+        className={`w-full pl-9 pr-11 h-11 bg-surface border border-line rounded-sm text-base text-ink placeholder:text-ink-muted transition-colors duration-fast ease-standard hover:border-line-strong focus:outline-none ${focusRingClasses} disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
         {...props}
       />
       {hasValue && (
@@ -39,7 +39,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           onClick={handleClear}
           disabled={props.disabled}
           aria-label="Xoá tìm kiếm"
-          className={`absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:text-ink disabled:opacity-40 disabled:cursor-not-allowed ${focusRingClasses}`}
+          className={`absolute right-0 top-0 flex h-11 w-11 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:text-ink disabled:opacity-40 disabled:cursor-not-allowed ${focusRingClasses}`}
         >
           <X size={14} />
         </button>
