@@ -19,4 +19,5 @@ const parseCubicBezier = (name: string, fallback: [number, number, number, numbe
 // Read from the CSS motion tokens so Framer and CSS transitions stay aligned.
 export const DURATION_FAST = parseDuration('--duration-fast', 0.14);
 export const DURATION_BASE = parseDuration('--duration-base', 0.2);
+export const DURATION_SLOW = parseDuration('--duration-slow', 2);
 export const EASE_STANDARD = parseCubicBezier('--ease-standard', [0.2, 0.8, 0.2, 1]);

@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { DURATION_SLOW } from '@/lib/motion';
 
 interface TilesProps {
   className?: string;
@@ -37,7 +38,7 @@ export const Tiles = React.memo(
                   transition: { duration: 0 },
                 }}
                 animate={{
-                  transition: { duration: 2 },
+                  transition: { duration: DURATION_SLOW },
                 }}
                 key={`col-${j}`}
                 className={cn(

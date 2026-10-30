@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
+import { focusRingClasses } from '@/lib/utils';
 
 interface ScrollToTopButtonProps {
   activeTab: string;
@@ -31,12 +32,13 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ activeTab }) => {
     <AnimatePresence>
       {isVisible && (
         <motion.button
+          type="button"
           initial={{ opacity: 0, scale: 0.5, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           onClick={scrollToTop}
-          className={`fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40 p-3 rounded-full shadow-2xl border border-accent/20 transition-all active:scale-90 bg-accent text-on-accent hover:bg-accent/90 hover:shadow-accent/40`}
-          title="Cuộn lên đầu trang"
+          className={`fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40 flex h-12 w-12 items-center justify-center rounded-md border border-accent bg-accent text-on-accent transition-all duration-fast ease-standard hover:brightness-110 active:scale-90 ${focusRingClasses}`}
+          aria-label="Cuộn lên đầu trang"
         >
           <ArrowUp size={24} />
         </motion.button>
