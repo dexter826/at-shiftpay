@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bảng ca — Tổng quan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <svg aria-hidden="true" style="display:none">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 9h18M16 12h4"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  </svg>
+
+  <div class="shell">
+    <aside class="rail">
+      <img class="mark" src="mark-dark.svg" alt="ShiftPay" width="34" height="34" />
+      <nav aria-label="Điều hướng chính">
+        <a href="#" aria-current="page"><svg class="icon"><use href="#i-grid"/></svg>Tổng quan</a>
+        <a href="#"><svg class="icon"><use href="#i-calendar"/></svg>Lịch</a>
+        <a href="#"><svg class="icon"><use href="#i-users"/></svg>Nhân sự</a>
+        <a href="#"><svg class="icon"><use href="#i-wallet"/></svg>Lương</a>
+        <a href="#"><svg class="icon"><use href="#i-settings"/></svg>Cài đặt</a>
+      </nav>
+      <div class="rail-foot">
+        <div class="avatar">MT</div>
+        <button class="icon-btn" aria-label="Chuyển sang giao diện tối"><svg class="icon"><use href="#i-moon"/></svg></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Tuần 44 · 26/10 – 01/11/2026</div>
+          <h1>Bảng ca</h1>
+        </div>
+        <div class="actions">
+          <button class="btn"><svg class="icon"><use href="#i-arrow"/></svg>Tải tuần</button>
+          <button class="btn btn-primary"><svg class="icon"><use href="#i-plus"/></svg>Xếp ca</button>
+        </div>
+      </header>
+
+      <section class="kpis" aria-label="Chỉ số tuần">
+        <div class="kpi"><div class="label">Giờ đã xếp</div><strong>312h</strong><small>+12h so với tuần trước</small></div>
+        <div class="kpi"><div class="label">Lương dự kiến</div><strong>24.850.000đ</strong><small>+4,2% trước thuế</small></div>
+        <div class="kpi"><div class="label">Ca đã xếp</div><strong>48</strong><small>4 địa điểm · 12 người</small></div>
+        <div class="kpi need"><div class="label">Cần xếp</div><strong>6</strong><small>Trước 17:00 hôm nay</small></div>
+      </section>
+
+      <div class="board-wrap">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Lịch phân ca</h2>
+            <div class="filters"><span class="chip on">Tuần 44</span><span class="chip">Tất cả địa điểm</span></div>
+          </div>
+          <div class="board">
+            <div class="row-label" style="background:var(--surface)"></div>
+            <div class="day-head"><b>T2</b><span>26/10</span></div>
+            <div class="day-head"><b>T3</b><span>27/10</span></div>
+            <div class="day-head"><b>T4</b><span>28/10</span></div>
+            <div class="day-head"><b>T5</b><span>29/10</span></div>
+            <div class="day-head today"><b>T6</b><span>30/10 · Hôm nay</span></div>
+            <div class="day-head"><b>T7</b><span>31/10</span></div>
+            <div class="day-head"><b>CN</b><span>01/11</span></div>
+
+            <div class="row-label">Sáng</div>
+            <div class="cell"><div class="tile"><h3>Pha chế · Q1</h3><span class="time">08:00–12:00</span><span class="people">4 người</span></div></div>
+            <div class="cell"><div class="tile"><h3>Bếp · Q3</h3><span class="time">08:00–12:00</span><span class="people">3 người</span></div></div>
+            <div class="cell"><div class="tile"><h3>Pha chế · Q1</h3><span class="time">08:00–12:00</span><span class="people">4 người</span></div></div>
+            <div class="cell"><div class="tile"><h3>Bếp · Q3</h3><span class="time">08:00–12:00</span><span class="people">3 người</span></div></div>
+            <div class="cell today"><div class="tile"><h3>Pha chế · Q1</h3><span class="time">08:00–12:00</span><span class="people">4 người</span></div></div>
+            <div class="cell"><div class="tile need"><h3>Cần xếp</h3><span class="people">Ca sáng</span></div></div>
+            <div class="cell"><div class="tile need"><h3>Cần xếp</h3><span class="people">Ca sáng</span></div></div>
+
+            <div class="row-label">Chiều</div>
+            <div class="cell"><div class="tile"><h3>Phục vụ · Q1</h3><span class="time">12:00–18:00</span><span class="people">6 người</span></div></div>
+            <div class="cell"><div class="tile"><h3>Phục vụ · Q3</h3><span class="time">12:00–18:00</span><span class="people">5 người</span></div></div>
+            <div class="cell"><div class="tile"><h3>Phục vụ · Q1</h3><span class="time">12:00–18:00</span><span class="people">6 người</span></div></div>
+            <div class="cell"><div class="tile"><h3>Phục vụ · Q3</h3><span class="time">12:00–18:00</span><span class="people">5 người</span></div></div>
+            <div class="cell today"><div class="tile"><h3>Phục vụ · Q1</h3><span class="time">12:00–18:00</span><span class="people">6 người</span></div></div>
+            <div class="cell"><div class="tile need"><h3>Cần xếp</h3><span class="people">Ca chiều</span></div></div>
+            <div class="cell"><div class="tile need"><h3>Cần xếp</h3><span class="people">Ca chiều</span></div></div>
+
+            <div class="row-label">Tối</div>
+            <div class="cell"><div class="tile need"><h3>Cần xếp</h3><span class="people">Ca tối</span></div></div>
+            <div class="cell"><div class="tile"><h3>Tiệc riêng · Q3</h3><span class="time">18:00–22:00</span><span class="people">4 người</span></div></div>
+            <div class="cell"><div class="tile need"><h3>Cần xếp</h3><span class="people">Ca tối</span></div></div>
+            <div class="cell"><div class="tile"><h3>Tiệc riêng · Q3</h3><span class="time">18:00–22:00</span><span class="people">4 người</span></div></div>
+            <div class="cell today"><div class="tile"><h3>Tiệc cưới · Lotus</h3><span class="time">18:00–22:00</span><span class="people">8 người</span></div></div>
+            <div class="cell"><div class="tile"><h3>Tiệc cưới · Lotus</h3><span class="time">18:00–22:00</span><span class="people">8 người</span></div></div>
+            <div class="cell"><div class="tile"><h3>Tiệc riêng · Q7</h3><span class="time">18:00–22:00</span><span class="people">6 người</span></div></div>
+          </div>
+          <div class="board-foot"><span>6 ca cần xếp · 42 ca đã có người</span><span>Cập nhật 08:42</span></div>
+        </section>
+
+        <aside class="panel tasks">
+          <div class="panel-head"><h2>Cần xử lý</h2><span class="chip on">6</span></div>
+          <div class="task need">
+            <div class="task-top"><b>06</b><span class="mono" style="font-size:9px;color:var(--muted)">ca</span></div>
+            <h3>Ca chưa có người</h3>
+            <p>2 tối nay, 2 sáng T7, 2 chiều CN.</p>
+            <a href="#">Xếp tất cả <svg class="icon"><use href="#i-arrow"/></svg></a>
+          </div>
+          <div class="task">
+            <div class="task-top"><b>02</b><span class="mono" style="font-size:9px;color:var(--muted)">người</span></div>
+            <h3>Chờ xác nhận</h3>
+            <p>Phạm Dũng và Lê Chi chưa xác nhận ca tối.</p>
+            <a href="#">Gửi nhắc <svg class="icon"><use href="#i-arrow"/></svg></a>
+          </div>
+          <div class="task">
+            <div class="task-top"><b>02</b><span class="mono" style="font-size:9px;color:var(--muted)">người</span></div>
+            <h3>Chưa chốt giờ</h3>
+            <p>Bảng lương tháng 10 · hạn 31/10.</p>
+            <a href="#">Mở bảng lương <svg class="icon"><use href="#i-arrow"/></svg></a>
+          </div>
+          <div class="task-note">Mẹo: kéo thả ca giữa các ô để đổi người. Thay đổi được lưu tự động.</div>
+        </aside>
+      </div>
+
+      <div class="bottom">
+      <section class="panel payroll">
+        <div class="panel-head"><h2>Bảng lương gần đây</h2><span class="chip">Tháng 10</span></div>
+        <table>
+          <thead><tr><th>Nhân viên</th><th class="num">Ca</th><th class="num">Giờ</th><th class="num">Thực nhận</th><th>Trạng thái</th></tr></thead>
+          <tbody>
+            <tr><td class="name">Nguyễn An</td><td class="num">22</td><td class="num">96h</td><td class="num">9.240.000đ</td><td><span class="tag tag-ok"><svg class="icon" style="width:10px;height:10px"><use href="#i-check"/></svg>Đã chốt</span></td></tr>
+            <tr><td class="name">Trần Bình</td><td class="num">20</td><td class="num">104h</td><td class="num">8.760.000đ</td><td><span class="tag tag-wait">Chờ chốt</span></td></tr>
+            <tr><td class="name">Lê Chi</td><td class="num">18</td><td class="num">88h</td><td class="num">8.120.000đ</td><td><span class="tag tag-ok"><svg class="icon" style="width:10px;height:10px"><use href="#i-check"/></svg>Đã chốt</span></td></tr>
+            <tr><td class="name">Phạm Dũng</td><td class="num">16</td><td class="num">80h</td><td class="num">7.480.000đ</td><td><span class="tag tag-wait">Chờ chốt</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <aside class="panel locations">
+        <div class="panel-head"><h2>Địa điểm</h2><span class="chip">Tuần 44</span></div>
+        <div class="loc"><div><b>Quận 1</b><span>12 ca · 96h</span></div><div class="track"><i style="width:100%"></i></div><em>18 người</em></div>
+        <div class="loc"><div><b>Thảo Điền</b><span>10 ca · 72h</span></div><div class="track"><i style="width:75%"></i></div><em>14 người</em></div>
+        <div class="loc"><div><b>Quận 3</b><span>9 ca · 68h</span></div><div class="track"><i style="width:64%"></i></div><em>11 người</em></div>
+        <div class="loc"><div><b>Quận 7</b><span>6 ca · 46h</span></div><div class="track"><i style="width:42%"></i></div><em>8 người</em></div>
+        <div class="loc"><div><b>Bếp trung tâm</b><span>5 ca · 38h</span></div><div class="track"><i style="width:30%"></i></div><em>6 người</em></div>
+      </aside>
+      </div>
+
+      <footer class="page-foot"><span>Dữ liệu đồng bộ 2 phút trước</span><span>Giờ hệ thống 09:15</span></footer>
+    </main>
+  </div>
+</body>
+</html>
