@@ -95,17 +95,16 @@ Rebuild the visual layer end to end. Three complete design directions are propos
 ## Testing Decisions
 
 **What makes a good check here** — the repo has no automated test framework, by explicit product decision. Verification must still assert external behavior at the highest seam:
-- The token seam: built CSS is the observable output; a check is good only if it fails on the exact class of bug it claims (a reference that does not resolve), without asserting internal file organization.
+- The build seam: the static gate and the rendered app are the observable output; token work is verified through them and the screens, not through internal file assertions.
 - The screen seam: the rendered screen in both themes at both breakpoints is the observable behavior; manual checks follow a fixed per-screen checklist.
 - No check may assert implementation details such as class-name spelling or component internals.
 
 **Seams**
 1. Existing static gate — lint, type-check, production build, run on every PR.
-2. New token resolution check — a script run after build that scans source token references and fails if any does not resolve against the generated CSS. This is the only new seam and it sits at the highest available point.
-3. Manual screen seam — for each screen ticket: both themes, both breakpoints, contrast, focus-visible, reduced-motion, charts/status colors, theme persistence.
+2. Manual screen seam — for each screen ticket: both themes, both breakpoints, contrast, focus-visible, reduced-motion, charts/status colors, theme persistence.
 
 **Modules tested**
-- Token layer: token resolution check.
+- Token layer: verified through the static gates and the screen sweep in both themes; a dedicated token checker was considered and dropped as temporary migration tooling, not permanent infrastructure.
 - Primitives and shells: manual checklist exercised through the screens that use them most (dashboard, calendar, settings).
 - Screens: manual checklist per screen.
 - `DESIGN.md`: reviewed against the generated CSS in the token ticket's review (manual, not scripted).

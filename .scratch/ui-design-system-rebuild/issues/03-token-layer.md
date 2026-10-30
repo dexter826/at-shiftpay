@@ -2,7 +2,7 @@
 
 **What to build:** The app runs on Tailwind v4's CSS-first theme with the chosen direction's two-tier token system (primitive palette steps → semantic roles). Every style references the new semantic vocabulary; the old token names, hardcoded color literals, and styled-components are gone. Screens restyle at the value level with no markup, route, flow, or primitive-API changes.
 
-**Blocked by:** 01 (Design direction), 02 (Token resolution check).
+**Blocked by:** 01 (Design direction).
 
 **Status:** ready-for-agent
 
