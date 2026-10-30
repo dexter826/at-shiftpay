@@ -7,10 +7,10 @@ import Button from '@/components/ui/Button';
 import { useAuthStore } from '@/stores';
 
 // Import extracted components
-import EmployeeToolbar from '@/components/pages/employees/EmployeeToolbar';
-import EmployeeList from '@/components/pages/employees/EmployeeList';
-import EmployeeFormModal from '@/components/pages/employees/EmployeeFormModal';
-import EmployeeDetailModal from '@/components/pages/employees/EmployeeDetailModal';
+import EmployeeToolbar from '@/features/employees/components/EmployeeToolbar';
+import EmployeeList from '@/features/employees/components/EmployeeList';
+import EmployeeFormModal from '@/features/employees/components/EmployeeFormModal';
+import EmployeeDetailModal from '@/features/employees/components/EmployeeDetailModal';
 
 interface EmployeeManagerProps {
   employees: Employee[];

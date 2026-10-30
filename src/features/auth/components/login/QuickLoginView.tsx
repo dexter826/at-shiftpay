@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Eye, EyeOff, X, ChevronRight } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
-import { ValidationError } from '@/components/auth/login/ValidationError';
+import { ValidationError } from '@/features/auth/components/login/ValidationError';
 
 interface QuickLoginViewProps {
   savedUser: { email: string; displayName: string; photoURL?: string };

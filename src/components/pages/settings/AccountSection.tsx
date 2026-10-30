@@ -6,7 +6,7 @@ import { dbService } from '@/services';
 import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/Toast';
 import { ImageCropperModal } from '@/components/modals/ImageCropperModal';
-import { ChangePasswordModal } from '@/components/auth/ChangePasswordModal';
+import { ChangePasswordModal } from '@/features/auth/components/ChangePasswordModal';
 import { DeleteAccountModal } from '@/components/pages/settings/DeleteAccountModal';
 import KeyIcon from '@/components/ui/icons/key-icon';
 import TrashIcon from '@/components/ui/icons/trash-icon';

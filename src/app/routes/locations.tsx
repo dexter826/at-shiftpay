@@ -12,11 +12,11 @@ import { Modal } from '@/components/ui/Modal';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 // Import extracted components
-import LocationStats from '@/components/pages/locations/LocationStats';
-import LocationToolbar from '@/components/pages/locations/LocationToolbar';
-import LocationList from '@/components/pages/locations/LocationList';
-import LocationFormModal from '@/components/pages/locations/LocationFormModal';
-import LocationDetailModal from '@/components/pages/locations/LocationDetailModal';
+import LocationStats from '@/features/locations/components/LocationStats';
+import LocationToolbar from '@/features/locations/components/LocationToolbar';
+import LocationList from '@/features/locations/components/LocationList';
+import LocationFormModal from '@/features/locations/components/LocationFormModal';
+import LocationDetailModal from '@/features/locations/components/LocationDetailModal';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 

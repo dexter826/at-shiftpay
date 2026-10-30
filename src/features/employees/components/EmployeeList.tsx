@@ -4,7 +4,7 @@ import { Users } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { LoadMore } from '@/components/ui/LoadMore';
 import { Employee } from '@/types/index';
-import EmployeeCard from '@/components/pages/employees/EmployeeCard';
+import EmployeeCard from '@/features/employees/components/EmployeeCard';
 
 interface EmployeeListProps {
   employees: Employee[];

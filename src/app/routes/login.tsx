@@ -4,14 +4,14 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfi
 import { AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 
-import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
+import { ForgotPasswordModal } from '@/features/auth/components/ForgotPasswordModal';
 import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/Toast';
 
-import LoginHeader from '@/components/auth/login/LoginHeader';
-import VerificationView from '@/components/auth/login/VerificationView';
-import QuickLoginView from '@/components/auth/login/QuickLoginView';
-import AuthForm from '@/components/auth/login/AuthForm';
+import LoginHeader from '@/features/auth/components/login/LoginHeader';
+import VerificationView from '@/features/auth/components/login/VerificationView';
+import QuickLoginView from '@/features/auth/components/login/QuickLoginView';
+import AuthForm from '@/features/auth/components/login/AuthForm';
 
 interface LoginProps {
   onLogin: () => void;

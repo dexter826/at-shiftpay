@@ -4,10 +4,10 @@ import { Employee, Event, Shift, UserSettings, Location } from '@/types/index';
 
 import Dashboard from '@/components/pages/Dashboard';
 import CalendarView from '@/components/pages/CalendarView';
-import EmployeeManager from '@/components/pages/EmployeeManager';
+import EmployeeManager from '@/app/routes/employees';
 import PayrollView from '@/components/pages/PayrollView';
 import SettingsView from '@/components/pages/SettingsView';
-import LocationManager from '@/components/pages/LocationManager';
+import LocationManager from '@/app/routes/locations';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 

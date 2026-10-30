@@ -6,7 +6,7 @@ import { Phone, Calendar, CreditCard } from 'lucide-react';
 import PenIcon from '@/components/ui/icons/pen-icon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 import { useThemeStore } from '@/stores';
-import BankCard from '@/components/pages/employees/BankCard';
+import BankCard from '@/features/employees/components/BankCard';
 
 interface EmployeeDetailModalProps {
     isOpen: boolean;
