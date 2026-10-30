@@ -11,7 +11,6 @@ import {
   getDocs,
   where,
   limit,
-  writeBatch,
   deleteField,
 } from 'firebase/firestore';
 import { Location } from '@/types/index';
@@ -41,11 +40,11 @@ export const locationService = {
   async addLocation(
     data: {
       name: string;
-      address?: string;
-      latitude?: number;
-      longitude?: number;
-      review?: 'high' | 'low';
-      reviewNote?: string;
+      address?: string | null;
+      latitude?: number | null;
+      longitude?: number | null;
+      review?: 'high' | 'low' | null;
+      reviewNote?: string | null;
     },
     userId: string
   ): Promise<string> {
@@ -63,7 +62,8 @@ export const locationService = {
     } catch (error) {
       console.error('addLocation error:', error);
       throw new Error(
-        `Không thể thêm địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+        `Không thể thêm địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
       );
     }
   },
@@ -78,7 +78,8 @@ export const locationService = {
     } catch (error) {
       console.error('updateLocation error:', error);
       throw new Error(
-        `Không thể cập nhật địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+        `Không thể cập nhật địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
       );
     }
   },
@@ -89,7 +90,8 @@ export const locationService = {
     } catch (error) {
       console.error('deleteLocation error:', error);
       throw new Error(
-        `Không thể xóa địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+        `Không thể xóa địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
       );
     }
   },

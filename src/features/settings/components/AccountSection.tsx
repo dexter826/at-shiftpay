@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { User, Camera, Loader2, Edit2, Check, X, Key, ChevronRight, Trash2 } from 'lucide-react';
+import { User, Camera, Loader2, Edit2, Check, X, ChevronRight } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { imageService } from '@/lib/api/imageService';
@@ -9,10 +9,11 @@ import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { DeleteAccountModal } from '@/features/settings/components/DeleteAccountModal';
 import KeyIcon from '@/components/ui/icons/KeyIcon';
 import TrashIcon from '@/components/ui/icons/TrashIcon';
+import type { User as FirebaseUser } from 'firebase/auth';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface AccountSectionProps {
-  user: any;
+  user: FirebaseUser | null;
   onChangePassword: () => void;
 }
 

@@ -7,7 +7,6 @@ import {
   getDocs,
   Unsubscribe,
   Query,
-  WriteBatch,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { safeValidate } from '@/utils/validation';

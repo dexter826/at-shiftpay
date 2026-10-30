@@ -54,9 +54,10 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   useEffect(() => {
     if (savedUser && !showQuickLogin && !password) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate the login screen from the saved profile
       setShowQuickLogin(true);
     }
-  }, [savedUser]);
+  }, [savedUser, showQuickLogin, password]);
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -65,6 +66,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   useEffect(() => {
     if (savedUser && showQuickLogin) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate the login screen from the saved profile
       setEmail(savedUser.email);
     }
   }, [savedUser, showQuickLogin]);
@@ -164,7 +166,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         });
         onLogin();
       }
-    } catch (error: any) {
+    } catch (error) {
+      const code = (error as { code?: string }).code ?? '';
       const messages: Record<string, string> = {
         'auth/email-already-in-use': 'Email đã được sử dụng',
         'auth/invalid-email': 'Email không hợp lệ',
@@ -174,7 +177,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         'auth/invalid-credential': 'Email hoặc mật khẩu không đúng',
         'auth/too-many-requests': 'Quá nhiều lần thử. Vui lòng thử lại sau',
       };
-      const errorMessage = messages[error.code] || 'Đã xảy ra lỗi';
+      const errorMessage = messages[code] || 'Đã xảy ra lỗi';
       setError(errorMessage);
       showToast(errorMessage, 'error');
     } finally {

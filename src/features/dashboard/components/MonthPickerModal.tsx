@@ -26,6 +26,7 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- form state initialized from props when the modal opens
       setTempYear(selectedDate.getFullYear());
     }
   }, [isOpen, selectedDate]);

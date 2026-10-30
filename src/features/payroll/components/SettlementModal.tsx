@@ -2,9 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { useToast } from '@/components/ui/ToastProvider';
-import { useThemeStore } from '@/stores/themeStore';
+/* removed unused import from @/stores/themeStore */
 import { Shift, PaymentTransaction, AdvanceBalance, Event, Location } from '@/types/index';
-import { formatCurrency, formatDate } from '@/utils/format';
+import { formatCurrency } from '@/utils/format';
 import { paymentService } from '@/lib/api/paymentService';
 import { Calculator, Loader2, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
@@ -27,9 +27,6 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   employeeId,
   employeeName,
   shifts,
-  paymentHistory,
-  events,
-  locations,
   onSuccess,
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -45,6 +42,7 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   useEffect(() => {
     // Reset state mỗi khi mở modal
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the fetch state for each opening
       setIsLoadingAdvances(true);
       setAdvancesError(null);
       setLocalAdvances([]);
@@ -67,7 +65,7 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
       setIsLoadingAdvances(true);
       setLocalAdvances([]);
     }
-  }, [isOpen, employeeId, userId]);
+  }, [isOpen, employeeId, userId, showToast]);
 
   // Tính số dư nợ
   const advanceBalance = useMemo((): AdvanceBalance => {

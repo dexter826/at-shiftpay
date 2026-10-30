@@ -29,7 +29,6 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
   onClose,
   onEdit,
   onDelete,
-  settings,
 }) => {
   const theme = useThemeStore((state) => state.theme);
 
@@ -139,7 +138,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                 )}
               </span>
             </div>
-            {event.surcharge > 0 && (
+            {(event.surcharge ?? 0) > 0 && (
               <div className="flex items-center justify-end gap-1.5 text-blue-500">
                 <span className="text-[11px] font-medium">Phụ phí:</span>
                 <span className="text-xs font-bold">
@@ -153,7 +152,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                 </span>
               </div>
             )}
-            {event.surchargeDistribution && event.surcharge > 0 && (
+            {event.surchargeDistribution && (event.surcharge ?? 0) > 0 && (
               <p className={`text-[10px] text-[var(--text-muted)] italic`}>
                 (
                 {event.surchargeDistribution.type === 'equal'

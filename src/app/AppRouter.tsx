@@ -1,4 +1,5 @@
 import React, { Activity } from 'react';
+import type { User } from 'firebase/auth';
 import { Employee, Event, Shift, UserSettings, Location } from '@/types/index';
 
 import DashboardView from '@/app/routes/dashboard';
@@ -13,7 +14,7 @@ type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'lo
 interface AppRouterProps {
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
-  user: any;
+  user: User | null;
   employees: Employee[];
   locations: Location[];
   events: Event[];

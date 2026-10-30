@@ -25,6 +25,7 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components -- the hook is intentionally co-located with its provider
 export const useToast = () => {
   const context = useContext(ToastContext);
   if (!context) throw new Error('useToast must be used within ToastProvider');
@@ -38,7 +39,7 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: number) => void }> = ({
   useEffect(() => {
     const timer = setTimeout(() => onRemove(toast.id), toast.duration);
     return () => clearTimeout(timer);
-  }, [toast.id, onRemove]);
+  }, [toast.id, toast.duration, onRemove]);
 
   const icons = {
     success: <CheckCircle size={18} className="text-primary" />,

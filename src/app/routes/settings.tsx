@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import type { User } from 'firebase/auth';
 import { UserSettings } from '@/types/index';
 import Switch from '@/components/ui/Switch';
 import { LogOut, Sun, Moon } from 'lucide-react';
@@ -8,7 +9,7 @@ import WorkConfigSection from '@/features/settings/components/WorkConfigSection'
 import { ChangePasswordModal } from '@/features/auth/components/ChangePasswordModal';
 
 interface SettingsViewProps {
-  user: any;
+  user: User | null;
   settings: UserSettings;
   onLogout: () => void;
 }

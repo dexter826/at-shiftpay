@@ -56,7 +56,7 @@ interface AppDataState {
   refreshData: (userId: string) => void;
 }
 
-let updateTimer: any = null;
+let updateTimer: ReturnType<typeof setTimeout> | null = null;
 
 export const useAppDataStore = create<AppDataState>((set, get) => ({
   // Initial data

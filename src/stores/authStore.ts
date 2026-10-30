@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
-interface SavedUser {
+export interface SavedUser {
   email: string;
   displayName: string;
   photoURL?: string;

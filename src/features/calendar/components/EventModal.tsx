@@ -1,13 +1,5 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import {
-  Employee,
-  Shift,
-  ShiftSession,
-  Event,
-  UserSettings,
-  DEFAULT_SETTINGS,
-  Location,
-} from '@/types/index';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { Employee, Shift, ShiftSession, Event, UserSettings, Location } from '@/types/index';
 import { shiftService } from '@/lib/api/shiftService';
 import { locationService } from '@/lib/api/locationService';
 import { eventService } from '@/lib/api/eventService';
@@ -23,7 +15,6 @@ import {
   MapPin,
   Type,
   FileText,
-  Search,
 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
@@ -81,10 +72,26 @@ export const EventModal: React.FC<EventModalProps> = ({
   const [titleError, setTitleError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [employeeShiftCounts, setEmployeeShiftCounts] = useState<Record<string, number>>({});
-  const [initialState, setInitialState] = useState<any>(null);
+  const [initialState, setInitialState] = useState<Record<string, unknown> | null>(null);
   const [initialSelectedIds, setInitialSelectedIds] = useState<Set<string>>(new Set());
 
   const initialStateRef = useRef<string | null>(null);
+
+  const loadEmployeeShiftCounts = useCallback(async () => {
+    try {
+      const shifts = await shiftService.getUnpaidShifts(userId);
+      const counts: Record<string, number> = {};
+
+      shifts.forEach((shift) => {
+        counts[shift.employeeId] = (counts[shift.employeeId] || 0) + 1;
+      });
+
+      setEmployeeShiftCounts(counts);
+    } catch (error) {
+      console.error('Error loading employee shift counts:', error);
+      setEmployeeShiftCounts({});
+    }
+  }, [userId]);
 
   useEffect(() => {
     const initKey = `${existingEvent?.id ?? 'new'}:${date}:${locations.length > 0 ? 'loc' : 'noloc'}`;
@@ -97,6 +104,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
     if (isOpen) {
       if (existingEvent) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- form is initialized from the edited event when the modal opens
         setTitle(existingEvent.title);
 
         // Tìm địa điểm từ ID
@@ -108,7 +116,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         // Lấy đánh giá địa điểm
         if (loc) {
-          setReview(loc.review);
+          setReview(loc.review ?? undefined);
           setReviewNote(loc.reviewNote || '');
         } else {
           setReview(undefined);
@@ -183,7 +191,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       if (existingEvent) {
         const loc = locations.find((l) => l.id === existingEvent.locationId);
         if (loc) {
-          setReview(loc.review);
+          setReview(loc.review ?? undefined);
           setReviewNote(loc.reviewNote || '');
         }
       }
@@ -208,23 +216,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         setInitialState(null);
       }
     }
-  }, [isOpen, existingEvent, existingShifts, settings, locations, date]);
-
-  const loadEmployeeShiftCounts = async () => {
-    try {
-      const shifts = await shiftService.getUnpaidShifts(userId);
-      const counts: Record<string, number> = {};
-
-      shifts.forEach((shift) => {
-        counts[shift.employeeId] = (counts[shift.employeeId] || 0) + 1;
-      });
-
-      setEmployeeShiftCounts(counts);
-    } catch (error) {
-      console.error('Error loading employee shift counts:', error);
-      setEmployeeShiftCounts({});
-    }
-  };
+  }, [isOpen, existingEvent, existingShifts, settings, locations, date, loadEmployeeShiftCounts]);
 
   const selectSession = (session: ShiftSession) => {
     if (selectedSession === session) {
@@ -298,7 +290,7 @@ export const EventModal: React.FC<EventModalProps> = ({
     });
   };
 
-  const validateTitle = (value: string) => {
+  const validateTitle = () => {
     // Không bắt buộc tên
     setTitleError('');
     return true;
@@ -350,6 +342,7 @@ export const EventModal: React.FC<EventModalProps> = ({
     reviewNote,
     initialState,
     existingEvent,
+    locations,
   ]);
 
   const handleSubmit = async () => {
@@ -453,7 +446,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         }
       });
 
-      const surchargeDistribution: any =
+      const surchargeDistribution: Event['surchargeDistribution'] =
         surcharge > 0
           ? {
               type: surchargeDistributionType,
@@ -466,7 +459,7 @@ export const EventModal: React.FC<EventModalProps> = ({
           .map(([id]) => id);
       }
 
-      const eventData: any = {
+      const eventData: Omit<Event, 'id'> = {
         date,
         title: finalTitle,
         locationId,
@@ -546,9 +539,9 @@ export const EventModal: React.FC<EventModalProps> = ({
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);
-                  if (titleError) validateTitle(e.target.value);
+                  if (titleError) validateTitle();
                 }}
-                onBlur={() => validateTitle(title)}
+                onBlur={() => validateTitle()}
                 className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none ${
                   titleError
                     ? 'border-red-500 focus:border-red-500'
@@ -611,7 +604,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                           type="button"
                           onClick={() => {
                             setLocation(loc.name);
-                            setReview(loc.review);
+                            setReview(loc.review ?? undefined);
                             setReviewNote(loc.reviewNote || '');
                           }}
                           className={`w-full px-3 py-2 text-left text-xs hover:bg-[var(--border-color)] transition-colors border-b last:border-0 border-[var(--border-color)] text-[var(--text-secondary)]`}

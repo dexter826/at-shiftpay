@@ -8,7 +8,13 @@ import { Location } from '@/types/index';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 
-interface LocationFormData {
+interface LocationSuggestion {
+  display_name: string;
+  lat?: string;
+  lon?: string;
+}
+
+export interface LocationFormData {
   name: string;
   address: string;
   latitude: number | null;
@@ -39,18 +45,19 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Autocomplete state
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const suggestionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       if (editingLocation) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- form state initialized from props when the modal opens
         setName(editingLocation.name);
         setAddress(editingLocation.address || '');
         setLat(editingLocation.latitude?.toString() || '');
         setLng(editingLocation.longitude?.toString() || '');
-        setReview(editingLocation.review);
+        setReview(editingLocation.review ?? undefined);
         setReviewNote(editingLocation.reviewNote || '');
       } else {
         // Reset form
@@ -86,8 +93,8 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
       const res = await fetch(
         `https://api.locationiq.com/v1/autocomplete.php?key=${LOCATIONIQ_API_KEY}&q=${encodeURIComponent(text)}&limit=5&accept-language=vi&countrycodes=vn`
       );
-      const data = await res.json();
-      setSuggestions(Array.isArray(data) ? data : []);
+      const data: unknown = await res.json();
+      setSuggestions(Array.isArray(data) ? (data as LocationSuggestion[]) : []);
       setShowSuggestions(true);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
@@ -99,7 +106,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
     fetchSuggestions(val);
   };
 
-  const handleSelectSuggestion = (suggestion: any) => {
+  const handleSelectSuggestion = (suggestion: LocationSuggestion) => {
     setAddress(suggestion.display_name);
     if (suggestion.lat && suggestion.lon) {
       setLat(suggestion.lat.toString());

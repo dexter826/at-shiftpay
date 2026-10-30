@@ -1,4 +1,5 @@
-import React, { useMemo, useState, memo, useEffect } from 'react';
+import React, { useMemo, useState, memo } from 'react';
+import type { User } from 'firebase/auth';
 import { Employee, Event, Shift, UserSettings } from '@/types/index';
 import { PAYMENT_COLORS } from '@/config/colors';
 import { parseDateOnly } from '@/utils/format';
@@ -15,7 +16,7 @@ import PaymentChart from '@/features/dashboard/components/PaymentChart';
 import { MonthPickerModal } from '@/features/dashboard/components/MonthPickerModal';
 
 interface DashboardViewProps {
-  user: any;
+  user: User | null;
   employees: Employee[];
   events: Event[];
   shifts: Shift[];
@@ -37,12 +38,9 @@ const DashboardView: React.FC<DashboardViewProps> = ({
   const viewDate = useAppDataStore((state) => state.viewDate);
   const setViewDate = useAppDataStore((state) => state.setViewDate);
 
-  const [selectedDate, setSelectedDate] = useState(viewDate);
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
 
-  useEffect(() => {
-    setSelectedDate(viewDate);
-  }, [viewDate]);
+  const selectedDate = viewDate;
 
   const currentMonth = selectedDate.getMonth();
   const currentYear = selectedDate.getFullYear();
@@ -145,7 +143,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
       advancedAmount: totalAdvancedAmount,
       totalEarned: totalUnpaidAmount + totalAdvancedAmount,
     };
-  }, [initialEvents, initialShifts, monthlyData, employees, loading]);
+  }, [initialEvents, monthlyData, employees, loading]);
 
   const chartData = useMemo(() => {
     const { events, shifts } = monthlyData;
@@ -171,7 +169,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
       });
     }
     return data;
-  }, [monthlyData.events, monthlyData.shifts, currentMonth, currentYear]);
+  }, [monthlyData, currentMonth, currentYear]);
 
   // Preload avatar người dùng
   React.useEffect(() => {

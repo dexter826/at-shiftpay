@@ -3,7 +3,7 @@ import { Camera, Upload, Loader2, Building2, RotateCcw } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
-import { Employee } from '@/types/index';
+import { Employee, BankAccount } from '@/types/index';
 import { useToast } from '@/components/ui/ToastProvider';
 import { imageService } from '@/lib/api/imageService';
 import { employeeService } from '@/lib/api/employeeService';
@@ -45,7 +45,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   const [cropperOpen, setCropperOpen] = useState(false);
   const [tempImage, setTempImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [initialState, setInitialState] = useState<any>(null);
+  const [initialState, setInitialState] = useState<Record<string, unknown> | null>(null);
 
   // Load banks once
   useEffect(() => {
@@ -60,6 +60,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       if (editingEmployee) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- form state initialized from props when the modal opens
         setName(editingEmployee.name);
         setPhone(editingEmployee.phone);
         setImageUrl(editingEmployee.imageUrl || '');
@@ -202,7 +203,12 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
       const isEditing = !!editingEmployee;
       const empId = editingEmployee?.id;
 
-      const employeeData: any = {
+      const employeeData: {
+        name: string;
+        phone: string;
+        imageUrl?: string;
+        bankAccount?: BankAccount;
+      } = {
         name: name.trim(),
         phone: phone.trim(),
         imageUrl: imageUrl.trim(),
@@ -211,7 +217,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
       if (bankAccount) {
         employeeData.bankAccount = bankAccount;
       } else if (isEditing) {
-        employeeData.bankAccount = deleteField();
+        (employeeData as Record<string, unknown>).bankAccount = deleteField();
       }
 
       if (isEditing && empId) {

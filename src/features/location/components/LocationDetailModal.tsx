@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { motion } from 'framer-motion';
+/* removed unused import from framer-motion */
 import {
   MapPin,
   MessageSquare,
@@ -12,7 +12,7 @@ import {
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Location, Event } from '@/types/index';
-import { useThemeStore } from '@/stores/themeStore';
+/* removed unused import from @/stores/themeStore */
 import PenIcon from '@/components/ui/icons/PenIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
@@ -33,8 +33,6 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
   events,
   onEditClick,
 }) => {
-  const theme = useThemeStore((state) => state.theme);
-
   const editIconRef = React.useRef<AnimatedIconHandle>(null);
 
   if (!location) return null;
@@ -174,7 +172,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
 
           <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
             {locationEvents.length > 0 ? (
-              locationEvents.map((event, idx) => {
+              locationEvents.map((event) => {
                 const eventDate = new Date(event.date).toLocaleDateString('vi-VN', {
                   weekday: 'short',
                   day: '2-digit',

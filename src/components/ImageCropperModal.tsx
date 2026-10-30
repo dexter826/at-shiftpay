@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Cropper from 'react-easy-crop';
+import Cropper, { type Area } from 'react-easy-crop';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { getCroppedImg } from '@/utils/cropImage';
@@ -19,7 +19,7 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
 }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   const onCropChange = (crop: { x: number; y: number }) => {
     setCrop(crop);
@@ -29,11 +29,13 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
     setZoom(zoom);
   };
 
-  const onCropAreaComplete = (_croppedArea: any, croppedAreaPixels: any) => {
-    setCroppedAreaPixels(croppedAreaPixels);
+  const onCropAreaComplete = (_croppedArea: Area, pixels: Area) => {
+    setCroppedAreaPixels(pixels);
   };
 
   const handleConfirm = async () => {
+    if (!croppedAreaPixels) return;
+
     try {
       const croppedImage = await getCroppedImg(image, croppedAreaPixels);
       if (croppedImage) {

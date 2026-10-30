@@ -1,12 +1,9 @@
 // Kiểm tra object
-
-const isObject = (item: any): boolean => {
-  return item && typeof item === 'object' && !Array.isArray(item);
-};
+const isObject = (item: unknown): item is Record<string, unknown> =>
+  typeof item === 'object' && item !== null && !Array.isArray(item);
 
 // So sánh sâu (Deep compare)
-
-export const areValuesEqual = (val1: any, val2: any): boolean => {
+export const areValuesEqual = (val1: unknown, val2: unknown): boolean => {
   // Trim chuỗi
   if (typeof val1 === 'string' && typeof val2 === 'string') {
     return val1.trim() === val2.trim();

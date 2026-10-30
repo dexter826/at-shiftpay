@@ -24,7 +24,6 @@ const LocationCard: React.FC<LocationCardProps> = ({
   onDelete,
   onViewDetail,
   index,
-  theme,
 }) => {
   const hasCoords = location.latitude && location.longitude;
   const mapUrl = hasCoords
