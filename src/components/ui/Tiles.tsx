@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { DURATION_BASE } from '@/lib/motion';
 
 interface TilesProps {
   className?: string;
@@ -22,31 +23,32 @@ export const Tiles = React.memo(
   ({ className, rows = 40, cols = 30, tileClassName, tileSize = 'md' }: TilesProps) => {
     const rowsArray = new Array(rows).fill(1);
     const colsArray = new Array(cols).fill(1);
+    const prefersReducedMotion = useReducedMotion();
 
     return (
       <div className={cn('relative z-0 flex w-full h-full justify-center', className)}>
         {rowsArray.map((_, i) => (
           <div
             key={`row-${i}`}
-            className={cn(
-              tileSizes[tileSize],
-              'border-l dark:border-neutral-800 border-neutral-200 relative',
-              tileClassName
-            )}
+            className={cn(tileSizes[tileSize], 'border-l border-line relative', tileClassName)}
           >
             {colsArray.map((_, j) => (
               <motion.div
-                whileHover={{
-                  backgroundColor: `var(--tile)`,
-                  transition: { duration: 0 },
-                }}
+                whileHover={
+                  prefersReducedMotion
+                    ? undefined
+                    : {
+                        backgroundColor: `var(--color-accent)`,
+                        transition: { duration: 0 },
+                      }
+                }
                 animate={{
-                  transition: { duration: 2 },
+                  transition: { duration: DURATION_BASE },
                 }}
                 key={`col-${j}`}
                 className={cn(
                   tileSizes[tileSize],
-                  'border-r border-t dark:border-neutral-800 border-neutral-200 relative',
+                  'border-r border-t border-line relative',
                   tileClassName
                 )}
               />

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import { motion } from 'framer-motion';
 import { MapPin, MessageSquare, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 import { Location } from '@/types/index';
+import { focusRingClasses, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 
@@ -13,7 +13,6 @@ interface LocationCardProps {
   onEdit: (loc: Location) => void;
   onDelete: (id: string) => void;
   onViewDetail: (loc: Location) => void;
-  index: number;
   theme: string;
 }
 
@@ -23,7 +22,6 @@ const LocationCard: React.FC<LocationCardProps> = ({
   onEdit,
   onDelete,
   onViewDetail,
-  index,
 }) => {
   const hasCoords = location.latitude && location.longitude;
   const mapUrl = hasCoords
@@ -46,123 +44,109 @@ const LocationCard: React.FC<LocationCardProps> = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
-      onClick={() => onViewDetail(location)}
-      className={`group relative flex flex-col rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer bg-[var(--bg-card)] border border-[var(--border-color)]`}
-    >
+    <div className="relative flex flex-col rounded-md bg-surface border border-line">
       {/* Phần hình ảnh */}
-      <div className="h-[200px] overflow-hidden relative">
+      <div className="relative h-50 overflow-hidden rounded-t-md">
         <img
           src={mapUrl}
           alt={location.name}
           decoding="async"
-          className={`w-full h-full object-cover transition-all duration-500 ${hasCoords ? 'group-hover:scale-105' : 'blur-[2px] opacity-60'}`}
+          className="w-full h-full object-cover"
         />
 
         {!hasCoords && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+          <div className="absolute inset-0 flex items-center justify-center">
             <span
-              className={`bg-[var(--bg-card)] bg-opacity-90 px-4 py-2 rounded-lg text-xs font-bold text-[var(--text-primary)] shadow-sm border border-[var(--border-color)]`}
+              className={`px-2 py-1 rounded-xs text-label font-medium bg-surface border border-line text-ink-soft pointer-events-none`}
             >
               Chưa có địa chỉ chính xác
             </span>
           </div>
         )}
+      </div>
 
-        {/* Action Buttons - Desktop: Show on Hover, Mobile: Always Show */}
-        <div className="absolute top-2 right-2 flex items-center gap-1.5 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleOpenInGoogleMaps();
-            }}
-            className="w-9 h-9 rounded-lg bg-black/40 flex items-center justify-center text-white/80 hover:text-white hover:bg-black/60 transition-colors"
-            title="Xem trên Google Maps"
-          >
-            <ExternalLink size={14} />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(location);
-            }}
-            className="w-9 h-9 rounded-lg bg-black/40 flex items-center justify-center text-white/80 hover:text-white hover:bg-black/60 transition-colors"
-            title="Sửa địa điểm"
-          >
-            <Pencil size={14} />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(location.id);
-            }}
-            className="w-9 h-9 rounded-lg bg-black/40 flex items-center justify-center text-white/80 hover:text-red-400 hover:bg-black/60 transition-colors"
-            title="Xóa địa điểm"
-          >
-            <Trash2 size={14} />
-          </button>
-        </div>
+      {/* Vùng bấm mở chi tiết */}
+      <button
+        type="button"
+        onClick={() => onViewDetail(location)}
+        aria-label={`Xem chi tiết ${location.name}`}
+        className={`absolute inset-0 cursor-pointer rounded-md transition-colors duration-fast ease-standard hover:bg-surface-2/70 ${focusRingClasses}`}
+      />
+
+      {/* Nút thao tác */}
+      <div className="absolute top-2 right-2 flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={handleOpenInGoogleMaps}
+          className={`flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+          aria-label={`Mở ${location.name} trong Google Maps`}
+          title="Xem trên Google Maps"
+        >
+          <ExternalLink size={14} />
+        </button>
+        <button
+          type="button"
+          onClick={() => onEdit(location)}
+          className={`flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+          aria-label={`Sửa địa điểm ${location.name}`}
+          title="Sửa địa điểm"
+        >
+          <Pencil size={14} />
+        </button>
+        <button
+          type="button"
+          onClick={() => onDelete(location.id)}
+          className={`flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-danger hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+          aria-label={`Xóa địa điểm ${location.name}`}
+          title="Xóa địa điểm"
+        >
+          <Trash2 size={14} />
+        </button>
       </div>
 
       {/* Phần thông tin */}
-      <div className="flex-1 p-5">
+      <div className="relative flex-1 p-5 pointer-events-none">
         <div className="space-y-1.5">
-          <h3 className={`text-lg font-bold text-[var(--text-primary)] leading-tight line-clamp-1`}>
+          <h3 className={`text-title font-semibold text-ink leading-tight line-clamp-1`}>
             {location.name}
           </h3>
           <div className="flex items-center gap-1.5">
-            <MapPin size={14} className="text-blue-500 shrink-0" />
-            <span className={`text-xs text-[var(--text-secondary)] line-clamp-1`}>
+            <MapPin size={14} className="text-ink-muted shrink-0" />
+            <span className={`text-body-sm text-ink-soft line-clamp-1`}>
               {location.address || 'Địa chỉ chưa xác định'}
             </span>
           </div>
 
-          {location.reviewNote ? (
-            <div className="flex items-start gap-1.5 mt-2">
-              <MessageSquare size={14} className="text-gray-400 shrink-0 mt-0.5" />
-              <p className={`text-xs text-[var(--text-muted)] line-clamp-2 italic`}>
-                "{location.reviewNote}"
-              </p>
-            </div>
-          ) : (
-            <div className="flex items-start gap-1.5 mt-2 opacity-50">
-              <MessageSquare size={14} className="text-gray-300 shrink-0 mt-0.5" />
-              <p className={`text-xs text-[var(--text-muted)] italic`}>Chưa có ghi chú</p>
-            </div>
-          )}
+          <div className="flex items-start gap-1.5 mt-2">
+            <MessageSquare size={14} className="text-ink-muted shrink-0 mt-0.5" />
+            <p className={`text-body-sm text-ink-muted italic line-clamp-2`}>
+              {location.reviewNote ? `"${location.reviewNote}"` : 'Chưa có ghi chú'}
+            </p>
+          </div>
 
-          <div
-            className={`flex items-center gap-4 pt-3 mt-auto border-t border-[var(--border-color)]`}
-          >
+          <div className={`flex items-center gap-4 pt-3 mt-auto border-t border-line`}>
             <div className="flex flex-col">
-              <span className={`text-[10px] uppercase text-[var(--text-muted)] font-semibold`}>
-                Lịch sử
-              </span>
-              <span className={`text-sm font-bold text-[var(--text-primary)]`}>
+              <span className={`text-label font-medium text-ink-muted`}>Lịch sử</span>
+              <span className={`text-body-sm font-semibold text-ink tabular-nums`}>
                 {stats.workCount} ca làm
               </span>
             </div>
             <div className="flex flex-col">
-              <span className={`text-[10px] uppercase text-[var(--text-muted)] font-semibold`}>
-                Đánh giá
-              </span>
+              <span className={`text-label font-medium text-ink-muted`}>Đánh giá</span>
               {location.review ? (
                 <span
-                  className={`text-sm font-bold ${location.review === 'high' ? 'text-green-500' : 'text-red-500'}`}
+                  className={`text-body-sm font-semibold ${location.review === 'high' ? 'text-success' : 'text-danger'}`}
                 >
                   {location.review === 'high' ? 'Tốt' : 'Kém'}
                 </span>
               ) : (
-                <span className={`text-sm font-bold text-[var(--text-muted)]`}>Thường</span>
+                <span className={`text-body-sm font-semibold text-ink-muted`}>Thường</span>
               )}
             </div>
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

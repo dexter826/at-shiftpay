@@ -1,9 +1,6 @@
-import React, { memo, useRef } from 'react';
-import CalendarIcon from '@/components/ui/icons/CalendarIcon';
-import ChevronLeftIcon from '@/components/ui/icons/ChevronLeftIcon';
-import ChevronRightIcon from '@/components/ui/icons/ChevronRightIcon';
-import MapPinIcon from '@/components/ui/icons/MapPinIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import React, { memo } from 'react';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
+import { Calendar, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 
 interface CalendarHeaderProps {
   displayDate: Date;
@@ -20,59 +17,48 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   onGoToToday,
   onNavigateToReviews,
 }) => {
-  const prevMonthRef = useRef<AnimatedIconHandle>(null);
-  const nextMonthRef = useRef<AnimatedIconHandle>(null);
-  const todayIconRef = useRef<AnimatedIconHandle>(null);
-  const locationManagerRef = useRef<AnimatedIconHandle>(null);
-
   const monthLabel = new Intl.DateTimeFormat('vi-VN', { month: 'long', year: 'numeric' }).format(
     displayDate
   );
 
   return (
-    <div
-      className={`flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]`}
-    >
+    <div className={`flex items-center justify-between px-4 py-3 border-b border-line`}>
       <div className="flex items-center gap-1">
         <button
+          type="button"
           onClick={onGoToToday}
-          onMouseEnter={() => todayIconRef.current?.startAnimation()}
-          onMouseLeave={() => todayIconRef.current?.stopAnimation()}
-          className={`px-2.5 py-1.5 text-[11px] font-medium rounded border border-[var(--border-color)] hover:bg-[var(--border-color)] transition-colors mr-1 flex items-center gap-1`}
+          className={`min-h-10 px-3 text-label font-medium rounded-sm border border-line hover:bg-surface-2 transition-colors duration-fast ease-standard mr-1 flex items-center gap-1 ${focusRingOnSurfaceClasses}`}
         >
-          <CalendarIcon ref={todayIconRef} size={12} />
+          <Calendar size={12} />
           Hôm nay
         </button>
         <button
+          type="button"
           onClick={onPrevMonth}
           aria-label="Tháng trước"
-          onMouseEnter={() => prevMonthRef.current?.startAnimation()}
-          onMouseLeave={() => prevMonthRef.current?.stopAnimation()}
-          className={`p-2 text-[var(--text-muted)] hover:bg-[var(--border-color)] rounded transition-colors`}
+          className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
         >
-          <ChevronLeftIcon ref={prevMonthRef} size={18} />
+          <ChevronLeft size={18} />
         </button>
         <button
+          type="button"
           onClick={onNextMonth}
           aria-label="Tháng sau"
-          onMouseEnter={() => nextMonthRef.current?.startAnimation()}
-          onMouseLeave={() => nextMonthRef.current?.stopAnimation()}
-          className={`p-2 text-[var(--text-muted)] hover:bg-[var(--border-color)] rounded transition-colors`}
+          className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
         >
-          <ChevronRightIcon ref={nextMonthRef} size={18} />
+          <ChevronRight size={18} />
         </button>
       </div>
-      <h3 className={`text-sm font-medium text-[var(--text-primary)] capitalize`}>{monthLabel}</h3>
+      <h3 className={`text-body-sm font-medium text-ink capitalize`}>{monthLabel}</h3>
       <div className="flex items-center gap-1">
         {onNavigateToReviews && (
           <button
+            type="button"
             onClick={onNavigateToReviews}
-            title="Quản lý địa điểm"
-            onMouseEnter={() => locationManagerRef.current?.startAnimation()}
-            onMouseLeave={() => locationManagerRef.current?.stopAnimation()}
-            className={`h-9 w-9 flex items-center justify-center hover:bg-[var(--border-color)] rounded transition-colors text-primary`}
+            aria-label="Quản lý địa điểm"
+            className={`flex h-10 w-10 items-center justify-center hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard text-accent-ink ${focusRingOnSurfaceClasses}`}
           >
-            <MapPinIcon ref={locationManagerRef} size={18} />
+            <MapPin size={18} />
           </button>
         )}
       </div>

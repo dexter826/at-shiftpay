@@ -1,8 +1,8 @@
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
-import ChevronLeftIcon from '@/components/ui/icons/ChevronLeftIcon';
-import ChevronRightIcon from '@/components/ui/icons/ChevronRightIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import Button from '@/components/ui/Button';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface PayrollMonthPickerModalProps {
   isOpen: boolean;
@@ -21,56 +21,46 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
   viewYear,
   setViewYear,
 }) => {
-  const prevMonthRef = useRef<AnimatedIconHandle>(null);
-  const nextMonthRef = useRef<AnimatedIconHandle>(null);
-
   return (
     <Modal
       title="Chọn thời gian"
       isOpen={isOpen}
       onClose={onClose}
       footer={
-        <button
+        <Button
+          variant="secondary"
+          fullWidth
           onClick={() => {
             setFilterDate('');
             onClose();
           }}
-          className={`w-full py-2.5 rounded-lg text-sm font-medium border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--border-color)] transition-colors`}
         >
           Xem tất cả lịch sử
-        </button>
+        </Button>
       }
     >
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center px-2">
           <button
+            type="button"
             onClick={() => setViewYear((prev) => prev - 1)}
-            onMouseEnter={() => prevMonthRef.current?.startAnimation()}
-            onMouseLeave={() => prevMonthRef.current?.stopAnimation()}
-            className={`p-1 rounded-full hover:bg-[var(--border-color)]`}
+            aria-label="Năm trước"
+            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
-            <ChevronLeftIcon
-              ref={prevMonthRef}
-              size={20}
-              className="text-[var(--text-secondary)]"
-            />
+            <ChevronLeft size={18} className="text-ink-soft" />
           </button>
-          <span className={`text-lg font-bold text-[var(--text-primary)]`}>{viewYear}</span>
+          <span className={`text-body font-semibold text-ink tabular-nums`}>{viewYear}</span>
           <button
+            type="button"
             onClick={() => setViewYear((prev) => prev + 1)}
-            onMouseEnter={() => nextMonthRef.current?.startAnimation()}
-            onMouseLeave={() => nextMonthRef.current?.stopAnimation()}
-            className={`p-1 rounded-full hover:bg-[var(--border-color)]`}
+            aria-label="Năm sau"
+            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
-            <ChevronRightIcon
-              ref={nextMonthRef}
-              size={20}
-              className="text-[var(--text-secondary)]"
-            />
+            <ChevronRight size={18} className="text-ink-soft" />
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2.5">
           {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => {
             const monthStr = month.toString().padStart(2, '0');
             const value = `${viewYear}-${monthStr}`;
@@ -81,20 +71,16 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
             return (
               <button
                 key={month}
+                type="button"
                 onClick={() => {
                   setFilterDate(value);
                   onClose();
                 }}
-                className={`
-                         py-3 rounded-lg text-sm font-medium transition-colors border
-                         ${
-                           isSelected
-                             ? 'bg-primary text-white border-primary'
-                             : `hover:bg-[var(--border-color)]
-                               border-[var(--border-color)] text-[var(--text-secondary)]
-                               ${isCurrentMonth ? 'border-primary/50 text-primary' : ''}`
-                         }
-                      `}
+                className={`py-2.5 rounded-sm text-body-sm font-semibold tabular-nums transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses} ${
+                  isSelected
+                    ? 'bg-accent text-on-accent border-accent'
+                    : `bg-surface-2 hover:bg-surface border-line text-ink-soft ${isCurrentMonth ? 'border-accent text-ink' : ''}`
+                }`}
               >
                 Tháng {month}
               </button>

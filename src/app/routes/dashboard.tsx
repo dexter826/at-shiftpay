@@ -212,7 +212,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
   );
 
   return (
-    <div className="pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-dynamic">
+    <div className="pb-28 md:pb-0 bg-canvas min-h-dynamic">
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.div
@@ -221,7 +221,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="hidden md:block py-4 px-6 border-b border-[var(--border-color)]">
+            <div className="hidden md:block py-4 px-6 border-b border-line">
               <div className="flex items-center gap-3">
                 <Skeleton variant="circular" width={40} height={40} />
                 <div>
@@ -229,12 +229,12 @@ const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
               </div>
             </div>
-            <div className="p-4 md:p-6 space-y-4">
+            <div className="p-4 md:p-8 space-y-4">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg h-28"
+                    className="px-4 py-3.5 bg-surface border border-line rounded-md h-28"
                   >
                     <Skeleton variant="text" width="60%" height={12} className="mb-3" />
                     <Skeleton variant="text" width="40%" height={28} />
@@ -242,22 +242,22 @@ const DashboardView: React.FC<DashboardViewProps> = ({
                 ))}
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg h-[300px]">
+                <div className="p-4 bg-surface border border-line rounded-md min-h-[340px]">
                   <Skeleton variant="text" width="40%" height={20} className="mb-4" />
                   <Skeleton
                     variant="rectangular"
                     width="100%"
                     height={200}
-                    className="rounded-lg"
+                    className="rounded-md"
                   />
                 </div>
-                <div className="p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg h-[300px]">
+                <div className="p-4 bg-surface border border-line rounded-md min-h-[340px]">
                   <Skeleton variant="text" width="40%" height={20} className="mb-4" />
                   <Skeleton
                     variant="rectangular"
                     width="100%"
                     height={200}
-                    className="rounded-lg"
+                    className="rounded-md"
                   />
                 </div>
               </div>
@@ -272,13 +272,13 @@ const DashboardView: React.FC<DashboardViewProps> = ({
           >
             <DashboardHeader user={user} onOpenExport={onOpenExport} />
 
-            <div className="p-4 md:p-6 space-y-4">
+            <div className="p-4 md:p-8 space-y-4">
               <div className="md:hidden">
                 <Button
                   onClick={onOpenExport}
                   variant="primary"
                   fullWidth
-                  className="flex items-center justify-center gap-2 h-10 text-sm"
+                  className="flex items-center justify-center gap-2 h-10"
                 >
                   <Download size={16} /> Xuất báo cáo
                 </Button>

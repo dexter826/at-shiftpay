@@ -1,20 +1,9 @@
 import React, { memo } from 'react';
-/* removed unused import from framer-motion */
-import {
-  MapPin,
-  MessageSquare,
-  Calendar,
-  ExternalLink,
-  ThumbsUp,
-  ThumbsDown,
-  Minus,
-} from 'lucide-react';
+import { Calendar, ExternalLink, MapPin, MessageSquare, Pencil } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Location, Event } from '@/types/index';
-/* removed unused import from @/stores/themeStore */
-import PenIcon from '@/components/ui/icons/PenIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 
@@ -33,8 +22,6 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
   events,
   onEditClick,
 }) => {
-  const editIconRef = React.useRef<AnimatedIconHandle>(null);
-
   if (!location) return null;
 
   const hasCoords = location.latitude && location.longitude;
@@ -61,23 +48,23 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
   const renderReviewBadge = () => {
     if (location.review === 'high') {
       return (
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold border border-green-500/20">
-          <ThumbsUp size={14} />
+        <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
+          <span className="w-1.5 h-1.5 rounded-xs bg-success" />
           <span>Tốt</span>
         </div>
       );
     }
     if (location.review === 'low') {
       return (
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 text-red-500 text-xs font-bold border border-red-500/20">
-          <ThumbsDown size={14} />
+        <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
+          <span className="w-1.5 h-1.5 rounded-xs bg-danger" />
           <span>Kém</span>
         </div>
       );
     }
     return (
-      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-500/10 text-slate-500 text-xs font-bold border border-slate-500/20">
-        <Minus size={14} />
+      <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
+        <span className="w-1.5 h-1.5 rounded-xs bg-ink-muted" />
         <span>Thường</span>
       </div>
     );
@@ -95,12 +82,10 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
             onClose();
             onEditClick(location);
           }}
-          onMouseEnter={() => editIconRef.current?.startAnimation()}
-          onMouseLeave={() => editIconRef.current?.stopAnimation()}
           fullWidth
           className="flex justify-center items-center gap-2"
         >
-          <PenIcon ref={editIconRef} size={18} color="currentColor" />
+          <Pencil size={18} color="currentColor" />
           Chỉnh sửa địa điểm
         </Button>
       }
@@ -109,49 +94,43 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
         {/* Header Section */}
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start gap-4">
-            <h3
-              className={`text-2xl font-black tracking-tight text-[var(--text-primary)] leading-tight`}
-            >
-              {location.name}
-            </h3>
+            <h3 className={`text-display font-semibold text-ink leading-tight`}>{location.name}</h3>
             {renderReviewBadge()}
           </div>
 
-          <div className="relative aspect-[16/9] rounded-2xl overflow-hidden border shadow-inner">
-            <img
-              src={mapUrl}
-              alt={location.name}
-              className={`w-full h-full object-cover ${!hasCoords ? 'blur-[2px] opacity-60' : ''}`}
-            />
+          <div className="relative aspect-[16/9] rounded-md overflow-hidden border border-line">
+            <img src={mapUrl} alt={location.name} className="w-full h-full object-cover" />
             {!hasCoords && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+              <div className="absolute inset-0 flex items-center justify-center">
                 <span
-                  className={`bg-[var(--bg-card)] bg-opacity-90 px-4 py-2 rounded-lg text-xs font-bold text-[var(--text-primary)] shadow-sm border border-[var(--border-color)]`}
+                  className={`px-2 py-1 rounded-xs text-label font-medium bg-surface border border-line text-ink-soft`}
                 >
                   Chưa có tọa độ chính xác
                 </span>
               </div>
             )}
             <button
+              type="button"
               onClick={handleOpenInGoogleMaps}
-              className="absolute bottom-3 right-3 p-2.5 rounded-lg bg-[var(--bg-card)]/90 shadow-lg border border-white/20 hover:scale-105 transition-transform active:scale-95"
+              aria-label="Mở trong Google Maps"
               title="Mở trong Google Maps"
+              className={`absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-soft hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
             >
-              <ExternalLink size={20} className="text-blue-500" />
+              <ExternalLink size={16} />
             </button>
           </div>
 
-          <div className="flex items-start gap-3 p-4 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
-            <MapPin size={20} className="text-primary shrink-0 mt-0.5" />
-            <span className={`text-sm leading-relaxed text-[var(--text-secondary)]`}>
+          <div className="flex items-start gap-3 p-4 rounded-md bg-surface-2 border border-line">
+            <MapPin size={16} className="text-accent-ink shrink-0 mt-0.5" />
+            <span className={`text-body-sm leading-relaxed text-ink-soft`}>
               {location.address || 'Địa chỉ chưa xác định'}
             </span>
           </div>
 
           {location.reviewNote && (
-            <div className="flex items-start gap-3 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 italic">
-              <MessageSquare size={18} className="text-amber-500 shrink-0 mt-1" />
-              <p className={`text-sm text-[var(--text-secondary)] leading-relaxed`}>
+            <div className="flex items-start gap-3 p-4 rounded-md bg-surface-2 border border-line">
+              <MessageSquare size={16} className="text-ink-muted shrink-0 mt-0.5" />
+              <p className={`text-body-sm text-ink-soft leading-relaxed italic`}>
                 "{location.reviewNote}"
               </p>
             </div>
@@ -161,16 +140,12 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
         {/* History Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-3 px-1">
-            <div className="h-px flex-1 bg-[var(--border-color)] opacity-30" />
-            <h4
-              className={`text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)]`}
-            >
-              Lịch sử công việc
-            </h4>
-            <div className="h-px flex-1 bg-[var(--border-color)] opacity-30" />
+            <div className="h-px flex-1 bg-line" />
+            <h4 className={`text-label font-medium text-ink-muted`}>Lịch sử công việc</h4>
+            <div className="h-px flex-1 bg-line" />
           </div>
 
-          <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+          <div className="space-y-2 max-h-75 overflow-y-auto pr-1">
             {locationEvents.length > 0 ? (
               locationEvents.map((event) => {
                 const eventDate = new Date(event.date).toLocaleDateString('vi-VN', {
@@ -182,23 +157,21 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
                 return (
                   <div
                     key={event.id}
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-colors hover:bg-[var(--border-color)] border-[var(--border-color)]`}
+                    className={`flex items-center justify-between gap-3 p-3 rounded-md border border-line bg-surface-2`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                        <Calendar size={20} />
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xs bg-surface border border-line text-ink-muted">
+                        <Calendar size={16} />
                       </div>
-                      <div>
-                        <div className={`text-sm font-bold text-[var(--text-primary)]`}>
+                      <div className="min-w-0">
+                        <div className={`text-body-sm font-semibold text-ink truncate`}>
                           {event.title}
                         </div>
-                        <div className={`text-[11px] text-[var(--text-secondary)]`}>
-                          {eventDate}
-                        </div>
+                        <div className={`text-label text-ink-soft tabular-nums`}>{eventDate}</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className={`text-xs font-black text-[var(--text-primary)]`}>
+                    <div className="text-right shrink-0">
+                      <div className={`text-body-sm font-semibold text-ink tabular-nums`}>
                         {event.amount?.toLocaleString('vi-VN')}đ
                       </div>
                     </div>
@@ -206,9 +179,9 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
                 );
               })
             ) : (
-              <div className="text-center py-8 opacity-40">
+              <div className="text-center py-8 text-ink-muted">
                 <Calendar size={32} className="mx-auto mb-2" />
-                <p className="text-xs font-medium">Chưa có lịch sử làm việc tại đây</p>
+                <p className="text-body-sm font-medium">Chưa có lịch sử làm việc tại đây</p>
               </div>
             )}
           </div>

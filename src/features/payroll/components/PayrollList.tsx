@@ -1,10 +1,12 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, ChevronRightIcon } from 'lucide-react';
+import { CheckCircle, ChevronRightIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { LoadMore } from '@/components/ui/LoadMore';
 import { formatCurrency } from '@/utils/format';
 import { PayrollSummary, Employee } from '@/types/index';
+import { focusRingClasses } from '@/lib/utils';
+import { DURATION_BASE } from '@/lib/motion';
 
 interface PayrollListProps {
   loading: boolean;
@@ -35,13 +37,13 @@ const PayrollList: React.FC<PayrollListProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: DURATION_BASE }}
           className="space-y-2"
         >
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className={`w-full p-3 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg flex justify-between items-center`}
+              className={`w-full p-3 bg-surface border border-line rounded-md flex justify-between items-center`}
             >
               <div className="flex items-center gap-3 w-full">
                 <Skeleton variant="circular" width={36} height={36} />
@@ -60,12 +62,12 @@ const PayrollList: React.FC<PayrollListProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: DURATION_BASE }}
           className="space-y-2"
         >
           {items.length === 0 ? (
-            <div className={`text-center py-10 text-[var(--text-muted)]`}>
-              <CheckCircle2 size={48} className="mx-auto mb-2 opacity-20" />
+            <div className={`text-center py-10 text-ink-muted`}>
+              <CheckCircle size={48} className="mx-auto mb-2" />
               <p>{searchTerm ? 'Không tìm thấy nhân viên nào' : 'Không có khoản nợ nào'}</p>
             </div>
           ) : (
@@ -91,7 +93,7 @@ const PayrollList: React.FC<PayrollListProps> = ({
                         onPaymentClick(item.employeeId);
                       }
                     }}
-                    className={`w-full p-3 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg hover:border-primary/50 transition-colors flex justify-between items-center group`}
+                    className={`w-full p-3 bg-surface border border-line rounded-md hover:border-ink-muted transition-colors duration-fast ease-standard flex justify-between items-center ${focusRingClasses}`}
                   >
                     <div className="flex items-center gap-3">
                       {employeeImage ? (
@@ -99,41 +101,35 @@ const PayrollList: React.FC<PayrollListProps> = ({
                           src={employeeImage}
                           alt={item.employeeName}
                           decoding="async"
-                          className={`w-9 h-9 rounded-full object-cover border-2 ${item.totalUnpaid > 0 ? 'border-primary' : 'border-[var(--border-color)]'}`}
+                          className={`w-9 h-9 rounded-full object-cover border ${item.totalUnpaid > 0 ? 'border-warning' : 'border-line'}`}
                         />
                       ) : (
                         <div
-                          className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium ${
-                            item.totalUnpaid > 0
-                              ? 'bg-primary/10 text-primary'
-                              : 'hover:bg-[var(--border-color)] text-[var(--text-muted)]'
-                          }`}
+                          className={`w-9 h-9 rounded-full flex items-center justify-center text-body-sm font-medium text-ink-soft bg-surface-2`}
                         >
                           {item.employeeName.charAt(0)}
                         </div>
                       )}
                       <div className="text-left">
                         <div className="flex items-center gap-2">
-                          <p className={`text-sm font-medium text-[var(--text-secondary)]`}>
+                          <p className={`text-body-sm font-medium text-ink-soft`}>
                             {item.employeeName}
                           </p>
                           {itemWithFees.totalFees && itemWithFees.totalFees > 0 && (
-                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-500 border border-blue-500/30 rounded">
+                            <span className="flex items-center px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
                               Có phụ phí
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-xs">
+                        <div className="flex items-center gap-2 text-label font-medium tabular-nums">
                           {item.unpaidCount > 0 && (
-                            <span className="text-primary">{item.unpaidCount} công chưa trả</span>
+                            <span className="text-warning">{item.unpaidCount} công chưa trả</span>
                           )}
                           {item.advancedCount > 0 && (
-                            <span className="text-orange-500">
-                              {item.advancedCount} công đã ứng
-                            </span>
+                            <span className="text-info">{item.advancedCount} công đã ứng</span>
                           )}
                           {item.unpaidCount === 0 && item.advancedCount === 0 && (
-                            <span className="text-[var(--text-muted)]">Không có công nợ</span>
+                            <span className="text-ink-muted">Không có công nợ</span>
                           )}
                         </div>
                       </div>
@@ -142,17 +138,17 @@ const PayrollList: React.FC<PayrollListProps> = ({
                     <div className="flex items-center gap-2">
                       <div className="text-right">
                         <span
-                          className={`text-sm font-medium tabular-nums ${item.totalUnpaid > 0 ? 'text-primary' : 'text-[var(--text-muted)]'}`}
+                          className={`text-body-sm font-semibold tabular-nums ${item.totalUnpaid > 0 ? 'text-warning' : 'text-ink-muted'}`}
                         >
                           {formatCurrency(item.totalUnpaid)}
                         </span>
                         {item.totalAdvanced > 0 && (
-                          <p className="text-xs text-orange-500">
+                          <p className="text-label font-medium text-info tabular-nums">
                             Đã ứng: {formatCurrency(item.totalAdvanced)}
                           </p>
                         )}
                       </div>
-                      <ChevronRightIcon size={16} className="text-[var(--text-muted)]" />
+                      <ChevronRightIcon size={16} className="text-ink-muted" />
                     </div>
                   </button>
                 );

@@ -158,7 +158,7 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading 
   }, [employees, searchTerm, sortBy, shiftCountByEmployee]);
 
   return (
-    <div className={`pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-screen`}>
+    <div className={`pb-28 md:pb-0 bg-canvas min-h-screen`}>
       <EmployeeToolbar
         employeeCount={employees.length}
         loading={loading}
@@ -216,9 +216,7 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading 
           </div>
         }
       >
-        <p className={`text-sm text-[var(--text-secondary)]`}>
-          Bạn có chắc muốn xóa nhân viên này?
-        </p>
+        <p className={`text-body-sm text-ink-soft`}>Bạn có chắc muốn xóa nhân viên này?</p>
       </Modal>
 
       {/* Lỗi xóa */}
@@ -232,7 +230,7 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading 
           </Button>
         }
       >
-        <p className={`text-sm text-[var(--text-secondary)]`}>{deleteError}</p>
+        <p className={`text-body-sm text-ink-soft`}>{deleteError}</p>
       </Modal>
 
       {/* Chi tiết nhân viên */}

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 import { Location } from '@/types/index';
 
@@ -167,135 +168,166 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
     >
       <div className="space-y-4">
         <div>
-          <label className={`block text-sm font-medium text-[var(--text-secondary)] mb-1.5`}>
+          <label
+            htmlFor="location-name"
+            className={`block text-label font-medium mb-1.5 text-ink-muted`}
+          >
             Tên địa điểm
           </label>
           <input
+            id="location-name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Nhập tên địa điểm"
-            className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-primary)]`}
+            className={`w-full px-4 py-2.5 rounded-sm border border-line text-body-sm bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           />
         </div>
 
         <div>
-          <label className={`block text-sm font-medium text-[var(--text-secondary)] mb-1.5`}>
+          <label
+            htmlFor="location-address"
+            className={`block text-label font-medium mb-1.5 text-ink-muted`}
+          >
             Địa chỉ & Tọa độ
           </label>
           <div className="space-y-3">
             <div className="relative" ref={suggestionRef}>
               <input
+                id="location-address"
                 type="text"
                 value={address}
                 onChange={(e) => handleAddressChange(e.target.value)}
                 onFocus={() => address.length >= 3 && setShowSuggestions(true)}
                 placeholder="Nhập địa chỉ (Ví dụ: 2739 Phạm Thế Hiển)"
-                className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-primary)]`}
+                className={`w-full px-4 py-2.5 rounded-sm border border-line text-body-sm bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
               />
               <AnimatePresence>
                 {showSuggestions && suggestions.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className={`absolute z-50 w-full mt-1 border rounded-lg shadow-xl overflow-hidden bg-[var(--bg-card)] border-[var(--border-color)]`}
+                  <motion.ul
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className={`absolute z-50 w-full mt-1 border border-line rounded-md overflow-hidden bg-surface`}
                   >
                     {suggestions.map((s, i) => (
-                      <button
-                        key={i}
-                        onClick={() => handleSelectSuggestion(s)}
-                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors border-b last:border-0 border-[var(--border-color)] hover:bg-[var(--border-color)] text-[var(--text-primary)]`}
-                      >
-                        <div className="font-medium line-clamp-1">
-                          {s.display_name.split(',')[0]}
-                        </div>
-                        <div className={`text-[10px] text-[var(--text-secondary)] line-clamp-1`}>
-                          {s.display_name}
-                        </div>
-                      </button>
+                      <li key={i}>
+                        <button
+                          type="button"
+                          onClick={() => handleSelectSuggestion(s)}
+                          className={`w-full text-left px-4 py-2.5 text-body-sm transition-colors duration-fast ease-standard border-b last:border-0 border-line hover:bg-surface-2 text-ink ${focusRingOnSurfaceClasses}`}
+                        >
+                          <div className="font-medium line-clamp-1">
+                            {s.display_name.split(',')[0]}
+                          </div>
+                          <div className={`text-label text-ink-soft line-clamp-1`}>
+                            {s.display_name}
+                          </div>
+                        </button>
+                      </li>
                     ))}
-                  </motion.div>
+                  </motion.ul>
                 )}
               </AnimatePresence>
             </div>
             <div className="flex gap-3">
               <div className="relative flex-1">
+                <label htmlFor="location-lat" className="sr-only">
+                  Vĩ độ
+                </label>
                 <input
+                  id="location-lat"
                   type="text"
                   value={lat}
                   onChange={(e) => setLat(e.target.value)}
                   placeholder="Vĩ độ (Latitude)"
-                  className={`w-full px-3 py-2.5 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-xs lg:text-sm overflow-hidden text-ellipsis bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-primary)]`}
+                  className={`w-full px-3 py-2.5 rounded-sm border border-line text-body-sm overflow-hidden text-ellipsis tabular-nums bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                 />
               </div>
               <div className="relative flex-1">
+                <label htmlFor="location-lng" className="sr-only">
+                  Kinh độ
+                </label>
                 <input
+                  id="location-lng"
                   type="text"
                   value={lng}
                   onChange={(e) => setLng(e.target.value)}
                   placeholder="Kinh độ (Longitude)"
-                  className={`w-full px-3 py-2.5 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-xs lg:text-sm overflow-hidden text-ellipsis bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-primary)]`}
+                  className={`w-full px-3 py-2.5 rounded-sm border border-line text-body-sm overflow-hidden text-ellipsis tabular-nums bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                 />
               </div>
             </div>
-            <p className="text-[10px] text-blue-500 px-1 italic">
+            <p className="text-label text-ink-muted px-1">
               * Lấy tọa độ từ Google Maps để hiển thị bản đồ chính xác.
             </p>
           </div>
         </div>
 
         <div>
-          <label className={`block text-sm font-medium text-[var(--text-secondary)] mb-2`}>
+          <p
+            id="location-review-label"
+            className={`block text-label font-medium mb-2 text-ink-muted`}
+          >
             Đánh giá chất lượng
-          </label>
-          <div className="flex gap-3">
+          </p>
+          <div role="group" aria-labelledby="location-review-label" className="flex gap-3">
             <button
+              type="button"
               onClick={() => setReview('high')}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border transition-all ${
+              aria-pressed={review === 'high'}
+              className={`flex-1 p-2.5 min-h-10 rounded-sm border text-body-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 review === 'high'
-                  ? 'bg-green-500/10 border-green-500 text-green-600'
-                  : `bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+                  ? 'border-success/50 bg-success/10 text-ink'
+                  : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >
-              <ThumbsUp size={18} />
-              <span className="font-medium">Tốt</span>
+              <ThumbsUp size={16} />
+              Tốt
             </button>
             <button
+              type="button"
               onClick={() => setReview(undefined)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border transition-all ${
+              aria-pressed={review === undefined}
+              className={`flex-1 p-2.5 min-h-10 rounded-sm border text-body-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 review === undefined
-                  ? 'bg-primary/10 border-primary text-primary'
-                  : `bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+                  ? 'border-ink-muted bg-surface-2 text-ink'
+                  : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >
-              <Minus size={18} />
-              <span className="font-medium">Thường</span>
+              <Minus size={16} />
+              Thường
             </button>
             <button
+              type="button"
               onClick={() => setReview('low')}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border transition-all ${
+              aria-pressed={review === 'low'}
+              className={`flex-1 p-2.5 min-h-10 rounded-sm border text-body-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 review === 'low'
-                  ? 'bg-red-500/10 border-red-500 text-red-600'
-                  : `bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-muted)] hover:border-red-500/50`
+                  ? 'border-danger/50 bg-danger/10 text-ink'
+                  : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >
-              <ThumbsDown size={18} />
-              <span className="font-medium">Kém</span>
+              <ThumbsDown size={16} />
+              Kém
             </button>
           </div>
         </div>
 
         <div>
-          <label className={`block text-sm font-medium text-[var(--text-secondary)] mb-1.5`}>
+          <label
+            htmlFor="location-review-note"
+            className={`block text-label font-medium mb-1.5 text-ink-muted`}
+          >
             Ghi chú đánh giá
           </label>
           <textarea
+            id="location-review-note"
             value={reviewNote}
             onChange={(e) => setReviewNote(e.target.value)}
             placeholder="Lưu ý về địa điểm này..."
             rows={3}
-            className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-primary)]`}
+            className={`w-full px-4 py-2.5 rounded-sm border border-line text-body-sm resize-none bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           />
         </div>
       </div>

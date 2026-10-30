@@ -1,10 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import ChevronIcon from '@/components/ui/icons/ChevronIcon';
-import SimpleCheckedIcon from '@/components/ui/icons/SimpleCheckedIcon';
-import MagnifierIcon from '@/components/ui/icons/MagnifierIcon';
-import XIcon from '@/components/ui/icons/XIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
+import { Check, ChevronDown, Search, X } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { focusRingClasses, focusRingOnSurfaceClasses } from '@/lib/utils';
+import { DURATION_BASE, DURATION_FAST, EASE_STANDARD } from '@/lib/motion';
 
 export interface DropdownOption {
   value: string;
@@ -39,11 +37,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const prefersReducedMotion = useReducedMotion();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const chevronRef = useRef<AnimatedIconHandle>(null);
-  const searchIconRef = useRef<AnimatedIconHandle>(null);
-  const xIconRef = useRef<AnimatedIconHandle>(null);
 
   const closeDropdown = useCallback(() => {
     setIsOpen(false);
@@ -112,40 +108,43 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <button
         type="button"
         onClick={() => (isOpen ? closeDropdown() : setIsOpen(true))}
-        onMouseEnter={() => chevronRef.current?.startAnimation()}
-        onMouseLeave={() => chevronRef.current?.stopAnimation()}
         disabled={disabled}
-        className={`w-full h-full flex items-center gap-2 px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] hover:border-primary/50 focus:outline-none focus:border-primary disabled:opacity-50 transition-colors ${minWidth}`}
+        aria-expanded={isOpen}
+        className={`w-full h-full flex items-center gap-2 px-3 py-2 bg-surface-2 border border-line rounded-sm text-body-sm text-ink-soft hover:border-ink-muted focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-fast ease-standard ${focusRingClasses} ${minWidth}`}
       >
-        {icon && <span className="text-[var(--text-muted)]">{icon}</span>}
+        {icon && <span className="text-ink-muted">{icon}</span>}
         <span className="flex-1 text-left truncate">
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-          <ChevronIcon ref={chevronRef} size={16} className="text-[var(--text-muted)]" />
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{
+            duration: prefersReducedMotion ? 0 : DURATION_BASE,
+            ease: EASE_STANDARD,
+          }}
+        >
+          <ChevronDown size={16} className="text-ink-muted" />
         </motion.div>
       </button>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className={`absolute top-full left-0 right-0 mt-1 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg shadow-lg z-50 flex flex-col overflow-hidden`}
+            className={`absolute top-full left-0 right-0 mt-1 bg-surface border border-line rounded-sm z-50 flex flex-col overflow-hidden`}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.15 }}
+            transition={{
+              duration: prefersReducedMotion ? 0 : DURATION_FAST,
+              ease: EASE_STANDARD,
+            }}
           >
             {searchable && (
-              <div className={`p-2 border-b border-[var(--border-color)]`}>
-                <div
-                  className="relative"
-                  onMouseEnter={() => searchIconRef.current?.startAnimation()}
-                  onMouseLeave={() => searchIconRef.current?.stopAnimation()}
-                >
-                  <MagnifierIcon
-                    ref={searchIconRef}
+              <div className={`p-2 border-b border-line`}>
+                <div className="relative">
+                  <Search
                     size={14}
-                    className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]`}
+                    className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted`}
                   />
                   <input
                     ref={searchInputRef}
@@ -153,17 +152,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     placeholder={searchPlaceholder}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className={`w-full pl-8 pr-8 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-md text-xs text-[var(--text-secondary)] focus:outline-none focus:border-primary`}
+                    className={`w-full h-10 pl-8 pr-12 bg-surface-2 border border-line rounded-sm text-label font-medium text-ink-soft placeholder:text-ink-muted transition-colors duration-fast ease-standard focus:outline-none ${focusRingOnSurfaceClasses}`}
                   />
                   {searchTerm && (
                     <button
                       type="button"
                       onClick={() => setSearchTerm('')}
-                      onMouseEnter={() => xIconRef.current?.startAnimation()}
-                      onMouseLeave={() => xIconRef.current?.stopAnimation()}
-                      className={`absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-[var(--border-color)] text-[var(--text-muted)]`}
+                      aria-label="Xoá tìm kiếm"
+                      className={`absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-sm text-ink-muted hover:bg-surface hover:text-ink transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                     >
-                      <XIcon ref={xIconRef} size={12} />
+                      <X size={12} />
                     </button>
                   )}
                 </div>
@@ -177,19 +175,17 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     type="button"
                     key={option.value}
                     onClick={() => handleSelect(option.value)}
-                    className={`w-full px-3 py-2.5 text-left text-sm transition-colors hover:bg-primary/10 ${value === option.value ? `bg-primary/10 text-primary font-medium` : `text-[var(--text-secondary)]`}`}
+                    className={`w-full px-3 py-2.5 text-left text-body-sm transition-all duration-fast ease-standard hover:brightness-110 ${value === option.value ? `bg-surface-2 text-ink font-medium` : `text-ink-soft`}`}
                   >
                     <div className="flex items-center gap-2 group/opt">
                       {option.icon && <span className="text-current">{option.icon}</span>}
                       <span className="flex-1 truncate">{option.label}</span>
-                      {value === option.value && (
-                        <SimpleCheckedIcon size={14} className="text-primary" />
-                      )}
+                      {value === option.value && <Check size={14} className="text-accent-ink" />}
                     </div>
                   </button>
                 ))
               ) : (
-                <div className={`px-3 py-4 text-center text-xs text-[var(--text-muted)]`}>
+                <div className={`px-3 py-4 text-center text-label text-ink-muted`}>
                   Không tìm thấy kết quả
                 </div>
               )}

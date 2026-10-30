@@ -25,7 +25,6 @@ interface StatRow {
   key: StatKey | null;
   subtract?: boolean;
   currency?: boolean;
-  color?: string;
 }
 
 interface StatCard {
@@ -82,24 +81,17 @@ const DashboardStats: React.FC<DashboardStatsProps> = memo(({ stats }) => (
       const Icon = card.icon;
       const mainValue = stats[card.value];
       return (
-        <div
-          key={card.label}
-          className="p-3.5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg"
-        >
+        <div key={card.label} className="px-4 py-3.5 bg-surface border border-line rounded-md">
           <div className="flex items-center gap-2 mb-2.5">
-            <div className="p-1.5 rounded-md bg-primary/10 text-primary">
+            <div className="p-1.5 rounded-xs bg-surface-2 text-ink-soft">
               <Icon size={14} />
             </div>
-            <span className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">
-              {card.label}
-            </span>
+            <span className="text-label font-medium text-ink-muted">{card.label}</span>
           </div>
-          <p
-            className={`text-xl font-bold text-[var(--text-primary)] tabular-nums mb-2.5 ${card.isCurrency ? 'text-primary' : ''}`}
-          >
+          <p className="text-data font-semibold text-ink tabular-nums mb-2.5">
             {card.isCurrency ? formatCurrency(mainValue) : mainValue}
           </p>
-          <div className="pt-2 border-t border-[var(--border-color)] space-y-1">
+          <div className="pt-2 border-t border-line space-y-1">
             {card.rows.map((row) => {
               const val = row.subtract
                 ? stats.totalEmployees - stats.activeEmployees
@@ -107,11 +99,9 @@ const DashboardStats: React.FC<DashboardStatsProps> = memo(({ stats }) => (
                   ? stats[row.key]
                   : 0;
               return (
-                <div key={row.label} className="flex justify-between text-[11px]">
-                  <span className="text-[var(--text-secondary)]">{row.label}</span>
-                  <span
-                    className={`font-semibold tabular-nums ${row.color || 'text-[var(--text-primary)]'}`}
-                  >
+                <div key={row.label} className="flex justify-between text-label">
+                  <span className="text-ink-soft">{row.label}</span>
+                  <span className="font-semibold tabular-nums text-ink">
                     {row.currency ? formatCurrency(val) : val}
                   </span>
                 </div>

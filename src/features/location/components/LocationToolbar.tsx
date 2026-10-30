@@ -41,7 +41,7 @@ const LocationToolbar: React.FC<LocationToolbarProps> = ({
           onChange={(value) => {
             if (value === 'all' || value === 'high' || value === 'low') onFilterChange(value);
           }}
-          className="flex-1 md:min-w-[120px] h-10"
+          className="flex-1 md:min-w-30 h-10"
         />
         <Dropdown
           options={[
@@ -53,7 +53,7 @@ const LocationToolbar: React.FC<LocationToolbarProps> = ({
           onChange={(value) => {
             if (value === 'newest' || value === 'name' || value === 'count') onSortChange(value);
           }}
-          className="flex-1 md:min-w-[150px] h-10"
+          className="flex-1 md:min-w-38 h-10"
         />
       </div>
     </div>

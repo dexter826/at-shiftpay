@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(() => {
   return {
@@ -8,7 +9,7 @@ export default defineConfig(() => {
       port: 3000,
       host: '0.0.0.0',
     },
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
@@ -47,7 +48,6 @@ export default defineConfig(() => {
             'charts-vendor': ['recharts'],
             'icons-vendor': ['lucide-react'],
             'lottie-vendor': ['lottie-react'],
-            'styled-vendor': ['styled-components'],
             'picker-vendor': ['@ncdai/react-wheel-picker'],
             'framer-motion-vendor': ['framer-motion'],
             'cropper-vendor': ['react-easy-crop'],

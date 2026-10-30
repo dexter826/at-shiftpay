@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
-import { useThemeStore } from '@/stores/themeStore';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface MonthPickerModalProps {
   isOpen: boolean;
@@ -20,8 +20,6 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
   selectedDate,
   onChange,
 }) => {
-  const theme = useThemeStore((state) => state.theme);
-
   const [tempYear, setTempYear] = useState<number>(selectedDate.getFullYear());
 
   useEffect(() => {
@@ -68,7 +66,7 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
             Đóng
           </Button>
           <Button variant="primary" onClick={handleGoToCurrentMonth} className="flex-1 gap-1.5">
-            <Calendar size={16} className="text-white" />
+            <Calendar size={16} />
             Tháng hiện tại
           </Button>
         </div>
@@ -76,19 +74,23 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
     >
       <div className="space-y-6 py-2">
         {/* Chọn năm */}
-        <div className="flex justify-between items-center px-4 py-2 bg-slate-500/5 rounded-lg border border-dashed border-slate-500/10">
+        <div className="flex justify-between items-center px-4 py-2 bg-surface-2 rounded-md border border-dashed border-line">
           <button
+            type="button"
             onClick={() => setTempYear((prev) => prev - 1)}
-            className={`p-2 rounded-lg hover:bg-[var(--border-color)] transition-colors`}
+            aria-label="Năm trước"
+            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
-            <ChevronLeft size={18} className="text-[var(--text-secondary)]" />
+            <ChevronLeft size={18} className="text-ink-soft" />
           </button>
-          <span className={`text-base font-bold text-[var(--text-primary)]`}>Năm {tempYear}</span>
+          <span className={`text-body font-semibold text-ink`}>Năm {tempYear}</span>
           <button
+            type="button"
             onClick={() => setTempYear((prev) => prev + 1)}
-            className={`p-2 rounded-lg hover:bg-[var(--border-color)] transition-colors`}
+            aria-label="Năm sau"
+            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
-            <ChevronRight size={18} className="text-[var(--text-secondary)]" />
+            <ChevronRight size={18} className="text-ink-soft" />
           </button>
         </div>
 
@@ -103,22 +105,13 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
             return (
               <button
                 key={index}
+                type="button"
                 onClick={() => handleSelectMonth(index)}
-                className={`
-                                    py-3 rounded-lg text-xs font-semibold transition-all border
-                                    ${
-                                      isSelected
-                                        ? 'bg-primary text-white border-primary shadow-sm shadow-primary/20 scale-[0.98]'
-                                        : `
-                                            ${
-                                              theme === 'dark'
-                                                ? 'bg-slate-800/40 hover:bg-slate-800 border-slate-700/50 text-slate-300'
-                                                : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600'
-                                            }
-                                            ${isCurrentMonth ? 'border-primary/45 text-primary bg-primary/5' : ''}
-                                        `
-                                    }
-                                `}
+                className={`py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses} ${
+                  isSelected
+                    ? 'bg-accent text-on-accent border-accent'
+                    : `bg-surface-2 hover:bg-surface border-line text-ink-soft ${isCurrentMonth ? 'border-accent/45 text-accent-ink' : ''}`
+                }`}
               >
                 {monthLabel}
               </button>

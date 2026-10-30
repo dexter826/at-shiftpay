@@ -4,11 +4,16 @@ import Button from '@/components/ui/Button';
 import { Event, Shift, UserSettings, Location } from '@/types/index';
 import { formatDate, formatCurrency } from '@/utils/format';
 import { shiftBreakdown } from '@/utils/payrollMath';
-import { useThemeStore } from '@/stores/themeStore';
-import { MapPin, Clock, Calendar, ThumbsUp, ThumbsDown, StickyNote } from 'lucide-react';
-import PenIcon from '@/components/ui/icons/PenIcon';
-import TrashIcon from '@/components/ui/icons/TrashIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Pencil,
+  StickyNote,
+  ThumbsDown,
+  ThumbsUp,
+  Trash2,
+} from 'lucide-react';
 
 interface EventDetailModalProps {
   event: Event | null;
@@ -30,11 +35,6 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const theme = useThemeStore((state) => state.theme);
-
-  const editIconRef = React.useRef<AnimatedIconHandle>(null);
-  const deleteIconRef = React.useRef<AnimatedIconHandle>(null);
-
   const eventShifts = useMemo(() => {
     if (!event) return [];
     return shifts.filter((s) => s.eventId === event.id);
@@ -60,11 +60,9 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               onEdit(event);
               onClose();
             }}
-            onMouseEnter={() => editIconRef.current?.startAnimation()}
-            onMouseLeave={() => editIconRef.current?.stopAnimation()}
-            className="flex-1 hover:text-blue-500"
+            className="flex-1 hover:text-info"
           >
-            <PenIcon ref={editIconRef} size={14} />
+            <Pencil size={14} />
             Sửa
           </Button>
           <Button
@@ -73,11 +71,9 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               onDelete(event.id);
               onClose();
             }}
-            onMouseEnter={() => deleteIconRef.current?.startAnimation()}
-            onMouseLeave={() => deleteIconRef.current?.stopAnimation()}
             className="flex-1"
           >
-            <TrashIcon ref={deleteIconRef} size={14} />
+            <Trash2 size={14} />
             Xóa
           </Button>
         </div>
@@ -85,30 +81,22 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
     >
       <div className="space-y-4">
         {/* 1. Thời gian & Địa điểm */}
-        <div
-          className={`p-3 rounded-lg border border-[var(--border-color)] bg-[var(--border-color)] space-y-3`}
-        >
+        <div className={`p-3 rounded-md border border-line bg-surface-2 space-y-3`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Calendar size={15} className="text-primary" />
-              <span className={`text-sm font-medium text-[var(--text-primary)]`}>
-                {formatDate(event.date)}
-              </span>
+              <Calendar size={15} className="text-accent-ink" />
+              <span className={`text-body-sm font-medium text-ink`}>{formatDate(event.date)}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock size={15} className="text-primary" />
-              <span className={`text-sm font-medium text-[var(--text-primary)]`}>
-                {event.time || '--:--'}
-              </span>
+              <Clock size={15} className="text-accent-ink" />
+              <span className={`text-body-sm font-medium text-ink`}>{event.time || '--:--'}</span>
             </div>
           </div>
 
           {locationInfo && (
-            <div
-              className={`flex items-start gap-2 pt-2 border-t border-dashed border-[var(--border-color)]`}
-            >
-              <MapPin size={15} className="text-primary mt-0.5 flex-shrink-0" />
-              <span className={`text-sm font-medium text-[var(--text-secondary)] leading-tight`}>
+            <div className={`flex items-start gap-2 pt-2 border-t border-dashed border-line`}>
+              <MapPin size={15} className="text-accent-ink mt-0.5 flex-shrink-0" />
+              <span className={`text-body-sm font-medium text-ink-soft leading-tight`}>
                 {locationInfo.name}
               </span>
             </div>
@@ -116,32 +104,26 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
         </div>
 
         {/* 2. Tài chính */}
-        <div
-          className={`p-3.5 bg-[var(--border-color)] border border-[var(--border-color)] rounded-lg flex items-center justify-between`}
-        >
+        <div className="p-3.5 bg-surface-2 border border-line rounded-sm flex items-center justify-between">
           <div>
-            <p
-              className={`text-[11px] text-[var(--text-muted)] font-semibold uppercase tracking-wider mb-1`}
-            >
-              Tổng tiền sự kiện
-            </p>
-            <p className={`text-2xl font-black text-primary`}>
+            <p className={`text-label text-ink-muted font-semibold mb-1`}>Tổng tiền sự kiện</p>
+            <p className={`text-data font-semibold tabular-nums text-ink`}>
               {formatCurrency(eventShifts.reduce((sum, shift) => sum + shift.amount, 0))}
             </p>
           </div>
           <div className="text-right space-y-1">
             <div className="flex items-center justify-end gap-1.5">
-              <span className={`text-[11px] text-[var(--text-muted)]`}>Lương:</span>
-              <span className={`text-xs font-bold text-[var(--text-primary)]`}>
+              <span className={`text-label text-ink-muted`}>Lương:</span>
+              <span className={`text-label font-semibold text-ink`}>
                 {formatCurrency(
                   eventShifts.reduce((sum, shift) => sum + shiftBreakdown(shift, event).base, 0)
                 )}
               </span>
             </div>
             {(event.surcharge ?? 0) > 0 && (
-              <div className="flex items-center justify-end gap-1.5 text-blue-500">
-                <span className="text-[11px] font-medium">Phụ phí:</span>
-                <span className="text-xs font-bold">
+              <div className="flex items-center justify-end gap-1.5 text-info">
+                <span className="text-label font-medium">Phụ phí:</span>
+                <span className="text-label font-semibold">
                   +
                   {formatCurrency(
                     eventShifts.reduce(
@@ -153,7 +135,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               </div>
             )}
             {event.surchargeDistribution && (event.surcharge ?? 0) > 0 && (
-              <p className={`text-[10px] text-[var(--text-muted)] italic`}>
+              <p className={`text-label text-ink-muted italic`}>
                 (
                 {event.surchargeDistribution.type === 'equal'
                   ? 'Chia đều'
@@ -169,16 +151,16 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
           <div className="space-y-3">
             {locationInfo?.review && (
               <div
-                className={`p-4 rounded-lg border ${locationInfo.review === 'high' ? 'border-green-500/20 bg-green-500/5' : 'border-red-500/20 bg-red-500/5'}`}
+                className={`p-4 rounded-md border ${locationInfo.review === 'high' ? 'border-success/20 bg-success/5' : 'border-danger/20 bg-danger/5'}`}
               >
                 <div className="flex items-center gap-2 mb-2.5">
                   {locationInfo.review === 'high' ? (
-                    <div className="flex items-center gap-2 text-green-600 font-bold text-sm">
+                    <div className="flex items-center gap-2 text-success font-semibold text-body-sm">
                       <ThumbsUp size={16} fill="currentColor" />
                       <span>Đánh giá địa điểm: Tốt</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 text-red-600 font-bold text-sm">
+                    <div className="flex items-center gap-2 text-danger font-semibold text-body-sm">
                       <ThumbsDown size={16} fill="currentColor" />
                       <span>Đánh giá địa điểm: Kém</span>
                     </div>
@@ -186,7 +168,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                 </div>
                 {locationInfo.reviewNote && (
                   <div
-                    className={`text-xs italic leading-relaxed font-medium ${locationInfo.review === 'high' ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}
+                    className={`text-label italic leading-relaxed font-medium ${locationInfo.review === 'high' ? 'text-success' : 'text-danger'}`}
                   >
                     "{locationInfo.reviewNote}"
                   </div>
@@ -195,16 +177,14 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
             )}
 
             {event.note && (
-              <div className={`p-3 rounded-lg border border-[var(--border-color)] bg-slate-500/5`}>
+              <div className={`p-3 rounded-md border border-line bg-surface-2`}>
                 <p
-                  className={`text-[11px] text-[var(--text-muted)] font-bold uppercase tracking-wider mb-1.5 flex items-center gap-1.5`}
+                  className={`text-label text-ink-muted font-semibold mb-1.5 flex items-center gap-1.5`}
                 >
                   <StickyNote size={12} />
                   Ghi chú sự kiện
                 </p>
-                <p className={`text-sm text-[var(--text-secondary)] leading-relaxed`}>
-                  {event.note}
-                </p>
+                <p className={`text-body-sm text-ink-soft leading-relaxed`}>{event.note}</p>
               </div>
             )}
           </div>
@@ -214,9 +194,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
         {eventShifts.length > 0 && (
           <div className="space-y-2">
             <div className="flex justify-between items-center px-1">
-              <p
-                className={`text-[11px] text-[var(--text-muted)] font-bold uppercase tracking-wider`}
-              >
+              <p className={`text-label text-ink-muted font-semibold`}>
                 Nhân viên ({eventShifts.length})
               </p>
             </div>
@@ -226,16 +204,16 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               {eventShifts.map((shift) => (
                 <div
                   key={shift.id}
-                  className={`flex flex-col gap-0.5 p-2 ${theme === 'dark' ? 'bg-slate-800/50 border-slate-700/50' : 'bg-white border-slate-100'} border rounded-lg shadow-sm`}
+                  className={`flex flex-col gap-0.5 p-2 bg-surface-2 border-line border rounded-sm`}
                 >
-                  <span className={`text-xs font-semibold text-[var(--text-primary)] truncate`}>
+                  <span className={`text-label font-semibold text-ink truncate`}>
                     {shift.employeeName}
                   </span>
                   <div className="flex items-center gap-1.5">
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${shift.session === 'morning' ? 'bg-orange-400' : 'bg-primary'}`}
+                      className={`w-1.5 h-1.5 rounded-xs ${shift.session === 'morning' ? 'bg-warning' : 'bg-accent'}`}
                     ></span>
-                    <span className={`text-[9px] font-medium text-[var(--text-muted)]`}>
+                    <span className={`text-label font-medium text-ink-muted`}>
                       {shift.session === 'morning' ? 'Sáng' : 'Chiều'}
                     </span>
                   </div>

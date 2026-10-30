@@ -13,25 +13,25 @@ const LocationStats: React.FC<LocationStatsProps> = ({ stats }) => {
   return (
     <div className="flex gap-2 shrink-0">
       <div
-        className={`bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-1.5 rounded-lg flex items-center gap-2`}
-        title="Tổng địa điểm"
+        className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft`}
       >
-        <MapPin size={14} className="text-primary" />
-        <span className={`text-xs font-medium text-[var(--text-primary)]`}>{stats.total}</span>
+        <MapPin size={12} className="text-ink-muted" />
+        <span>Tổng</span>
+        <span className="tabular-nums text-ink">{stats.total}</span>
       </div>
       <div
-        className={`bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-1.5 rounded-lg flex items-center gap-2`}
-        title="Đánh giá tốt"
+        className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft`}
       >
-        <ThumbsUp size={14} className="text-green-500" />
-        <span className={`text-xs font-medium text-[var(--text-primary)]`}>{stats.high}</span>
+        <ThumbsUp size={12} className="text-success" />
+        <span>Tốt</span>
+        <span className="tabular-nums text-ink">{stats.high}</span>
       </div>
       <div
-        className={`bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-1.5 rounded-lg flex items-center gap-2`}
-        title="Đánh giá kém"
+        className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft`}
       >
-        <ThumbsDown size={14} className="text-red-500" />
-        <span className={`text-xs font-medium text-[var(--text-primary)]`}>{stats.low}</span>
+        <ThumbsDown size={12} className="text-danger" />
+        <span>Kém</span>
+        <span className="tabular-nums text-ink">{stats.low}</span>
       </div>
     </div>
   );

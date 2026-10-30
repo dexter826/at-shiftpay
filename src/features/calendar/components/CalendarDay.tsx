@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Event, Location } from '@/types/index';
@@ -30,12 +31,12 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
       onClick={() => onClick(date)}
       whileHover={{ zIndex: 10 }}
       whileTap={{ scale: 0.95 }}
-      className={`aspect-square lg:aspect-auto flex flex-col items-center justify-center rounded-lg text-sm transition-all duration-200 relative overflow-hidden ${
+      className={`aspect-square lg:aspect-auto flex flex-col items-center justify-center rounded-sm text-body-sm transition-colors duration-fast ease-standard relative overflow-hidden ${focusRingOnSurfaceClasses} ${
         isSelected
-          ? 'bg-primary text-white shadow-lg shadow-primary/30'
+          ? 'bg-accent text-on-accent'
           : isToday
-            ? 'bg-primary/10 text-primary font-bold ring-2 ring-primary/20'
-            : `${isCurrentMonth ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)] opacity-40'} hover:bg-[var(--border-color)]`
+            ? 'bg-surface-2 text-accent-ink font-semibold ring-2 ring-line'
+            : `${isCurrentMonth ? 'text-ink' : 'text-ink-muted opacity-40'} hover:bg-surface-2`
       }`}
     >
       <span className="relative z-10">{date.getDate()}</span>
@@ -44,7 +45,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
         <div className="absolute top-1 right-1 flex flex-col gap-0.5 pointer-events-none">
           {events.length > 1 && (
             <div
-              className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold ${isSelected ? 'bg-white text-primary' : 'bg-primary text-white shadow-sm'}`}
+              className={`min-w-4 h-4 px-1 rounded-xs flex items-center justify-center text-label leading-none font-semibold ${isSelected ? 'bg-on-accent text-accent' : 'bg-accent text-on-accent'}`}
             >
               {events.length}
             </div>
@@ -59,12 +60,12 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
             return (
               <div key={i} className="flex items-center">
                 {loc?.review === 'high' ? (
-                  <ThumbsUp size={10} className={isSelected ? 'text-white' : 'text-green-500'} />
+                  <ThumbsUp size={10} className={isSelected ? 'text-on-accent' : 'text-success'} />
                 ) : loc?.review === 'low' ? (
-                  <ThumbsDown size={10} className={isSelected ? 'text-white' : 'text-red-500'} />
+                  <ThumbsDown size={10} className={isSelected ? 'text-on-accent' : 'text-danger'} />
                 ) : (
                   <div
-                    className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white/60' : 'bg-primary/60'}`}
+                    className={`w-1.5 h-1.5 rounded-xs ${isSelected ? 'bg-on-accent/60' : 'bg-accent/60'}`}
                   />
                 )}
               </div>
@@ -72,7 +73,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
           })}
           {events.length > 3 && (
             <div
-              className={`w-1 h-1 rounded-full ${isSelected ? 'bg-white/40' : 'bg-slate-400'}`}
+              className={`w-1 h-1 rounded-xs ${isSelected ? 'bg-on-accent/40' : 'bg-ink-muted'}`}
             />
           )}
         </div>

@@ -155,7 +155,7 @@ function AppShell() {
       <DataErrorWatcher />
       <OfflineIndicator />
       {authLoading ? (
-        <div className="flex items-center justify-center h-screen bg-[var(--bg-primary)]">
+        <div className="flex items-center justify-center h-screen bg-canvas">
           <Loader />
         </div>
       ) : !user || !user.emailVerified ? (
@@ -239,9 +239,9 @@ function AppContent({
   const currentTab = currentTabFromPath(location.pathname);
 
   return (
-    <div className="min-h-dynamic bg-[var(--bg-primary)]">
+    <div className="min-h-dynamic bg-canvas">
       <Navbar currentTab={currentTab} setTab={(tab) => navigate(`/${tab}`)} onLogout={onLogout} />
-      <main className="md:pl-60">
+      <main className="md:pl-[var(--sidebar-width)]">
         <PullToRefresh
           onRefresh={() => {
             if (user) refreshData(user.uid);
@@ -351,9 +351,7 @@ function AppContent({
           </div>
         }
       >
-        <p className="text-sm text-[var(--text-secondary)]">
-          Bạn có chắc muốn đăng xuất khỏi ứng dụng?
-        </p>
+        <p className="text-sm text-ink-soft">Bạn có chắc muốn đăng xuất khỏi ứng dụng?</p>
       </Modal>
     </div>
   );

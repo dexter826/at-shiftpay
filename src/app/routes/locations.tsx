@@ -1,16 +1,13 @@
-import React, { useState, useMemo, useRef, useEffect, memo } from 'react';
-import ArrowNarrowLeftIcon from '@/components/ui/icons/ArrowNarrowLeftIcon';
+import React, { useState, useMemo, useEffect, memo } from 'react';
+import { ArrowLeft, Plus, Trash2, X } from 'lucide-react';
 import { Location, Event } from '@/types/index';
 import { locationService } from '@/lib/api/locationService';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import Button from '@/components/ui/Button';
-import PlusIcon from '@/components/ui/icons/PlusIcon';
-import TrashIcon from '@/components/ui/icons/TrashIcon';
-import XIcon from '@/components/ui/icons/XIcon';
 import { Modal } from '@/components/ui/Modal';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import { focusRingClasses } from '@/lib/utils';
 
 // Import extracted components
 import LocationStats from '@/features/location/components/LocationStats';
@@ -39,8 +36,6 @@ const LocationView: React.FC<LocationViewProps> = ({
   const { user } = useAuthStore();
   const userId = user?.uid || '';
   const { showToast } = useToast();
-
-  const backIconRef = useRef<AnimatedIconHandle>(null);
 
   // Filter/Sort State
   const [searchTerm, setSearchTerm] = useState('');
@@ -175,31 +170,25 @@ const LocationView: React.FC<LocationViewProps> = ({
   };
 
   return (
-    <div className={`pb-28 bg-[var(--bg-primary)] min-h-screen px-4 pt-5 md:px-6 md:pt-6 md:pb-8`}>
+    <div className={`pb-28 bg-canvas min-h-screen px-4 pt-5 md:px-6 md:pt-6 md:pb-8`}>
       <div className="w-full space-y-6">
         {/* Header & Stats */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             {onBack && (
               <button
+                type="button"
                 onClick={onBack}
-                onMouseEnter={() => backIconRef.current?.startAnimation()}
-                onMouseLeave={() => backIconRef.current?.stopAnimation()}
-                className={`p-2 rounded-full transition-colors hover:bg-[var(--border-color)] flex items-center justify-center`}
+                aria-label="Quay lại"
                 title="Quay lại"
+                className={`flex h-10 w-10 items-center justify-center rounded-sm border border-line text-ink-soft hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingClasses}`}
               >
-                <ArrowNarrowLeftIcon
-                  ref={backIconRef}
-                  size={20}
-                  className="text-[var(--text-primary)]"
-                />
+                <ArrowLeft size={20} />
               </button>
             )}
             <div>
-              <h2 className={`text-xl font-semibold text-[var(--text-primary)]`}>
-                Quản lý địa điểm
-              </h2>
-              <p className={`text-sm text-[var(--text-secondary)] mt-0.5`}>
+              <h2 className={`text-title font-semibold text-ink`}>Quản lý địa điểm</h2>
+              <p className={`text-body-sm text-ink-soft mt-0.5`}>
                 Danh sách các địa điểm và đánh giá chất lượng.
               </p>
             </div>
@@ -212,7 +201,7 @@ const LocationView: React.FC<LocationViewProps> = ({
                 variant="primary"
                 fullWidth
                 className="md:w-auto flex items-center justify-center gap-2"
-                icon={<PlusIcon size={16} />}
+                icon={<Plus size={16} />}
               >
                 <span className="whitespace-nowrap">Thêm mới</span>
               </Button>
@@ -258,7 +247,7 @@ const LocationView: React.FC<LocationViewProps> = ({
               variant="secondary"
               onClick={() => setDeleteConfirm(null)}
               className="flex-1"
-              icon={<XIcon size={16} />}
+              icon={<X size={16} />}
             >
               Hủy
             </Button>
@@ -266,14 +255,14 @@ const LocationView: React.FC<LocationViewProps> = ({
               variant="danger"
               onClick={confirmDelete}
               className="flex-1"
-              icon={<TrashIcon size={16} />}
+              icon={<Trash2 size={16} />}
             >
               Xóa
             </Button>
           </div>
         }
       >
-        <p className={`text-sm text-[var(--text-secondary)]`}>
+        <p className={`text-body-sm text-ink-soft`}>
           Bạn có chắc chắn muốn xóa địa điểm này? Hành động này không thể hoàn tác.
         </p>
       </Modal>

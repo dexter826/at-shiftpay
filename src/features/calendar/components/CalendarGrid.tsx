@@ -29,12 +29,9 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 
   return (
     <>
-      <div className={`grid grid-cols-7 border-b border-[var(--border-color)]`}>
+      <div className={`grid grid-cols-7 border-b border-line`}>
         {['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'].map((d) => (
-          <div
-            key={d}
-            className={`py-2 text-center text-[11px] font-medium text-[var(--text-muted)]`}
-          >
+          <div key={d} className={`py-2 text-center text-label font-medium text-ink-muted`}>
             {d}
           </div>
         ))}
@@ -51,7 +48,11 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
               className="grid grid-cols-7 gap-1 col-span-7 h-full w-full"
             >
               {Array.from({ length: 35 }).map((_, i) => (
-                <Skeleton key={i} className="aspect-square lg:aspect-auto rounded" height="100%" />
+                <Skeleton
+                  key={i}
+                  className="aspect-square lg:aspect-auto rounded-xs"
+                  height="100%"
+                />
               ))}
             </motion.div>
           ) : (

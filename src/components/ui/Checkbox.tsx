@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import { peerFocusRingClasses } from '@/lib/utils';
 
 interface CheckboxProps {
   checked: boolean;
@@ -12,7 +13,10 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id }) => 
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
   return (
-    <label htmlFor={inputId} className="flex items-center gap-2 cursor-pointer select-none">
+    <label
+      htmlFor={inputId}
+      className="flex min-h-10 items-center gap-2.5 py-1.5 cursor-pointer select-none"
+    >
       <div className="relative">
         <input
           id={inputId}
@@ -22,16 +26,16 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id }) => 
           className="peer sr-only"
         />
         <div
-          className={`w-4 h-4 rounded border transition-colors ${
-            checked ? 'bg-primary border-primary' : 'border-[var(--border-color)] bg-transparent'
-          } peer-focus-visible:ring-2 peer-focus-visible:ring-primary/20`}
+          className={`w-4 h-4 rounded-xs border transition-colors duration-fast ease-standard hover:border-ink ${
+            checked ? 'bg-accent border-accent' : 'border-ink-muted bg-transparent'
+          } ${peerFocusRingClasses}`}
         >
           {checked && (
-            <Check size={12} className="text-white absolute inset-0 m-auto" strokeWidth={3} />
+            <Check size={12} className="text-on-accent absolute inset-0 m-auto" strokeWidth={3} />
           )}
         </div>
       </div>
-      {label && <span className="text-xs text-[var(--text-muted)]">{label}</span>}
+      {label && <span className="text-label font-medium text-ink-muted">{label}</span>}
     </label>
   );
 };

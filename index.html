@@ -8,6 +8,27 @@
     />
     <title>ShiftPay</title>
 
+    <!-- Apply the saved theme before first paint to avoid a wrong-theme flash -->
+    <script>
+      (function () {
+        var theme = 'dark';
+        try {
+          var stored = localStorage.getItem('theme');
+          if (stored) {
+            var parsed = JSON.parse(stored);
+            var saved = parsed && parsed.state && parsed.state.theme;
+            if (saved === 'light' || saved === 'dark') {
+              theme = saved;
+            }
+          }
+        } catch (error) {
+          // Corrupted storage falls back to the dark default.
+        }
+        document.documentElement.classList.add(theme);
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,7 +42,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#ecb52d" />
+    <meta name="theme-color" content="#1a1a17" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="ShiftPay" />

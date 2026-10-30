@@ -1,11 +1,10 @@
 import React, { useState, useMemo, memo } from 'react';
+import { Trash2, X } from 'lucide-react';
 import { Event, Shift, Employee, UserSettings, Location } from '@/types/index';
 import { eventService } from '@/lib/api/eventService';
 import { useToast } from '@/components/ui/ToastProvider';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import XIcon from '@/components/ui/icons/XIcon';
-import TrashIcon from '@/components/ui/icons/TrashIcon';
 import { toDateKey } from '@/utils/format';
 
 // Modals
@@ -197,13 +196,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   }, [selectedDate, shifts]);
 
   return (
-    <div className={`pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-screen relative`}>
+    <div className={`pb-28 md:pb-0 bg-canvas min-h-screen relative`}>
       <div className="px-4 pt-5 pb-4 md:px-6 md:pt-6 md:pb-6 flex flex-col lg:flex-row gap-4 lg:gap-6 lg:h-[calc(100vh-3rem)]">
         {/* Calendar Main */}
         <div className="flex-1">
-          <div
-            className={`bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg lg:h-full flex flex-col`}
-          >
+          <div className={`bg-surface border border-line rounded-md lg:h-full flex flex-col`}>
             <CalendarHeader
               displayDate={displayDate}
               onPrevMonth={prevMonth}
@@ -262,7 +259,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               variant="secondary"
               onClick={() => setDeleteConfirm(null)}
               className="flex-1"
-              icon={<XIcon size={16} />}
+              icon={<X size={16} />}
               disabled={isDeletingEvent}
             >
               Hủy
@@ -271,7 +268,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               variant="danger"
               onClick={confirmDeleteEvent}
               className="flex-1"
-              icon={<TrashIcon size={16} />}
+              icon={<Trash2 size={16} />}
               disabled={isDeletingEvent}
             >
               {isDeletingEvent ? 'Đang xóa...' : 'Xóa'}
@@ -279,7 +276,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           </div>
         }
       >
-        <p className="text-sm text-[var(--text-secondary)]">Bạn có chắc muốn xóa sự kiện này?</p>
+        <p className="text-body-sm text-ink-soft">Bạn có chắc muốn xóa sự kiện này?</p>
       </Modal>
 
       <EventDetailModal

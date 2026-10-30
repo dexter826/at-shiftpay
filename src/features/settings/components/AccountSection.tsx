@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { User, Camera, Loader2, Edit2, Check, X, ChevronRight } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Camera, Check, ChevronRight, Pencil, Key, Loader2, Trash2, User, X } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { imageService } from '@/lib/api/imageService';
@@ -7,10 +7,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/ToastProvider';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { DeleteAccountModal } from '@/features/settings/components/DeleteAccountModal';
-import KeyIcon from '@/components/ui/icons/KeyIcon';
-import TrashIcon from '@/components/ui/icons/TrashIcon';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import type { User as FirebaseUser } from 'firebase/auth';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface AccountSectionProps {
   user: FirebaseUser | null;
@@ -18,7 +16,9 @@ interface AccountSectionProps {
 }
 
 const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword }) => {
-  const itemHover = 'hover:bg-[var(--border-color)]';
+  const itemHover = 'hover:bg-surface-2';
+  const rowFocus =
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset';
   const { showToast } = useToast();
   const saveUserInfo = useAuthStore((state) => state.saveUserInfo);
 
@@ -31,8 +31,6 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const avatarInputRef = useRef<HTMLInputElement>(null);
-  const passwordIconRef = useRef<AnimatedIconHandle>(null);
-  const deleteIconRef = useRef<AnimatedIconHandle>(null);
 
   const handleSaveDisplayName = async () => {
     if (!editedName.trim()) {
@@ -106,39 +104,44 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
 
   return (
     <section>
-      <div
-        className={`flex items-center gap-2 mb-4 px-1 text-[var(--text-muted)] text-sm font-medium uppercase tracking-wider`}
-      >
+      <div className={`flex items-center gap-2 mb-4 px-1 text-title font-semibold text-ink`}>
         <User size={16} />
         <span>Tài khoản</span>
       </div>
 
-      <div
-        className={`bg-[var(--bg-card)] rounded-lg border border-[var(--border-color)] overflow-hidden`}
-      >
-        <div className={`p-4 flex items-center gap-4 border-b border-[var(--border-color)]`}>
-          <div
+      <div className={`bg-surface rounded-md border border-line overflow-hidden`}>
+        <div className={`p-4 flex items-center gap-4 border-b border-line`}>
+          <button
+            type="button"
             onClick={() => !isUploadingAvatar && avatarInputRef.current?.click()}
-            className={`relative w-16 h-16 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer group`}
+            disabled={isUploadingAvatar}
+            aria-label="Đổi ảnh đại diện"
+            className={`relative w-16 h-16 rounded-full border border-line bg-surface-2 group flex-shrink-0 transition-colors duration-fast ease-standard hover:border-ink-muted disabled:cursor-not-allowed ${focusRingOnSurfaceClasses}`}
           >
-            {user?.photoURL ? (
-              <img src={user.photoURL} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <img src="/avatar.png" alt="Avatar" className="w-full h-full object-cover" />
-            )}
+            <span className="absolute inset-0 overflow-hidden rounded-full">
+              {user?.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="Ảnh đại diện"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <img src="/avatar.png" alt="Ảnh đại diện" className="w-full h-full object-cover" />
+              )}
 
-            {isUploadingAvatar && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <Loader2 size={20} className="text-white animate-spin" />
-              </div>
-            )}
+              {isUploadingAvatar && (
+                <span className="absolute inset-0 bg-surface/90 flex items-center justify-center">
+                  <Loader2 size={20} className="text-ink animate-spin" />
+                </span>
+              )}
 
-            {!isUploadingAvatar && (
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                <Camera size={18} className="text-white" />
-              </div>
-            )}
-          </div>
+              {!isUploadingAvatar && (
+                <span className="absolute inset-0 bg-surface/90 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 flex items-center justify-center transition-opacity duration-fast ease-standard">
+                  <Camera size={18} className="text-ink-soft" />
+                </span>
+              )}
+            </span>
+          </button>
           <input
             type="file"
             ref={avatarInputRef}
@@ -153,80 +156,83 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
                   type="text"
                   value={editedName}
                   onChange={(e) => setEditedName(e.target.value)}
-                  className={`flex-1 min-w-0 px-3 py-2 rounded-lg border border-[var(--border-color)] bg-transparent text-[var(--text-primary)] focus:outline-none focus:border-primary text-sm`}
+                  aria-label="Tên hiển thị"
+                  className={`flex-1 min-w-0 px-3 py-2 min-h-10 rounded-sm border border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted text-body-sm ${focusRingOnSurfaceClasses}`}
                   placeholder="Nhập tên hiển thị"
                   autoFocus
                 />
                 <button
+                  type="button"
                   onClick={handleSaveDisplayName}
                   disabled={savingName}
-                  className="p-2 rounded-lg flex-shrink-0 bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors"
+                  aria-label="Lưu tên hiển thị"
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard disabled:opacity-60 ${focusRingOnSurfaceClasses}`}
                 >
                   <Check size={18} />
                 </button>
                 <button
+                  type="button"
                   onClick={handleCancelEditName}
                   disabled={savingName}
-                  className="p-2 rounded-lg flex-shrink-0 bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors"
+                  aria-label="Hủy sửa tên"
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard disabled:opacity-60 ${focusRingOnSurfaceClasses}`}
                 >
                   <X size={18} />
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <h3 className={`font-semibold text-[var(--text-primary)]`}>
+                <h3 className={`text-title font-semibold text-ink`}>
                   {user?.displayName || 'Người dùng'}
                 </h3>
                 <button
+                  type="button"
                   onClick={() => setIsEditingName(true)}
-                  className={`p-1 rounded hover:bg-[var(--border-color)] text-[var(--text-muted)] transition-colors`}
+                  aria-label="Sửa tên hiển thị"
+                  className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface-2 text-ink-muted hover:text-ink transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                 >
-                  <Edit2 size={14} />
+                  <Pencil size={14} />
                 </button>
               </div>
             )}
-            <p className={`text-sm text-[var(--text-muted)]`}>{user?.email}</p>
+            <p className={`text-body-sm text-ink-muted`}>{user?.email}</p>
           </div>
         </div>
 
         <button
+          type="button"
           onClick={onChangePassword}
-          onMouseEnter={() => passwordIconRef.current?.startAnimation()}
-          onMouseLeave={() => passwordIconRef.current?.stopAnimation()}
-          className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors text-left border-b border-[var(--border-color)]`}
+          className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors duration-fast ease-standard text-left border-b border-dashed border-line ${rowFocus}`}
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 text-primary">
-              <KeyIcon ref={passwordIconRef} size={20} />
+            <div className="p-2 rounded-sm bg-surface-2 text-ink-muted">
+              <Key size={20} />
             </div>
             <div>
-              <p className={`font-medium text-[var(--text-primary)]`}>Đổi mật khẩu</p>
-              <p className={`text-xs text-[var(--text-muted)]`}>Cập nhật mật khẩu đăng nhập</p>
+              <p className={`text-body-sm font-medium text-ink`}>Đổi mật khẩu</p>
+              <p className={`text-label font-medium text-ink-muted`}>Cập nhật mật khẩu đăng nhập</p>
             </div>
           </div>
-          <ChevronRight size={18} className="text-[var(--text-muted)]" />
+          <ChevronRight size={18} className="text-ink-muted" />
         </button>
 
         <button
+          type="button"
           onClick={() => setShowDeleteModal(true)}
-          onMouseEnter={() => deleteIconRef.current?.startAnimation()}
-          onMouseLeave={() => deleteIconRef.current?.stopAnimation()}
-          className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors text-left group`}
+          className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors duration-fast ease-standard text-left ${rowFocus}`}
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-500/10 text-red-500 group-hover:text-red-600">
-              <TrashIcon ref={deleteIconRef} size={20} />
+            <div className="p-2 rounded-sm bg-surface-2 text-danger">
+              <Trash2 size={20} />
             </div>
             <div>
-              <p className={`font-medium text-[var(--text-primary)] group-hover:text-red-600`}>
-                Xóa tài khoản
-              </p>
-              <p className={`text-xs text-[var(--text-muted)]`}>
+              <p className={`text-body-sm font-medium text-ink`}>Xóa tài khoản</p>
+              <p className={`text-label font-medium text-ink-muted`}>
                 Xóa vĩnh viễn toàn bộ dữ liệu của bạn
               </p>
             </div>
           </div>
-          <ChevronRight size={18} className="text-[var(--text-muted)]" />
+          <ChevronRight size={18} className="text-ink-muted" />
         </button>
       </div>
 

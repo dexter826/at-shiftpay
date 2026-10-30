@@ -11,6 +11,7 @@ import { deleteField } from 'firebase/firestore';
 import { vietQRService, VietQRBank } from '@/lib/api/vietqrService';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { areValuesEqual } from '@/utils/compare';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface EmployeeFormModalProps {
   isOpen: boolean;
@@ -260,37 +261,37 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
           }}
         >
           {error && (
-            <div className="p-2.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg">
+            <div className="p-2.5 bg-danger/10 border border-danger/30 text-danger text-body-sm rounded-sm">
               {error}
             </div>
           )}
           <div className="flex flex-col items-center justify-center pb-2">
-            <div
+            <button
+              type="button"
               onClick={() => !isUploading && fileInputRef.current?.click()}
-              className={`relative w-24 h-24 rounded-full overflow-hidden border-2 border-[var(--border-color)] bg-[var(--border-color)] cursor-pointer group transition-all hover:border-primary`}
+              aria-label="Thay đổi ảnh đại diện"
+              className={`relative w-24 h-24 rounded-full overflow-hidden border border-line bg-surface-2 group transition-colors duration-fast ease-standard hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
             >
               {imageUrl ? (
-                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                <img src={imageUrl} alt="Ảnh đại diện" className="w-full h-full object-cover" />
               ) : (
-                <div
-                  className={`w-full h-full flex items-center justify-center text-[var(--text-muted)]`}
-                >
+                <div className={`w-full h-full flex items-center justify-center text-ink-muted`}>
                   <Camera size={24} />
                 </div>
               )}
 
               {isUploading && (
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                  <Loader2 size={24} className="text-white animate-spin" />
+                <div className="absolute inset-0 bg-surface/90 flex items-center justify-center">
+                  <Loader2 size={24} className="text-ink animate-spin" />
                 </div>
               )}
 
               {!isUploading && (
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                  <Upload size={20} className="text-white" />
+                <div className="absolute inset-0 bg-surface/90 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 flex items-center justify-center transition-opacity duration-fast ease-standard">
+                  <Upload size={20} className="text-ink-soft" />
                 </div>
               )}
-            </div>
+            </button>
             <input
               type="file"
               ref={fileInputRef}
@@ -298,40 +299,48 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               accept="image/*"
               className="hidden"
             />
-            <p className={`text-[10px] text-[var(--text-muted)] mt-2`}>Click để thay đổi ảnh</p>
+            <p className={`text-body-sm text-ink-muted mt-2`}>Click để thay đổi ảnh</p>
           </div>
 
           <div>
-            <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>Họ tên</label>
+            <label
+              htmlFor="employee-name"
+              className={`block text-label font-medium mb-1.5 text-ink-muted`}
+            >
+              Họ tên
+            </label>
             <input
+              id="employee-name"
               type="text"
               placeholder="Nhập họ tên"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={`w-full p-2.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] placeholder-slate-500 focus:outline-none focus:border-primary`}
+              className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
             />
           </div>
           <div>
-            <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
+            <label
+              htmlFor="employee-phone"
+              className={`block text-label font-medium mb-1.5 text-ink-muted`}
+            >
               Số điện thoại (tùy chọn)
             </label>
             <input
+              id="employee-phone"
               type="tel"
               placeholder="Nhập số điện thoại"
               value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
               maxLength={11}
-              className={`w-full p-2.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] placeholder-slate-500 focus:outline-none focus:border-primary`}
+              className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
             />
           </div>
 
-          <div className={`pt-3 border-t border-[var(--border-color)]`}>
+          <div className={`pt-3 border-t border-line`}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Building2 size={14} className="text-primary" />
-                <label className={`text-xs font-medium text-[var(--text-primary)]`}>
-                  Thông tin ngân hàng (tùy chọn)
-                </label>
+                <Building2 size={14} className="text-accent-ink" />
+                <p className={`text-label font-medium text-ink`}>Thông tin ngân hàng (tùy chọn)</p>
               </div>
               <button
                 type="button"
@@ -341,17 +350,19 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                   setAccountNumber('');
                   setAccountName('');
                 }}
-                className={`flex items-center gap-1 px-2 py-1 rounded bg-[var(--bg-card)] hover:bg-primary/10 text-primary hover:text-primary/80 transition-colors text-xs`}
-                title="Làm mới thông tin ngân hàng"
+                className={`inline-flex min-h-10 items-center gap-1.5 px-3 rounded-sm text-body-sm font-semibold bg-surface border border-line text-accent-ink hover:brightness-110 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+                aria-label="Làm mới thông tin ngân hàng"
               >
-                <RotateCcw size={12} />
+                <RotateCcw size={14} />
                 Làm mới
               </button>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>Ngân hàng</label>
+                <label className={`block text-label font-medium mb-1.5 text-ink-muted`}>
+                  Ngân hàng
+                </label>
                 <Dropdown
                   options={[
                     { value: '', label: '-- Chọn ngân hàng --' },
@@ -375,30 +386,38 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               </div>
 
               <div>
-                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
+                <label
+                  htmlFor="employee-account-number"
+                  className={`block text-label font-medium mb-1.5 text-ink-muted`}
+                >
                   Số tài khoản
                 </label>
                 <input
+                  id="employee-account-number"
                   type="text"
                   placeholder="Nhập số tài khoản"
                   value={accountNumber}
                   onChange={(e) => setAccountNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                  className={`w-full p-2.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] placeholder-slate-500 focus:outline-none focus:border-primary`}
+                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted tabular-nums focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
                 />
               </div>
 
               <div>
-                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
+                <label
+                  htmlFor="employee-account-name"
+                  className={`block text-label font-medium mb-1.5 text-ink-muted`}
+                >
                   Tên chủ tài khoản
                 </label>
                 <input
+                  id="employee-account-name"
                   type="text"
                   placeholder="Nhập tên chủ tài khoản"
                   value={accountName}
                   onChange={(e) => setAccountName(e.target.value.toUpperCase())}
-                  className={`w-full p-2.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] placeholder-slate-500 focus:outline-none focus:border-primary`}
+                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
                 />
-                <p className={`text-[10px] text-[var(--text-muted)] mt-1`}>Viết hoa không dấu</p>
+                <p className={`text-body-sm text-ink-muted mt-1`}>Viết hoa không dấu</p>
               </div>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
+import { focusRingClasses } from '@/lib/utils';
 
 interface LoadMoreProps {
   currentCount: number;
@@ -21,13 +22,14 @@ export const LoadMore: React.FC<LoadMoreProps> = ({
   return (
     <div className={`col-span-full flex flex-col items-center justify-center gap-2 ${className}`}>
       <button
+        type="button"
         onClick={onLoadMore}
-        className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] hover:border-primary/50 hover:text-primary active:scale-95"
+        className={`flex items-center gap-2 px-3.5 py-2.5 rounded-sm text-body-sm font-semibold transition-all duration-fast ease-standard border border-line bg-surface text-ink hover:border-ink-muted active:scale-[0.98] ${focusRingClasses}`}
       >
         <span>Xem thêm</span>
         <Plus size={14} />
       </button>
-      <div className="text-[11px] text-[var(--text-muted)] tracking-wide uppercase font-medium">
+      <div className="text-label text-ink-muted tabular-nums">
         {Math.min(currentCount, totalCount)} / {totalCount} {unit}
       </div>
     </div>

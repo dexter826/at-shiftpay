@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
-import { ArrowUpDown, CalendarDays } from 'lucide-react';
+import { ArrowUpDown, Calendar } from 'lucide-react';
 import SearchInput from '@/components/ui/SearchInput';
 import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
+import { focusRingClasses } from '@/lib/utils';
 
 interface PayrollFiltersProps {
   activeTab: 'payroll' | 'history';
@@ -70,17 +71,17 @@ const PayrollFilters: React.FC<PayrollFiltersProps> = ({
         containerClassName="flex-1"
       />
       <button
+        type="button"
         onClick={() => {
           setViewYear(filterDate ? parseInt(filterDate.split('-')[0]) : new Date().getFullYear());
           onOpenFilterModal();
         }}
-        className="flex items-center gap-2 px-3 h-10 border border-[var(--border-color)] rounded-lg bg-[var(--bg-card)] text-sm text-[var(--text-primary)]"
+        className={`flex items-center gap-2 px-3 min-h-10 border border-line rounded-sm bg-surface text-body-sm text-ink transition-colors duration-fast ease-standard hover:border-ink-muted ${focusRingClasses}`}
       >
-        <CalendarDays
-          size={16}
-          className={filterDate ? 'text-primary' : 'text-[var(--text-muted)]'}
-        />
-        <span className={filterDate ? 'text-primary font-medium' : 'text-[var(--text-muted)]'}>
+        <Calendar size={16} className={filterDate ? 'text-accent-ink' : 'text-ink-muted'} />
+        <span
+          className={`tabular-nums ${filterDate ? 'text-accent-ink font-medium' : 'text-ink-muted'}`}
+        >
           {filterDate
             ? `Tháng ${filterDate.split('-')[1]}/${filterDate.split('-')[0]}`
             : 'Tất cả thời gian'}

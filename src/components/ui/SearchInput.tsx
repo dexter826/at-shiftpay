@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
+import { focusRingClasses } from '@/lib/utils';
 
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onClear?: () => void;
@@ -24,19 +25,21 @@ const SearchInput: React.FC<SearchInputProps> = ({
     <div className={`relative ${containerClassName}`}>
       <Search
         size={16}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none"
+        className={`absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none ${props.disabled ? 'opacity-60' : ''}`}
       />
       <input
         value={value}
         onChange={onChange}
-        className={`w-full pl-9 pr-9 h-10 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-primary transition-colors ${className}`}
+        className={`w-full pl-9 pr-10 h-10 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted transition-colors duration-fast ease-standard hover:border-ink-muted focus:outline-none ${focusRingClasses} disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
         {...props}
       />
       {hasValue && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+          disabled={props.disabled}
+          aria-label="Xoá tìm kiếm"
+          className={`absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:text-ink disabled:opacity-40 disabled:cursor-not-allowed ${focusRingClasses}`}
         >
           <X size={14} />
         </button>
