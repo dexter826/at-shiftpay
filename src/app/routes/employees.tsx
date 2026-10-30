@@ -216,7 +216,7 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading 
           </div>
         }
       >
-        <p className={`text-sm text-ink-soft`}>Bạn có chắc muốn xóa nhân viên này?</p>
+        <p className={`text-body-sm text-ink-soft`}>Bạn có chắc muốn xóa nhân viên này?</p>
       </Modal>
 
       {/* Lỗi xóa */}
@@ -230,7 +230,7 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading 
           </Button>
         }
       >
-        <p className={`text-sm text-ink-soft`}>{deleteError}</p>
+        <p className={`text-body-sm text-ink-soft`}>{deleteError}</p>
       </Modal>
 
       {/* Chi tiết nhân viên */}

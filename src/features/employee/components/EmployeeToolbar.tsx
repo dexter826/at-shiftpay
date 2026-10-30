@@ -36,11 +36,17 @@ const EmployeeToolbar: React.FC<EmployeeToolbarProps> = ({
     <div className={`py-4 px-4 md:px-6 border-b border-line`}>
       <div className="flex justify-between items-center">
         <div>
-          <h1 className={`text-lg font-semibold text-ink`}>
+          <h1 className={`text-title font-semibold text-ink`}>
             {loading ? <Skeleton width={120} height={24} /> : `${employeeCount} nhân viên`}
           </h1>
         </div>
-        <Button onClick={onAdd} disabled={loading} className="" icon={<Plus size={18} />}>
+        <Button
+          onClick={onAdd}
+          disabled={loading}
+          className=""
+          icon={<Plus size={18} />}
+          aria-label="Thêm mới nhân viên"
+        >
           <span className="hidden sm:inline">Thêm mới</span>
         </Button>
       </div>
