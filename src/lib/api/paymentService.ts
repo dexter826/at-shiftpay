@@ -2,7 +2,7 @@ import { db } from '@/lib/firebase';
 import {
   collection,
   doc,
-  writeBatch,
+  runTransaction,
   query,
   where,
   orderBy,
@@ -10,8 +10,12 @@ import {
   Unsubscribe,
 } from 'firebase/firestore';
 import { PaymentTransaction } from '@/types/index';
-import { createRealtimeSubscription, executeBatchWithRetry } from '@/lib/api/firebaseService';
+import { createRealtimeSubscription } from '@/lib/api/firebaseService';
 import { PaymentTransactionSchema } from '@/utils/validation';
+
+const ALREADY_SETTLED_MESSAGE = 'Khoản ứng đã được quyết toán';
+const SHIFT_NOT_UNPAID_MESSAGE = 'Ca làm đã được thanh toán hoặc ứng trước';
+const SHIFT_NOT_ADVANCED_MESSAGE = 'Ca làm không còn ở trạng thái ứng lương';
 
 export const paymentService = {
   subscribePayments(
@@ -36,24 +40,29 @@ export const paymentService = {
     shiftIds: string[]
   ): Promise<void> {
     try {
-      await executeBatchWithRetry(async () => {
-        const batch = writeBatch(db);
+      const paymentRef = doc(collection(db, 'payments'));
+      const shiftStatus = paymentData.type === 'advance' ? 'advanced' : 'paid';
 
-        const paymentRef = doc(collection(db, 'payments'));
-        batch.set(paymentRef, paymentData);
+      await runTransaction(db, async (transaction) => {
+        for (const shiftId of shiftIds) {
+          const snapshot = await transaction.get(doc(db, 'shifts', shiftId));
+          if (!snapshot.exists()) {
+            throw new Error(`Ca làm ${shiftId} không tồn tại`);
+          }
+          if (snapshot.data().status !== 'unpaid') {
+            throw new Error(SHIFT_NOT_UNPAID_MESSAGE);
+          }
+        }
 
-        const shiftStatus = paymentData.type === 'advance' ? 'advanced' : 'paid';
+        transaction.set(paymentRef, paymentData);
 
-        shiftIds.forEach((shiftId) => {
-          const shiftRef = doc(db, 'shifts', shiftId);
-          batch.update(shiftRef, {
+        for (const shiftId of shiftIds) {
+          transaction.update(doc(db, 'shifts', shiftId), {
             status: shiftStatus,
             paidAt: paymentData.date,
             paymentId: paymentRef.id,
           });
-        });
-
-        await batch.commit();
+        }
       });
     } catch (error) {
       console.error('createPaymentTransaction error:', error);
@@ -67,14 +76,7 @@ export const paymentService = {
     paymentData: Omit<PaymentTransaction, 'id' | 'type'>,
     shiftIds: string[]
   ): Promise<void> {
-    try {
-      await paymentService.createPaymentTransaction({ ...paymentData, type: 'advance' }, shiftIds);
-    } catch (error) {
-      console.error('createAdvancePayment error:', error);
-      throw new Error(
-        `Không thể tạo ứng lương: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
-      );
-    }
+    await paymentService.createPaymentTransaction({ ...paymentData, type: 'advance' }, shiftIds);
   },
 
   async settleAdvancePayment(
@@ -86,12 +88,25 @@ export const paymentService = {
     userId: string
   ): Promise<void> {
     try {
-      await executeBatchWithRetry(async () => {
-        const batch = writeBatch(db);
-        const now = Date.now();
+      const now = Date.now();
+      const settlementRef = doc(collection(db, 'payments'));
 
-        const settlementRef = doc(collection(db, 'payments'));
-        batch.set(settlementRef, {
+      await runTransaction(db, async (transaction) => {
+        for (const paymentId of advancePaymentIds) {
+          const snapshot = await transaction.get(doc(db, 'payments', paymentId));
+          if (!snapshot.exists() || snapshot.data().settledAt) {
+            throw new Error(ALREADY_SETTLED_MESSAGE);
+          }
+        }
+
+        for (const shiftId of shiftIds) {
+          const snapshot = await transaction.get(doc(db, 'shifts', shiftId));
+          if (!snapshot.exists() || snapshot.data().status !== 'advanced') {
+            throw new Error(SHIFT_NOT_ADVANCED_MESSAGE);
+          }
+        }
+
+        transaction.set(settlementRef, {
           employeeId,
           employeeName,
           amount: totalAmount,
@@ -102,24 +117,20 @@ export const paymentService = {
           userId: userId,
         });
 
-        advancePaymentIds.forEach((paymentId) => {
-          const paymentRef = doc(db, 'payments', paymentId);
-          batch.update(paymentRef, {
+        for (const paymentId of advancePaymentIds) {
+          transaction.update(doc(db, 'payments', paymentId), {
             settledAt: now,
             settledBy: settlementRef.id,
           });
-        });
+        }
 
-        shiftIds.forEach((shiftId) => {
-          const shiftRef = doc(db, 'shifts', shiftId);
-          batch.update(shiftRef, {
+        for (const shiftId of shiftIds) {
+          transaction.update(doc(db, 'shifts', shiftId), {
             status: 'paid',
             paidAt: now,
             paymentId: settlementRef.id,
           });
-        });
-
-        await batch.commit();
+        }
       });
     } catch (error) {
       console.error('settleAdvancePayment error:', error);
