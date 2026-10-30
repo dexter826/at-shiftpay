@@ -1,11 +1,6 @@
 import { db } from '@/lib/firebase';
 import {
   collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  writeBatch,
   query,
   where,
   orderBy,
@@ -56,62 +51,5 @@ export const shiftService = {
       orderBy('date', 'asc')
     );
     return executeBatchQuery<Shift>(q, ShiftSchema);
-  },
-
-  async addShift(data: Omit<Shift, 'id'>): Promise<void> {
-    try {
-      await addDoc(collection(db, 'shifts'), data);
-    } catch (error) {
-      console.error('addShift error:', error);
-      throw new Error(`Không thể thêm ca làm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
-  },
-
-  async addShiftsBatch(shiftsData: Omit<Shift, 'id'>[]): Promise<void> {
-    if (shiftsData.length === 0) return;
-    try {
-      const batch = writeBatch(db);
-      shiftsData.forEach(data => {
-        const newDocRef = doc(collection(db, 'shifts'));
-        batch.set(newDocRef, data);
-      });
-      await batch.commit();
-    } catch (error) {
-      console.error('addShiftsBatch error:', error);
-      throw new Error(`Không thể thêm các ca làm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
-  },
-
-  async deleteShiftsBatch(shiftIds: string[]): Promise<void> {
-    if (shiftIds.length === 0) return;
-    try {
-      const batch = writeBatch(db);
-      shiftIds.forEach(id => {
-        batch.delete(doc(db, 'shifts', id));
-      });
-      await batch.commit();
-    } catch (error) {
-      console.error('deleteShiftsBatch error:', error);
-      throw new Error(`Không thể xóa các ca làm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
-  },
-
-  async updateShift(id: string, data: Partial<Shift>): Promise<void> {
-    try {
-      const docRef = doc(db, 'shifts', id);
-      await updateDoc(docRef, data);
-    } catch (error) {
-      console.error('updateShift error:', error);
-      throw new Error(`Không thể cập nhật ca làm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
-  },
-
-  async deleteShift(id: string): Promise<void> {
-    try {
-      await deleteDoc(doc(db, 'shifts', id));
-    } catch (error) {
-      console.error('deleteShift error:', error);
-      throw new Error(`Không thể xóa ca làm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
   },
 };

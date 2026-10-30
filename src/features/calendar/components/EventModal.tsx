@@ -11,7 +11,6 @@ import {
 import { shiftService } from '@/lib/api/shiftService';
 import { locationService } from '@/lib/api/locationService';
 import { eventService } from '@/lib/api/eventService';
-import { deleteField } from 'firebase/firestore';
 import {
   Sun,
   Moon,

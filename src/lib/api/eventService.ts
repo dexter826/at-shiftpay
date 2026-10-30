@@ -1,13 +1,8 @@
 import { db } from '@/lib/firebase';
 import {
   collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
   doc,
   writeBatch,
-  getDocs,
-  orderBy,
   Unsubscribe,
   query,
   where
@@ -59,31 +54,6 @@ export const eventService = {
     return results.flat();
   },
 
-  async getAllEvents(userId: string): Promise<Event[]> {
-    try {
-      const q = query(
-        collection(db, 'events'),
-        where('userId', '==', userId),
-        orderBy('date', 'desc')
-      );
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event));
-    } catch (error) {
-      console.error('getAllEvents error:', error);
-      return [];
-    }
-  },
-
-  async addEvent(data: Omit<Event, 'id'>, userId: string): Promise<string> {
-    try {
-      const docRef = await addDoc(collection(db, 'events'), { ...data, userId });
-      return docRef.id;
-    } catch (error) {
-      console.error('addEvent error:', error);
-      throw new Error(`Không thể thêm sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
-  },
-
   async createEventWithShifts(eventData: Omit<Event, 'id'>, shiftsData: Omit<Shift, 'id'>[]): Promise<void> {
     try {
       await executeBatchWithRetry(async () => {
@@ -102,44 +72,6 @@ export const eventService = {
     } catch (error) {
       console.error('createEventWithShifts error:', error);
       throw new Error(`Không thể tạo sự kiện và ca làm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
-  },
-
-  async updateEvent(id: string, data: Partial<Event>): Promise<void> {
-    try {
-      const docRef = doc(db, 'events', id);
-      await updateDoc(docRef, data);
-    } catch (error) {
-      console.error('updateEvent error:', error);
-      throw new Error(`Không thể cập nhật sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
-  },
-
-  async updateEventWithShifts(
-    eventId: string,
-    eventData: Partial<Event>,
-    oldShiftIds: string[],
-    newShiftsData: Omit<Shift, 'id'>[]
-  ): Promise<void> {
-    try {
-      const batch = writeBatch(db);
-
-      const eventRef = doc(db, 'events', eventId);
-      batch.update(eventRef, eventData);
-
-      oldShiftIds.forEach(id => {
-        batch.delete(doc(db, 'shifts', id));
-      });
-
-      newShiftsData.forEach(shiftData => {
-        const shiftRef = doc(collection(db, 'shifts'));
-        batch.set(shiftRef, shiftData);
-      });
-
-      await batch.commit();
-    } catch (error) {
-      console.error('updateEventWithShifts error:', error);
-      throw new Error(`Không thể cập nhật sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
     }
   },
 
@@ -194,15 +126,6 @@ export const eventService = {
       await batch.commit();
     } catch (error) {
       console.error('deleteEventWithShifts error:', error);
-      throw new Error(`Không thể xóa sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
-    }
-  },
-
-  async deleteEvent(id: string): Promise<void> {
-    try {
-      await deleteDoc(doc(db, 'events', id));
-    } catch (error) {
-      console.error('deleteEvent error:', error);
       throw new Error(`Không thể xóa sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
     }
   },
