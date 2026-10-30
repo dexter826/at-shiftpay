@@ -55,7 +55,7 @@ const WorkConfigSection: React.FC<WorkConfigSectionProps> = ({ userUid, settings
   return (
     <div className="border border-line bg-surface">
       <div className="grid gap-4 p-4 sm:grid-cols-3">
-        <Field label="Lương mỗi ca" hint={`VND · ${formatCurrency(editSettings.shiftRate)}`}>
+        <Field label="Lương mỗi ca" hint={formatCurrency(editSettings.shiftRate)}>
           <Input
             leadingIcon={<Banknote size={15} aria-hidden="true" />}
             type="number"

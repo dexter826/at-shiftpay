@@ -21,6 +21,8 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState('');
 
   const onCropChange = (crop: { x: number; y: number }) => {
     setCrop(crop);
@@ -35,17 +37,21 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
   };
 
   const handleConfirm = async () => {
-    if (!croppedAreaPixels) return;
+    if (!croppedAreaPixels || isProcessing) return;
 
+    setError('');
+    setIsProcessing(true);
     try {
       const croppedImage = await getCroppedImg(image, croppedAreaPixels);
-      if (croppedImage) {
-        const file = new File([croppedImage], 'avatar.jpg', { type: 'image/jpeg' });
-        onCropComplete(file);
-        onClose();
-      }
-    } catch (e) {
-      console.error(e);
+      if (!croppedImage) throw new Error('Không thể cắt ảnh');
+      const file = new File([croppedImage], 'avatar.jpg', { type: 'image/jpeg' });
+      onCropComplete(file);
+      onClose();
+    } catch (caught) {
+      console.error(caught);
+      setError('Không thể cắt ảnh. Thử lại.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -56,10 +62,15 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
       onClose={onClose}
       footer={
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+          <Button variant="secondary" onClick={onClose} className="flex-1" disabled={isProcessing}>
             Hủy
           </Button>
-          <Button onClick={handleConfirm} className="flex-1">
+          <Button
+            onClick={handleConfirm}
+            className="flex-1"
+            loading={isProcessing}
+            disabled={!croppedAreaPixels}
+          >
             Xong
           </Button>
         </div>
@@ -93,9 +104,15 @@ export const ImageCropperModal: React.FC<ImageCropperModalProps> = ({
             step={0.1}
             aria-label="Phóng to"
             onChange={(e) => setZoom(Number(e.target.value))}
-            className={`w-full h-10 bg-transparent rounded-sm appearance-none cursor-pointer [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-xs [&::-webkit-slider-runnable-track]:bg-ink-muted [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:bg-ink [&::-moz-range-track]:h-1 [&::-moz-range-track]:rounded-xs [&::-moz-range-track]:bg-ink-muted [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:bg-ink ${focusRingOnSurfaceClasses}`}
+            className={`h-11 w-full appearance-none cursor-pointer rounded-sm bg-transparent [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-xs [&::-webkit-slider-runnable-track]:bg-ink-muted [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:-mt-2 [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:bg-ink [&::-moz-range-track]:h-1 [&::-moz-range-track]:rounded-xs [&::-moz-range-track]:bg-ink-muted [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:bg-ink ${focusRingOnSurfaceClasses}`}
           />
         </div>
+
+        {error && (
+          <p role="alert" className="text-label text-danger">
+            {error}
+          </p>
+        )}
 
         <p className={`text-body-sm text-ink-muted text-center`}>
           Kéo hình ảnh để canh chỉnh vùng hiển thị

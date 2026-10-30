@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 import { focusRingClasses } from '@/lib/utils';
 
@@ -7,10 +7,11 @@ interface ScrollToTopButtonProps {
   activeTab: string;
 }
 
-const ENABLED_TABS = ['dashboard', 'employees', 'payroll', 'locations'];
+const ENABLED_TABS = ['dashboard', 'calendar', 'employees', 'payroll', 'locations', 'settings'];
 
 const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ activeTab }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 400);
@@ -24,7 +25,7 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ activeTab }) => {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
     });
   };
 

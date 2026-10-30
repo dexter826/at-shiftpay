@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@/components/ui/Button';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -29,17 +30,13 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     }
 
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-canvas px-6 text-center">
-        <h1 className="text-lg font-semibold text-ink">Đã xảy ra lỗi</h1>
-        <p className="text-sm text-ink-soft max-w-sm">
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-canvas px-6 text-center">
+        <p className="font-mono text-mono-label text-ink-muted">ShiftPay</p>
+        <h1 className="text-display text-ink">Đã xảy ra lỗi</h1>
+        <p className="max-w-sm text-body-sm text-ink-soft">
           Ứng dụng gặp lỗi không mong muốn. Tải lại trang để tiếp tục.
         </p>
-        <button
-          onClick={this.handleReload}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent"
-        >
-          Tải lại trang
-        </button>
+        <Button onClick={this.handleReload}>Tải lại trang</Button>
       </div>
     );
   }

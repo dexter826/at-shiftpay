@@ -29,7 +29,7 @@ const ThemeButton: React.FC<{ onBrand?: boolean }> = ({ onBrand = false }) => {
 
 const benefits = [
   { icon: CalendarRange, text: 'Xếp ca trên một bảng tuần' },
-  { icon: CheckCircle2, text: 'Chốt công theo từng ca' },
+  { icon: CheckCircle2, text: 'Chốt lương theo từng ca' },
   { icon: Wallet, text: 'Thanh toán và đối soát một chỗ' },
 ];
 
@@ -48,7 +48,7 @@ const LoginLayout: React.FC<LoginLayoutProps> = ({ children }) => (
           Lương minh bạch.
         </p>
         <p className="mt-4 text-body-sm leading-relaxed text-on-brand/85">
-          Một chỗ cho lịch ca, chấm công và thanh toán.
+          Một chỗ cho lịch ca, phân công và thanh toán.
         </p>
         <ul className="mt-8 space-y-3.5 text-body-sm">
           {benefits.map((benefit) => (

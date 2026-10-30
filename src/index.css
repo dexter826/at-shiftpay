@@ -50,26 +50,6 @@
 
   --palette-scrim-light: #101613;
   --palette-scrim-dark: #000000;
-
-  /* Illustration palette: legacy artwork only; removed with splash/login rebuild. */
-  --palette-illustration-ink: #282828;
-  --palette-illustration-cab: #3d3dff;
-  --palette-illustration-window: #7d7c7c;
-  --palette-illustration-headlight: #fffcab;
-  --palette-illustration-body: #dfdfdf;
-  --palette-illustration-stripe: #fbbf24;
-  --palette-illustration-stamp: #dc2626;
-  --palette-illustration-lamp-dark: #ffffff;
-  --palette-illustration-lamp-light: #000000;
-  --palette-illustration-road-dark: #334155;
-  --palette-illustration-road-light: #282828;
-  --palette-illustration-dash-dark: #475569;
-  --palette-illustration-dash-light: #ffffff;
-  --palette-avatar-fur: #89664c;
-  --palette-avatar-ear: #ffc5d3;
-  --palette-avatar-face: #e0ac7e;
-  --palette-avatar-hand: #ffd6bb;
-  --palette-avatar-feature: #3b302a;
 }
 
 /* Semantic tier: the only colors screens and primitives may use. Light is the base. */
@@ -162,31 +142,6 @@
   --color-rail-muted: #8b978f;
   --color-rail-hover: #131a17;
   --color-rail-line: #1b2521;
-}
-
-/* Legacy illustration roles; keep until splash/login are rebuilt. */
-@theme {
-  --color-illustration-ink: var(--palette-illustration-ink);
-  --color-illustration-cab: var(--palette-illustration-cab);
-  --color-illustration-window: var(--palette-illustration-window);
-  --color-illustration-headlight: var(--palette-illustration-headlight);
-  --color-illustration-body: var(--palette-illustration-body);
-  --color-illustration-stripe: var(--palette-illustration-stripe);
-  --color-illustration-stamp: var(--palette-illustration-stamp);
-  --color-illustration-fur: var(--palette-avatar-fur);
-  --color-illustration-ear: var(--palette-avatar-ear);
-  --color-illustration-face: var(--palette-avatar-face);
-  --color-illustration-hand: var(--palette-avatar-hand);
-  --color-illustration-feature: var(--palette-avatar-feature);
-  --color-illustration-lamp: var(--palette-illustration-lamp-dark);
-  --color-illustration-road: var(--palette-illustration-road-dark);
-  --color-illustration-dash: var(--palette-illustration-dash-dark);
-}
-
-html.dark {
-  --color-illustration-lamp: var(--palette-illustration-lamp-light);
-  --color-illustration-road: var(--palette-illustration-road-light);
-  --color-illustration-dash: var(--palette-illustration-dash-light);
 }
 
 @keyframes shimmer {

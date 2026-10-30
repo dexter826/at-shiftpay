@@ -155,7 +155,7 @@ function AppShell() {
       <DataErrorWatcher />
       <OfflineIndicator />
       {authLoading ? (
-        <div className="flex items-center justify-center h-screen bg-canvas">
+        <div className="flex min-h-dvh items-center justify-center bg-canvas">
           <Loader />
         </div>
       ) : !user || !user.emailVerified ? (
@@ -237,13 +237,23 @@ function AppContent({
 
   return (
     <div className="min-h-dynamic bg-canvas">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-sm focus:border focus:border-line focus:bg-surface focus:px-4 focus:py-2 focus:text-body-sm focus:text-ink focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-canvas"
+      >
+        Bỏ qua điều hướng
+      </a>
       <Navbar
         currentTab={currentTab}
         setTab={(tab) => navigate(`/${tab}`)}
         onLogout={onLogout}
         user={user}
       />
-      <main className="pb-[calc(64px+env(safe-area-inset-bottom))] md:pl-[var(--rail-width)] md:pb-0">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="pb-[calc(64px+env(safe-area-inset-bottom))] focus:outline-none md:pl-[var(--rail-width)] md:pb-0"
+      >
         <PullToRefresh
           onRefresh={() => {
             if (user) refreshData(user.uid);

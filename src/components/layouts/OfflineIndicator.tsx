@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Wifi, WifiOff } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 export const OfflineIndicator: React.FC = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [showOnline, setShowOnline] = useState(false);
+  const onlineTimerRef = useRef<number | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
       setShowOnline(true);
-      setTimeout(() => setShowOnline(false), 3000);
+      if (onlineTimerRef.current) window.clearTimeout(onlineTimerRef.current);
+      onlineTimerRef.current = window.setTimeout(() => setShowOnline(false), 3000);
     };
 
     const handleOffline = () => {
@@ -25,6 +27,7 @@ export const OfflineIndicator: React.FC = () => {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      if (onlineTimerRef.current) window.clearTimeout(onlineTimerRef.current);
     };
   }, []);
 
