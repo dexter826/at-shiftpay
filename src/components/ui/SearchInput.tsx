@@ -29,14 +29,15 @@ const SearchInput: React.FC<SearchInputProps> = ({
       <input
         value={value}
         onChange={onChange}
-        className={`w-full pl-9 pr-9 h-10 bg-surface-2 border border-line rounded-lg text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent transition-colors ${className}`}
+        className={`w-full pl-9 pr-10 h-10 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted transition-colors duration-fast focus:outline-none focus:border-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
         {...props}
       />
       {hasValue && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-ink-muted hover:text-ink transition-colors"
+          aria-label="Xoá tìm kiếm"
+          className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
         >
           <X size={14} />
         </button>

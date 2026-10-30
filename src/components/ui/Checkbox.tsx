@@ -12,7 +12,10 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id }) => 
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
   return (
-    <label htmlFor={inputId} className="flex items-center gap-2 cursor-pointer select-none">
+    <label
+      htmlFor={inputId}
+      className="flex min-h-10 items-center gap-2.5 py-1.5 cursor-pointer select-none"
+    >
       <div className="relative">
         <input
           id={inputId}
@@ -22,16 +25,16 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id }) => 
           className="peer sr-only"
         />
         <div
-          className={`w-4 h-4 rounded border transition-colors ${
+          className={`w-4 h-4 rounded-xs border transition-colors duration-fast hover:border-accent/60 ${
             checked ? 'bg-accent border-accent' : 'border-line bg-transparent'
-          } peer-focus-visible:ring-2 peer-focus-visible:ring-accent/20`}
+          } peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-canvas`}
         >
           {checked && (
             <Check size={12} className="text-on-accent absolute inset-0 m-auto" strokeWidth={3} />
           )}
         </div>
       </div>
-      {label && <span className="text-xs text-ink-muted">{label}</span>}
+      {label && <span className="text-label text-ink-muted">{label}</span>}
     </label>
   );
 };

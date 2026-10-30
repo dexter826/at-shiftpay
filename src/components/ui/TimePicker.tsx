@@ -18,7 +18,7 @@ function WheelPickerWrapper({
   return (
     <WheelPickerPrimitive.WheelPickerWrapper
       className={cn(
-        'rounded-lg px-1 shadow-sm ring-1 ring-line/60',
+        'rounded-sm px-1 ring-1 ring-line/60',
         'bg-surface',
         '[&>[data-rwp]]:first:[&>[data-rwp-highlight-wrapper]]:rounded-s-md',
         '[&>[data-rwp]]:last:[&>[data-rwp-highlight-wrapper]]:rounded-e-md',
@@ -40,7 +40,7 @@ function WheelPicker({
     <WheelPickerPrimitive.WheelPicker
       classNames={{
         optionItem: cn('text-base', 'text-ink-muted'),
-        highlightWrapper: cn('font-bold text-lg', 'bg-line', 'text-ink'),
+        highlightWrapper: cn('font-bold text-lg', 'bg-surface-2', 'text-ink'),
         ...classNames,
       }}
       {...props}
@@ -98,8 +98,11 @@ export const TimePicker: React.FC<TimePickerProps> = ({ value, onChange, classNa
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        aria-label="Chọn giờ"
         className={cn(
-          'w-full p-2.5 border rounded-lg text-sm focus:outline-none flex items-center justify-between transition-all bg-surface-2 border-line text-ink focus:border-accent/50'
+          'w-full px-3 py-[9px] border rounded-sm text-body-sm flex items-center justify-between transition-colors duration-fast bg-surface-2 border-line text-ink hover:bg-surface focus:outline-none focus:border-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas'
         )}
       >
         <span className="flex items-center gap-2">
@@ -119,7 +122,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({ value, onChange, classNa
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
             className={cn(
-              'absolute top-full left-0 right-0 mt-1 p-3 border rounded-lg z-50 shadow-2xl bg-surface border-line'
+              'absolute top-full left-0 right-0 mt-1 p-3 border rounded-sm z-50 bg-surface border-line'
             )}
           >
             <div className="flex justify-center">
