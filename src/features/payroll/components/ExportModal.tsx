@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { FileDown, CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             className="flex-1"
             disabled={isExporting}
           >
-            <FileDown size={16} className="text-white" />
+            <Download size={16} className="text-on-accent" />
             {isExporting ? 'Đang xuất...' : 'Xuất CSV'}
           </Button>
         </div>
@@ -97,7 +97,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                             }
                         `}
             >
-              <CalendarDays size={18} />
+              <Calendar size={18} />
             </div>
             <div>
               <p className={`text-sm font-bold ${onlyDebt ? 'text-accent-ink' : 'text-ink'}`}>

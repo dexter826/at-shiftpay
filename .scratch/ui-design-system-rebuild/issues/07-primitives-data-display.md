@@ -15,7 +15,7 @@
 
 2026-10-30 — Implemented (static verification only, per user instruction).
 
-- Tiles: hover/return motion now uses the `--duration-slow` token (new `DURATION_SLOW` in the motion bridge); grid lines stay on `line`.
-- LoadMore: 4px radius, `text-body-sm`/semantics, `duration-fast ease-standard` transitions, hover via border instead of accent tint, focus ring, `type="button"`; the counter drops uppercase/11px for `text-label` with tabular numerals.
-- ScrollToTopButton: 48px square control (no pill), flat (no shadow), accent border + `on-accent` ink, focus ring, `aria-label` instead of `title`, tokenized transitions.
+- Tiles: hover/return motion uses the shared `DURATION_BASE` token and is skipped under reduced-motion. Note: Tiles currently has zero call sites in `src/` — pre-existing dead code, flagged here rather than deleted (AGENTS §3).
+- LoadMore: 4px radius, `px-3.5`/`text-body-sm`/semibold, `duration-fast ease-standard` transitions, hover via border instead of accent tint, focus ring, `type="button"`; the counter drops uppercase/11px for `text-label` with tabular numerals.
+- ScrollToTopButton: 40px square control, 4px radius, flat (no shadow, no accent glow), secondary surface styling (`surface` + `line`, hover `surface-2`) since it is not the view's primary action, focus ring, `aria-label` instead of `title`.
 - Prop APIs unchanged. Gates: `tsc` 0, `eslint` 0, `vite build` 0.

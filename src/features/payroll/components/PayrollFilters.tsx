@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { ArrowUpDown, CalendarDays } from 'lucide-react';
+import { ArrowUpDown, Calendar } from 'lucide-react';
 import SearchInput from '@/components/ui/SearchInput';
 import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 
@@ -76,7 +76,7 @@ const PayrollFilters: React.FC<PayrollFiltersProps> = ({
         }}
         className="flex items-center gap-2 px-3 h-10 border border-line rounded-lg bg-surface text-sm text-ink"
       >
-        <CalendarDays size={16} className={filterDate ? 'text-accent-ink' : 'text-ink-muted'} />
+        <Calendar size={16} className={filterDate ? 'text-accent-ink' : 'text-ink-muted'} />
         <span className={filterDate ? 'text-accent-ink font-medium' : 'text-ink-muted'}>
           {filterDate
             ? `Tháng ${filterDate.split('-')[1]}/${filterDate.split('-')[0]}`

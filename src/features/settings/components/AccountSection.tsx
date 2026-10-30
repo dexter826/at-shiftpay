@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Camera, Check, ChevronRight, Edit2, Key, Loader2, Trash2, User, X } from 'lucide-react';
+import { Camera, Check, ChevronRight, Pencil, Key, Loader2, Trash2, User, X } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { imageService } from '@/lib/api/imageService';
@@ -160,7 +160,7 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
                 <button
                   onClick={handleCancelEditName}
                   disabled={savingName}
-                  className="p-2 rounded-lg flex-shrink-0 bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors"
+                  className="p-2 rounded-lg flex-shrink-0 bg-danger/10 text-danger hover:bg-danger/20 transition-colors"
                 >
                   <X size={18} />
                 </button>
@@ -172,7 +172,7 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
                   onClick={() => setIsEditingName(true)}
                   className={`p-1 rounded hover:bg-line text-ink-muted transition-colors`}
                 >
-                  <Edit2 size={14} />
+                  <Pencil size={14} />
                 </button>
               </div>
             )}
@@ -201,11 +201,11 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
           className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors text-left group`}
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-500/10 text-red-500 group-hover:text-red-600">
+            <div className="p-2 rounded-lg bg-danger/10 text-danger group-hover:text-danger">
               <Trash2 size={20} />
             </div>
             <div>
-              <p className={`font-medium text-ink group-hover:text-red-600`}>Xóa tài khoản</p>
+              <p className={`font-medium text-ink group-hover:text-danger`}>Xóa tài khoản</p>
               <p className={`text-xs text-ink-muted`}>Xóa vĩnh viễn toàn bộ dữ liệu của bạn</p>
             </div>
           </div>

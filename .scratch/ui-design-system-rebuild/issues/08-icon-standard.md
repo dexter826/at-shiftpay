@@ -8,7 +8,7 @@
 
 - [x] Every local icon is audited: replaced by a lucide equivalent where one exists, redrawn to match where none does.
 - [x] No duplicate icons for the same meaning remain.
-- [x] Icon sizing and color follow semantic tokens; no hardcoded icon colors.
+- [ ] Icon sizing and color follow semantic tokens; no hardcoded icon colors.
 - [x] The logo is untouched.
 
 ## Comments
@@ -21,3 +21,10 @@
 - No duplicate icon meanings remain; lucide is the only icon source (57 files import it).
 - The logo and Lottie splash animation are untouched.
 - Gates: `tsc` 0, `eslint` 0 (no warnings), `vite build` 0.
+
+2026-10-30 — Review fixes.
+
+- Duplicate meanings removed app-wide: `CalendarDays`→`Calendar`, `FileDown`→`Download`, `Wallet2`→`Wallet`, `CheckCircle2`→`CheckCircle`, `Edit2`→`Pencil`. `PenIcon` rendered lucide `Pen`, but `Pencil` is what the rest of the app already used, so call sites keep one glyph per meaning.
+- Icon colors made semantic in the files this batch touched: Navbar theme icon (`text-accent-ink`), export button icon (`text-on-accent`), payroll stat icon (`text-info`), account danger chip (`text-danger`/`bg-danger/10`).
+- The icon-color criterion stays open: raw icon colors remain in screen files (login heart, location cards, payroll stats text) owned by tickets 10–16.
+- Cosmetic import-order churn in five files this batch did not otherwise change was reverted.

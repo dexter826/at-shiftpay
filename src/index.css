@@ -73,7 +73,6 @@
   --radius-xs: 0.1875rem;
   --duration-fast: 140ms;
   --duration-base: 200ms;
-  --duration-slow: 2000ms;
   --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
   --animate-loader-motion: loader-motion 1s linear infinite;
   --animate-loader-road: loader-road 1.4s linear infinite;

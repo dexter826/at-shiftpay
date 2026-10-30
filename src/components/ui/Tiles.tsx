@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { DURATION_SLOW } from '@/lib/motion';
+import { DURATION_BASE } from '@/lib/motion';
 
 interface TilesProps {
   className?: string;
@@ -23,6 +23,7 @@ export const Tiles = React.memo(
   ({ className, rows = 40, cols = 30, tileClassName, tileSize = 'md' }: TilesProps) => {
     const rowsArray = new Array(rows).fill(1);
     const colsArray = new Array(cols).fill(1);
+    const prefersReducedMotion = useReducedMotion();
 
     return (
       <div className={cn('relative z-0 flex w-full h-full justify-center', className)}>
@@ -33,12 +34,16 @@ export const Tiles = React.memo(
           >
             {colsArray.map((_, j) => (
               <motion.div
-                whileHover={{
-                  backgroundColor: `var(--color-accent)`,
-                  transition: { duration: 0 },
-                }}
+                whileHover={
+                  prefersReducedMotion
+                    ? undefined
+                    : {
+                        backgroundColor: `var(--color-accent)`,
+                        transition: { duration: 0 },
+                      }
+                }
                 animate={{
-                  transition: { duration: DURATION_SLOW },
+                  transition: { duration: DURATION_BASE },
                 }}
                 key={`col-${j}`}
                 className={cn(

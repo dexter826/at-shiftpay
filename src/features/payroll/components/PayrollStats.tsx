@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { formatCurrency } from '@/utils/format';
-import { Wallet2 } from 'lucide-react';
+import { Wallet } from 'lucide-react';
 
 interface PayrollStatsProps {
   loading: boolean;
@@ -32,7 +32,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
         {/* Tổng đã làm - Lên trên */}
         <div className="text-center mb-4">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <Wallet2 size={20} className="text-blue-500" />
+            <Wallet size={20} className="text-info" />
             <p className="text-xs text-blue-500 uppercase tracking-wide font-medium">Tổng đã làm</p>
           </div>
           <AnimatePresence mode="wait">
@@ -234,7 +234,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
             </div>
           </div>
         </div>
-        <Wallet2 size={24} className="text-accent-ink/50" />
+        <Wallet size={24} className="text-accent-ink/50" />
       </div>
     </div>
   );

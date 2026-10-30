@@ -109,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
             className="flex items-center justify-center w-10 h-10 rounded-lg transition-colors text-ink-muted hover:text-ink-soft hover:bg-surface-2"
             title={theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
           >
-            {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+            {theme === 'dark' ? <Sun size={18} className="text-accent-ink" /> : <Moon size={18} />}
           </button>
         </div>
       </div>

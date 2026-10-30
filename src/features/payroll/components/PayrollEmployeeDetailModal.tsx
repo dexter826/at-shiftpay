@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { Banknote, Calculator, Calendar, CheckCircle2, MapPin } from 'lucide-react';
+import { Banknote, Calculator, Calendar, CheckCircle, MapPin } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils/format';
 import { PayrollSummary, Shift, Event, Location } from '@/types/index';
 
@@ -135,7 +135,7 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
             </>
           ) : (
             <div className={`py-8 flex flex-col items-center justify-center text-ink-muted gap-2`}>
-              <CheckCircle2 size={32} className="text-accent-ink" />
+              <CheckCircle size={32} className="text-accent-ink" />
               <p className="text-sm">Không còn ca chưa thanh toán</p>
             </div>
           )

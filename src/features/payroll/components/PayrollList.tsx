@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, ChevronRightIcon } from 'lucide-react';
+import { CheckCircle, ChevronRightIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { LoadMore } from '@/components/ui/LoadMore';
 import { formatCurrency } from '@/utils/format';
@@ -65,7 +65,7 @@ const PayrollList: React.FC<PayrollListProps> = ({
         >
           {items.length === 0 ? (
             <div className={`text-center py-10 text-ink-muted`}>
-              <CheckCircle2 size={48} className="mx-auto mb-2 opacity-20" />
+              <CheckCircle size={48} className="mx-auto mb-2 opacity-20" />
               <p>{searchTerm ? 'Không tìm thấy nhân viên nào' : 'Không có khoản nợ nào'}</p>
             </div>
           ) : (
