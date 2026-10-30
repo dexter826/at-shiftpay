@@ -260,14 +260,11 @@ function AppContent({
                 path="/dashboard"
                 element={
                   <DashboardView
-                    user={user}
                     employees={employees}
                     events={events}
                     shifts={shifts}
-                    settings={settings}
+                    locations={locations}
                     loading={isLoading}
-                    onLogout={onLogout}
-                    onNavigateToSettings={() => navigate('/settings')}
                     onOpenExport={onOpenExport}
                   />
                 }

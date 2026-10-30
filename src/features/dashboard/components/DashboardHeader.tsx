@@ -1,47 +1,54 @@
-import React, { memo } from 'react';
-import { Download } from 'lucide-react';
-import type { User } from 'firebase/auth';
+import React from 'react';
+import { ChevronLeft, ChevronRight, Download, Plus } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
 interface DashboardHeaderProps {
-  user: User | null;
+  weekLabel: string;
+  onPrevWeek: () => void;
+  onNextWeek: () => void;
+  onToday: () => void;
   onOpenExport: () => void;
+  onOpenCalendar: () => void;
 }
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({ user, onOpenExport }) => {
-  return (
-    <div className={`hidden md:block py-4 px-6 border-b border-line`}>
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <img
-            src={user?.photoURL || '/avatar.png'}
-            alt="Avatar"
-            className="w-10 h-10 rounded-full object-cover border border-line"
-            onError={(e) => {
-              e.currentTarget.src = '/avatar.png';
-            }}
-          />
-          <div>
-            <p className={`text-body-sm text-ink-soft`}>Xin chào,</p>
-            <h2 className={`text-title font-semibold text-ink`}>
-              {user?.displayName || user?.email?.split('@')[0] || 'Người dùng'}
-            </h2>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Button
-            onClick={onOpenExport}
-            variant="primary"
-            className="flex items-center gap-2"
-            icon={<Download size={18} />}
-          >
-            <span>Xuất báo cáo</span>
-          </Button>
-        </div>
-      </div>
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({
+  weekLabel,
+  onPrevWeek,
+  onNextWeek,
+  onToday,
+  onOpenExport,
+  onOpenCalendar,
+}) => (
+  <header className="flex flex-col gap-4 border-b border-line pb-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p className="font-mono text-mono-label text-ink-muted">{weekLabel}</p>
+      <h1 className="mt-1 text-display text-ink">Bảng ca</h1>
     </div>
-  );
-};
+    <div className="flex flex-wrap items-center gap-2">
+      <div className="flex items-center gap-1">
+        <Button
+          variant="outline"
+          className="w-11 px-0"
+          onClick={onPrevWeek}
+          aria-label="Tuần trước"
+        >
+          <ChevronLeft size={16} aria-hidden="true" />
+        </Button>
+        <Button variant="outline" onClick={onToday}>
+          Tuần này
+        </Button>
+        <Button variant="outline" className="w-11 px-0" onClick={onNextWeek} aria-label="Tuần sau">
+          <ChevronRight size={16} aria-hidden="true" />
+        </Button>
+      </div>
+      <Button variant="outline" onClick={onOpenExport} icon={<Download size={16} />}>
+        Xuất báo cáo
+      </Button>
+      <Button onClick={onOpenCalendar} icon={<Plus size={16} />}>
+        Xếp ca
+      </Button>
+    </div>
+  </header>
+);
 
-export default memo(DashboardHeader);
+export default DashboardHeader;
