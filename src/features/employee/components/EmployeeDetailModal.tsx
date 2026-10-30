@@ -27,9 +27,16 @@ const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl 
     );
   }
 
+  const initials = name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <div className="w-24 h-24 rounded-full bg-surface-2 flex items-center justify-center text-data font-semibold text-ink-soft">
-      {name.charAt(0).toUpperCase()}
+      {initials}
     </div>
   );
 };
@@ -77,18 +84,18 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
           </div>
 
           <div className="text-center space-y-3">
-            <h3 className="text-title font-semibold text-ink">{employee.name}</h3>
+            <h3 className="text-display font-semibold text-ink">{employee.name}</h3>
 
             <div className="flex flex-wrap justify-center gap-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-label font-medium bg-surface-2 text-ink-soft">
-                <Calendar size={14} className="text-accent-ink" />
-                <span>Tham gia {joinedDate}</span>
+              <div className="inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs text-label font-medium bg-surface-2 text-ink-soft">
+                <Calendar size={12} className="text-accent-ink" />
+                <span className="tabular-nums">Tham gia {joinedDate}</span>
               </div>
 
               {employee.phone && (
                 <a
                   href={`tel:${employee.phone}`}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-label font-medium bg-accent/10 text-accent-ink hover:bg-accent/20 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+                  className={`inline-flex min-h-10 items-center gap-1.5 px-3 rounded-sm text-body-sm font-semibold bg-surface border border-line text-accent-ink hover:brightness-110 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                 >
                   <Phone size={14} />
                   <span className="tabular-nums">{employee.phone}</span>
@@ -101,7 +108,7 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
         <div className="space-y-4">
           <div className="flex items-center gap-3 px-1">
             <div className="h-px flex-1 bg-line" />
-            <h4 className="text-label font-semibold text-ink-muted">Thông tin thanh toán</h4>
+            <h4 className="text-label font-medium text-ink-muted">Thông tin thanh toán</h4>
             <div className="h-px flex-1 bg-line" />
           </div>
 

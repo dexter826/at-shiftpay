@@ -261,7 +261,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
           }}
         >
           {error && (
-            <div className="p-2.5 bg-danger/10 border border-danger/30 text-danger text-label rounded-sm">
+            <div className="p-2.5 bg-danger/10 border border-danger/30 text-danger text-body-sm rounded-sm">
               {error}
             </div>
           )}
@@ -270,10 +270,10 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               type="button"
               onClick={() => !isUploading && fileInputRef.current?.click()}
               aria-label="Thay đổi ảnh đại diện"
-              className={`relative w-24 h-24 rounded-full overflow-hidden border border-line bg-surface-2 group transition-colors duration-fast ease-standard hover:border-accent ${focusRingOnSurfaceClasses}`}
+              className={`relative w-24 h-24 rounded-full overflow-hidden border border-line bg-surface-2 group transition-colors duration-fast ease-standard hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
             >
               {imageUrl ? (
-                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                <img src={imageUrl} alt="Ảnh đại diện" className="w-full h-full object-cover" />
               ) : (
                 <div className={`w-full h-full flex items-center justify-center text-ink-muted`}>
                   <Camera size={24} />
@@ -299,13 +299,13 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               accept="image/*"
               className="hidden"
             />
-            <p className={`text-label text-ink-muted mt-2`}>Click để thay đổi ảnh</p>
+            <p className={`text-body-sm text-ink-muted mt-2`}>Click để thay đổi ảnh</p>
           </div>
 
           <div>
             <label
               htmlFor="employee-name"
-              className={`block text-label font-semibold mb-1.5 text-ink-muted`}
+              className={`block text-label font-medium mb-1.5 text-ink-muted`}
             >
               Họ tên
             </label>
@@ -315,13 +315,13 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               placeholder="Nhập họ tên"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent ${focusRingOnSurfaceClasses}`}
+              className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
             />
           </div>
           <div>
             <label
               htmlFor="employee-phone"
-              className={`block text-label font-semibold mb-1.5 text-ink-muted`}
+              className={`block text-label font-medium mb-1.5 text-ink-muted`}
             >
               Số điện thoại (tùy chọn)
             </label>
@@ -332,7 +332,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
               maxLength={11}
-              className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent ${focusRingOnSurfaceClasses}`}
+              className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
             />
           </div>
 
@@ -340,9 +340,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Building2 size={14} className="text-accent-ink" />
-                <p className={`text-label font-semibold text-ink`}>
-                  Thông tin ngân hàng (tùy chọn)
-                </p>
+                <p className={`text-label font-medium text-ink`}>Thông tin ngân hàng (tùy chọn)</p>
               </div>
               <button
                 type="button"
@@ -352,18 +350,17 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                   setAccountNumber('');
                   setAccountName('');
                 }}
-                className={`flex items-center gap-1 px-2 py-1 rounded-sm bg-surface hover:bg-accent/10 text-accent-ink transition-colors duration-fast ease-standard text-label ${focusRingOnSurfaceClasses}`}
+                className={`inline-flex min-h-10 items-center gap-1.5 px-3 rounded-sm text-body-sm font-semibold bg-surface border border-line text-accent-ink hover:brightness-110 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                 aria-label="Làm mới thông tin ngân hàng"
-                title="Làm mới thông tin ngân hàng"
               >
-                <RotateCcw size={12} />
+                <RotateCcw size={14} />
                 Làm mới
               </button>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className={`block text-label font-semibold mb-1.5 text-ink-muted`}>
+                <label className={`block text-label font-medium mb-1.5 text-ink-muted`}>
                   Ngân hàng
                 </label>
                 <Dropdown
@@ -391,25 +388,24 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               <div>
                 <label
                   htmlFor="employee-account-number"
-                  className={`block text-label font-semibold mb-1.5 text-ink-muted`}
+                  className={`block text-label font-medium mb-1.5 text-ink-muted`}
                 >
                   Số tài khoản
                 </label>
                 <input
                   id="employee-account-number"
                   type="text"
-                  inputMode="numeric"
                   placeholder="Nhập số tài khoản"
                   value={accountNumber}
                   onChange={(e) => setAccountNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted tabular-nums focus:outline-none focus:border-accent ${focusRingOnSurfaceClasses}`}
+                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted tabular-nums focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="employee-account-name"
-                  className={`block text-label font-semibold mb-1.5 text-ink-muted`}
+                  className={`block text-label font-medium mb-1.5 text-ink-muted`}
                 >
                   Tên chủ tài khoản
                 </label>
@@ -419,9 +415,9 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                   placeholder="Nhập tên chủ tài khoản"
                   value={accountName}
                   onChange={(e) => setAccountName(e.target.value.toUpperCase())}
-                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent ${focusRingOnSurfaceClasses}`}
+                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
                 />
-                <p className={`text-label text-ink-muted mt-1`}>Viết hoa không dấu</p>
+                <p className={`text-body-sm text-ink-muted mt-1`}>Viết hoa không dấu</p>
               </div>
             </div>
           </div>
