@@ -1,4 +1,12 @@
-import React, { useEffect, useState, createContext, useContext, useCallback } from 'react';
+import React, {
+  useEffect,
+  useState,
+  createContext,
+  useContext,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import { CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -8,10 +16,11 @@ interface Toast {
   id: number;
   message: string;
   type: ToastType;
+  duration: number;
 }
 
 interface ToastContextType {
-  showToast: (message: string, type?: ToastType) => void;
+  showToast: (message: string, type?: ToastType, duration?: number) => void;
 }
 
 const ToastContext = createContext<ToastContextType | null>(null);
@@ -27,7 +36,7 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: number) => void }> = ({
   onRemove,
 }) => {
   useEffect(() => {
-    const timer = setTimeout(() => onRemove(toast.id), 3000);
+    const timer = setTimeout(() => onRemove(toast.id), toast.duration);
     return () => clearTimeout(timer);
   }, [toast.id, onRemove]);
 
@@ -66,18 +75,25 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: number) => void }> = ({
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const nextIdRef = useRef(0);
 
-  const showToast = useCallback((message: string, type: ToastType = 'success') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-  }, []);
+  const showToast = useCallback(
+    (message: string, type: ToastType = 'success', duration: number = 3000) => {
+      nextIdRef.current += 1;
+      const id = nextIdRef.current;
+      setToasts((prev) => [...prev, { id, message, type, duration }]);
+    },
+    []
+  );
 
   const removeToast = useCallback((id: number) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  const value = useMemo(() => ({ showToast }), [showToast]);
+
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ToastContext.Provider value={value}>
       {children}
       <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-[90%] max-w-sm">
         <AnimatePresence mode="popLayout">
