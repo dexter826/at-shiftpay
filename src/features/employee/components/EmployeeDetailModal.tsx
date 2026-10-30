@@ -1,9 +1,10 @@
 import React, { memo, useState } from 'react';
+import { Calendar, CreditCard, Pencil, Phone } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
+import { Tag } from '@/components/ui/Tag';
 import { Employee } from '@/types/index';
-import { Calendar, CreditCard, Pencil, Phone } from 'lucide-react';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
+import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 import BankCard from '@/features/employee/components/BankCard';
 
 interface EmployeeDetailModalProps {
@@ -13,31 +14,34 @@ interface EmployeeDetailModalProps {
   onEditClick: (employee: Employee) => void;
 }
 
-const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl }) => {
-  const [imgError, setImgError] = useState(false);
-
-  if (imageUrl && !imgError) {
-    return (
-      <img
-        src={imageUrl}
-        alt={name}
-        className="w-24 h-24 rounded-full object-cover border border-line"
-        onError={() => setImgError(true)}
-      />
-    );
-  }
-
-  const initials = name
-    .split(' ')
-    .map((n) => n[0])
+const getInitials = (name: string) =>
+  name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
     .join('')
     .slice(0, 2)
-    .toUpperCase();
+    .toUpperCase() || 'NV';
 
-  return (
-    <div className="w-24 h-24 rounded-full bg-surface-2 flex items-center justify-center text-data font-semibold text-ink-soft">
-      {initials}
-    </div>
+const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl }) => {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const showPhoto = Boolean(imageUrl) && failedUrl !== imageUrl;
+
+  return showPhoto ? (
+    <img
+      src={imageUrl}
+      alt={name}
+      onError={() => setFailedUrl(imageUrl ?? null)}
+      className="h-24 w-24 rounded-full border border-line object-cover"
+    />
+  ) : (
+    <span
+      aria-hidden="true"
+      className="flex h-24 w-24 items-center justify-center rounded-full border border-line bg-surface-2 text-data font-semibold text-ink-soft"
+    >
+      {getInitials(name)}
+    </span>
   );
 };
 
@@ -59,75 +63,72 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
 
   return (
     <Modal
-      title="Hồ sơ nhân viên"
+      title={employee.name}
       isOpen={isOpen}
       onClose={onClose}
       footer={
         <Button
-          variant="primary"
           onClick={() => {
             onClose();
             onEditClick(employee);
           }}
           fullWidth
-          className="flex justify-center items-center gap-2"
+          icon={<Pencil size={16} />}
         >
-          <Pencil size={18} color="currentColor" />
-          Chỉnh sửa hồ sơ
+          Sửa hồ sơ
         </Button>
       }
     >
-      <div className="space-y-6">
-        <div className="flex flex-col items-center pt-2">
-          <div className="relative mb-4">
-            <Avatar key={employee.id} name={employee.name} imageUrl={employee.imageUrl} />
-          </div>
-
-          <div className="text-center space-y-3">
-            <h3 className="text-display font-semibold text-ink">{employee.name}</h3>
-
-            <div className="flex flex-wrap justify-center gap-2">
-              <div className="inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs text-label font-medium bg-surface-2 text-ink-soft">
-                <Calendar size={12} className="text-accent-ink" />
-                <span className="tabular-nums">Tham gia {joinedDate}</span>
-              </div>
-
-              {employee.phone && (
-                <a
-                  href={`tel:${employee.phone}`}
-                  className={`inline-flex min-h-10 items-center gap-1.5 px-3 rounded-sm text-body-sm font-semibold bg-surface border border-line text-accent-ink hover:brightness-110 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
-                >
-                  <Phone size={14} />
-                  <span className="tabular-nums">{employee.phone}</span>
-                </a>
-              )}
-            </div>
+      <div className="space-y-5">
+        <div className="flex flex-col items-center gap-3">
+          <Avatar name={employee.name} imageUrl={employee.imageUrl} />
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <span className="inline-flex items-center gap-1.5 font-mono text-label text-ink-muted">
+              <Calendar size={12} aria-hidden="true" />
+              Tham gia {joinedDate}
+            </span>
+            {employee.phone ? (
+              <a
+                href={`tel:${employee.phone}`}
+                className={cn(
+                  'inline-flex min-h-11 items-center gap-1.5 rounded-sm border border-line bg-surface px-3 text-body-sm font-semibold text-accent-ink transition-colors duration-fast ease-standard hover:bg-surface-2',
+                  focusRingOnSurfaceClasses
+                )}
+              >
+                <Phone size={14} aria-hidden="true" />
+                <span className="tabular-nums">{employee.phone}</span>
+              </a>
+            ) : (
+              <span className="text-label text-ink-muted">Chưa có số điện thoại</span>
+            )}
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 px-1">
-            <div className="h-px flex-1 bg-line" />
-            <h4 className="text-label font-medium text-ink-muted">Thông tin thanh toán</h4>
-            <div className="h-px flex-1 bg-line" />
-          </div>
-
-          <div className="flex flex-col items-center">
+        <div className="space-y-2 border-t border-line pt-4">
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-mono text-mono-label text-ink-muted">Tài khoản ngân hàng</p>
             {employee.bankAccount ? (
-              <BankCard
-                bankName={employee.bankAccount.bankName}
-                accountNumber={employee.bankAccount.accountNumber}
-                accountName={employee.bankAccount.accountName}
-              />
+              <Tag variant="success">Đã có</Tag>
             ) : (
-              <div className="w-full max-w-[320px] aspect-[1.586/1] rounded-md border border-dashed border-line flex flex-col items-center justify-center p-6 text-center space-y-2">
-                <div className="w-12 h-12 rounded-full bg-surface-2 flex items-center justify-center text-ink-muted">
-                  <CreditCard size={24} />
-                </div>
-                <p className="text-body-sm text-ink-muted">Chưa cập nhật thông tin ngân hàng</p>
-              </div>
+              <Tag variant="warning">Chưa có</Tag>
             )}
           </div>
+
+          {employee.bankAccount ? (
+            <BankCard
+              bankName={employee.bankAccount.bankName}
+              accountNumber={employee.bankAccount.accountNumber}
+              accountName={employee.bankAccount.accountName}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-2 border border-dashed border-line px-6 py-8 text-center">
+              <CreditCard size={24} aria-hidden="true" className="text-ink-muted" />
+              <p className="text-body-sm text-ink">Chưa có tài khoản ngân hàng</p>
+              <p className="text-label text-ink-muted">
+                Thêm thông tin để chuyển khoản lương cho nhân viên.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </Modal>

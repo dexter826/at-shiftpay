@@ -1,97 +1,129 @@
 import React, { memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Users } from 'lucide-react';
-import { Skeleton } from '@/components/ui/Skeleton';
+import Button from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadMore } from '@/components/ui/LoadMore';
+import { Skeleton } from '@/components/ui/Skeleton';
+import EmployeeRow from '@/features/employee/components/EmployeeRow';
 import { Employee } from '@/types/index';
-import EmployeeCard from '@/features/employee/components/EmployeeCard';
 
 interface EmployeeListProps {
-  employees: Employee[];
   loading: boolean;
+  employees: Employee[];
+  totalEmployees: number;
+  searchTerm: string;
   visibleCount: number;
   onLoadMore: () => void;
-  shiftCounts: Record<string, number>;
-  onEdit: (emp: Employee) => void;
-  onDelete: (empId: string) => void;
-  onDetail: (emp: Employee) => void;
-  searchTerm: string;
+  unpaidCounts: Record<string, number>;
+  onEdit: (employee: Employee) => void;
+  onDelete: (employee: Employee) => void;
+  onDetail: (employee: Employee) => void;
+  onClearSearch: () => void;
 }
 
+const GRID_CLASSES = 'lg:grid-cols-[minmax(0,1fr)_140px_120px_96px]';
+
 const EmployeeList: React.FC<EmployeeListProps> = ({
-  employees,
   loading,
+  employees,
+  totalEmployees,
+  searchTerm,
   visibleCount,
   onLoadMore,
-  shiftCounts,
+  unpaidCounts,
   onEdit,
   onDelete,
   onDetail,
-  searchTerm,
+  onClearSearch,
 }) => {
+  const hasMore = employees.length > visibleCount;
+  const hasSearch = searchTerm.trim().length > 0;
+
   return (
-    <div className="px-4 md:px-6 pt-2 pb-4">
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <motion.div
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-                <div
-                  key={i}
-                  className="bg-surface border border-line rounded-md aspect-square p-3 flex flex-col items-center justify-center gap-2"
-                >
-                  <Skeleton variant="circular" width={48} height={48} />
-                  <Skeleton variant="text" width="60%" height={14} />
-                  <Skeleton variant="text" width="40%" height={11} />
+    <section className="border border-line bg-surface">
+      <div
+        className={`hidden gap-3 border-b border-line bg-surface-2 px-4 py-2 lg:grid ${GRID_CLASSES}`}
+      >
+        <span className="font-mono text-mono-label text-ink-muted">Nhân viên</span>
+        <span className="font-mono text-mono-label text-ink-muted">Ngân hàng</span>
+        <span className="font-mono text-mono-label text-ink-muted">Ca chưa trả</span>
+        <span className="sr-only">Thao tác</span>
+      </div>
+
+      {loading ? (
+        <div aria-busy="true" aria-label="Đang tải nhân viên">
+          {Array.from({ length: 8 }, (_, index) => (
+            <div
+              key={index}
+              className={`grid gap-2 border-b border-line px-4 py-3 last:border-b-0 ${GRID_CLASSES}`}
+            >
+              <div className="flex items-center gap-3">
+                <Skeleton variant="circular" width={48} height={48} />
+                <div className="space-y-1.5">
+                  <Skeleton width={120} height={14} />
+                  <Skeleton width={86} height={11} />
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {employees.slice(0, visibleCount).map((emp) => (
-                <EmployeeCard
-                  key={emp.id}
-                  employee={emp}
-                  shiftCount={shiftCounts[emp.id] || 0}
-                  onClick={onDetail}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                />
-              ))}
-            </div>
-
-            {employees.length === 0 && !loading && (
-              <div className="text-center py-12 text-ink-muted">
-                <Users size={24} className="mx-auto mb-2" />
-                <p className="text-body-sm">
-                  {searchTerm ? 'Không tìm thấy nhân viên nào' : 'Chưa có nhân viên nào'}
-                </p>
               </div>
-            )}
-
-            <LoadMore
-              currentCount={visibleCount}
-              totalCount={employees.length}
-              onLoadMore={onLoadMore}
-              unit="nhân viên"
-              className="mt-3 col-span-full"
+              <div className="hidden lg:block">
+                <Skeleton width={58} height={22} />
+              </div>
+              <div className="hidden lg:block">
+                <Skeleton width={48} height={14} />
+              </div>
+              <div className="hidden lg:block">
+                <Skeleton width={72} height={16} />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : employees.length === 0 ? (
+        totalEmployees === 0 ? (
+          <EmptyState
+            icon={<Users size={24} aria-hidden="true" />}
+            title="Chưa có nhân viên"
+            description="Thêm nhân viên để bắt đầu xếp ca."
+            className="min-h-[280px]"
+          />
+        ) : (
+          <EmptyState
+            icon={<Users size={24} aria-hidden="true" />}
+            title="Không tìm thấy nhân viên"
+            description="Thử tên hoặc số điện thoại khác."
+            className="min-h-[280px]"
+            action={
+              hasSearch ? (
+                <Button variant="outline" onClick={onClearSearch}>
+                  Xóa tìm kiếm
+                </Button>
+              ) : undefined
+            }
+          />
+        )
+      ) : (
+        <>
+          {employees.slice(0, visibleCount).map((employee) => (
+            <EmployeeRow
+              key={employee.id}
+              employee={employee}
+              unpaidCount={unpaidCounts[employee.id] || 0}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onDetail={onDetail}
             />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          ))}
+          {hasMore && (
+            <div className="border-t border-line p-3">
+              <LoadMore
+                currentCount={visibleCount}
+                totalCount={employees.length}
+                onLoadMore={onLoadMore}
+                unit="nhân viên"
+              />
+            </div>
+          )}
+        </>
+      )}
+    </section>
   );
 };
 

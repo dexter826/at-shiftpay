@@ -282,14 +282,7 @@ function AppContent({
               />
               <Route
                 path="/employees"
-                element={
-                  <EmployeeView
-                    employees={employees}
-                    shifts={shifts}
-                    events={events}
-                    loading={isLoading}
-                  />
-                }
+                element={<EmployeeView employees={employees} shifts={shifts} loading={isLoading} />}
               />
               <Route
                 path="/locations"

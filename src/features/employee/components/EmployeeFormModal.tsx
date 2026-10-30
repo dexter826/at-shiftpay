@@ -1,143 +1,135 @@
-import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
-import { Camera, Upload, Loader2, Building2, RotateCcw } from 'lucide-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Camera, Loader2, RotateCcw } from 'lucide-react';
+import { deleteField } from 'firebase/firestore';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
-import { Employee, BankAccount } from '@/types/index';
+import { Field } from '@/components/ui/Field';
+import { Input } from '@/components/ui/Input';
 import { useToast } from '@/components/ui/ToastProvider';
+import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { imageService } from '@/lib/api/imageService';
 import { employeeService } from '@/lib/api/employeeService';
-import { deleteField } from 'firebase/firestore';
-import { vietQRService, VietQRBank } from '@/lib/api/vietqrService';
-import { ImageCropperModal } from '@/components/ImageCropperModal';
-import { areValuesEqual } from '@/utils/compare';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
+import { vietQRService, type VietQRBank } from '@/lib/api/vietqrService';
+import { Employee, BankAccount } from '@/types/index';
+import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface EmployeeFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   editingEmployee: Employee | null;
+  employees: Employee[];
   userId: string;
 }
+
+interface EmployeeFormErrors {
+  name?: string;
+  phone?: string;
+  bank?: string;
+}
+
+const formatPhone = (value: string) => value.replace(/[^0-9]/g, '').slice(0, 11);
+
+const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({
+  title,
+  children,
+}) => (
+  <section className="space-y-3 border-t border-line pt-4">
+    <h3 className="font-mono text-mono-label text-ink-muted">{title}</h3>
+    {children}
+  </section>
+);
 
 const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   isOpen,
   onClose,
   editingEmployee,
+  employees,
   userId,
 }) => {
   const { showToast } = useToast();
 
-  // Form State
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [name, setName] = useState(editingEmployee?.name ?? '');
+  const [phone, setPhone] = useState(editingEmployee?.phone ?? '');
+  const [imageUrl, setImageUrl] = useState(editingEmployee?.imageUrl ?? '');
+  const [imageError, setImageError] = useState(false);
 
-  // Bank State
   const [bankList, setBankList] = useState<VietQRBank[]>([]);
-  const [bankId, setBankId] = useState('');
-  const [bankName, setBankName] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [accountName, setAccountName] = useState('');
+  const [bankListLoading, setBankListLoading] = useState(true);
+  const [bankId, setBankId] = useState(editingEmployee?.bankAccount?.bankId ?? '');
+  const [bankName, setBankName] = useState(editingEmployee?.bankAccount?.bankName ?? '');
+  const [accountNumber, setAccountNumber] = useState(
+    editingEmployee?.bankAccount?.accountNumber ?? ''
+  );
+  const [accountName, setAccountName] = useState(editingEmployee?.bankAccount?.accountName ?? '');
 
-  // UI State
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<EmployeeFormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [cropperOpen, setCropperOpen] = useState(false);
   const [tempImage, setTempImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [initialState, setInitialState] = useState<Record<string, unknown> | null>(null);
 
-  // Load banks once
   useEffect(() => {
-    const loadBanks = async () => {
-      const banks = await vietQRService.getBankList();
-      setBankList(banks);
+    let active = true;
+
+    vietQRService
+      .getBankList()
+      .then((banks) => {
+        if (active) setBankList(banks);
+      })
+      .finally(() => {
+        if (active) setBankListLoading(false);
+      });
+
+    return () => {
+      active = false;
     };
-    loadBanks();
   }, []);
 
-  // Initialize form when modal opens or editingEmployee changes
-  useEffect(() => {
-    if (isOpen) {
-      if (editingEmployee) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect -- form state initialized from props when the modal opens
-        setName(editingEmployee.name);
-        setPhone(editingEmployee.phone);
-        setImageUrl(editingEmployee.imageUrl || '');
-        setBankId(editingEmployee.bankAccount?.bankId || '');
-        setBankName(editingEmployee.bankAccount?.bankName || '');
-        setAccountNumber(editingEmployee.bankAccount?.accountNumber || '');
-        setAccountName(editingEmployee.bankAccount?.accountName || '');
-        setError('');
+  const bankOptions = useMemo(() => {
+    const options = [
+      { value: '', label: 'Không dùng ngân hàng' },
+      ...bankList.map((bank) => ({
+        value: bank.bin,
+        label: `${bank.shortName} - ${bank.name}`,
+      })),
+    ];
 
-        setInitialState({
-          name: editingEmployee.name,
-          phone: editingEmployee.phone,
-          imageUrl: editingEmployee.imageUrl || '',
-          bankAccount: editingEmployee.bankAccount
-            ? {
-                bankId: editingEmployee.bankAccount.bankId,
-                bankName: editingEmployee.bankAccount.bankName,
-                accountNumber: editingEmployee.bankAccount.accountNumber,
-                accountName: editingEmployee.bankAccount.accountName,
-              }
-            : null,
-        });
-      } else {
-        // Add mode
-        setName('');
-        setPhone('');
-        setImageUrl('');
-        setBankId('');
-        setBankName('');
-        setAccountNumber('');
-        setAccountName('');
-        setError('');
-        setInitialState(null);
-      }
+    if (bankId && !bankList.some((bank) => bank.bin === bankId)) {
+      options.splice(1, 0, {
+        value: bankId,
+        label: bankName || editingEmployee?.bankAccount?.bankName || 'Ngân hàng đã lưu',
+      });
     }
-  }, [isOpen, editingEmployee]);
 
-  const hasChanged = useMemo(() => {
-    if (!editingEmployee || !initialState) return true;
+    return options;
+  }, [bankList, bankId, bankName, editingEmployee]);
 
-    const bankAccount =
-      bankId && accountNumber && accountName
-        ? {
-            bankId,
-            bankName,
-            accountNumber,
-            accountName,
-          }
-        : null;
+  const hasChanges = useMemo(() => {
+    if (!editingEmployee) return name.trim().length > 0;
 
-    const currentState = {
-      name: name.trim(),
-      phone: phone.trim(),
-      imageUrl: imageUrl.trim(),
-      bankAccount: bankAccount,
-    };
+    return (
+      name.trim() !== editingEmployee.name.trim() ||
+      phone.trim() !== editingEmployee.phone.trim() ||
+      imageUrl.trim() !== (editingEmployee.imageUrl ?? '').trim() ||
+      bankId !== (editingEmployee.bankAccount?.bankId ?? '') ||
+      bankName !== (editingEmployee.bankAccount?.bankName ?? '') ||
+      accountNumber.trim() !== (editingEmployee.bankAccount?.accountNumber ?? '').trim() ||
+      accountName.trim() !== (editingEmployee.bankAccount?.accountName ?? '').trim()
+    );
+  }, [editingEmployee, name, phone, imageUrl, bankId, bankName, accountNumber, accountName]);
 
-    return !areValuesEqual(currentState, initialState);
-  }, [
-    name,
-    phone,
-    imageUrl,
-    bankId,
-    bankName,
-    accountNumber,
-    accountName,
-    initialState,
-    editingEmployee,
-  ]);
+  const clearBankError = () => {
+    if (errors.bank) setErrors((previous) => ({ ...previous, bank: undefined }));
+  };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      showToast('Vui lòng chọn file ảnh', 'error');
+      showToast('Vui lòng chọn file ảnh.', 'error');
       return;
     }
 
@@ -156,275 +148,304 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
     try {
       const url = await imageService.uploadImage(croppedFile);
       setImageUrl(url);
-      showToast('Đã tải ảnh lên thành công', 'success');
+      setImageError(false);
+      showToast('Đã tải ảnh lên.', 'success');
     } catch (error) {
       console.error('Upload failed:', error);
-      showToast('Không thể tải ảnh lên', 'error');
+      showToast('Không thể tải ảnh lên. Thử lại.', 'error');
     } finally {
       setIsUploading(false);
       setTempImage(null);
     }
   };
 
-  const handleSubmit = async () => {
-    if (!name.trim()) {
-      setError('Vui lòng nhập họ tên');
-      return;
+  const validate = () => {
+    const nextErrors: EmployeeFormErrors = {};
+    const trimmedName = name.trim();
+    const trimmedPhone = phone.trim();
+
+    if (!trimmedName) {
+      nextErrors.name = 'Nhập họ tên.';
     }
 
-    if (phone && !/^\d{9,11}$/.test(phone)) {
-      setError('Số điện thoại phải từ 9-11 chữ số');
-      return;
-    }
-
-    if ((bankId || accountNumber || accountName) && !(bankId && accountNumber && accountName)) {
-      setError('Vui lòng điền đầy đủ thông tin ngân hàng hoặc bỏ trống');
-      return;
-    }
-
-    if (bankId && accountNumber && accountName) {
-      const validation = vietQRService.validateBankAccount(accountNumber, accountName);
-      if (!validation.valid) {
-        setError(validation.error || 'Thông tin ngân hàng không hợp lệ');
-        return;
+    if (trimmedPhone) {
+      if (!/^\d{9,11}$/.test(trimmedPhone)) {
+        nextErrors.phone = 'Số điện thoại phải có 9–11 chữ số.';
+      } else if (
+        (!editingEmployee || trimmedPhone !== editingEmployee.phone.trim()) &&
+        employees.some(
+          (employee) =>
+            employee.id !== editingEmployee?.id && employee.phone.trim() === trimmedPhone
+        )
+      ) {
+        nextErrors.phone = 'Số điện thoại này đã có trong sổ.';
       }
     }
 
-    const bankAccount =
+    const hasAnyBank = Boolean(bankId || accountNumber || accountName);
+    const hasFullBank = Boolean(bankId && accountNumber && accountName);
+    if (hasAnyBank && !hasFullBank) {
+      nextErrors.bank = 'Điền đủ ngân hàng, số tài khoản và chủ tài khoản hoặc để trống.';
+    } else if (hasFullBank) {
+      const validation = vietQRService.validateBankAccount(accountNumber, accountName);
+      if (!validation.valid) {
+        nextErrors.bank = validation.error || 'Thông tin ngân hàng không hợp lệ.';
+      }
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting || isUploading || !validate()) return;
+
+    const bankAccount: BankAccount | null =
       bankId && accountNumber && accountName
         ? {
             bankId,
             bankName,
-            accountNumber,
-            accountName,
+            accountNumber: accountNumber.trim(),
+            accountName: accountName.trim(),
           }
         : null;
 
+    const employeeData: {
+      name: string;
+      phone: string;
+      imageUrl?: string;
+      bankAccount?: BankAccount;
+    } = {
+      name: name.trim(),
+      phone: phone.trim(),
+    };
+
+    if (imageUrl.trim()) employeeData.imageUrl = imageUrl.trim();
+    if (bankAccount) employeeData.bankAccount = bankAccount;
+    else if (editingEmployee) {
+      (employeeData as Record<string, unknown>).bankAccount = deleteField();
+    }
+
+    setIsSubmitting(true);
     try {
-      const isEditing = !!editingEmployee;
-      const empId = editingEmployee?.id;
-
-      const employeeData: {
-        name: string;
-        phone: string;
-        imageUrl?: string;
-        bankAccount?: BankAccount;
-      } = {
-        name: name.trim(),
-        phone: phone.trim(),
-        imageUrl: imageUrl.trim(),
-      };
-
-      if (bankAccount) {
-        employeeData.bankAccount = bankAccount;
-      } else if (isEditing) {
-        (employeeData as Record<string, unknown>).bankAccount = deleteField();
-      }
-
-      if (isEditing && empId) {
-        await employeeService.updateEmployee(empId, employeeData);
-        showToast('Đã cập nhật nhân viên', 'success');
+      if (editingEmployee) {
+        await employeeService.updateEmployee(editingEmployee.id, employeeData);
+        showToast('Đã cập nhật nhân viên.', 'success');
       } else {
         await employeeService.addEmployee(employeeData, userId);
-        showToast('Đã thêm nhân viên mới', 'success');
+        showToast('Đã thêm nhân viên.', 'success');
       }
       onClose();
-    } catch (err) {
-      console.error('Error saving employee:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Có lỗi xảy ra';
-      showToast(errorMessage, 'error');
+    } catch (error) {
+      console.error('Error saving employee:', error);
+      showToast('Không thể lưu nhân viên. Thử lại.', 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const resetBank = () => {
+    setBankId('');
+    setBankName('');
+    setAccountNumber('');
+    setAccountName('');
+    clearBankError();
+  };
+
+  const hint = isUploading
+    ? 'Đang tải ảnh…'
+    : !hasChanges
+      ? editingEmployee
+        ? 'Chưa có thay đổi để lưu.'
+        : 'Nhập họ tên để lưu.'
+      : null;
 
   return (
     <>
       <Modal
-        title={editingEmployee ? 'Sửa thông tin' : 'Thêm nhân viên'}
+        title={editingEmployee ? 'Sửa hồ sơ' : 'Thêm nhân viên'}
         isOpen={isOpen}
         onClose={onClose}
         footer={
-          <div className="flex gap-2">
-            <Button variant="secondary" onClick={onClose} className="flex-1">
-              Hủy
-            </Button>
-            <Button onClick={handleSubmit} className="flex-1" disabled={!hasChanged}>
-              Lưu
-            </Button>
+          <div className="space-y-2">
+            {hint && <p className="text-center text-label text-ink-muted">{hint}</p>}
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                onClick={onClose}
+                className="flex-1"
+                disabled={isSubmitting || isUploading}
+              >
+                Hủy
+              </Button>
+              <Button
+                type="submit"
+                form="employee-form"
+                className="flex-1"
+                loading={isSubmitting}
+                disabled={!hasChanges || isUploading}
+              >
+                {editingEmployee ? 'Cập nhật' : 'Lưu'}
+              </Button>
+            </div>
           </div>
         }
       >
         <form
-          className="space-y-4"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
+          id="employee-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void handleSubmit();
           }}
+          className="space-y-5"
+          noValidate
         >
-          {error && (
-            <div className="p-2.5 bg-danger/10 border border-danger/30 text-danger text-body-sm rounded-sm">
-              {error}
-            </div>
-          )}
-          <div className="flex flex-col items-center justify-center pb-2">
-            <button
-              type="button"
-              onClick={() => !isUploading && fileInputRef.current?.click()}
-              aria-label="Thay đổi ảnh đại diện"
-              className={`relative w-24 h-24 rounded-full overflow-hidden border border-line bg-surface-2 group transition-colors duration-fast ease-standard hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
-            >
-              {imageUrl ? (
-                <img src={imageUrl} alt="Ảnh đại diện" className="w-full h-full object-cover" />
-              ) : (
-                <div className={`w-full h-full flex items-center justify-center text-ink-muted`}>
-                  <Camera size={24} />
-                </div>
-              )}
-
-              {isUploading && (
-                <div className="absolute inset-0 bg-surface/90 flex items-center justify-center">
-                  <Loader2 size={24} className="text-ink animate-spin" />
-                </div>
-              )}
-
-              {!isUploading && (
-                <div className="absolute inset-0 bg-surface/90 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 flex items-center justify-center transition-opacity duration-fast ease-standard">
-                  <Upload size={20} className="text-ink-soft" />
-                </div>
-              )}
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              accept="image/*"
-              className="hidden"
-            />
-            <p className={`text-body-sm text-ink-muted mt-2`}>Click để thay đổi ảnh</p>
-          </div>
-
-          <div>
-            <label
-              htmlFor="employee-name"
-              className={`block text-label font-medium mb-1.5 text-ink-muted`}
-            >
-              Họ tên
-            </label>
-            <input
-              id="employee-name"
-              type="text"
-              placeholder="Nhập họ tên"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="employee-phone"
-              className={`block text-label font-medium mb-1.5 text-ink-muted`}
-            >
-              Số điện thoại (tùy chọn)
-            </label>
-            <input
-              id="employee-phone"
-              type="tel"
-              placeholder="Nhập số điện thoại"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
-              maxLength={11}
-              className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
-            />
-          </div>
-
-          <div className={`pt-3 border-t border-line`}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Building2 size={14} className="text-accent-ink" />
-                <p className={`text-label font-medium text-ink`}>Thông tin ngân hàng (tùy chọn)</p>
-              </div>
+          <FormSection title="Thông tin">
+            <div className="flex flex-col items-center gap-2">
               <button
                 type="button"
-                onClick={() => {
-                  setBankId('');
-                  setBankName('');
-                  setAccountNumber('');
-                  setAccountName('');
-                }}
-                className={`inline-flex min-h-10 items-center gap-1.5 px-3 rounded-sm text-body-sm font-semibold bg-surface border border-line text-accent-ink hover:brightness-110 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
-                aria-label="Làm mới thông tin ngân hàng"
+                onClick={() => !isUploading && fileInputRef.current?.click()}
+                aria-label="Đổi ảnh đại diện"
+                className={cn(
+                  'relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-line bg-surface-2 text-ink-muted transition-colors duration-fast ease-standard hover:border-line-strong',
+                  focusRingOnSurfaceClasses
+                )}
               >
-                <RotateCcw size={14} />
-                Làm mới
+                {imageUrl && !imageError ? (
+                  <img
+                    src={imageUrl}
+                    alt="Ảnh đại diện"
+                    onError={() => setImageError(true)}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Camera size={24} aria-hidden="true" />
+                )}
+                {isUploading && (
+                  <span className="absolute inset-0 flex items-center justify-center bg-surface/90">
+                    <Loader2 size={24} aria-hidden="true" className="animate-spin text-ink" />
+                  </span>
+                )}
               </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <p className="text-label text-ink-muted">Nhấn để đổi ảnh</p>
             </div>
 
-            <div className="space-y-3">
-              <div>
-                <label className={`block text-label font-medium mb-1.5 text-ink-muted`}>
-                  Ngân hàng
-                </label>
-                <Dropdown
-                  options={[
-                    { value: '', label: '-- Chọn ngân hàng --' },
-                    ...bankList.map((bank) => ({
-                      value: bank.bin,
-                      label: `${bank.shortName} - ${bank.name}`,
-                    })),
-                  ]}
-                  value={bankId}
-                  onChange={(value) => {
-                    const selectedBank = bankList.find((b) => b.bin === value);
+            <Field label="Họ tên" required error={errors.name}>
+              <Input
+                value={name}
+                onChange={(event) => {
+                  setName(event.target.value);
+                  if (errors.name) setErrors((previous) => ({ ...previous, name: undefined }));
+                }}
+                placeholder="Ví dụ: Nguyễn Minh Anh"
+                autoComplete="name"
+                autoFocus
+              />
+            </Field>
+
+            <Field label="Số điện thoại" hint="Tùy chọn, 9–11 chữ số." error={errors.phone}>
+              <Input
+                type="tel"
+                inputMode="numeric"
+                value={phone}
+                onChange={(event) => {
+                  setPhone(formatPhone(event.target.value));
+                  if (errors.phone) setErrors((previous) => ({ ...previous, phone: undefined }));
+                }}
+                placeholder="Ví dụ: 0901234567"
+                autoComplete="tel"
+              />
+            </Field>
+          </FormSection>
+
+          <FormSection title="Ngân hàng (tùy chọn)">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-label text-ink-muted">Dùng để chuyển khoản lương.</p>
+              {(bankId || bankName || accountNumber || accountName) && (
+                <Button
+                  variant="outline"
+                  onClick={resetBank}
+                  icon={<RotateCcw size={14} />}
+                  className="shrink-0 px-2.5 text-label"
+                >
+                  Xóa thông tin ngân hàng
+                </Button>
+              )}
+            </div>
+
+            <Field label="Ngân hàng">
+              <Dropdown
+                options={bankOptions}
+                value={bankId}
+                onChange={(value) => {
+                  if (!value) {
+                    setBankId('');
+                    setBankName('');
+                  } else {
+                    const selectedBank = bankList.find((bank) => bank.bin === value);
                     setBankId(value);
-                    setBankName(selectedBank?.shortName || '');
-                  }}
-                  placeholder="-- Chọn ngân hàng --"
-                  minWidth="w-full"
-                  className="w-full"
-                  searchable={true}
-                  searchPlaceholder="Tìm tên ngân hàng..."
-                />
-              </div>
+                    setBankName(
+                      selectedBank?.shortName ||
+                        (value === editingEmployee?.bankAccount?.bankId
+                          ? editingEmployee?.bankAccount?.bankName || ''
+                          : '')
+                    );
+                  }
+                  clearBankError();
+                }}
+                ariaLabel="Ngân hàng"
+                placeholder="Chọn ngân hàng"
+                searchable
+                searchPlaceholder="Tìm ngân hàng"
+                disabled={bankListLoading}
+                className="w-full"
+                minWidth="w-full"
+              />
+            </Field>
+            {bankListLoading && (
+              <p className="text-label text-ink-muted">Đang tải danh sách ngân hàng…</p>
+            )}
 
-              <div>
-                <label
-                  htmlFor="employee-account-number"
-                  className={`block text-label font-medium mb-1.5 text-ink-muted`}
-                >
-                  Số tài khoản
-                </label>
-                <input
-                  id="employee-account-number"
-                  type="text"
-                  placeholder="Nhập số tài khoản"
-                  value={accountNumber}
-                  onChange={(e) => setAccountNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted tabular-nums focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
-                />
-              </div>
+            <Field label="Số tài khoản">
+              <Input
+                value={accountNumber}
+                onChange={(event) => {
+                  setAccountNumber(event.target.value.replace(/[^0-9]/g, '').slice(0, 20));
+                  clearBankError();
+                }}
+                inputMode="numeric"
+                placeholder="Ví dụ: 0123456789"
+                className="tabular-nums"
+              />
+            </Field>
 
-              <div>
-                <label
-                  htmlFor="employee-account-name"
-                  className={`block text-label font-medium mb-1.5 text-ink-muted`}
-                >
-                  Tên chủ tài khoản
-                </label>
-                <input
-                  id="employee-account-name"
-                  type="text"
-                  placeholder="Nhập tên chủ tài khoản"
-                  value={accountName}
-                  onChange={(e) => setAccountName(e.target.value.toUpperCase())}
-                  className={`w-full p-2.5 bg-surface-2 border border-line rounded-sm text-body-sm text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted ${focusRingOnSurfaceClasses}`}
-                />
-                <p className={`text-body-sm text-ink-muted mt-1`}>Viết hoa không dấu</p>
-              </div>
-            </div>
-          </div>
+            <Field label="Chủ tài khoản" hint="Viết hoa, không dấu.">
+              <Input
+                value={accountName}
+                onChange={(event) => {
+                  setAccountName(event.target.value.toUpperCase());
+                  clearBankError();
+                }}
+                placeholder="Ví dụ: NGUYEN MINH ANH"
+              />
+            </Field>
+
+            {errors.bank && (
+              <p role="alert" className="text-label text-danger">
+                {errors.bank}
+              </p>
+            )}
+          </FormSection>
         </form>
       </Modal>
 
-      {/* Modal cắt ảnh */}
       {tempImage && (
         <ImageCropperModal
           isOpen={cropperOpen}
@@ -440,4 +461,4 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   );
 };
 
-export default memo(EmployeeFormModal);
+export default React.memo(EmployeeFormModal);

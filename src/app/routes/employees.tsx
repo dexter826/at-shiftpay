@@ -1,13 +1,13 @@
-import React, { useState, useMemo, memo } from 'react';
+import React, { memo, useMemo, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { Employee, Shift } from '@/types/index';
 import { employeeService } from '@/lib/api/employeeService';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/components/ui/ToastProvider';
 import Button from '@/components/ui/Button';
 import { useAuthStore } from '@/stores/authStore';
-
-// Import extracted components
-import EmployeeToolbar from '@/features/employee/components/EmployeeToolbar';
+import { toDateKey } from '@/utils/format';
+import EmployeeToolbar, { type EmployeeSort } from '@/features/employee/components/EmployeeToolbar';
 import EmployeeList from '@/features/employee/components/EmployeeList';
 import EmployeeFormModal from '@/features/employee/components/EmployeeFormModal';
 import EmployeeDetailModal from '@/features/employee/components/EmployeeDetailModal';
@@ -15,7 +15,6 @@ import EmployeeDetailModal from '@/features/employee/components/EmployeeDetailMo
 interface EmployeeViewProps {
   employees: Employee[];
   shifts: Shift[];
-  events?: { id: string; date: string }[];
   loading?: boolean;
 }
 
@@ -24,184 +23,213 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading 
   const { user } = useAuthStore();
   const userId = user?.uid || '';
 
-  // Tính công nợ trong tháng
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
+  const now = new Date();
+  const monthPrefix = toDateKey(now).slice(0, 7);
+  const monthLabel = `Tháng ${now.getMonth() + 1}`;
 
-  const shiftCountByEmployee = useMemo(() => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<EmployeeSort>('name');
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Employee | null>(null);
+  const [blockedDelete, setBlockedDelete] = useState<{ reason: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const resetPagination = () => setVisibleCount(12);
+
+  const unpaidCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    shifts.forEach((s) => {
-      const d = new Date(s.date);
-      if (
-        d.getMonth() === currentMonth &&
-        d.getFullYear() === currentYear &&
-        s.status === 'unpaid'
-      ) {
-        counts[s.employeeId] = (counts[s.employeeId] || 0) + 1;
+    shifts.forEach((shift) => {
+      if (shift.status === 'unpaid' && shift.date.startsWith(monthPrefix)) {
+        counts[shift.employeeId] = (counts[shift.employeeId] || 0) + 1;
       }
     });
     return counts;
-  }, [shifts, currentMonth, currentYear]);
+  }, [shifts, monthPrefix]);
 
-  // Điều kiện xóa nhân viên
-  const canDeleteEmployee = (empId: string): { canDelete: boolean; reason?: string } => {
-    const today = new Date().toISOString().split('T')[0];
-    const unpaidShifts = shifts.filter((s) => s.employeeId === empId && s.status === 'unpaid');
-    if (unpaidShifts.length > 0)
+  const filteredEmployees = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+
+    return employees
+      .filter(
+        (employee) =>
+          !term ||
+          employee.name.toLowerCase().includes(term) ||
+          employee.phone.toLowerCase().includes(term)
+      )
+      .sort((a, b) => {
+        if (sortBy === 'name') return a.name.localeCompare(b.name, 'vi');
+        if (sortBy === 'recent') {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }
+
+        const countDiff = (unpaidCounts[b.id] || 0) - (unpaidCounts[a.id] || 0);
+        return countDiff !== 0 ? countDiff : a.name.localeCompare(b.name, 'vi');
+      });
+  }, [employees, searchTerm, sortBy, unpaidCounts]);
+
+  const stats = useMemo(() => {
+    const missingBank = employees.filter((employee) => !employee.bankAccount).length;
+    return { total: employees.length, missingBank };
+  }, [employees]);
+
+  const summary = useMemo(() => {
+    const parts = [`${monthLabel}`, `${stats.total} nhân viên`];
+    if (stats.missingBank > 0) parts.push(`${stats.missingBank} chưa có tài khoản`);
+    return parts.join(' · ');
+  }, [monthLabel, stats]);
+
+  const canDeleteEmployee = (employee: Employee): { canDelete: boolean; reason?: string } => {
+    const unpaidShifts = shifts.filter(
+      (shift) => shift.employeeId === employee.id && shift.status === 'unpaid'
+    );
+    if (unpaidShifts.length > 0) {
       return {
         canDelete: false,
-        reason: `Nhân viên còn ${unpaidShifts.length} công chưa thanh toán`,
+        reason: `“${employee.name}” còn ${unpaidShifts.length} ca chưa thanh toán.`,
       };
-    const futureShifts = shifts.filter((s) => s.employeeId === empId && s.date >= today);
-    if (futureShifts.length > 0)
+    }
+
+    const todayKey = toDateKey(new Date());
+    const upcomingShifts = shifts.filter(
+      (shift) => shift.employeeId === employee.id && shift.date >= todayKey
+    );
+    if (upcomingShifts.length > 0) {
       return {
         canDelete: false,
-        reason: `Nhân viên đang có ${futureShifts.length} ca làm sắp tới`,
+        reason: `“${employee.name}” đang có ${upcomingShifts.length} ca từ hôm nay trở đi.`,
       };
+    }
+
     return { canDelete: true };
   };
 
-  // State Management
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingEmp, setEditingEmp] = useState<Employee | null>(null);
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'shifts' | 'recent'>('name');
-  const [visibleCount, setVisibleCount] = useState(18);
-
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [isDeletingEmployee, setIsDeletingEmployee] = useState(false);
-
-  // Handlers
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setVisibleCount(18);
-  };
-
-  const handleSortChange = (value: 'name' | 'shifts' | 'recent') => {
-    setSortBy(value);
-    setVisibleCount(18);
-  };
-
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => Math.min(prev + 18, filteredAndSortedEmployees.length));
-  };
-
-  const openAddModal = () => {
-    setEditingEmp(null);
-    setModalOpen(true);
-  };
-
-  const openEditModal = (emp: Employee) => {
-    setEditingEmp(emp);
-    setModalOpen(true);
-  };
-
-  const openDetailModal = (emp: Employee) => {
-    setSelectedEmployee(emp);
-    setDetailModalOpen(true);
-  };
-
-  const handleDelete = async (id: string) => {
-    const { canDelete, reason } = canDeleteEmployee(id);
-    if (!canDelete) {
-      setDeleteError(reason || 'Không thể xóa nhân viên này');
+  const handleDelete = (employee: Employee) => {
+    const check = canDeleteEmployee(employee);
+    if (!check.canDelete) {
+      setBlockedDelete({ reason: check.reason ?? '' });
       return;
     }
-    setDeleteConfirm(id);
+    setDeleteTarget(employee);
   };
 
   const confirmDelete = async () => {
-    if (!deleteConfirm || isDeletingEmployee) return;
+    if (!deleteTarget || isDeleting) return;
 
-    setIsDeletingEmployee(true);
+    setIsDeleting(true);
     try {
-      await employeeService.deleteEmployee(deleteConfirm);
-      showToast('Đã xóa nhân viên', 'success');
-      setDeleteConfirm(null);
+      await employeeService.deleteEmployee(deleteTarget.id);
+      showToast('Đã xóa nhân viên.', 'success');
+      setDeleteTarget(null);
     } catch (error) {
       console.error('Delete employee failed:', error);
-      showToast('Không thể xóa nhân viên. Vui lòng thử lại', 'error');
+      showToast('Không thể xóa nhân viên. Thử lại.', 'error');
     } finally {
-      setIsDeletingEmployee(false);
+      setIsDeleting(false);
     }
   };
 
-  // Filter & Sort Logic
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- React Compiler is not enabled; memoization stays manual
-  const filteredAndSortedEmployees = useMemo(() => {
-    const filtered = employees.filter(
-      (e) => e.name.toLowerCase().includes(searchTerm.toLowerCase()) || e.phone.includes(searchTerm)
-    );
+  const handleOpenAdd = () => {
+    setEditingEmployee(null);
+    setIsFormOpen(true);
+  };
 
-    return [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case 'name':
-          return a.name.localeCompare(b.name, 'vi');
-        case 'shifts': {
-          const aShifts = shiftCountByEmployee[a.id] || 0;
-          const bShifts = shiftCountByEmployee[b.id] || 0;
-          return bShifts - aShifts;
-        }
-        case 'recent': {
-          const aCreatedAt = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-          const bCreatedAt = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          return bCreatedAt - aCreatedAt;
-        }
-        default:
-          return 0;
-      }
-    });
-  }, [employees, searchTerm, sortBy, shiftCountByEmployee]);
+  const handleOpenEdit = (employee: Employee) => {
+    setEditingEmployee(employee);
+    setIsFormOpen(true);
+  };
 
   return (
-    <div className={`pb-28 md:pb-0 bg-canvas min-h-screen`}>
-      <EmployeeToolbar
-        employeeCount={employees.length}
-        loading={loading}
-        onAdd={openAddModal}
-        searchTerm={searchTerm}
-        onSearchChange={handleSearchChange}
-        onClearSearch={() => handleSearchChange('')}
-        sortBy={sortBy}
-        onSortChange={handleSortChange}
-      />
+    <div className="min-h-dynamic bg-canvas">
+      <div className="mx-auto max-w-[1400px] px-4 py-5 md:px-6 md:py-6">
+        <header className="flex flex-col gap-4 border-b border-line pb-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="font-mono text-mono-label text-ink-muted">
+              {loading ? 'Đang tải nhân sự' : summary}
+            </p>
+            <h1 className="mt-1 text-display text-ink">Sổ nhân sự</h1>
+          </div>
+          <Button onClick={handleOpenAdd} icon={<Plus size={16} />}>
+            Thêm nhân viên
+          </Button>
+        </header>
 
-      <EmployeeList
-        employees={filteredAndSortedEmployees}
-        loading={loading}
-        visibleCount={visibleCount}
-        onLoadMore={handleLoadMore}
-        shiftCounts={shiftCountByEmployee}
-        onEdit={openEditModal}
-        onDelete={handleDelete}
-        onDetail={openDetailModal}
-        searchTerm={searchTerm}
-      />
+        <div className="mt-4 space-y-3">
+          <EmployeeToolbar
+            searchTerm={searchTerm}
+            onSearchChange={(value) => {
+              setSearchTerm(value);
+              resetPagination();
+            }}
+            onClearSearch={() => {
+              setSearchTerm('');
+              resetPagination();
+            }}
+            sortBy={sortBy}
+            onSortChange={(value) => {
+              setSortBy(value);
+              resetPagination();
+            }}
+            loading={loading}
+          />
 
-      {/* Form Modal */}
-      <EmployeeFormModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        editingEmployee={editingEmp}
-        userId={userId}
-      />
+          <EmployeeList
+            loading={loading}
+            employees={filteredEmployees}
+            totalEmployees={employees.length}
+            searchTerm={searchTerm}
+            visibleCount={visibleCount}
+            onLoadMore={() =>
+              setVisibleCount((current) => Math.min(current + 12, filteredEmployees.length))
+            }
+            unpaidCounts={unpaidCounts}
+            onEdit={handleOpenEdit}
+            onDelete={handleDelete}
+            onDetail={setSelectedEmployee}
+            onClearSearch={() => {
+              setSearchTerm('');
+              resetPagination();
+            }}
+          />
+        </div>
+      </div>
 
-      {/* Modal xóa */}
+      {isFormOpen && (
+        <EmployeeFormModal
+          isOpen
+          onClose={() => {
+            setIsFormOpen(false);
+            setEditingEmployee(null);
+          }}
+          editingEmployee={editingEmployee}
+          employees={employees}
+          userId={userId}
+        />
+      )}
+
+      {selectedEmployee && (
+        <EmployeeDetailModal
+          isOpen
+          onClose={() => setSelectedEmployee(null)}
+          employee={selectedEmployee}
+          onEditClick={handleOpenEdit}
+        />
+      )}
+
       <Modal
-        title="Xác nhận xóa"
-        isOpen={!!deleteConfirm}
-        onClose={() => setDeleteConfirm(null)}
+        title="Xóa nhân viên?"
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
         footer={
           <div className="flex gap-2">
             <Button
               variant="secondary"
-              onClick={() => setDeleteConfirm(null)}
+              onClick={() => setDeleteTarget(null)}
               className="flex-1"
-              disabled={isDeletingEmployee}
+              disabled={isDeleting}
             >
               Hủy
             </Button>
@@ -209,40 +237,38 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading 
               variant="danger"
               onClick={confirmDelete}
               className="flex-1"
-              disabled={isDeletingEmployee}
+              loading={isDeleting}
             >
-              {isDeletingEmployee ? 'Đang xóa...' : 'Xóa'}
+              Xóa nhân viên
             </Button>
           </div>
         }
       >
-        <p className={`text-body-sm text-ink-soft`}>Bạn có chắc muốn xóa nhân viên này?</p>
+        {deleteTarget && (
+          <p className="text-body-sm text-ink-soft">
+            “{deleteTarget.name}” sẽ bị xóa khỏi sổ. Các ca cũ vẫn giữ tên trong sổ lương. Không thể
+            hoàn tác.
+          </p>
+        )}
       </Modal>
 
-      {/* Lỗi xóa */}
       <Modal
-        title="Không thể xóa"
-        isOpen={!!deleteError}
-        onClose={() => setDeleteError(null)}
+        title="Không thể xóa nhân viên"
+        isOpen={!!blockedDelete}
+        onClose={() => setBlockedDelete(null)}
         footer={
-          <Button variant="secondary" onClick={() => setDeleteError(null)} fullWidth>
+          <Button variant="secondary" onClick={() => setBlockedDelete(null)} fullWidth>
             Đã hiểu
           </Button>
         }
       >
-        <p className={`text-body-sm text-ink-soft`}>{deleteError}</p>
+        {blockedDelete && (
+          <div className="space-y-2 text-body-sm text-ink-soft">
+            <p>{blockedDelete.reason}</p>
+            <p className="text-label text-ink-muted">Thanh toán hoặc gỡ ca trước khi xóa.</p>
+          </div>
+        )}
       </Modal>
-
-      {/* Chi tiết nhân viên */}
-      <EmployeeDetailModal
-        isOpen={detailModalOpen}
-        onClose={() => {
-          setDetailModalOpen(false);
-          setSelectedEmployee(null);
-        }}
-        employee={selectedEmployee}
-        onEditClick={(emp) => openEditModal(emp)}
-      />
     </div>
   );
 };
