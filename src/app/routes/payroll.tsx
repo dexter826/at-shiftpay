@@ -26,6 +26,21 @@ interface PayrollViewProps {
   loading?: boolean;
 }
 
+const startOfWindowMonthsAgo = (monthsBack: number): number => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() - monthsBack, 1).getTime();
+};
+
+const parseMonthStart = (value: string): number => {
+  const [year, month] = value.split('-').map(Number);
+  return new Date(year, month - 1, 1).getTime();
+};
+
+const nextMonthStart = (value: string): number => {
+  const [year, month] = value.split('-').map(Number);
+  return new Date(year, month, 1).getTime();
+};
+
 const PayrollView: React.FC<PayrollViewProps> = ({
   shifts,
   employees,
@@ -35,6 +50,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'payroll' | 'history'>('payroll');
   const [paymentHistory, setPaymentHistory] = useState<PaymentTransaction[]>([]);
+  const [paymentSince, setPaymentSince] = useState(() => startOfWindowMonthsAgo(11));
 
   const [selectedEmpId, setSelectedEmpId] = useState<string | null>(null);
   const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
@@ -83,12 +99,20 @@ const PayrollView: React.FC<PayrollViewProps> = ({
   useEffect(() => {
     if (!userId) return;
 
-    const unsubscribe = paymentService.subscribePayments(userId, (payments) => {
+    const unsubscribe = paymentService.subscribePayments(userId, paymentSince, (payments) => {
       setPaymentHistory(payments);
     });
 
     return () => unsubscribe();
-  }, [userId]);
+  }, [userId, paymentSince]);
+
+  // Chọn tháng cũ hơn cửa sổ hiện tại thì mở rộng cửa sổ để lịch sử có dữ liệu
+  const handleFilterDateChange = (value: string) => {
+    setFilterDate(value);
+    if (!value) return;
+    const monthStart = parseMonthStart(value);
+    setPaymentSince((prev) => (monthStart < prev ? monthStart : prev));
+  };
 
   // Hook style đồng bộ theme
 
@@ -164,12 +188,18 @@ const PayrollView: React.FC<PayrollViewProps> = ({
     return paymentHistory.filter((payment) => {
       const matchesSearch = payment.employeeName.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDate = filterDate
-        ? payment.date >= new Date(filterDate).getTime() &&
-          payment.date < new Date(filterDate).setMonth(new Date(filterDate).getMonth() + 1)
+        ? payment.date >= parseMonthStart(filterDate) && payment.date < nextMonthStart(filterDate)
         : true;
       return matchesSearch && matchesDate;
     });
   }, [paymentHistory, searchTerm, filterDate]);
+
+  const handleLoadMorePayments = () => {
+    setPaymentSince((prev) => {
+      const current = new Date(prev);
+      return new Date(current.getFullYear(), current.getMonth() - 12, 1).getTime();
+    });
+  };
 
   return (
     <div className={`pb-28 md:pb-0 bg-[var(--bg-primary)] min-h-screen`}>
@@ -242,6 +272,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
             loading={loading}
             items={filteredHistory}
             onSelectTransaction={setSelectedTransactionId}
+            onLoadMore={handleLoadMorePayments}
           />
         )}
       </div>
@@ -277,7 +308,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
         filterDate={filterDate}
-        setFilterDate={setFilterDate}
+        setFilterDate={handleFilterDateChange}
         viewYear={viewYear}
         setViewYear={setViewYear}
       />

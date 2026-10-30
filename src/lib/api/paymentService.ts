@@ -20,18 +20,22 @@ const SHIFT_NOT_ADVANCED_MESSAGE = 'Ca làm không còn ở trạng thái ứng 
 export const paymentService = {
   subscribePayments(
     userId: string,
-    callback: (payments: PaymentTransaction[]) => void
+    since: number,
+    callback: (payments: PaymentTransaction[]) => void,
+    onError?: (error: unknown) => void
   ): Unsubscribe {
     const q = query(
       collection(db, 'payments'),
       where('userId', '==', userId),
+      where('date', '>=', since),
       orderBy('date', 'desc')
     );
     return createRealtimeSubscription<PaymentTransaction>(
       q,
       callback,
       'subscribePayments',
-      PaymentTransactionSchema
+      PaymentTransactionSchema,
+      onError
     );
   },
 

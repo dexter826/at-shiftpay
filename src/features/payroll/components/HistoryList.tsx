@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { History, Clock, ChevronRightIcon } from 'lucide-react';
+import Button from '@/components/ui/Button';
 import { formatCurrency } from '@/utils/format';
 import { PaymentTransaction } from '@/types/index';
 
@@ -8,9 +9,15 @@ interface HistoryListProps {
   loading: boolean;
   items: PaymentTransaction[];
   onSelectTransaction: (id: string) => void;
+  onLoadMore?: () => void;
 }
 
-const HistoryList: React.FC<HistoryListProps> = ({ loading, items, onSelectTransaction }) => {
+const HistoryList: React.FC<HistoryListProps> = ({
+  loading,
+  items,
+  onSelectTransaction,
+  onLoadMore,
+}) => {
   return (
     <AnimatePresence mode="wait">
       {loading ? (
@@ -91,11 +98,18 @@ const HistoryList: React.FC<HistoryListProps> = ({ loading, items, onSelectTrans
               ))}
 
               {items.length > 0 && (
-                <p
-                  className={`text-center text-[11px] text-[var(--text-muted)] tracking-wide uppercase font-medium mt-6`}
-                >
-                  Đã hiển thị toàn bộ {items.length} giao dịch
-                </p>
+                <div className="mt-6 space-y-3">
+                  <p
+                    className={`text-center text-[11px] text-[var(--text-muted)] tracking-wide uppercase font-medium`}
+                  >
+                    Đang hiển thị {items.length} giao dịch
+                  </p>
+                  {onLoadMore && (
+                    <Button variant="secondary" fullWidth onClick={onLoadMore}>
+                      Tải thêm 12 tháng
+                    </Button>
+                  )}
+                </div>
               )}
             </>
           )}

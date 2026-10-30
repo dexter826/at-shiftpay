@@ -43,6 +43,7 @@ export const shiftService = {
     return executeBatchQuery<Shift>(q, ShiftSchema);
   },
 
+  // Cần toàn bộ ca chưa trả/đã ứng để tính tổng nợ chính xác, nên không giới hạn theo thời gian.
   subscribeUnpaidShifts(
     userId: string,
     callback: (shifts: Shift[]) => void,
