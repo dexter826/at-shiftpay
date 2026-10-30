@@ -21,7 +21,7 @@ interface AuthState {
   init: () => () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   savedUser: null,
   loading: true,
@@ -38,9 +38,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     try {
       await signOut(auth);
-      localStorage.removeItem('user_info');
     } catch (error) {
       console.error('Logout error', error);
+    } finally {
+      get().clearSavedUserInfo();
     }
   },
   refreshUser: async () => {
@@ -53,7 +54,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   init: () => {
     const saved = localStorage.getItem('saved_user_info');
     if (saved) {
-      set({ savedUser: JSON.parse(saved) });
+      try {
+        set({ savedUser: JSON.parse(saved) });
+      } catch {
+        localStorage.removeItem('saved_user_info');
+      }
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
