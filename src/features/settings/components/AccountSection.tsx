@@ -66,6 +66,11 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
       return;
     }
 
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Ảnh không được lớn hơn 5MB', 'error');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
       setTempImage(reader.result as string);
