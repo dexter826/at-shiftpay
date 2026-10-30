@@ -42,7 +42,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
 
   const locationInfo = useMemo(() => {
     if (!event) return null;
-    return locations.find((l) => l.id === event.locationId || l.name === event.location);
+    return locations.find((l) => l.id === event.locationId);
   }, [event, locations]);
 
   if (!event) return null;
