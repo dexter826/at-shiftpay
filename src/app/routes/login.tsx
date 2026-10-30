@@ -169,7 +169,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         'auth/email-already-in-use': 'Email đã được sử dụng',
         'auth/invalid-email': 'Email không hợp lệ',
         'auth/weak-password': 'Mật khẩu quá yếu',
-        'auth/user-not-found': 'Tài khoản không tồn tại',
+        'auth/user-not-found': 'Email hoặc mật khẩu không đúng',
         'auth/wrong-password': 'Mật khẩu không đúng',
         'auth/invalid-credential': 'Email hoặc mật khẩu không đúng',
         'auth/too-many-requests': 'Quá nhiều lần thử. Vui lòng thử lại sau',

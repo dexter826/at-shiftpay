@@ -105,7 +105,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
       } else if (err.code === 'auth/requires-recent-login') {
         setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
       } else {
-        setError('Đã xảy ra lỗi: ' + (err.message || 'Vui lòng thử lại sau'));
+        setError('Không thể đổi mật khẩu. Vui lòng thử lại sau.');
       }
     } finally {
       if (!success) {

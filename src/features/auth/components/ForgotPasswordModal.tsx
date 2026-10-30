@@ -31,9 +31,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen
     } catch (error: any) {
       console.error('Reset password error:', error);
       let message = 'Có lỗi xảy ra khi gửi email';
-      if (error.code === 'auth/user-not-found') {
-        message = 'Email không tồn tại trong hệ thống';
-      } else if (error.code === 'auth/invalid-email') {
+      if (error.code === 'auth/invalid-email') {
         message = 'Email không hợp lệ';
       }
       showToast(message, 'error');
