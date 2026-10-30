@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Event, Location } from '@/types/index';
-import { useThemeStore } from '@/stores/themeStore';
+/* removed unused import from @/stores/themeStore */
 
 interface CalendarDayProps {
   date: Date;
@@ -22,9 +22,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
   isToday,
   isCurrentMonth,
   onClick,
-}) => {
-  const theme = useThemeStore((state) => state.theme);
-  // Using dateStr for key prop happens in parent
+}) => {  // Using dateStr for key prop happens in parent
 
   return (
     <motion.button

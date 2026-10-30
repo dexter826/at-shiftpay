@@ -1,6 +1,6 @@
 import React, { memo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ThumbsUp, ThumbsDown, MapPin, Pencil, Trash2 } from 'lucide-react';
+import { Calendar, ThumbsUp, ThumbsDown, Pencil, Trash2 } from 'lucide-react';
 import PlusIcon from '@/components/ui/icons/PlusIcon';
 import MapPinIcon from '@/components/ui/icons/MapPinIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';

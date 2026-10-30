@@ -66,9 +66,7 @@ export const paymentService = {
       });
     } catch (error) {
       console.error('createPaymentTransaction error:', error);
-      throw new Error(
-        `Không thể tạo giao dịch thanh toán: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
-      );
+      throw new Error(`Không thể tạo giao dịch thanh toán: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
     }
   },
 
@@ -134,9 +132,7 @@ export const paymentService = {
       });
     } catch (error) {
       console.error('settleAdvancePayment error:', error);
-      throw new Error(
-        `Không thể quyết toán tiền ứng: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
-      );
+      throw new Error(`Không thể quyết toán tiền ứng: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
     }
   },
 
@@ -159,9 +155,7 @@ export const paymentService = {
       return payments.filter((p) => !p.settledAt);
     } catch (error) {
       console.error('getUnsettledAdvances error:', error);
-      throw new Error(
-        `Không thể tải khoản ứng lương: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
-      );
+      throw new Error(`Không thể tải khoản ứng lương: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
     }
   },
 };

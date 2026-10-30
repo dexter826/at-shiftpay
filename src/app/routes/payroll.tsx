@@ -1,12 +1,12 @@
-import React, { useMemo, useState, useCallback, useRef, useEffect, memo } from 'react';
-import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/types/index';
+import React, { useMemo, useState, useEffect, memo } from 'react';
+import { Shift, PaymentTransaction, Event, Location } from '@/types/index';
 import { paymentService } from '@/lib/api/paymentService';
 
-import { useToast } from '@/components/ui/ToastProvider';
+/* removed unused import from @/components/ui/ToastProvider */
 import { PaymentModal } from '@/features/payroll/components/PaymentModal';
 import { SettlementModal } from '@/features/payroll/components/SettlementModal';
 import { useAuthStore } from '@/stores/authStore';
-import { DropdownOption } from '@/components/ui/Dropdown';
+/* removed unused import from @/components/ui/Dropdown */
 
 // Import extracted components
 import PayrollStats from '@/features/payroll/components/PayrollStats';
@@ -100,9 +100,6 @@ const PayrollView: React.FC<PayrollViewProps> = ({
       });
     }
   }, [employees]);
-
-  const { showToast } = useToast();
-
   // Chọn/Bỏ chọn
   const handleSelectAll = () => {
     if (selectedShiftIds.length === selectedUnpaidShifts.length) {

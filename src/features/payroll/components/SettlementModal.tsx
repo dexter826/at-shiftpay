@@ -2,9 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { useToast } from '@/components/ui/ToastProvider';
-import { useThemeStore } from '@/stores/themeStore';
+/* removed unused import from @/stores/themeStore */
 import { Shift, PaymentTransaction, AdvanceBalance, Event, Location } from '@/types/index';
-import { formatCurrency, formatDate } from '@/utils/format';
+import { formatCurrency } from '@/utils/format';
 import { paymentService } from '@/lib/api/paymentService';
 import { Calculator, Loader2, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
@@ -26,11 +26,7 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   onClose,
   employeeId,
   employeeName,
-  shifts,
-  paymentHistory,
-  events,
-  locations,
-  onSuccess,
+  shifts,  onSuccess,
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { showToast } = useToast();

@@ -1,30 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import {
-  Employee,
-  Shift,
-  ShiftSession,
-  Event,
-  UserSettings,
-  DEFAULT_SETTINGS,
-  Location,
-} from '@/types/index';
+import { Employee, Shift, ShiftSession, Event, UserSettings, Location } from '@/types/index';
 import { shiftService } from '@/lib/api/shiftService';
 import { locationService } from '@/lib/api/locationService';
 import { eventService } from '@/lib/api/eventService';
-import {
-  Sun,
-  Moon,
-  Check,
-  AlertCircle,
-  Banknote,
-  ThumbsUp,
-  ThumbsDown,
-  Minus,
-  MapPin,
-  Type,
-  FileText,
-  Search,
-} from 'lucide-react';
+import { Sun, Moon, Check, AlertCircle, Banknote, ThumbsUp, ThumbsDown, Minus, MapPin, Type, FileText } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { TimePicker } from '@/components/ui/TimePicker';
@@ -298,7 +277,7 @@ export const EventModal: React.FC<EventModalProps> = ({
     });
   };
 
-  const validateTitle = (value: string) => {
+  const validateTitle = () => {
     // Không bắt buộc tên
     setTitleError('');
     return true;
@@ -546,9 +525,9 @@ export const EventModal: React.FC<EventModalProps> = ({
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);
-                  if (titleError) validateTitle(e.target.value);
+                  if (titleError) validateTitle();
                 }}
-                onBlur={() => validateTitle(title)}
+                onBlur={() => validateTitle()}
                 className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none ${
                   titleError
                     ? 'border-red-500 focus:border-red-500'

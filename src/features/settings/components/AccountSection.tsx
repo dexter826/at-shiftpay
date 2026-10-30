@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { User, Camera, Loader2, Edit2, Check, X, Key, ChevronRight, Trash2 } from 'lucide-react';
+import { User, Camera, Loader2, Edit2, Check, X, ChevronRight } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { imageService } from '@/lib/api/imageService';

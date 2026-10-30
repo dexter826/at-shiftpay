@@ -62,9 +62,7 @@ export const settingsService = {
       await setDoc(docRef, { ...data, userId }, { merge: true });
     } catch (error) {
       console.error('updateSettings error:', error);
-      throw new Error(
-        `Không thể cập nhật cài đặt: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
-      );
+      throw new Error(`Không thể cập nhật cài đặt: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
     }
   },
 
@@ -77,9 +75,7 @@ export const settingsService = {
       }
     } catch (error) {
       console.error('deleteUserAccountData error:', error);
-      throw new Error(
-        `Không thể xóa dữ liệu người dùng: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
-      );
+      throw new Error(`Không thể xóa dữ liệu người dùng: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
     }
   },
 };

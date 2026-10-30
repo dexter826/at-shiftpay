@@ -19,15 +19,7 @@ interface ActivityChartProps {
   onMonthClick: () => void;
 }
 
-const TrendIndicator = ({
-  value,
-  count,
-  label,
-}: {
-  value: number | null;
-  count: number;
-  label: string;
-}) => {
+const TrendIndicator = ({ value }: { value: number | null }) => {
   if (value === null) {
     return (
       <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-500/10 text-slate-400">
@@ -55,16 +47,8 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
         <div className="flex items-center justify-between sm:block">
           <h3 className="text-sm font-semibold text-[var(--text-primary)]">Hoạt động</h3>
           <div className="flex items-center gap-2 mt-1 sm:mt-1">
-            <TrendIndicator
-              value={growthStats.eventGrowth}
-              count={growthStats.eventCount}
-              label=""
-            />
-            <TrendIndicator
-              value={growthStats.shiftGrowth}
-              count={growthStats.shiftCount}
-              label=""
-            />
+            <TrendIndicator value={growthStats.eventGrowth} />
+            <TrendIndicator value={growthStats.shiftGrowth} />
           </div>
         </div>
         <div className="flex items-center justify-between sm:justify-start gap-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg p-0.5 w-full sm:w-auto">

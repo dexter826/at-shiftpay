@@ -5,7 +5,7 @@ import { Employee } from '@/types/index';
 import { Phone, Calendar, CreditCard } from 'lucide-react';
 import PenIcon from '@/components/ui/icons/PenIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
-import { useThemeStore } from '@/stores/themeStore';
+/* removed unused import from @/stores/themeStore */
 import BankCard from '@/features/employee/components/BankCard';
 
 interface EmployeeDetailModalProps {
@@ -20,9 +20,7 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
   onClose,
   employee,
   onEditClick,
-}) => {
-  const theme = useThemeStore((state) => state.theme);
-
+}) => {
   const editIconRef = React.useRef<AnimatedIconHandle>(null);
 
   if (!employee) return null;

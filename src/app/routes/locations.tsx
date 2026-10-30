@@ -157,7 +157,7 @@ const LocationView: React.FC<LocationViewProps> = ({
       await locationService.deleteLocation(deleteConfirm);
       showToast('Xóa địa điểm thành công', 'success');
       setDeleteConfirm(null);
-    } catch (error) {
+    } catch {
       showToast('Không thể xóa địa điểm', 'error');
     }
   };

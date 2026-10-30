@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface PullToRefreshProps {
   onRefresh: () => Promise<void> | void;
@@ -11,9 +11,7 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
   const [pullDistance, setPullDistance] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const startYRef = React.useRef(0);
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const controls = useAnimation();
-  const PULL_THRESHOLD = 80;
+  const containerRef = React.useRef<HTMLDivElement>(null);  const PULL_THRESHOLD = 80;
 
   useEffect(() => {
     const container = containerRef.current;

@@ -21,9 +21,7 @@ interface EmployeeViewProps {
 
 const EmployeeView: React.FC<EmployeeViewProps> = ({
   employees,
-  shifts,
-  events = [],
-  loading = false,
+  shifts,  loading = false,
 }) => {
   const { showToast } = useToast();
   const { user } = useAuthStore();

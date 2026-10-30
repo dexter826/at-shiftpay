@@ -2,23 +2,13 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { useToast } from '@/components/ui/ToastProvider';
-import { useThemeStore } from '@/stores/themeStore';
+/* removed unused import from @/stores/themeStore */
 import { Shift, PayrollSummary, Event, Employee, Location } from '@/types/index';
 import { formatCurrency } from '@/utils/format';
 import { paymentService } from '@/lib/api/paymentService';
 import { vietQRService } from '@/lib/api/vietqrService';
 import { shiftBreakdown, roundAmount, sumShiftAmounts } from '@/utils/payrollMath';
-import {
-  Banknote,
-  AlertTriangle,
-  Check,
-  QrCode,
-  Building2,
-  IdCard,
-  User,
-  MapPin,
-  Wallet,
-} from 'lucide-react';
+import { Banknote, AlertTriangle, Check, QrCode, Building2, User, MapPin, Wallet } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 
 interface PaymentModalProps {
@@ -51,9 +41,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   const [paymentType, setPaymentType] = useState<'regular' | 'advance'>('regular');
   const [isProcessing, setIsProcessing] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
-  const [qrError, setQrError] = useState<string | null>(null);
-  const theme = useThemeStore((state) => state.theme);
-
+  const [qrError, setQrError] = useState<string | null>(null);
   const { user } = useAuthStore();
   const userId = user?.uid || '';
   const { showToast } = useToast();

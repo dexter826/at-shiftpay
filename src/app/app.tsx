@@ -11,7 +11,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { ToastProvider, useToast } from '@/components/ui/ToastProvider';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
-import { useThemeStore } from '@/stores/themeStore';
+/* removed unused import from @/stores/themeStore */
 import { useAuthStore } from '@/stores/authStore';
 import { useAppDataStore } from '@/stores/appDataStore';
 import { eventService } from '@/lib/api/eventService';
@@ -20,9 +20,7 @@ import { exportDetailedReport } from '@/lib/api/exportService';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 
-function AppShell() {
-  const theme = useThemeStore((state) => state.theme);
-  const { user, loading: authLoading, init: initAuth, logout } = useAuthStore();
+function AppShell() {  const { user, loading: authLoading, init: initAuth, logout } = useAuthStore();
   const {
     employees,
     locations,
