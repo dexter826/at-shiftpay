@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, MapPin } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { cn, focusRingClasses } from '@/lib/utils';
 import type { LocationSummaryRow } from '@/features/dashboard/dashboardData';
 
@@ -30,9 +31,12 @@ const LocationSummaryPanel: React.FC<LocationSummaryProps> = ({ rows, onOpenCale
       </div>
 
       {topRows.length === 0 ? (
-        <p className="px-3.5 py-8 text-center text-body-sm text-ink-muted">
-          Chưa có địa điểm nào có sự kiện trong tuần.
-        </p>
+        <EmptyState
+          icon={<MapPin size={24} aria-hidden="true" />}
+          title="Chưa có địa điểm trong tuần"
+          description="Chưa có sự kiện hoặc sự kiện chưa gắn địa điểm trong tuần này."
+          className="py-8"
+        />
       ) : (
         <div>
           {topRows.map((row) => (

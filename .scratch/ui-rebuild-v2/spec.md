@@ -71,6 +71,14 @@ Dashboard, Lịch sự kiện, Địa điểm, Nhân sự, Thanh toán, Cài đ�
 - Tailwind v4: token CSS-first, không hardcode màu ngoài token.
 - frontend-design: cá tính riêng, tránh mặc định template; một điểm nhấn mạnh, phần còn lại kỷ luật.
 
+### UX writing
+
+- Empty state dùng chung `EmptyState`: icon + title + một dòng giải thích; action optional, tối đa một và không lặp CTA đã có ở header.
+- "Chưa có..." cho chưa có dữ liệu; "Không có..." cho hàng đợi đã sạch. Không dùng "đã đủ..." khi chưa có dữ liệu để đủ.
+- Nêu phạm vi tuần/tháng khi màn trộn hai phạm vi.
+- KPI: note nêu trạng thái/ngữ cảnh, không lặp đơn vị; highlight chỉ khi thực sự có việc.
+- Số đếm không leading zero. CTA dùng đúng nhãn hành động đích. Câu ngắn, sentence case, không exclamation.
+
 ## Trình tự và gate
 
 1. **Logo treatments** — chọn mark.

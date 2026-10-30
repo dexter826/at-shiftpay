@@ -4,15 +4,28 @@ import { formatCurrency } from '@/utils/format';
 import type { WeekBoard } from '@/features/dashboard/dashboardData';
 
 const KpiStrip: React.FC<{ kpis: WeekBoard['kpis'] }> = ({ kpis }) => {
+  const hasEvents = kpis.events > 0;
   const cards = [
-    { label: 'Sự kiện tuần', value: String(kpis.events), note: 'sự kiện' },
-    { label: 'Ca đã xếp', value: String(kpis.shifts), note: 'ca làm' },
-    { label: 'Lương dự kiến', value: formatCurrency(kpis.amount), note: 'trong tuần' },
+    {
+      label: 'Sự kiện tuần',
+      value: String(kpis.events),
+      note: hasEvents ? 'Trong tuần' : 'Chưa có',
+    },
+    {
+      label: 'Ca đã xếp',
+      value: String(kpis.shifts),
+      note: kpis.shifts > 0 ? 'Trong tuần' : 'Chưa có',
+    },
+    {
+      label: 'Lương dự kiến',
+      value: formatCurrency(kpis.amount),
+      note: kpis.shifts > 0 ? 'Trong tuần' : 'Chưa có ca',
+    },
     {
       label: 'Cần xếp',
       value: String(kpis.unassigned),
-      note: kpis.unassigned > 0 ? 'sự kiện chưa có ca' : 'đã đủ người',
-      highlight: true,
+      note: kpis.unassigned > 0 ? 'Cần xếp lịch' : hasEvents ? 'Đã xếp đủ' : 'Chưa có sự kiện',
+      highlight: kpis.unassigned > 0,
     },
   ];
 

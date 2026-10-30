@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CalendarDays, Users } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { cn, focusRingClasses } from '@/lib/utils';
 import type { DashboardEventTile, WeekBoard } from '@/features/dashboard/dashboardData';
 
@@ -90,11 +91,12 @@ const WeekBoard: React.FC<{ board: WeekBoard; onOpenCalendar: () => void }> = ({
       </div>
 
       {board.weeklyEvents.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 px-6 py-16 text-center">
-          <CalendarDays size={28} className="text-ink-muted" aria-hidden="true" />
-          <p className="text-body-sm font-medium text-ink">Tuần này chưa có sự kiện</p>
-          <p className="text-label text-ink-muted">Dùng nút Xếp ca để thêm sự kiện.</p>
-        </div>
+        <EmptyState
+          icon={<CalendarDays size={24} aria-hidden="true" />}
+          title="Tuần này chưa có sự kiện"
+          description="Thêm sự kiện để bắt đầu xếp ca."
+          className="min-h-[280px]"
+        />
       ) : (
         <>
           <div className="hidden grid-cols-[52px_repeat(7,minmax(0,1fr))] md:grid">

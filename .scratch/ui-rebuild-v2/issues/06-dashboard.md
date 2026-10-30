@@ -117,3 +117,10 @@ Không sửa: shell, login, payroll/calendar, token/primitive, API.
 
 
 2026-10-30 — Fix TaskPanel sau feedback: bỏ 3 dòng 0 việc + tag "Đã xong" lặp, bỏ số "00" và "0 việc"; panel chỉ hiện việc đang có count > 0, hoặc một empty state "Không có việc cần xử lý". Tách scope: "Sự kiện chưa xếp" theo tuần (khớp board/KPI), "Ca chưa thanh toán" và "Ca đã ứng" theo tháng (khớp Sổ lương). Count lấy từ payrollStats tháng thay vì shifts tuần.
+
+2026-10-30 — Chuẩn hóa empty state + UX writing sau feedback:
+- Thêm `EmptyState` dùng chung (icon + title + một dòng; action optional).
+- Board, task panel, sổ lương, địa điểm dùng cùng pattern; bỏ 4 kiểu empty khác nhau.
+- Task panel: bỏ liệt kê việc 0/"00"/"Đã xong", empty state "Không có việc cần xử lý"; payment task theo tháng, unassigned theo tuần.
+- KPI: note không lặp đơn vị, highlight Cần xếp chỉ khi >0; bỏ "đã đủ người" khi tuần chưa có sự kiện.
+- Rule ghi vào spec mục "UX writing"; áp dụng cho các màn sau.

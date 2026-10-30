@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { cn, focusRingClasses } from '@/lib/utils';
 
 interface TaskPanelProps {
@@ -51,13 +52,13 @@ const TaskPanel: React.FC<TaskPanelProps> = ({
       </div>
 
       {tasks.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
-          <CheckCircle2 size={24} className="text-success" aria-hidden="true" />
-          <p className="text-body-sm font-medium text-ink">Không có việc cần xử lý</p>
-          <p className="text-label text-ink-muted">
-            Tuần này đã đủ người, tháng này không còn ca chờ thanh toán.
-          </p>
-        </div>
+        <EmptyState
+          tone="success"
+          icon={<CheckCircle2 size={24} aria-hidden="true" />}
+          title="Không có việc cần xử lý"
+          description="Không có sự kiện chưa xếp, ca chờ thanh toán hay ca đã ứng."
+          className="py-8"
+        />
       ) : (
         <div>
           {tasks.map((task) => (

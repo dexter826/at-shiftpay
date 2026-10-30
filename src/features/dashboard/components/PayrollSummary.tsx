@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Wallet } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { Tag } from '@/components/ui/Tag';
 import { cn, focusRingClasses } from '@/lib/utils';
 import { formatCurrency } from '@/utils/format';
@@ -46,9 +47,12 @@ const PayrollSummaryPanel: React.FC<PayrollSummaryProps> = ({
       </div>
 
       {dueRows.length === 0 ? (
-        <p className="px-3.5 py-8 text-center text-body-sm text-ink-muted">
-          Chưa có ca nào cần thanh toán trong tháng.
-        </p>
+        <EmptyState
+          icon={<Wallet size={24} aria-hidden="true" />}
+          title="Chưa có ca cần thanh toán"
+          description="Không có ca nào chờ chốt hoặc trả lương trong tháng."
+          className="py-8"
+        />
       ) : (
         <>
           <div className="hidden overflow-x-auto md:block">
