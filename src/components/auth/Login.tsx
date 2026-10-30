@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '@/firebase';
+import { auth } from '@/lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, setPersistence, browserLocalPersistence, browserSessionPersistence, sendEmailVerification } from 'firebase/auth';
 import { AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';

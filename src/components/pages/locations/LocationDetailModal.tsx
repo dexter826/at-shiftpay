@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
-import { Location, Event } from "@/types";
+import { Location, Event } from "@/types/index";
 import { useThemeStore } from "@/stores";
 import PenIcon from "@/components/ui/icons/pen-icon";
 import { AnimatedIconHandle } from "@/components/ui/icons/types";

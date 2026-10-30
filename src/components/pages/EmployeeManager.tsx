@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, memo } from 'react';
-import { Employee, Shift } from '@/types';
+import { Employee, Shift } from '@/types/index';
 import { dbService } from '@/services';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/components/ui/Toast';

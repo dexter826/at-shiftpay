@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button';
 import SimpleCheckedIcon from '@/components/ui/icons/simple-checked-icon';
 import { formatCurrency } from '@/utils/format';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
-import { PayrollSummary } from '@/types';
+import { PayrollSummary } from '@/types/index';
 
 interface ConfirmPaymentModalProps {
   isOpen: boolean;

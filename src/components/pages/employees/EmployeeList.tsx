@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Users } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { LoadMore } from '@/components/ui/LoadMore';
-import { Employee } from '@/types';
+import { Employee } from '@/types/index';
 import EmployeeCard from '@/components/pages/employees/EmployeeCard';
 
 interface EmployeeListProps {

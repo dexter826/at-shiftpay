@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect, memo } from 'react';
-import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/types';
+import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/types/index';
 import { dbService } from '@/services';
 
 import { useToast } from '@/components/ui/Toast';

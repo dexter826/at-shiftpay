@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { Employee } from '@/types';
+import { Employee } from '@/types/index';
 import { Phone, Calendar, CreditCard } from 'lucide-react';
 import PenIcon from '@/components/ui/icons/pen-icon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';

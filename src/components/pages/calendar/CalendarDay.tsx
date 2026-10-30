@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
-import { Event, Location } from '@/types';
+import { Event, Location } from '@/types/index';
 import { useThemeStore } from '@/stores';
 
 interface CalendarDayProps {

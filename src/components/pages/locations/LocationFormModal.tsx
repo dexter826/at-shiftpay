@@ -4,7 +4,7 @@ import { ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 
-import { Location } from '@/types';
+import { Location } from '@/types/index';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 

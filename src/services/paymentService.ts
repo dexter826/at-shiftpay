@@ -1,4 +1,4 @@
-import { db } from '@/firebase';
+import { db } from '@/lib/firebase';
 import {
   collection,
   doc,
@@ -12,7 +12,7 @@ import {
   QueryDocumentSnapshot,
   Unsubscribe
 } from 'firebase/firestore';
-import { PaymentTransaction } from '@/types';
+import { PaymentTransaction } from '@/types/index';
 import { createRealtimeSubscription, executeBatchWithRetry } from '@/services/firebaseService';
 import { PaymentTransactionSchema } from '@/utils/validation';
 

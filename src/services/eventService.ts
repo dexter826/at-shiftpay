@@ -1,4 +1,4 @@
-import { db } from '@/firebase';
+import { db } from '@/lib/firebase';
 import {
   collection,
   addDoc,
@@ -12,7 +12,7 @@ import {
   query,
   where
 } from 'firebase/firestore';
-import { Event, Shift } from '@/types';
+import { Event, Shift } from '@/types/index';
 import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery, executeBatchWithRetry } from '@/services/firebaseService';
 import { EventSchema } from '@/utils/validation';
 

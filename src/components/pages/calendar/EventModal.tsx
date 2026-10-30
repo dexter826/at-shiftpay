@@ -7,7 +7,7 @@ import {
   UserSettings,
   DEFAULT_SETTINGS,
   Location,
-} from "@/types";
+} from "@/types/index";
 import { dbService, deleteField } from "@/services";
 import {
   Sun,

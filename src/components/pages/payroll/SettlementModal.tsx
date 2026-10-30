@@ -3,7 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { useThemeStore } from '@/stores';
-import { Shift, PaymentTransaction, AdvanceBalance, Event, Location } from '@/types';
+import { Shift, PaymentTransaction, AdvanceBalance, Event, Location } from '@/types/index';
 import { formatCurrency, formatDate } from '@/utils/format';
 import { dbService } from '@/services';
 import { Calculator, Loader2 } from 'lucide-react';

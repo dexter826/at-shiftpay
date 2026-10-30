@@ -4,7 +4,7 @@ import { MapPin } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { LoadMore } from '@/components/ui/LoadMore';
 import LocationCard from '@/components/pages/locations/LocationCard';
-import { Location } from '@/types';
+import { Location } from '@/types/index';
 
 interface LocationListProps {
     loading: boolean;

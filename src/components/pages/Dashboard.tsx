@@ -1,6 +1,6 @@
 import React, { useMemo, useState, memo, useEffect } from 'react';
-import { Employee, Event, Shift, UserSettings } from '@/types';
-import { PAYMENT_COLORS } from '@/constants/colors';
+import { Employee, Event, Shift, UserSettings } from '@/types/index';
+import { PAYMENT_COLORS } from '@/config/colors';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download } from 'lucide-react';
 import Button from '@/components/ui/Button';

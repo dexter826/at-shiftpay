@@ -1,5 +1,5 @@
 import React, { useState, useMemo, memo } from 'react';
-import { Event, Shift, Employee, UserSettings, Location } from '@/types';
+import { Event, Shift, Employee, UserSettings, Location } from '@/types/index';
 import { dbService } from '@/services';
 import { useToast } from '@/components/ui/Toast';
 import { Modal } from '@/components/ui/Modal';

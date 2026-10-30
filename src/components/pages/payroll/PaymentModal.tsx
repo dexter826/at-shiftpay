@@ -3,7 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { useThemeStore } from '@/stores';
-import { Shift, PayrollSummary, Event, Employee, Location } from '@/types';
+import { Shift, PayrollSummary, Event, Employee, Location } from '@/types/index';
 import { formatCurrency } from '@/utils/format';
 import { dbService } from '@/services';
 import { vietQRService } from '@/services/vietqrService';

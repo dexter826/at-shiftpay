@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserSettings } from '@/types';
+import { UserSettings } from '@/types/index';
 import Switch from '@/components/ui/Switch';
 import { LogOut, Sun, Moon } from 'lucide-react';
 import { useThemeStore } from '@/stores';

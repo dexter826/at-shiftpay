@@ -1,4 +1,4 @@
-import { db } from '@/firebase';
+import { db } from '@/lib/firebase';
 import {
   collection,
   addDoc,
@@ -14,7 +14,7 @@ import {
   writeBatch,
   deleteField
 } from 'firebase/firestore';
-import { Location } from '@/types';
+import { Location } from '@/types/index';
 import { createRealtimeSubscription } from '@/services/firebaseService';
 import { LocationSchema } from '@/utils/validation';
 

@@ -1,4 +1,4 @@
-import { db } from '@/firebase';
+import { db } from '@/lib/firebase';
 import { 
   doc, 
   setDoc, 
@@ -11,7 +11,7 @@ import {
   writeBatch,
   deleteDoc
 } from 'firebase/firestore';
-import { UserSettings, DEFAULT_SETTINGS } from '@/types';
+import { UserSettings, DEFAULT_SETTINGS } from '@/types/index';
 
 export const settingsService = {
   subscribeSettings(userId: string, callback: (settings: UserSettings) => void): Unsubscribe {

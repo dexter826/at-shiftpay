@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Employee, Event, Shift, UserSettings, Location } from '@/types';
+import { Employee, Event, Shift, UserSettings, Location } from '@/types/index';
 
 import Dashboard from '@/components/pages/Dashboard';
 import CalendarView from '@/components/pages/CalendarView';

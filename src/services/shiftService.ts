@@ -1,4 +1,4 @@
-import { db } from '@/firebase';
+import { db } from '@/lib/firebase';
 import {
   collection,
   addDoc,
@@ -11,7 +11,7 @@ import {
   orderBy,
   Unsubscribe
 } from 'firebase/firestore';
-import { Shift } from '@/types';
+import { Shift } from '@/types/index';
 import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery } from '@/services/firebaseService';
 import { ShiftSchema } from '@/utils/validation';
 

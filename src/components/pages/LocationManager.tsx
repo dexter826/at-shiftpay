@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect, memo } from 'react';
 import ArrowNarrowLeftIcon from '@/components/ui/icons/arrow-narrow-left-icon';
-import { Location, Event } from '@/types';
+import { Location, Event } from '@/types/index';
 import { dbService } from '@/services';
 import { useToast } from '@/components/ui/Toast';
 import { useAuthStore, useThemeStore } from '@/stores';

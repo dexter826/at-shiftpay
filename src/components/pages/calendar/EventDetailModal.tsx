@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { Event, Shift, UserSettings, Location } from '@/types';
+import { Event, Shift, UserSettings, Location } from '@/types/index';
 import { formatDate, formatCurrency } from '@/utils/format';
 import { useThemeStore } from '@/stores';
 import {

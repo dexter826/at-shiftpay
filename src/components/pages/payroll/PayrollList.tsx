@@ -4,7 +4,7 @@ import { CheckCircle2, ChevronRightIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { LoadMore } from '@/components/ui/LoadMore';
 import { formatCurrency } from '@/utils/format';
-import { PayrollSummary } from '@/types';
+import { PayrollSummary } from '@/types/index';
 
 interface PayrollListProps {
   loading: boolean;

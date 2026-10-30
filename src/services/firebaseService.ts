@@ -1,5 +1,5 @@
 import { collection, query, where, orderBy, onSnapshot, getDocs, Unsubscribe, Query, WriteBatch } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/lib/firebase';
 import { safeValidate } from '@/utils/validation';
 import { z } from 'zod';
 

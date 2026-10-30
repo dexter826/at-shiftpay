@@ -3,7 +3,7 @@ import { Camera, Upload, Loader2, Building2, RotateCcw } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
-import { Employee } from '@/types';
+import { Employee } from '@/types/index';
 import { useToast } from '@/components/ui/Toast';
 import { dbService, deleteField } from '@/services';
 import { vietQRService, VietQRBank } from '@/services/vietqrService';

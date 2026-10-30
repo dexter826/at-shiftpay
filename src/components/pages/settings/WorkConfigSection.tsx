@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, Save, Loader2 } from 'lucide-react';
-import { UserSettings } from '@/types';
+import { UserSettings } from '@/types/index';
 import { dbService } from '@/services';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';

@@ -1,3 +1,3 @@
-export { Splashscreen } from '@/components/common/Splashscreen';
+export { Splashscreen } from '@/components/Splashscreen';
 export { AppRouter } from '@/components/common/AppRouter';
-export { PullToRefresh } from '@/components/common/PullToRefresh';
+export { PullToRefresh } from '@/components/PullToRefresh';

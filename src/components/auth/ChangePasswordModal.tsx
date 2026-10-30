@@ -5,7 +5,7 @@ import { Lock, AlertCircle, Check } from 'lucide-react';
 import EyeIcon from '@/components/ui/icons/eye-icon';
 import EyeOffIcon from '@/components/ui/icons/eye-off-icon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
-import { auth } from '@/firebase';
+import { auth } from '@/lib/firebase';
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 
 interface ChangePasswordModalProps {

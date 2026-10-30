@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Calendar, MapPin } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils/format';
-import { PaymentTransaction, Shift, Event, Location } from '@/types';
+import { PaymentTransaction, Shift, Event, Location } from '@/types/index';
 
 interface TransactionDetailModalProps {
   isOpen: boolean;

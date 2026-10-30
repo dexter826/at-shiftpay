@@ -5,7 +5,7 @@ import PlusIcon from '@/components/ui/icons/plus-icon';
 import MapPinIcon from '@/components/ui/icons/map-pin-icon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Event, Shift, Location } from '@/types';
+import { Event, Shift, Location } from '@/types/index';
 import { formatDate } from '@/utils/format';
 import { useThemeStore } from '@/stores';
 

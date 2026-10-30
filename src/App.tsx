@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Loader from '@/components/ui/Loading';
-import { Navbar, OfflineIndicator } from '@/components/layout';
+import { Navbar, OfflineIndicator } from '@/components/layouts';
 import { Login } from '@/components/auth';
 import { Splashscreen, AppRouter, PullToRefresh } from '@/components/common';
 import { ExportModal } from '@/components/modals';

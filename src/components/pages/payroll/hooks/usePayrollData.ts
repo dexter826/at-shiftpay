@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Shift, PayrollSummary, Event } from '@/types';
+import { Shift, PayrollSummary, Event } from '@/types/index';
 
 interface UsePayrollDataProps {
     shifts: Shift[];

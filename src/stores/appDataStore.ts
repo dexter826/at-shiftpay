@@ -6,7 +6,7 @@ import {
   UserSettings,
   DEFAULT_SETTINGS,
   Location,
-} from "@/types";
+} from "@/types/index";
 import { dbService } from "@/services";
 
 interface AppDataState {

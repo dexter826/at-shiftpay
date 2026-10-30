@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { Phone, Briefcase, Pencil, Trash2, Landmark } from 'lucide-react';
-import { Employee } from '@/types';
+import { Employee } from '@/types/index';
 
 interface EmployeeCardProps {
   employee: Employee;
