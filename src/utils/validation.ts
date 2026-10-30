@@ -105,7 +105,8 @@ export function validateUserSettings(data: unknown) {
 export function safeValidate<T>(schema: z.ZodSchema<T>, data: unknown): T | null {
   const result = schema.safeParse(data);
   if (!result.success) {
-    console.warn('Validation failed for data:', data, 'Errors:', result.error.issues);
+    const fields = result.error.issues.map((issue) => issue.path.join('.')).join(', ');
+    console.warn(`Validation failed for fields: ${fields}`);
     return null;
   }
   return result.data;
