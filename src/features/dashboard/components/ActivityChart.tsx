@@ -6,7 +6,12 @@ import ChartTooltip from '@/features/dashboard/components/ChartTooltip';
 
 interface ActivityChartProps {
   data: { day: number; events: number; shifts: number }[];
-  growthStats: { eventGrowth: number; shiftGrowth: number; eventCount: number; shiftCount: number };
+  growthStats: {
+    eventGrowth: number | null;
+    shiftGrowth: number | null;
+    eventCount: number;
+    shiftCount: number;
+  };
   monthName: string;
   onPrevMonth: () => void;
   onNextMonth: () => void;
@@ -19,10 +24,18 @@ const TrendIndicator = ({
   count,
   label,
 }: {
-  value: number;
+  value: number | null;
   count: number;
   label: string;
 }) => {
+  if (value === null) {
+    return (
+      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-500/10 text-slate-400">
+        —
+      </span>
+    );
+  }
+
   const isPositive = value >= 0;
   return (
     <span

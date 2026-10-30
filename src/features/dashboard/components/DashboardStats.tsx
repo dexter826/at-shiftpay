@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Calendar, TrendingUp, Users, Wallet } from 'lucide-react';
+import { formatCurrency } from '@/utils/format';
 
 interface DashboardStatsProps {
   stats: {
@@ -78,7 +79,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = memo(({ stats }) => (
           <p
             className={`text-xl font-bold text-[var(--text-primary)] tabular-nums mb-2.5 ${card.isCurrency ? 'text-primary' : ''}`}
           >
-            {card.isCurrency ? `${mainValue.toLocaleString('vi-VN')}đ` : mainValue}
+            {card.isCurrency ? formatCurrency(mainValue) : mainValue}
           </p>
           <div className="pt-2 border-t border-[var(--border-color)] space-y-1">
             {card.rows.map((row) => {
@@ -96,7 +97,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = memo(({ stats }) => (
                   <span
                     className={`font-semibold tabular-nums ${row.color || 'text-[var(--text-primary)]'}`}
                   >
-                    {row.currency ? `${val.toLocaleString('vi-VN')}đ` : val}
+                    {row.currency ? formatCurrency(val) : val}
                   </span>
                 </div>
               );

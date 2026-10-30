@@ -1,6 +1,7 @@
 import React, { useMemo, useState, memo, useEffect } from 'react';
 import { Employee, Event, Shift, UserSettings } from '@/types/index';
 import { PAYMENT_COLORS } from '@/config/colors';
+import { parseDateOnly } from '@/utils/format';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download } from 'lucide-react';
 import Button from '@/components/ui/Button';
@@ -53,20 +54,20 @@ const DashboardView: React.FC<DashboardViewProps> = ({
     const prevY = prevMonthDate.getFullYear();
 
     const currentEvents = initialEvents.filter((e) => {
-      const d = new Date(e.date);
+      const d = parseDateOnly(e.date);
       return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     });
     const currentShifts = initialShifts.filter((s) => {
-      const d = new Date(s.date);
+      const d = parseDateOnly(s.date);
       return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     });
 
     const prevEvents = initialEvents.filter((e) => {
-      const d = new Date(e.date);
+      const d = parseDateOnly(e.date);
       return d.getMonth() === prevM && d.getFullYear() === prevY;
     });
     const prevShifts = initialShifts.filter((s) => {
-      const d = new Date(s.date);
+      const d = parseDateOnly(s.date);
       return d.getMonth() === prevM && d.getFullYear() === prevY;
     });
 
@@ -91,7 +92,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   const stats = useMemo(() => {
-    if (loading || employees.length === 0) return null;
+    if (loading) return null;
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -99,7 +100,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
 
     // Dùng getTime để so sánh nhanh hơn
     const todayEvents = initialEvents.filter((e) => {
-      const t = new Date(e.date).getTime();
+      const t = parseDateOnly(e.date).getTime();
       return t >= todayStart && t < todayEnd;
     });
 
@@ -110,11 +111,12 @@ const DashboardView: React.FC<DashboardViewProps> = ({
     const weekEndTime = weekStartTime + 7 * 86400000;
 
     const weekEvents = initialEvents.filter((e) => {
-      const t = new Date(e.date).getTime();
+      const t = parseDateOnly(e.date).getTime();
       return t >= weekStartTime && t < weekEndTime;
     });
 
-    const unpaidShifts = initialShifts.filter((s) => s.status === 'unpaid');
+    const monthShifts = monthlyData.shifts;
+    const unpaidShifts = monthShifts.filter((s) => s.status === 'unpaid');
     const morningShiftsCount = unpaidShifts.filter((s) => s.session === 'morning').length;
     const afternoonShiftsCount = unpaidShifts.filter((s) => s.session === 'afternoon').length;
 
@@ -122,10 +124,10 @@ const DashboardView: React.FC<DashboardViewProps> = ({
     const activeEmployeesCount = employees.filter((e) => activeEmployeeIds.has(e.id)).length;
 
     const unpaidEventIds = new Set(unpaidShifts.map((s) => s.eventId));
-    const unpaidEventsCount = initialEvents.filter((e) => unpaidEventIds.has(e.id)).length;
+    const unpaidEventsCount = monthlyData.events.filter((e) => unpaidEventIds.has(e.id)).length;
 
     const totalUnpaidAmount = unpaidShifts.reduce((sum, s) => sum + s.amount, 0);
-    const totalAdvancedAmount = initialShifts.reduce(
+    const totalAdvancedAmount = monthShifts.reduce(
       (sum, s) => (s.status === 'advanced' ? sum + s.amount : sum),
       0
     );
@@ -143,7 +145,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
       advancedAmount: totalAdvancedAmount,
       totalEarned: totalUnpaidAmount + totalAdvancedAmount,
     };
-  }, [initialEvents, initialShifts, employees, loading]);
+  }, [initialEvents, initialShifts, monthlyData, employees, loading]);
 
   const chartData = useMemo(() => {
     const { events, shifts } = monthlyData;
@@ -162,13 +164,11 @@ const DashboardView: React.FC<DashboardViewProps> = ({
       const dayEvents = eventMap[dateStr] || 0;
       const dayShifts = shiftMap[dateStr] || 0;
 
-      if (dayEvents > 0 || dayShifts > 0) {
-        data.push({
-          day: day,
-          events: dayEvents,
-          shifts: dayShifts,
-        });
-      }
+      data.push({
+        day: day,
+        events: dayEvents,
+        shifts: dayShifts,
+      });
     }
     return data;
   }, [monthlyData.events, monthlyData.shifts, currentMonth, currentYear]);
@@ -185,7 +185,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
     const { events, shifts, prevEvents, prevShifts } = monthlyData;
 
     const calculateGrowth = (current: number, previous: number) => {
-      if (previous === 0) return current > 0 ? 100 : 0;
+      if (previous === 0) return null;
       return Math.round(((current - previous) / previous) * 100);
     };
 
@@ -201,13 +201,13 @@ const DashboardView: React.FC<DashboardViewProps> = ({
   }, [monthlyData]);
 
   const paymentData = useMemo(() => {
-    const unpaidShifts = initialShifts.filter((s) => s.status === 'unpaid').length;
-    const advancedShifts = initialShifts.filter((s) => s.status === 'advanced').length;
+    const unpaidShifts = monthlyData.shifts.filter((s) => s.status === 'unpaid').length;
+    const advancedShifts = monthlyData.shifts.filter((s) => s.status === 'advanced').length;
     return [
       { name: 'Chưa thanh toán', value: unpaidShifts, color: PAYMENT_COLORS.UNPAID },
       { name: 'Đã ứng tiền', value: advancedShifts, color: PAYMENT_COLORS.ADVANCED },
     ].filter((d) => d.value > 0);
-  }, [initialShifts]);
+  }, [monthlyData.shifts]);
 
   const monthName = new Intl.DateTimeFormat('vi-VN', { month: 'long', year: 'numeric' }).format(
     selectedDate
