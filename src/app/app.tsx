@@ -20,7 +20,7 @@ import { exportDetailedReport } from '@/lib/api/exportService';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 
-function App() {
+function AppShell() {
   const theme = useThemeStore(state => state.theme);
   const { user, loading: authLoading, init: initAuth, logout } = useAuthStore();
   const {
@@ -267,7 +267,7 @@ function AppContent({
   );
 }
 
-function AppWrapper() {
+function App() {
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem('splashscreen_shown');
   });
@@ -276,7 +276,7 @@ function AppWrapper() {
     return <Splashscreen onComplete={() => setShowSplash(false)} />;
   }
 
-  return <App />;
+  return <AppShell />;
 }
 
-export default AppWrapper;
+export default App;
