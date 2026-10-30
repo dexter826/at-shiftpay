@@ -203,7 +203,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   </button>
                 ))
               ) : (
-                <div className={`px-3 py-4 text-center text-xs text-ink-muted`}>
+                <div className={`px-3 py-4 text-center text-label text-ink-muted`}>
                   Không tìm thấy kết quả
                 </div>
               )}
