@@ -177,7 +177,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
               if (passwordError) onValidatePassword(event.target.value);
             }}
             onBlur={() => onValidatePassword(password)}
-            placeholder="Nhập mật khẩu"
             autoComplete={isSignUp ? 'new-password' : 'current-password'}
           />
         </Field>
@@ -200,7 +199,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 if (confirmPasswordError) onValidateConfirmPassword(event.target.value);
               }}
               onBlur={() => onValidateConfirmPassword(confirmPassword)}
-              placeholder="Nhập lại mật khẩu"
               autoComplete="new-password"
             />
           </Field>
