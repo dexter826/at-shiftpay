@@ -293,14 +293,7 @@ function AppContent({
               />
               <Route
                 path="/locations"
-                element={
-                  <LocationView
-                    locations={locations}
-                    events={events}
-                    loading={isLoading}
-                    onBack={() => navigate('/calendar')}
-                  />
-                }
+                element={<LocationView locations={locations} events={events} loading={isLoading} />}
               />
               <Route
                 path="/payroll"

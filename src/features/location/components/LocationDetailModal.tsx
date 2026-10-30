@@ -1,9 +1,11 @@
-import React, { memo } from 'react';
-import { Calendar, ExternalLink, MapPin, MessageSquare, Pencil } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { Calendar, ExternalLink, MapPin, Pencil } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Tag } from '@/components/ui/Tag';
 import { Location, Event } from '@/types/index';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
+import { formatCurrency, formatDate } from '@/utils/format';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 
@@ -12,8 +14,14 @@ interface LocationDetailModalProps {
   onClose: () => void;
   location: Location | null;
   events: Event[];
-  onEditClick: (loc: Location) => void;
+  onEditClick: (location: Location) => void;
 }
+
+const reviewTag = (review: Location['review']) => {
+  if (review === 'high') return <Tag variant="success">Tốt</Tag>;
+  if (review === 'low') return <Tag variant="danger">Kém</Tag>;
+  return <Tag>Thường</Tag>;
+};
 
 const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
   isOpen,
@@ -22,173 +30,155 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
   events,
   onEditClick,
 }) => {
+  const [failedMapId, setFailedMapId] = useState<string | null>(null);
+
+  const locationEvents = useMemo(() => {
+    if (!location) return [];
+    return events
+      .filter((event) => event.locationId === location.id)
+      .sort((a, b) => b.date.localeCompare(a.date));
+  }, [events, location]);
+
   if (!location) return null;
 
-  const hasCoords = location.latitude && location.longitude;
+  const hasCoords = location.latitude != null && location.longitude != null;
   const mapUrl = hasCoords
     ? `https://maps.locationiq.com/v3/staticmap?key=${LOCATIONIQ_API_KEY}&center=${location.latitude},${location.longitude}&zoom=17&size=600x400&markers=icon:large-blue-cutout|${location.latitude},${location.longitude}`
-    : `https://maps.locationiq.com/v3/staticmap?key=${LOCATIONIQ_API_KEY}&center=21.02776,105.83416&zoom=12&size=600x400`;
-
-  // Lọc sự kiện của địa điểm này và sắp xếp mới nhất
-  const locationEvents = events
-    .filter((e) => e.locationId === location.id)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    : null;
+  const mapFailed = failedMapId === location.id;
+  const hasMapLink = hasCoords || Boolean(location.address?.trim());
 
   const handleOpenInGoogleMaps = () => {
-    const { latitude, longitude, address } = location;
-    let url = '';
-    if (latitude && longitude) {
-      url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-    } else if (address && address.trim()) {
-      url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.trim())}`;
+    if (location.latitude != null && location.longitude != null) {
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`,
+        '_blank',
+        'noopener,noreferrer'
+      );
+      return;
     }
-    if (url) window.open(url, '_blank');
-  };
 
-  const renderReviewBadge = () => {
-    if (location.review === 'high') {
-      return (
-        <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-          <span className="w-1.5 h-1.5 rounded-xs bg-success" />
-          <span>Tốt</span>
-        </div>
+    if (location.address?.trim()) {
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.address.trim())}`,
+        '_blank',
+        'noopener,noreferrer'
       );
     }
-    if (location.review === 'low') {
-      return (
-        <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-          <span className="w-1.5 h-1.5 rounded-xs bg-danger" />
-          <span>Kém</span>
-        </div>
-      );
-    }
-    return (
-      <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-        <span className="w-1.5 h-1.5 rounded-xs bg-ink-muted" />
-        <span>Thường</span>
-      </div>
-    );
   };
 
   return (
     <Modal
-      title="Chi tiết địa điểm"
+      title={location.name}
       isOpen={isOpen}
       onClose={onClose}
       footer={
         <Button
-          variant="primary"
           onClick={() => {
             onClose();
             onEditClick(location);
           }}
           fullWidth
-          className="flex justify-center items-center gap-2"
+          icon={<Pencil size={16} />}
         >
-          <Pencil size={18} color="currentColor" />
-          Chỉnh sửa địa điểm
+          Sửa địa điểm
         </Button>
       }
     >
-      <div className="space-y-6">
-        {/* Header Section */}
-        <div className="flex flex-col gap-4">
-          <div className="flex justify-between items-start gap-4">
-            <h3 className={`text-display font-semibold text-ink leading-tight`}>{location.name}</h3>
-            {renderReviewBadge()}
-          </div>
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-mono-label text-ink-muted">Đánh giá</span>
+          {reviewTag(location.review)}
+        </div>
 
-          <div className="relative aspect-[16/9] rounded-md overflow-hidden border border-line">
-            <img src={mapUrl} alt={location.name} className="w-full h-full object-cover" />
-            {!hasCoords && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span
-                  className={`px-2 py-1 rounded-xs text-label font-medium bg-surface border border-line text-ink-soft`}
-                >
-                  Chưa có tọa độ chính xác
-                </span>
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={handleOpenInGoogleMaps}
-              aria-label="Mở trong Google Maps"
-              title="Mở trong Google Maps"
-              className={`absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-soft hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
-            >
-              <ExternalLink size={16} />
-            </button>
-          </div>
-
-          <div className="flex items-start gap-3 p-4 rounded-md bg-surface-2 border border-line">
-            <MapPin size={16} className="text-accent-ink shrink-0 mt-0.5" />
-            <span className={`text-body-sm leading-relaxed text-ink-soft`}>
-              {location.address || 'Địa chỉ chưa xác định'}
-            </span>
-          </div>
-
-          {location.reviewNote && (
-            <div className="flex items-start gap-3 p-4 rounded-md bg-surface-2 border border-line">
-              <MessageSquare size={16} className="text-ink-muted shrink-0 mt-0.5" />
-              <p className={`text-body-sm text-ink-soft leading-relaxed italic`}>
-                "{location.reviewNote}"
+        <div className="aspect-[16/9] overflow-hidden border border-line bg-surface-2">
+          {mapUrl && !mapFailed ? (
+            <img
+              src={mapUrl}
+              alt={`Bản đồ ${location.name}`}
+              loading="lazy"
+              onError={() => setFailedMapId(location.id)}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center gap-1.5 px-6 text-center">
+              <MapPin size={22} aria-hidden="true" className="text-ink-muted" />
+              <p className="text-body-sm text-ink-soft">
+                {mapFailed ? 'Không tải được bản đồ.' : 'Chưa có tọa độ để hiển thị bản đồ.'}
               </p>
             </div>
           )}
         </div>
 
-        {/* History Section */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 px-1">
-            <div className="h-px flex-1 bg-line" />
-            <h4 className={`text-label font-medium text-ink-muted`}>Lịch sử công việc</h4>
-            <div className="h-px flex-1 bg-line" />
+        <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+          <p className="text-label text-ink-muted">
+            {hasMapLink ? 'Mở vị trí bằng địa chỉ hoặc tọa độ.' : 'Cần địa chỉ hoặc tọa độ.'}
+          </p>
+          <Button
+            variant="outline"
+            onClick={handleOpenInGoogleMaps}
+            disabled={!hasMapLink}
+            icon={<ExternalLink size={14} />}
+          >
+            Mở Google Maps
+          </Button>
+        </div>
+
+        <div className="flex items-start gap-2 border border-line bg-surface-2 px-3 py-2.5">
+          <MapPin size={15} aria-hidden="true" className="mt-0.5 shrink-0 text-ink-muted" />
+          <p className="text-body-sm leading-relaxed text-ink-soft">
+            {location.address?.trim() || 'Chưa có địa chỉ'}
+          </p>
+        </div>
+
+        {location.reviewNote && (
+          <div className="space-y-1.5 border-t border-line pt-3">
+            <p className="font-mono text-mono-label text-ink-muted">Ghi chú đánh giá</p>
+            <p className="text-body-sm italic leading-relaxed text-ink-soft">
+              “{location.reviewNote}”
+            </p>
+          </div>
+        )}
+
+        <div className="space-y-2 border-t border-line pt-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-mono text-mono-label text-ink-muted">Lịch sử sự kiện</p>
+            <span className="font-mono text-mono-label text-ink-muted">
+              {locationEvents.length}
+            </span>
           </div>
 
-          <div className="space-y-2 max-h-75 overflow-y-auto pr-1">
-            {locationEvents.length > 0 ? (
-              locationEvents.map((event) => {
-                const eventDate = new Date(event.date).toLocaleDateString('vi-VN', {
-                  weekday: 'short',
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                });
-                return (
-                  <div
-                    key={event.id}
-                    className={`flex items-center justify-between gap-3 p-3 rounded-md border border-line bg-surface-2`}
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xs bg-surface border border-line text-ink-muted">
-                        <Calendar size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <div className={`text-body-sm font-semibold text-ink truncate`}>
-                          {event.title}
-                        </div>
-                        <div className={`text-label text-ink-soft tabular-nums`}>{eventDate}</div>
-                      </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className={`text-body-sm font-semibold text-ink tabular-nums`}>
-                        {event.amount?.toLocaleString('vi-VN')}đ
-                      </div>
-                    </div>
+          {locationEvents.length === 0 ? (
+            <EmptyState
+              icon={<Calendar size={24} aria-hidden="true" />}
+              title="Chưa có sự kiện tại địa điểm này"
+              description="Sự kiện gắn địa điểm sẽ hiện ở đây."
+              className="py-8"
+            />
+          ) : (
+            <div className="divide-y divide-line border border-line">
+              {locationEvents.map((event) => (
+                <div key={event.id} className="flex items-start justify-between gap-3 px-3 py-2.5">
+                  <div className="min-w-0">
+                    <p className="truncate text-body-sm font-medium text-ink">
+                      {event.title || 'Tiệc'}
+                    </p>
+                    <p className="font-mono text-label text-ink-muted">{formatDate(event.date)}</p>
                   </div>
-                );
-              })
-            ) : (
-              <div className="text-center py-8 text-ink-muted">
-                <Calendar size={32} className="mx-auto mb-2" />
-                <p className="text-body-sm font-medium">Chưa có lịch sử làm việc tại đây</p>
-              </div>
-            )}
-          </div>
+                  <div className="shrink-0 text-right">
+                    <p className="font-mono text-label text-ink-muted">Lương/người</p>
+                    <p className="font-mono text-label text-ink">
+                      {event.amount != null ? formatCurrency(event.amount) : 'Chưa có lương'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </Modal>
   );
 };
 
-export default memo(LocationDetailModal);
+export default LocationDetailModal;
