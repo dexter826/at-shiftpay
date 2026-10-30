@@ -9,8 +9,8 @@ import Button from '@/components/ui/Button';
 import { ToastProvider } from '@/components/ui/Toast';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
 import { useThemeStore, useAuthStore, useAppDataStore } from '@/stores';
-import { dbService } from '@/services';
-import { exportDetailedReport } from '@/services/exportService';
+import { dbService } from '@/lib/api';
+import { exportDetailedReport } from '@/lib/api/exportService';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 

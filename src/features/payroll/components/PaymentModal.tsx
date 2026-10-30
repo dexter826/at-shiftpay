@@ -5,8 +5,8 @@ import { useToast } from '@/components/ui/Toast';
 import { useThemeStore } from '@/stores';
 import { Shift, PayrollSummary, Event, Employee, Location } from '@/types/index';
 import { formatCurrency } from '@/utils/format';
-import { dbService } from '@/services';
-import { vietQRService } from '@/services/vietqrService';
+import { dbService } from '@/lib/api';
+import { vietQRService } from '@/lib/api/vietqrService';
 import { Banknote, AlertTriangle, Check, QrCode, Building2, IdCard, User, MapPin, Wallet } from 'lucide-react';
 import { useAuthStore } from '@/stores';
 

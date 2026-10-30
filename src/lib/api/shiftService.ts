@@ -12,7 +12,7 @@ import {
   Unsubscribe
 } from 'firebase/firestore';
 import { Shift } from '@/types/index';
-import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery } from '@/services/firebaseService';
+import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery } from '@/lib/api/firebaseService';
 import { ShiftSchema } from '@/utils/validation';
 
 export const shiftService = {

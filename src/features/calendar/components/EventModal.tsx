@@ -8,7 +8,7 @@ import {
   DEFAULT_SETTINGS,
   Location,
 } from "@/types/index";
-import { dbService, deleteField } from "@/services";
+import { dbService, deleteField } from "@/lib/api";
 import {
   Sun,
   Moon,

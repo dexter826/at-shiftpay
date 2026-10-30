@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect, memo } from 'react';
 import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/types/index';
-import { dbService } from '@/services';
+import { dbService } from '@/lib/api';
 
 import { useToast } from '@/components/ui/Toast';
 import { PaymentModal } from '@/features/payroll/components/PaymentModal';

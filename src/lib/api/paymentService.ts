@@ -13,7 +13,7 @@ import {
   Unsubscribe
 } from 'firebase/firestore';
 import { PaymentTransaction } from '@/types/index';
-import { createRealtimeSubscription, executeBatchWithRetry } from '@/services/firebaseService';
+import { createRealtimeSubscription, executeBatchWithRetry } from '@/lib/api/firebaseService';
 import { PaymentTransactionSchema } from '@/utils/validation';
 
 export const paymentService = {

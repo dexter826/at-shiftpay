@@ -13,7 +13,7 @@ import {
   where
 } from 'firebase/firestore';
 import { Event, Shift } from '@/types/index';
-import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery, executeBatchWithRetry } from '@/services/firebaseService';
+import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery, executeBatchWithRetry } from '@/lib/api/firebaseService';
 import { EventSchema } from '@/utils/validation';
 
 export const eventService = {

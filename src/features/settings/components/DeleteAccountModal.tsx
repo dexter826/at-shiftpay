@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AlertTriangle, Trash2, Loader2 } from 'lucide-react';
-import { dbService } from '@/services';
+import { dbService } from '@/lib/api';
 import { auth } from '@/lib/firebase';
 import { deleteUser } from 'firebase/auth';
 import { useToast } from '@/components/ui/Toast';

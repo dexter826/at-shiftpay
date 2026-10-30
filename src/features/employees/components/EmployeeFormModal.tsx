@@ -5,8 +5,8 @@ import Button from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Employee } from '@/types/index';
 import { useToast } from '@/components/ui/Toast';
-import { dbService, deleteField } from '@/services';
-import { vietQRService, VietQRBank } from '@/services/vietqrService';
+import { dbService, deleteField } from '@/lib/api';
+import { vietQRService, VietQRBank } from '@/lib/api/vietqrService';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { areValuesEqual } from '@/utils/compare';
 

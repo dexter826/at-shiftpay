@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { User, Camera, Loader2, Edit2, Check, X, Key, ChevronRight, Trash2 } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
-import { dbService } from '@/services';
+import { dbService } from '@/lib/api';
 import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/Toast';
 import { ImageCropperModal } from '@/components/ImageCropperModal';

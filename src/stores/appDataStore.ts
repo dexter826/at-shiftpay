@@ -7,7 +7,7 @@ import {
   DEFAULT_SETTINGS,
   Location,
 } from "@/types/index";
-import { dbService } from "@/services";
+import { dbService } from "@/lib/api";
 
 interface AppDataState {
   // Data
