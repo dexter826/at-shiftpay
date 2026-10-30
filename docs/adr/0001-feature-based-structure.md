@@ -5,6 +5,6 @@ The `src/` tree mixed screens, feature UI, and data access under `components/pag
 ## Consequences
 
 - Shared Firestore access sits in `lib/api/` for now: the standard has no shared-API folder, and these services are used by more than one feature, so they cannot own a single `features/<f>/api/`.
-- `features/settings` imports `ChangePasswordModal` from `features/auth`, the one cross-feature import left after the move; it should be composed at the `app/` level when the settings screen is next touched.
+- `features/settings` used to import `ChangePasswordModal` from `features/auth`; it is now composed at the `app/routes/settings.tsx` level, so features no longer import each other.
 - Barrel files still exist (`components/index.ts`, `components/layouts/index.ts`, `lib/api/index.ts`, `stores/index.ts`, `features/auth/index.ts`); the standard discourages them and they are slated for removal in the dead-code pass.
 - No `testing/` or `app/provider.tsx` folders were created because the repo has no tests and no global providers yet.
