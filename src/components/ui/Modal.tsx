@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import XIcon from '@/components/ui/icons/XIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import { focusRingClasses } from '@/lib/utils';
+import { DURATION_BASE, EASE_STANDARD } from '@/lib/motion';
 
 interface ModalProps {
   title: string;
@@ -83,11 +85,11 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/60 p-0 md:p-4"
+          className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-scrim/70 p-0 md:p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: DURATION_BASE, ease: EASE_STANDARD }}
         >
           <motion.div
             ref={dialogRef}
@@ -95,25 +97,26 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
             aria-modal="true"
             aria-labelledby={titleId}
             tabIndex={-1}
-            className={`bg-canvas w-full md:max-w-md md:rounded-lg rounded-t-lg max-h-[85vh] flex flex-col border border-line outline-none`}
+            className={`bg-surface w-full md:max-w-md md:rounded-md rounded-t-md max-h-[85vh] flex flex-col border border-line outline-none`}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: DURATION_BASE, ease: EASE_STANDARD }}
           >
             {/* Tiêu đề */}
             <div
               className={`px-4 py-3 border-b border-line flex justify-between items-center flex-shrink-0`}
             >
-              <h3 id={titleId} className={`text-base font-semibold text-ink`}>
+              <h3 id={titleId} className={`text-title font-semibold text-ink`}>
                 {title}
               </h3>
               <button
+                type="button"
                 onClick={onClose}
                 onMouseEnter={() => closeIconRef.current?.startAnimation()}
                 onMouseLeave={() => closeIconRef.current?.stopAnimation()}
                 aria-label="Đóng"
-                className={`p-2 text-ink-muted hover:text-ink-soft rounded-md hover:bg-line transition-colors`}
+                className={`p-2 text-ink-muted hover:text-ink hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingClasses}`}
               >
                 <XIcon ref={closeIconRef} size={18} />
               </button>

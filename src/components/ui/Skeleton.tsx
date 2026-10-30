@@ -1,5 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { DURATION_BASE, EASE_STANDARD } from '@/lib/motion';
 
 interface SkeletonProps {
   className?: string;
@@ -21,10 +22,12 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   const shimmerGradient = 'from-transparent via-ink/5 to-transparent';
 
   const variantClasses = {
-    text: 'rounded',
-    rectangular: 'rounded-lg',
+    text: 'rounded-xs',
+    rectangular: 'rounded-md',
     circular: 'rounded-full',
   };
+
+  const prefersReducedMotion = useReducedMotion();
 
   const style = {
     width: width,
@@ -35,20 +38,22 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: DURATION_BASE, ease: EASE_STANDARD }}
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
       style={style}
     >
-      <motion.div
-        className={`absolute inset-0 bg-gradient-to-r ${shimmerGradient}`}
-        initial={{ x: '-100%' }}
-        animate={{ x: '100%' }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      />
+      {!prefersReducedMotion && (
+        <motion.div
+          className={`absolute inset-0 bg-gradient-to-r ${shimmerGradient}`}
+          initial={{ x: '-100%' }}
+          animate={{ x: '100%' }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        />
+      )}
     </motion.div>
   );
 };

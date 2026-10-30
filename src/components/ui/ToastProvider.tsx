@@ -9,6 +9,8 @@ import React, {
 } from 'react';
 import { CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { focusRingClasses } from '@/lib/utils';
+import { DURATION_FAST, EASE_STANDARD } from '@/lib/motion';
 
 type ToastType = 'success' | 'error' | 'warning';
 
@@ -47,26 +49,29 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: number) => void }> = ({
     warning: <AlertCircle size={18} className="text-warning" />,
   };
 
-  const bgColors = {
-    success: 'bg-success/10 border-success/30',
-    error: 'bg-danger/10 border-danger/30',
-    warning: 'bg-warning/10 border-warning/30',
+  const borderColors = {
+    success: 'border-success/40',
+    error: 'border-danger/40',
+    warning: 'border-warning/40',
   };
 
   return (
     <motion.div
-      className={`flex items-center gap-3 px-4 py-3 rounded-lg border ${bgColors[toast.type]} shadow-lg bg-surface/90`}
-      initial={{ opacity: 0, y: -20 }}
+      role={toast.type === 'error' ? 'alert' : 'status'}
+      className={`flex items-center gap-3 px-4 py-3 rounded-md border bg-surface ${borderColors[toast.type]}`}
+      initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.2 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: DURATION_FAST, ease: EASE_STANDARD }}
       layout
     >
       {icons[toast.type]}
-      <span className={`text-sm text-ink flex-1`}>{toast.message}</span>
+      <span className={`text-body-sm text-ink flex-1`}>{toast.message}</span>
       <button
+        type="button"
         onClick={() => onRemove(toast.id)}
-        className={`text-ink-muted hover:text-accent-ink transition-colors`}
+        aria-label="Đóng thông báo"
+        className={`p-1 rounded-xs text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingClasses}`}
       >
         <X size={16} />
       </button>

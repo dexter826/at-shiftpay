@@ -75,6 +75,7 @@
   --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   --color-ring: var(--color-accent);
+  --color-scrim: oklch(0.12 0.005 80);
   --color-canvas: var(--palette-graphite-975);
   --color-surface: var(--palette-graphite-925);
   --color-surface-2: var(--palette-graphite-875);
