@@ -134,7 +134,7 @@ export const exportDetailedReport = (
   const url = URL.createObjectURL(blob);
   link.setAttribute('href', url);
 
-  let fileName = '';
+  let fileName: string;
   if (month === 0) {
     fileName = year === 0 ? 'Bao_Cao_Tat_Ca' : `Bao_Cao_Nam_${year}`;
   } else {

@@ -131,14 +131,16 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({
       switch (sortBy) {
         case 'name':
           return a.name.localeCompare(b.name, 'vi');
-        case 'shifts':
+        case 'shifts': {
           const aShifts = shiftCountByEmployee[a.id] || 0;
           const bShifts = shiftCountByEmployee[b.id] || 0;
           return bShifts - aShifts;
-        case 'recent':
+        }
+        case 'recent': {
           const aCreatedAt = a.createdAt ? new Date(a.createdAt).getTime() : 0;
           const bCreatedAt = b.createdAt ? new Date(b.createdAt).getTime() : 0;
           return bCreatedAt - aCreatedAt;
+        }
         default:
           return 0;
       }
