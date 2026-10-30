@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, memo } from 'react';
 import ArrowNarrowLeftIcon from '@/components/ui/icons/arrow-narrow-left-icon';
 import { Location, Event } from '@/types/index';
-import { dbService } from '@/lib/api';
+import { locationService } from '@/lib/api/locationService';
 import { useToast } from '@/components/ui/Toast';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -131,10 +131,10 @@ const LocationManager: React.FC<LocationManagerProps> = ({
     const handleFormSubmit = async (data: any) => {
         try {
             if (editingLocation) {
-                await dbService.updateLocation(editingLocation.id, data);
+                await locationService.updateLocation(editingLocation.id, data);
                 showToast('Cập nhật địa điểm thành công', 'success');
             } else {
-                await dbService.addLocation(data, userId);
+                await locationService.addLocation(data, userId);
                 showToast('Thêm địa điểm thành công', 'success');
             }
             setIsModalOpen(false);
@@ -152,7 +152,7 @@ const LocationManager: React.FC<LocationManagerProps> = ({
     const confirmDelete = async () => {
         if (!deleteConfirm) return;
         try {
-            await dbService.deleteLocation(deleteConfirm);
+            await locationService.deleteLocation(deleteConfirm);
             showToast('Xóa địa điểm thành công', 'success');
             setDeleteConfirm(null);
         } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, memo } from 'react';
 import { Employee, Shift } from '@/types/index';
-import { dbService } from '@/lib/api';
+import { employeeService } from '@/lib/api/employeeService';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';
@@ -98,7 +98,7 @@ const EmployeeManager: React.FC<EmployeeManagerProps> = ({ employees, shifts, ev
 
   const confirmDelete = async () => {
     if (deleteConfirm) {
-      await dbService.deleteEmployee(deleteConfirm);
+      await employeeService.deleteEmployee(deleteConfirm);
       showToast('Đã xóa nhân viên', 'success');
       setDeleteConfirm(null);
     }

@@ -5,7 +5,7 @@ import { useToast } from '@/components/ui/Toast';
 import { useThemeStore } from '@/stores/themeStore';
 import { Shift, PaymentTransaction, AdvanceBalance, Event, Location } from '@/types/index';
 import { formatCurrency, formatDate } from '@/utils/format';
-import { dbService } from '@/lib/api';
+import { paymentService } from '@/lib/api/paymentService';
 import { Calculator, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -49,7 +49,7 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
             
             const fetchAdvances = async () => {
                 try {
-                    const data = await dbService.getUnsettledAdvances(employeeId, userId);
+                    const data = await paymentService.getUnsettledAdvances(employeeId, userId);
                     setLocalAdvances(data);
                 } catch (error) {
                     console.error('Failed to fetch advances:', error);
@@ -111,7 +111,7 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
             // Chốt sổ theo số dư thực
             const settlementAmount = advanceBalance.balance;
 
-            await dbService.settleAdvancePayment(
+            await paymentService.settleAdvancePayment(
                 employeeId,
                 employeeName,
                 unsettledAdvances.map(p => p.id),

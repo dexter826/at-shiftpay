@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect, memo } from 'react';
 import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/types/index';
-import { dbService } from '@/lib/api';
+import { paymentService } from '@/lib/api/paymentService';
 
 import { useToast } from '@/components/ui/Toast';
 import { PaymentModal } from '@/features/payroll/components/PaymentModal';
@@ -75,7 +75,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
   useEffect(() => {
     if (!userId) return;
 
-    const unsubscribe = dbService.subscribePayments(userId, (payments) => {
+    const unsubscribe = paymentService.subscribePayments(userId, (payments) => {
       setPaymentHistory(payments);
     });
 
@@ -147,7 +147,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
         userId: userId
       };
 
-      await dbService.createPaymentTransaction(paymentData, selectedShiftIds);
+      await paymentService.createPaymentTransaction(paymentData, selectedShiftIds);
 
       showToast('Đã thanh toán thành công', 'success');
       setSelectedEmpId(null);

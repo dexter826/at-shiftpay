@@ -8,7 +8,10 @@ import {
   DEFAULT_SETTINGS,
   Location,
 } from "@/types/index";
-import { dbService, deleteField } from "@/lib/api";
+import { shiftService } from '@/lib/api/shiftService';
+import { locationService } from '@/lib/api/locationService';
+import { eventService } from '@/lib/api/eventService';
+import { deleteField } from 'firebase/firestore';
 import {
   Sun,
   Moon,
@@ -216,7 +219,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   const loadEmployeeShiftCounts = async () => {
     try {
-      const shifts = await dbService.getUnpaidShifts(userId);
+      const shifts = await shiftService.getUnpaidShifts(userId);
       const counts: Record<string, number> = {};
 
       shifts.forEach((shift) => {
@@ -390,7 +393,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       // Xử lý Địa điểm & Đánh giá
       let locationId = "";
       if (location.trim()) {
-        locationId = await dbService.findOrCreateLocation(userId, location.trim(), {
+        locationId = await locationService.findOrCreateLocation(userId, location.trim(), {
           review,
           reviewNote: reviewNote.trim(),
         });
@@ -495,14 +498,14 @@ export const EventModal: React.FC<EventModalProps> = ({
 
       if (isEditing && existingEvent) {
         // Cập nhật thông minh
-        await dbService.batchUpdateEvent(existingEvent.id, eventData, {
+        await eventService.batchUpdateEvent(existingEvent.id, eventData, {
           create: shiftsToCreate,
           update: shiftsToUpdate,
           delete: shiftIdsToDelete,
         });
       } else {
         // Tạo mới (Atomic)
-        await dbService.createEventWithShifts(eventData, shiftsToCreate);
+        await eventService.createEventWithShifts(eventData, shiftsToCreate);
       }
 
       showToast(

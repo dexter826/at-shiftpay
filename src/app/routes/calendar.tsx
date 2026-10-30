@@ -1,6 +1,6 @@
 import React, { useState, useMemo, memo } from 'react';
 import { Event, Shift, Employee, UserSettings, Location } from '@/types/index';
-import { dbService } from '@/lib/api';
+import { eventService } from '@/lib/api/eventService';
 import { useToast } from '@/components/ui/Toast';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
@@ -159,7 +159,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const confirmDeleteEvent = async () => {
     if (deleteConfirm) {
       const eventShifts = shifts.filter((s: Shift) => s.eventId === deleteConfirm);
-      await dbService.deleteEventWithShifts(deleteConfirm, eventShifts.map((s: Shift) => s.id));
+      await eventService.deleteEventWithShifts(deleteConfirm, eventShifts.map((s: Shift) => s.id));
       showToast('Đã xóa sự kiện', 'success');
       setDeleteConfirm(null);
     }

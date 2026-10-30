@@ -7,7 +7,11 @@ import {
   DEFAULT_SETTINGS,
   Location,
 } from "@/types/index";
-import { dbService } from "@/lib/api";
+import { eventService } from '@/lib/api/eventService';
+import { shiftService } from '@/lib/api/shiftService';
+import { employeeService } from '@/lib/api/employeeService';
+import { locationService } from '@/lib/api/locationService';
+import { settingsService } from '@/lib/api/settingsService';
 
 interface AppDataState {
   // Data
@@ -237,7 +241,7 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
     needed.forEach(({ m, y }) => {
       const key = `${m}-${y}`;
       if (!_subscriptions.has(key)) {
-        const unsubEvt = dbService.subscribeEventsByMonth(
+        const unsubEvt = eventService.subscribeEventsByMonth(
           userId,
           m,
           y,
@@ -256,7 +260,7 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
           }
         );
 
-        const unsubShf = dbService.subscribeShiftsByMonth(
+        const unsubShf = shiftService.subscribeShiftsByMonth(
           userId,
           m,
           y,
@@ -283,22 +287,22 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
     });
 
     if (!_subscriptions.has("app-data")) {
-      const unsubEmp = dbService.subscribeEmployees(userId, (data) => {
+      const unsubEmp = employeeService.subscribeEmployees(userId, (data) => {
         set({ employees: data });
         markLoadedBase("employees");
       });
 
-      const unsubLoc = dbService.subscribeLocations(userId, (data) => {
+      const unsubLoc = locationService.subscribeLocations(userId, (data) => {
         set({ locations: data });
         markLoadedBase("locations");
       });
 
-      const unsubSet = dbService.subscribeSettings(userId, (data) => {
+      const unsubSet = settingsService.subscribeSettings(userId, (data) => {
         if (data) set({ settings: data });
         markLoadedBase("settings");
       });
 
-      const unsubUnp = dbService.subscribeUnpaidShifts(userId, async (data) => {
+      const unsubUnp = shiftService.subscribeUnpaidShifts(userId, async (data) => {
         const currentState = get();
         currentState._unpaidShifts = data;
 
@@ -314,7 +318,7 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
 
         if (missing.length > 0) {
           try {
-            currentState._extraEvents = await dbService.getEventsByIds(
+            currentState._extraEvents = await eventService.getEventsByIds(
               userId,
               missing
             );

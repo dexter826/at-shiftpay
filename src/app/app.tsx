@@ -14,7 +14,8 @@ import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
 import { useThemeStore } from '@/stores/themeStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAppDataStore } from '@/stores/appDataStore';
-import { dbService } from '@/lib/api';
+import { eventService } from '@/lib/api/eventService';
+import { shiftService } from '@/lib/api/shiftService';
 import { exportDetailedReport } from '@/lib/api/exportService';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
@@ -91,8 +92,8 @@ function App() {
     try {
       setIsExporting(true);
       const [fetchedEvents, fetchedShifts] = await Promise.all([
-        dbService.getEventsByMonth(user.uid, month, year),
-        dbService.getShiftsByMonth(user.uid, month, year)
+        eventService.getEventsByMonth(user.uid, month, year),
+        shiftService.getShiftsByMonth(user.uid, month, year)
       ]);
       await exportDetailedReport(month, year, fetchedEvents, fetchedShifts, employees, locations, settings, onlyDebt);
       setIsExportModalOpen(false);

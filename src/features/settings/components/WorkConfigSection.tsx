@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, Save, Loader2 } from 'lucide-react';
 import { UserSettings } from '@/types/index';
-import { dbService } from '@/lib/api';
+import { settingsService } from '@/lib/api/settingsService';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';
 import { TimePicker } from '@/components/ui/TimePicker';
@@ -36,7 +36,7 @@ const WorkConfigSection: React.FC<WorkConfigSectionProps> = ({ userUid, settings
     const handleSaveSettings = async () => {
         setSaving(true);
         try {
-            await dbService.updateSettings(userUid, editSettings);
+            await settingsService.updateSettings(userUid, editSettings);
             showToast('Đã lưu cài đặt', 'success');
         } catch (err) {
             console.error(err);

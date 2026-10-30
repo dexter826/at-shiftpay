@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AlertTriangle, Trash2, Loader2 } from 'lucide-react';
-import { dbService } from '@/lib/api';
+import { settingsService } from '@/lib/api/settingsService';
 import { auth } from '@/lib/firebase';
 import { deleteUser } from 'firebase/auth';
 import { useToast } from '@/components/ui/Toast';
@@ -29,7 +29,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             const user = auth.currentUser;
             if (!user) throw new Error('Không tìm thấy người dùng');
 
-            await dbService.deleteUserAccountData(user.uid);
+            await settingsService.deleteUserAccountData(user.uid);
             await deleteUser(user);
             clearSavedUserInfo();
 

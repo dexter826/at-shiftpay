@@ -5,7 +5,9 @@ import Button from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Employee } from '@/types/index';
 import { useToast } from '@/components/ui/Toast';
-import { dbService, deleteField } from '@/lib/api';
+import { imageService } from '@/lib/api/imageService';
+import { employeeService } from '@/lib/api/employeeService';
+import { deleteField } from 'firebase/firestore';
 import { vietQRService, VietQRBank } from '@/lib/api/vietqrService';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { areValuesEqual } from '@/utils/compare';
@@ -135,7 +137,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   const handleCropComplete = async (croppedFile: File) => {
     setIsUploading(true);
     try {
-      const url = await dbService.uploadImage(croppedFile);
+      const url = await imageService.uploadImage(croppedFile);
       setImageUrl(url);
       showToast('Đã tải ảnh lên thành công', 'success');
     } catch (error) {
@@ -195,10 +197,10 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
       }
 
       if (isEditing && empId) {
-        await dbService.updateEmployee(empId, employeeData);
+        await employeeService.updateEmployee(empId, employeeData);
         showToast('Đã cập nhật nhân viên', 'success');
       } else {
-        await dbService.addEmployee(employeeData, userId);
+        await employeeService.addEmployee(employeeData, userId);
         showToast('Đã thêm nhân viên mới', 'success');
       }
       onClose();

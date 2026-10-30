@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { User, Camera, Loader2, Edit2, Check, X, Key, ChevronRight, Trash2 } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
-import { dbService } from '@/lib/api';
+import { imageService } from '@/lib/api/imageService';
 import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/Toast';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
@@ -80,7 +80,7 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user }) => {
     const handleCropComplete = async (croppedFile: File) => {
         setIsUploadingAvatar(true);
         try {
-            const url = await dbService.uploadImage(croppedFile);
+            const url = await imageService.uploadImage(croppedFile);
             if (auth.currentUser) {
                 await updateProfile(auth.currentUser, { photoURL: url });
                 saveUserInfo({
