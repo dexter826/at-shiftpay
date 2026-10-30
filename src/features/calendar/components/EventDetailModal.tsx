@@ -3,7 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Event, Shift, UserSettings, Location } from '@/types/index';
 import { formatDate, formatCurrency } from '@/utils/format';
-import { useThemeStore } from '@/stores';
+import { useThemeStore } from '@/stores/themeStore';
 import {
     MapPin, Clock, Calendar,
     ThumbsUp, ThumbsDown, StickyNote

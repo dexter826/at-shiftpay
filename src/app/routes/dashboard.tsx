@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Download } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { useAppDataStore } from '@/stores';
+import { useAppDataStore } from '@/stores/appDataStore';
 
 import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
 import DashboardStats from '@/features/dashboard/components/DashboardStats';

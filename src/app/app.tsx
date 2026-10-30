@@ -11,7 +11,9 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { ToastProvider } from '@/components/ui/Toast';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
-import { useThemeStore, useAuthStore, useAppDataStore } from '@/stores';
+import { useThemeStore } from '@/stores/themeStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useAppDataStore } from '@/stores/appDataStore';
 import { dbService } from '@/lib/api';
 import { exportDetailedReport } from '@/lib/api/exportService';
 

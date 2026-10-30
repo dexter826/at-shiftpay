@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useThemeStore } from '@/stores';
+import { useThemeStore } from '@/stores/themeStore';
 
 const Loader = ({ fullScreen = true }: { fullScreen?: boolean }) => {
   const theme = useThemeStore(state => state.theme);

@@ -5,7 +5,7 @@ import { dbService } from '@/lib/api';
 import { useToast } from '@/components/ui/Toast';
 import { PaymentModal } from '@/features/payroll/components/PaymentModal';
 import { SettlementModal } from '@/features/payroll/components/SettlementModal';
-import { useAuthStore } from '@/stores';
+import { useAuthStore } from '@/stores/authStore';
 import { DropdownOption } from '@/components/ui/Dropdown';
 
 // Import extracted components

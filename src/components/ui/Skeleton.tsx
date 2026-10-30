@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useThemeStore } from '@/stores';
+import { useThemeStore } from '@/stores/themeStore';
 
 interface SkeletonProps {
     className?: string;

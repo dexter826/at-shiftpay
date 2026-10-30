@@ -4,7 +4,7 @@ import { dbService } from '@/lib/api';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';
-import { useAuthStore } from '@/stores';
+import { useAuthStore } from '@/stores/authStore';
 
 // Import extracted components
 import EmployeeToolbar from '@/features/employees/components/EmployeeToolbar';

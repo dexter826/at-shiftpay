@@ -7,7 +7,7 @@ import { AnimatedIconHandle } from '@/components/ui/icons/types';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Event, Shift, Location } from '@/types/index';
 import { formatDate } from '@/utils/format';
-import { useThemeStore } from '@/stores';
+import { useThemeStore } from '@/stores/themeStore';
 
 interface CalendarSidebarProps {
     selectedDate: string | null;

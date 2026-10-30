@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
-import { useThemeStore } from '@/stores';
+import { useThemeStore } from '@/stores/themeStore';
 
 interface MonthPickerModalProps {
     isOpen: boolean;

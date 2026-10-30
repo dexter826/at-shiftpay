@@ -29,7 +29,8 @@ import { TimePicker } from "@/components/ui/TimePicker";
 import { useToast } from "@/components/ui/Toast";
 import SearchInput from "@/components/ui/SearchInput";
 import { areValuesEqual } from "@/utils/compare";
-import { useAuthStore, useThemeStore } from "@/stores";
+import { useAuthStore } from '@/stores/authStore';
+import { useThemeStore } from '@/stores/themeStore';
 
 interface EventModalProps {
   date: string;

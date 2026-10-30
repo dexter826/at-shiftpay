@@ -5,7 +5,7 @@ import { Employee } from '@/types/index';
 import { Phone, Calendar, CreditCard } from 'lucide-react';
 import PenIcon from '@/components/ui/icons/pen-icon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
-import { useThemeStore } from '@/stores';
+import { useThemeStore } from '@/stores/themeStore';
 import BankCard from '@/features/employees/components/BankCard';
 
 interface EmployeeDetailModalProps {

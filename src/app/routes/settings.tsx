@@ -2,7 +2,7 @@ import React from 'react';
 import { UserSettings } from '@/types/index';
 import Switch from '@/components/ui/Switch';
 import { LogOut, Sun, Moon } from 'lucide-react';
-import { useThemeStore } from '@/stores';
+import { useThemeStore } from '@/stores/themeStore';
 import AccountSection from '@/features/settings/components/AccountSection';
 import WorkConfigSection from '@/features/settings/components/WorkConfigSection';
 
