@@ -45,6 +45,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
         </button>
         <button
           onClick={onPrevMonth}
+          aria-label="Tháng trước"
           onMouseEnter={() => prevMonthRef.current?.startAnimation()}
           onMouseLeave={() => prevMonthRef.current?.stopAnimation()}
           className={`p-2 text-[var(--text-muted)] hover:bg-[var(--border-color)] rounded transition-colors`}
@@ -53,6 +54,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
         </button>
         <button
           onClick={onNextMonth}
+          aria-label="Tháng sau"
           onMouseEnter={() => nextMonthRef.current?.startAnimation()}
           onMouseLeave={() => nextMonthRef.current?.stopAnimation()}
           className={`p-2 text-[var(--text-muted)] hover:bg-[var(--border-color)] rounded transition-colors`}

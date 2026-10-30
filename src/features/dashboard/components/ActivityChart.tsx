@@ -77,6 +77,7 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
           <div className="h-3 w-px bg-[var(--border-color)] shrink-0" />
           <button
             onClick={onPrevMonth}
+            aria-label="Tháng trước"
             className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded transition-colors shrink-0"
           >
             <ChevronLeft size={14} />
@@ -89,6 +90,7 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
           </button>
           <button
             onClick={onNextMonth}
+            aria-label="Tháng sau"
             className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded transition-colors shrink-0"
           >
             <ChevronRight size={14} />
