@@ -104,7 +104,16 @@ export const locationService = {
 
         // Cập nhật review nếu có dữ liệu đánh giá
         if (reviewData) {
-          await this.updateLocation(locationId, reviewData);
+          const reviewUpdate: Partial<Location> = {};
+          if (reviewData.review !== undefined) {
+            reviewUpdate.review = reviewData.review;
+          }
+          if (reviewData.reviewNote !== undefined && reviewData.reviewNote !== '') {
+            reviewUpdate.reviewNote = reviewData.reviewNote;
+          }
+          if (Object.keys(reviewUpdate).length > 0) {
+            await this.updateLocation(locationId, reviewUpdate);
+          }
         }
 
         return locationId;
