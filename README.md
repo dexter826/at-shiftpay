@@ -1,13 +1,13 @@
 <div align="center">
-  <img src="public/logo_text.png" alt="ShiftPay Logo" width="300"/>
-  <h3>Hệ thống Quản lý Nhân sự, Phân ca & Tính lương Tự động</h3>
+  <img src="public/brand/lockup.svg" alt="ShiftPay Logo" width="360"/>
+  <h3>Quản lý ca làm, lịch sự kiện và thanh toán</h3>
   
   <p align="center">
     <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
     <img src="https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Vite-6.2-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
     <img src="https://img.shields.io/badge/Firebase-12.6-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-4.3-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
     <img src="https://img.shields.io/badge/Zustand-5.0-black?style=flat-square&logo=react&logoColor=white" alt="Zustand" />
     <img src="https://img.shields.io/badge/License-Internal_Use-green.svg?style=flat-square" alt="License" />
   </p>
@@ -30,12 +30,12 @@
 
 ## 1. 🌟 Giới thiệu
 
-**ShiftPay** là giải pháp phần mềm tự động hóa quản lý nhân sự, phân ca làm việc, chấm công và tính lương. Ứng dụng chuyên phục vụ các mô hình kinh doanh F&B, nhà hàng, sự kiện và tiệc lưu động.
+**ShiftPay** là cuốn sổ vận hành cho đội ngũ làm ca: xếp lịch sự kiện, phân công ca sáng/chiều, quản lý địa điểm và chốt lương minh bạch. Ứng dụng phù hợp nhà hàng, sự kiện và tiệc lưu động.
 
 ### Điểm nổi bật
 
 - **⚡ Hiệu suất cao:** Xây dựng trên nền tảng React 19 và Vite mới nhất.
-- **🌐 Offline-first:** Bộ nhớ đệm cục bộ thông minh, thao tác mượt mà khi mất kết nối mạng và đồng bộ ngầm khi có Internet.
+- **🌐 PWA & offline shell:** Cài lên thiết bị, có màn hình chờ, chỉ báo ngoại tuyến và cache shell để mở lại nhanh.
 - **💳 Chạm thanh toán:** Tự động tạo mã QR chuyển khoản chính xác đến từng đồng qua hệ thống VietQR.
 
 ---
@@ -54,25 +54,25 @@ mindmap
     Lịch & Sự kiện
       Lịch làm việc
       Trạng thái & Dự toán
-    Phân ca & Chấm công
-      Gán ca làm việc
-      Hệ số tự động
+    Phân công ca
+      Ca sáng & ca chiều
+      Gán nhân viên
     Tài chính & Lương
-      Công nợ & Ứng lương
+      Công nợ & ứng lương
       Thanh toán VietQR
       Lịch sử giao dịch
-    Báo cáo & Thống kê
-      Dashboard thu chi
-      Xuất dữ liệu CSV
+    Sổ lương & xuất dữ liệu
+      KPI công nợ
+      Xuất CSV
 ```
 
 - **👥 Nhân sự & Hồ sơ:** Quản lý thông tin cá nhân, tài khoản ngân hàng và tìm kiếm nhân viên.
 - **📍 Địa điểm làm việc:** Quản lý danh sách điểm tổ chức, đánh giá chất lượng và ghi chú đặc thù.
 - **📅 Lịch & Sự kiện:** Giao diện trực quan theo dõi tiến độ sự kiện, liên kết địa điểm và dự toán chi phí.
-- **⏰ Phân ca & Chấm công:** Gán ca làm linh hoạt (Sáng/Chiều/Tối), tự động áp dụng hệ số giờ làm để tính thu nhập.
-- **💳 Tài chính & Quyết toán:** Tổng hợp công nợ, quản lý tạm ứng, tạo mã QR thanh toán nhanh qua VietQR và lưu trữ lịch sử minh bạch.
-- **📊 Báo cáo & Thống kê:** Biểu đồ trực quan theo dõi dòng tiền và hỗ trợ trích xuất dữ liệu công lương ra tệp CSV.
-- **🎨 Trải nghiệm UI/UX:** Giao diện tương thích đa thiết bị, hỗ trợ chế độ Tối/Sáng và PWA.
+- **⏰ Phân công ca:** Gán nhân viên vào ca sáng/chiều của từng sự kiện, theo dõi ca chưa xếp và số người.
+- **💳 Tài chính & Quyết toán:** Tổng hợp công nợ, quản lý ứng lương, tạo mã QR thanh toán qua VietQR và lưu lịch sử giao dịch.
+- **📊 Sổ lương & xuất dữ liệu:** KPI công nợ theo nhân viên, chi tiết ca và xuất báo cáo CSV.
+- **🎨 Trải nghiệm UI/UX:** Rail desktop + bottom nav mobile, theme Theo hệ thống/Sáng/Tối, PWA và trạng thái loading/empty/offline.
 
 <br>
 
@@ -95,7 +95,7 @@ flowchart TB
     subgraph State["Trạng thái (Zustand)"]
         AppData["appDataStore (Dữ liệu Offline)"]
         AuthStore["authStore (Phiên Đăng nhập)"]
-        ThemeStore["themeStore (Giao diện Tối/Sáng)"]
+        ThemeStore["themeStore (Theo hệ thống/Sáng/Tối)"]
     end
 
     subgraph Services["Tầng Dịch vụ (Singleton Logic)"]
@@ -239,11 +239,11 @@ at_shiftpay/
 gitGraph
   commit id: "Khởi tạo"
   commit id: "Phiên bản ổn định"
-  branch feature/them-thong-ke
-  checkout feature/them-thong-ke
-  commit id: "feat: Tạo biểu đồ"
+  branch feature/them-lich
+  checkout feature/them-lich
+  commit id: "feat: Thêm lịch sự kiện"
   checkout main
-  merge feature/them-thong-ke id: "Gộp tính năng"
+  merge feature/them-lich id: "Gộp tính năng"
 ```
 
 1. **Fork** kho lưu trữ về tài khoản GitHub cá nhân.

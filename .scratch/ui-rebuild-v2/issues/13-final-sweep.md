@@ -101,6 +101,7 @@
 - Rebuild ErrorBoundary bằng token/Button, `min-h-dvh`; app loading `min-h-dvh`; OfflineIndicator dọn timer; ImageCropper range 44, loading/error/disabled; ScrollToTop tôn trọng reduced motion và mở cho calendar/settings.
 - SW `at-shiftpay-v4`, precache shell + asset hash đọc từ index; chỉ cache GET cùng origin; activate xóa cache cũ; navigation offline fallback về index cho deep link SPA.
 - Thay OG/Twitter bằng `public/social-card.png` mới (lockup hiện tại, palette Bảng ca, copy tiếng Việt); xóa ảnh cũ; cập nhật meta description/OG/Twitter.
+- Thay `docs/images/mockup.jpg` bằng mockup Bảng ca mới (Lịch sự kiện light + Sổ lương dark, không còn UI/claim cũ); thêm `public/brand/lockup.svg` và sửa README dùng lockup mới thay `logo_text.png` đã xóa; refresh copy README theo tính năng thật.
 - Xóa `Tiles.tsx`, palette/token illustration/avatar, dependency `motion`; giữ `recharts` theo spec.
 - Copy: CSV `Tổng công` → `Số người`; login bỏ “chấm công”, “Chốt công” → “Chốt lương”; bỏ “VND ·” lặp trong Settings.
 - Viết `DESIGN.md` thật (9 mục, token, component, layout, responsive, a11y, PWA, agent guide); tạo `GLOSSARY.md`.
