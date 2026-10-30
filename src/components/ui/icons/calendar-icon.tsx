@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle } from "react";
-import type { AnimatedIconHandle, AnimatedIconProps } from "./types";
+import type { AnimatedIconHandle, AnimatedIconProps } from "@/components/ui/icons/types";
 import { Calendar } from "lucide-react";
 
 const CalendarIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(

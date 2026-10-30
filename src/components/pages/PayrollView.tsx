@@ -1,23 +1,23 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect, memo } from 'react';
-import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '../../types';
-import { dbService } from '../../services';
+import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/types';
+import { dbService } from '@/services';
 
-import { useToast } from '../ui/Toast';
-import { PaymentModal } from './payroll/PaymentModal';
-import { SettlementModal } from './payroll/SettlementModal';
-import { useAuthStore } from '../../stores';
-import { DropdownOption } from '../ui/Dropdown';
+import { useToast } from '@/components/ui/Toast';
+import { PaymentModal } from '@/components/pages/payroll/PaymentModal';
+import { SettlementModal } from '@/components/pages/payroll/SettlementModal';
+import { useAuthStore } from '@/stores';
+import { DropdownOption } from '@/components/ui/Dropdown';
 
 // Import extracted components
-import PayrollStats from './payroll/PayrollStats';
-import PayrollFilters from './payroll/PayrollFilters';
-import PayrollList from './payroll/PayrollList';
-import HistoryList from './payroll/HistoryList';
-import EmployeeDetailModal from './payroll/PayrollEmployeeDetailModal';
-import TransactionDetailModal from './payroll/TransactionDetailModal';
-import ConfirmPaymentModal from './payroll/ConfirmPaymentModal';
-import MonthPickerModal from './payroll/MonthPickerModal';
-import { usePayrollData } from './payroll/hooks/usePayrollData';
+import PayrollStats from '@/components/pages/payroll/PayrollStats';
+import PayrollFilters from '@/components/pages/payroll/PayrollFilters';
+import PayrollList from '@/components/pages/payroll/PayrollList';
+import HistoryList from '@/components/pages/payroll/HistoryList';
+import EmployeeDetailModal from '@/components/pages/payroll/PayrollEmployeeDetailModal';
+import TransactionDetailModal from '@/components/pages/payroll/TransactionDetailModal';
+import ConfirmPaymentModal from '@/components/pages/payroll/ConfirmPaymentModal';
+import MonthPickerModal from '@/components/pages/payroll/MonthPickerModal';
+import { usePayrollData } from '@/components/pages/payroll/hooks/usePayrollData';
 
 interface PayrollViewProps {
   shifts: Shift[];

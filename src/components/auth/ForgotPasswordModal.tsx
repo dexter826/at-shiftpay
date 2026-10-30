@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../../firebase';
-import { Modal } from '../ui/Modal';
-import Button from '../ui/Button';
-import { useToast } from '../ui/Toast';
+import { auth } from '@/firebase';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { useToast } from '@/components/ui/Toast';
 
 interface ForgotPasswordModalProps {
     isOpen: boolean;

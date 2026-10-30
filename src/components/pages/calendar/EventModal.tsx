@@ -7,8 +7,8 @@ import {
   UserSettings,
   DEFAULT_SETTINGS,
   Location,
-} from "../../../types";
-import { dbService, deleteField } from "../../../services";
+} from "@/types";
+import { dbService, deleteField } from "@/services";
 import {
   Sun,
   Moon,
@@ -23,13 +23,13 @@ import {
   FileText,
   Search,
 } from "lucide-react";
-import { Modal } from "../../ui/Modal";
-import Button from "../../ui/Button";
-import { TimePicker } from "../../ui/TimePicker";
-import { useToast } from "../../ui/Toast";
-import SearchInput from "../../ui/SearchInput";
-import { areValuesEqual } from "../../../utils/compare";
-import { useAuthStore, useThemeStore } from "../../../stores";
+import { Modal } from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
+import { TimePicker } from "@/components/ui/TimePicker";
+import { useToast } from "@/components/ui/Toast";
+import SearchInput from "@/components/ui/SearchInput";
+import { areValuesEqual } from "@/utils/compare";
+import { useAuthStore, useThemeStore } from "@/stores";
 
 interface EventModalProps {
   date: string;

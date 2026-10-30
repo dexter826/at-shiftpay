@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, ChevronRightIcon } from 'lucide-react';
-import { Skeleton } from '../../ui/Skeleton';
-import { LoadMore } from '../../ui/LoadMore';
-import { formatCurrency } from '../../../utils/format';
-import { PayrollSummary } from '../../../types';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { LoadMore } from '@/components/ui/LoadMore';
+import { formatCurrency } from '@/utils/format';
+import { PayrollSummary } from '@/types';
 
 interface PayrollListProps {
   loading: boolean;

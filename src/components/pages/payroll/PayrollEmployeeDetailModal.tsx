@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
-import { Modal } from '../../ui/Modal';
-import Button from '../../ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
 import { Banknote, Calculator, Calendar, CheckCircle2, MapPin } from 'lucide-react';
-import { formatCurrency, formatDate } from '../../../utils/format';
-import { PayrollSummary, Shift, Event, Location } from '../../../types';
+import { formatCurrency, formatDate } from '@/utils/format';
+import { PayrollSummary, Shift, Event, Location } from '@/types';
 
 interface EmployeeDetailModalProps {
   isOpen: boolean;

@@ -1,17 +1,17 @@
 import React, { useMemo, useState, memo, useEffect } from 'react';
-import { Employee, Event, Shift, UserSettings } from '../../types';
-import { PAYMENT_COLORS } from '../../constants/colors';
+import { Employee, Event, Shift, UserSettings } from '@/types';
+import { PAYMENT_COLORS } from '@/constants/colors';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download } from 'lucide-react';
-import Button from '../ui/Button';
-import { Skeleton } from '../ui/Skeleton';
-import { useAppDataStore } from '../../stores';
+import Button from '@/components/ui/Button';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { useAppDataStore } from '@/stores';
 
-import DashboardHeader from './dashboard/DashboardHeader';
-import DashboardStats from './dashboard/DashboardStats';
-import ActivityChart from './dashboard/ActivityChart';
-import PaymentChart from './dashboard/PaymentChart';
-import { MonthPickerModal } from '../modals/MonthPickerModal';
+import DashboardHeader from '@/components/pages/dashboard/DashboardHeader';
+import DashboardStats from '@/components/pages/dashboard/DashboardStats';
+import ActivityChart from '@/components/pages/dashboard/ActivityChart';
+import PaymentChart from '@/components/pages/dashboard/PaymentChart';
+import { MonthPickerModal } from '@/components/modals/MonthPickerModal';
 
 interface DashboardProps {
     user: any;

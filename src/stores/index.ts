@@ -1,3 +1,3 @@
-export { useThemeStore } from './themeStore';
-export { useAuthStore } from './authStore';
-export { useAppDataStore } from './appDataStore';
+export { useThemeStore } from '@/stores/themeStore';
+export { useAuthStore } from '@/stores/authStore';
+export { useAppDataStore } from '@/stores/appDataStore';

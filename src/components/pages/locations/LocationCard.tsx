@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, MessageSquare, ExternalLink, Pencil, Trash2 } from 'lucide-react';
-import { Location } from '../../../types';
+import { Location } from '@/types';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 

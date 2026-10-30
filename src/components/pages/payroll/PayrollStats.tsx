@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Skeleton } from '../../ui/Skeleton';
-import { formatCurrency } from '../../../utils/format';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { formatCurrency } from '@/utils/format';
 import { Wallet2 } from 'lucide-react';
 
 

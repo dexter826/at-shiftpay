@@ -1,22 +1,22 @@
 import React, { useState, useMemo, useRef, useEffect, memo } from 'react';
-import ArrowNarrowLeftIcon from '../ui/icons/arrow-narrow-left-icon';
-import { Location, Event } from '../../types';
-import { dbService } from '../../services';
-import { useToast } from '../ui/Toast';
-import { useAuthStore, useThemeStore } from '../../stores';
-import Button from '../ui/Button';
-import PlusIcon from '../ui/icons/plus-icon';
-import TrashIcon from '../ui/icons/trash-icon';
-import XIcon from '../ui/icons/x-icon';
-import { Modal } from '../ui/Modal';
-import { AnimatedIconHandle } from '../ui/icons/types';
+import ArrowNarrowLeftIcon from '@/components/ui/icons/arrow-narrow-left-icon';
+import { Location, Event } from '@/types';
+import { dbService } from '@/services';
+import { useToast } from '@/components/ui/Toast';
+import { useAuthStore, useThemeStore } from '@/stores';
+import Button from '@/components/ui/Button';
+import PlusIcon from '@/components/ui/icons/plus-icon';
+import TrashIcon from '@/components/ui/icons/trash-icon';
+import XIcon from '@/components/ui/icons/x-icon';
+import { Modal } from '@/components/ui/Modal';
+import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 // Import extracted components
-import LocationStats from './locations/LocationStats';
-import LocationToolbar from './locations/LocationToolbar';
-import LocationList from './locations/LocationList';
-import LocationFormModal from './locations/LocationFormModal';
-import LocationDetailModal from './locations/LocationDetailModal';
+import LocationStats from '@/components/pages/locations/LocationStats';
+import LocationToolbar from '@/components/pages/locations/LocationToolbar';
+import LocationList from '@/components/pages/locations/LocationList';
+import LocationFormModal from '@/components/pages/locations/LocationFormModal';
+import LocationDetailModal from '@/components/pages/locations/LocationDetailModal';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 

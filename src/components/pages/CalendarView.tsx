@@ -1,20 +1,20 @@
 import React, { useState, useMemo, memo } from 'react';
-import { Event, Shift, Employee, UserSettings, Location } from '../../types';
-import { dbService } from '../../services';
-import { useToast } from '../ui/Toast';
-import { Modal } from '../ui/Modal';
-import Button from '../ui/Button';
-import XIcon from '../ui/icons/x-icon';
-import TrashIcon from '../ui/icons/trash-icon';
+import { Event, Shift, Employee, UserSettings, Location } from '@/types';
+import { dbService } from '@/services';
+import { useToast } from '@/components/ui/Toast';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import XIcon from '@/components/ui/icons/x-icon';
+import TrashIcon from '@/components/ui/icons/trash-icon';
 
 // Modals
-import { EventModal } from './calendar/EventModal';
-import { EventDetailModal } from './calendar/EventDetailModal';
+import { EventModal } from '@/components/pages/calendar/EventModal';
+import { EventDetailModal } from '@/components/pages/calendar/EventDetailModal';
 
 // New Components
-import CalendarHeader from './calendar/CalendarHeader';
-import CalendarGrid from './calendar/CalendarGrid';
-import CalendarSidebar from './calendar/CalendarSidebar';
+import CalendarHeader from '@/components/pages/calendar/CalendarHeader';
+import CalendarGrid from '@/components/pages/calendar/CalendarGrid';
+import CalendarSidebar from '@/components/pages/calendar/CalendarSidebar';
 
 interface CalendarViewProps {
   events: Event[];

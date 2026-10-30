@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Employee, Event, Shift, UserSettings, Location } from '../../types';
+import { Employee, Event, Shift, UserSettings, Location } from '@/types';
 
-import Dashboard from '../pages/Dashboard';
-import CalendarView from '../pages/CalendarView';
-import EmployeeManager from '../pages/EmployeeManager';
-import PayrollView from '../pages/PayrollView';
-import SettingsView from '../pages/SettingsView';
-import LocationManager from '../pages/LocationManager';
+import Dashboard from '@/components/pages/Dashboard';
+import CalendarView from '@/components/pages/CalendarView';
+import EmployeeManager from '@/components/pages/EmployeeManager';
+import PayrollView from '@/components/pages/PayrollView';
+import SettingsView from '@/components/pages/SettingsView';
+import LocationManager from '@/components/pages/LocationManager';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 

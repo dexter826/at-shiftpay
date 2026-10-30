@@ -1,3 +1,3 @@
 
-export { ExportModal } from './ExportModal';
-export { ImageCropperModal } from './ImageCropperModal';
+export { ExportModal } from '@/components/modals/ExportModal';
+export { ImageCropperModal } from '@/components/modals/ImageCropperModal';

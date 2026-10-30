@@ -1,10 +1,10 @@
 import React, { memo, useRef } from 'react';
-import { Modal } from '../../ui/Modal';
-import Button from '../../ui/Button';
-import SimpleCheckedIcon from '../../ui/icons/simple-checked-icon';
-import { formatCurrency } from '../../../utils/format';
-import { AnimatedIconHandle } from '../../ui/icons/types';
-import { PayrollSummary } from '../../../types';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import SimpleCheckedIcon from '@/components/ui/icons/simple-checked-icon';
+import { formatCurrency } from '@/utils/format';
+import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import { PayrollSummary } from '@/types';
 
 interface ConfirmPaymentModalProps {
   isOpen: boolean;

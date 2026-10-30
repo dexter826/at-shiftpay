@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users } from 'lucide-react';
-import { Skeleton } from '../../ui/Skeleton';
-import { LoadMore } from '../../ui/LoadMore';
-import { Employee } from '../../../types';
-import EmployeeCard from './EmployeeCard';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { LoadMore } from '@/components/ui/LoadMore';
+import { Employee } from '@/types';
+import EmployeeCard from '@/components/pages/employees/EmployeeCard';
 
 interface EmployeeListProps {
   employees: Employee[];

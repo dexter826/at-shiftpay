@@ -1,10 +1,10 @@
 import React from 'react';
-import { UserSettings } from '../../types';
-import Switch from '../ui/Switch';
+import { UserSettings } from '@/types';
+import Switch from '@/components/ui/Switch';
 import { LogOut, Sun, Moon } from 'lucide-react';
-import { useThemeStore } from '../../stores';
-import AccountSection from './settings/AccountSection';
-import WorkConfigSection from './settings/WorkConfigSection';
+import { useThemeStore } from '@/stores';
+import AccountSection from '@/components/pages/settings/AccountSection';
+import WorkConfigSection from '@/components/pages/settings/WorkConfigSection';
 
 interface SettingsViewProps {
     user: any;

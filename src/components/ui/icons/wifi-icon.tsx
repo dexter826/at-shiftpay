@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle } from "react";
-import type { AnimatedIconHandle, AnimatedIconProps } from "./types";
+import type { AnimatedIconHandle, AnimatedIconProps } from "@/components/ui/icons/types";
 import { Wifi } from "lucide-react";
 
 const WifiIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(

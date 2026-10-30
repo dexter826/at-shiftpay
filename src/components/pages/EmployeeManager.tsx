@@ -1,16 +1,16 @@
 import React, { useState, useMemo, useEffect, memo } from 'react';
-import { Employee, Shift } from '../../types';
-import { dbService } from '../../services';
-import { Modal } from '../ui/Modal';
-import { useToast } from '../ui/Toast';
-import Button from '../ui/Button';
-import { useAuthStore } from '../../stores';
+import { Employee, Shift } from '@/types';
+import { dbService } from '@/services';
+import { Modal } from '@/components/ui/Modal';
+import { useToast } from '@/components/ui/Toast';
+import Button from '@/components/ui/Button';
+import { useAuthStore } from '@/stores';
 
 // Import extracted components
-import EmployeeToolbar from './employees/EmployeeToolbar';
-import EmployeeList from './employees/EmployeeList';
-import EmployeeFormModal from './employees/EmployeeFormModal';
-import EmployeeDetailModal from './employees/EmployeeDetailModal';
+import EmployeeToolbar from '@/components/pages/employees/EmployeeToolbar';
+import EmployeeList from '@/components/pages/employees/EmployeeList';
+import EmployeeFormModal from '@/components/pages/employees/EmployeeFormModal';
+import EmployeeDetailModal from '@/components/pages/employees/EmployeeDetailModal';
 
 interface EmployeeManagerProps {
   employees: Employee[];

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
 import { Camera, Upload, Loader2, Building2, RotateCcw } from 'lucide-react';
-import { Modal } from '../../ui/Modal';
-import Button from '../../ui/Button';
-import { Dropdown } from '../../ui/Dropdown';
-import { Employee } from '../../../types';
-import { useToast } from '../../ui/Toast';
-import { dbService, deleteField } from '../../../services';
-import { vietQRService, VietQRBank } from '../../../services/vietqrService';
-import { ImageCropperModal } from '../../modals';
-import { areValuesEqual } from '../../../utils/compare';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { Dropdown } from '@/components/ui/Dropdown';
+import { Employee } from '@/types';
+import { useToast } from '@/components/ui/Toast';
+import { dbService, deleteField } from '@/services';
+import { vietQRService, VietQRBank } from '@/services/vietqrService';
+import { ImageCropperModal } from '@/components/modals';
+import { areValuesEqual } from '@/utils/compare';
 
 interface EmployeeFormModalProps {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeStore } from '../../../stores';
+import { useThemeStore } from '@/stores';
 
 interface BankCardProps {
     bankName?: string;

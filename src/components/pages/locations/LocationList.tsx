@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin } from 'lucide-react';
-import { Skeleton } from '../../ui/Skeleton';
-import { LoadMore } from '../../ui/LoadMore';
-import LocationCard from './LocationCard';
-import { Location } from '../../../types';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { LoadMore } from '@/components/ui/LoadMore';
+import LocationCard from '@/components/pages/locations/LocationCard';
+import { Location } from '@/types';
 
 interface LocationListProps {
     loading: boolean;

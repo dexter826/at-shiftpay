@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
-import { Event, Location } from '../../../types';
-import { useThemeStore } from '../../../stores';
+import { Event, Location } from '@/types';
+import { useThemeStore } from '@/stores';
 
 interface CalendarDayProps {
     date: Date;

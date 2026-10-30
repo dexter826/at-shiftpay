@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { History, Clock, ChevronRightIcon } from 'lucide-react';
-import { formatCurrency } from '../../../utils/format';
-import { PaymentTransaction } from '../../../types';
+import { formatCurrency } from '@/utils/format';
+import { PaymentTransaction } from '@/types';
 
 interface HistoryListProps {
   loading: boolean;

@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { Modal } from '../ui/Modal';
-import Button from '../ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
 import { Lock, AlertCircle, Check } from 'lucide-react';
-import EyeIcon from '../ui/icons/eye-icon';
-import EyeOffIcon from '../ui/icons/eye-off-icon';
-import { AnimatedIconHandle } from '../ui/icons/types';
-import { auth } from '../../firebase';
+import EyeIcon from '@/components/ui/icons/eye-icon';
+import EyeOffIcon from '@/components/ui/icons/eye-off-icon';
+import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import { auth } from '@/firebase';
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 
 interface ChangePasswordModalProps {

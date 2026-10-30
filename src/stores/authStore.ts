@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { User, onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "@/firebase";
 
 interface SavedUser {
   email: string;

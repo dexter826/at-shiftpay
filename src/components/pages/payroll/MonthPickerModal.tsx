@@ -1,8 +1,8 @@
 import React, { memo, useRef } from 'react';
-import { Modal } from '../../ui/Modal';
-import ChevronLeftIcon from '../../ui/icons/chevron-left-icon';
-import ChevronRightIcon from '../../ui/icons/chevron-right-icon';
-import { AnimatedIconHandle } from '../../ui/icons/types';
+import { Modal } from '@/components/ui/Modal';
+import ChevronLeftIcon from '@/components/ui/icons/chevron-left-icon';
+import ChevronRightIcon from '@/components/ui/icons/chevron-right-icon';
+import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface MonthPickerModalProps {
   isOpen: boolean;

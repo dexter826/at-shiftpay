@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { ArrowUpDown } from 'lucide-react';
-import PlusIcon from '../../ui/icons/plus-icon';
-import Button from '../../ui/Button';
-import SearchInput from '../../ui/SearchInput';
-import { Dropdown } from '../../ui/Dropdown';
-import { Skeleton } from '../../ui/Skeleton';
+import PlusIcon from '@/components/ui/icons/plus-icon';
+import Button from '@/components/ui/Button';
+import SearchInput from '@/components/ui/SearchInput';
+import { Dropdown } from '@/components/ui/Dropdown';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 
 interface EmployeeToolbarProps {

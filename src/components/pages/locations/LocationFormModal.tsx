@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback, memo, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
-import { Modal } from '../../ui/Modal';
-import Button from '../../ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
 
-import { Location } from '../../../types';
+import { Location } from '@/types';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 

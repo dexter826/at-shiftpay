@@ -9,12 +9,12 @@ import {
   ThumbsDown,
   Minus,
 } from "lucide-react";
-import { Modal } from "../../ui/Modal";
-import Button from "../../ui/Button";
-import { Location, Event } from "../../../types";
-import { useThemeStore } from "../../../stores";
-import PenIcon from "../../ui/icons/pen-icon";
-import { AnimatedIconHandle } from "../../ui/icons/types";
+import { Modal } from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
+import { Location, Event } from "@/types";
+import { useThemeStore } from "@/stores";
+import PenIcon from "@/components/ui/icons/pen-icon";
+import { AnimatedIconHandle } from "@/components/ui/icons/types";
 
 const LOCATIONIQ_API_KEY =
   import.meta.env.VITE_LOCATIONIQ_API_KEY || "free_key_placeholder";

@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import {
   collection,
   addDoc,
@@ -14,9 +14,9 @@ import {
   writeBatch,
   deleteField
 } from 'firebase/firestore';
-import { Location } from '../types';
-import { createRealtimeSubscription } from './firebaseService';
-import { LocationSchema } from '../utils/validation';
+import { Location } from '@/types';
+import { createRealtimeSubscription } from '@/services/firebaseService';
+import { LocationSchema } from '@/utils/validation';
 
 export const locationService = {
   subscribeLocations(userId: string, callback: (locations: Location[]) => void): Unsubscribe {

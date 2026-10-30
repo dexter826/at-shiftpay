@@ -6,8 +6,8 @@ import {
   UserSettings,
   DEFAULT_SETTINGS,
   Location,
-} from "../types";
-import { dbService } from "../services";
+} from "@/types";
+import { dbService } from "@/services";
 
 interface AppDataState {
   // Data

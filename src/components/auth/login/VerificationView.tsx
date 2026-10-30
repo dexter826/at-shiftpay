@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, RefreshCw, LogOut } from 'lucide-react';
-import Button from '../../ui/Button';
+import Button from '@/components/ui/Button';
 
 interface VerificationViewProps {
   currentUser: any;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Cropper from 'react-easy-crop';
-import { Modal } from '../ui/Modal';
-import Button from '../ui/Button';
-import { getCroppedImg } from '../../utils/cropImage';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { getCroppedImg } from '@/utils/cropImage';
 
 interface ImageCropperModalProps {
     isOpen: boolean;

@@ -1,4 +1,4 @@
-import { useThemeStore } from '../stores';
+import { useThemeStore } from '@/stores';
 
 export const useThemeStyles = () => {
     const { theme, toggleTheme } = useThemeStore();

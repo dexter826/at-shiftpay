@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import Loader from './components/ui/Loading';
-import { Navbar, OfflineIndicator } from './components/layout';
-import { Login } from './components/auth';
-import { Splashscreen, AppRouter, PullToRefresh } from './components/common';
-import { ExportModal } from './components/modals';
-import { Modal } from './components/ui/Modal';
-import Button from './components/ui/Button';
-import { ToastProvider } from './components/ui/Toast';
-import ScrollToTopButton from './components/ui/ScrollToTopButton';
-import { useThemeStore, useAuthStore, useAppDataStore } from './stores';
-import { dbService } from './services';
-import { exportDetailedReport } from './services/exportService';
+import Loader from '@/components/ui/Loading';
+import { Navbar, OfflineIndicator } from '@/components/layout';
+import { Login } from '@/components/auth';
+import { Splashscreen, AppRouter, PullToRefresh } from '@/components/common';
+import { ExportModal } from '@/components/modals';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { ToastProvider } from '@/components/ui/Toast';
+import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
+import { useThemeStore, useAuthStore, useAppDataStore } from '@/stores';
+import { dbService } from '@/services';
+import { exportDetailedReport } from '@/services/exportService';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 

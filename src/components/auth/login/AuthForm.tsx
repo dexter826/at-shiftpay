@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Lock, Eye, EyeOff, ChevronLeft } from 'lucide-react';
-import Button from '../../ui/Button';
-import Checkbox from '../../ui/Checkbox';
-import { ValidationError } from './ValidationError';
+import Button from '@/components/ui/Button';
+import Checkbox from '@/components/ui/Checkbox';
+import { ValidationError } from '@/components/auth/login/ValidationError';
 
 interface AuthFormProps {
   isSignUp: boolean;

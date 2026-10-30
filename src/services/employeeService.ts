@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import {
   collection,
   addDoc,
@@ -10,9 +10,9 @@ import {
   orderBy,
   Unsubscribe
 } from 'firebase/firestore';
-import { Employee, BankAccount } from '../types';
-import { createRealtimeSubscription } from './firebaseService';
-import { EmployeeSchema } from '../utils/validation';
+import { Employee, BankAccount } from '@/types';
+import { createRealtimeSubscription } from '@/services/firebaseService';
+import { EmployeeSchema } from '@/utils/validation';
 
 export const employeeService = {
   subscribeEmployees(userId: string, callback: (employees: Employee[]) => void): Unsubscribe {

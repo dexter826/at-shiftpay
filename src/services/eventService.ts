@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import {
   collection,
   addDoc,
@@ -12,9 +12,9 @@ import {
   query,
   where
 } from 'firebase/firestore';
-import { Event, Shift } from '../types';
-import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery, executeBatchWithRetry } from './firebaseService';
-import { EventSchema } from '../utils/validation';
+import { Event, Shift } from '@/types';
+import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery, executeBatchWithRetry } from '@/services/firebaseService';
+import { EventSchema } from '@/utils/validation';
 
 export const eventService = {
   subscribeEventsByMonth(userId: string, month: number, year: number, callback: (events: Event[]) => void): Unsubscribe {

@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import {
   collection,
   addDoc,
@@ -11,9 +11,9 @@ import {
   orderBy,
   Unsubscribe
 } from 'firebase/firestore';
-import { Shift } from '../types';
-import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery } from './firebaseService';
-import { ShiftSchema } from '../utils/validation';
+import { Shift } from '@/types';
+import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery } from '@/services/firebaseService';
+import { ShiftSchema } from '@/utils/validation';
 
 export const shiftService = {
   subscribeShiftsByMonth(userId: string, month: number, year: number, callback: (shifts: Shift[]) => void): Unsubscribe {

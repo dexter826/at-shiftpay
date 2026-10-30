@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Skeleton } from '../../ui/Skeleton';
-import { Event, Location } from '../../../types';
-import CalendarDay from './CalendarDay';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { Event, Location } from '@/types';
+import CalendarDay from '@/components/pages/calendar/CalendarDay';
 
 interface CalendarGridProps {
     daysInMonth: Date[];

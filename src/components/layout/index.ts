@@ -1,2 +1,2 @@
-export { Navbar } from './Navbar';
-export { OfflineIndicator } from './OfflineIndicator';
+export { Navbar } from '@/components/layout/Navbar';
+export { OfflineIndicator } from '@/components/layout/OfflineIndicator';

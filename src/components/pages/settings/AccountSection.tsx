@@ -1,16 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { User, Camera, Loader2, Edit2, Check, X, Key, ChevronRight, Trash2 } from 'lucide-react';
-import { auth } from '../../../firebase';
+import { auth } from '@/firebase';
 import { updateProfile } from 'firebase/auth';
-import { dbService } from '../../../services';
-import { useAuthStore } from '../../../stores/authStore';
-import { useToast } from '../../ui/Toast';
-import { ImageCropperModal } from '../../modals/ImageCropperModal';
-import { ChangePasswordModal } from '../../auth/ChangePasswordModal';
-import { DeleteAccountModal } from './DeleteAccountModal';
-import KeyIcon from '../../ui/icons/key-icon';
-import TrashIcon from '../../ui/icons/trash-icon';
-import { AnimatedIconHandle } from '../../ui/icons/types';
+import { dbService } from '@/services';
+import { useAuthStore } from '@/stores/authStore';
+import { useToast } from '@/components/ui/Toast';
+import { ImageCropperModal } from '@/components/modals/ImageCropperModal';
+import { ChangePasswordModal } from '@/components/auth/ChangePasswordModal';
+import { DeleteAccountModal } from '@/components/pages/settings/DeleteAccountModal';
+import KeyIcon from '@/components/ui/icons/key-icon';
+import TrashIcon from '@/components/ui/icons/trash-icon';
+import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface AccountSectionProps {
     user: any;

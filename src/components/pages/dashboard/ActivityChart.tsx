@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { CalendarRange, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from 'lucide-react';
-import { PAYMENT_COLORS } from '../../../constants/colors';
-import ChartTooltip from './ChartTooltip';
+import { PAYMENT_COLORS } from '@/constants/colors';
+import ChartTooltip from '@/components/pages/dashboard/ChartTooltip';
 
 interface ActivityChartProps {
     data: { day: number; events: number; shifts: number }[];

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../../firebase';
+import { auth } from '@/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, setPersistence, browserLocalPersistence, browserSessionPersistence, sendEmailVerification } from 'firebase/auth';
 import { AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 
-import { ForgotPasswordModal } from './ForgotPasswordModal';
-import { useAuthStore } from '../../stores/authStore';
-import { useToast } from '../ui/Toast';
+import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
+import { useAuthStore } from '@/stores/authStore';
+import { useToast } from '@/components/ui/Toast';
 
-import LoginHeader from './login/LoginHeader';
-import VerificationView from './login/VerificationView';
-import QuickLoginView from './login/QuickLoginView';
-import AuthForm from './login/AuthForm';
+import LoginHeader from '@/components/auth/login/LoginHeader';
+import VerificationView from '@/components/auth/login/VerificationView';
+import QuickLoginView from '@/components/auth/login/QuickLoginView';
+import AuthForm from '@/components/auth/login/AuthForm';
 
 interface LoginProps {
   onLogin: () => void;

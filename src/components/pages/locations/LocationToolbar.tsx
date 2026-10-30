@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import SearchInput from '../../ui/SearchInput';
-import { Dropdown } from '../../ui/Dropdown';
+import SearchInput from '@/components/ui/SearchInput';
+import { Dropdown } from '@/components/ui/Dropdown';
 
 interface LocationToolbarProps {
     searchTerm: string;

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import Button from '../../ui/Button';
-import ExportIcon from '../../ui/icons/export-icon';
+import Button from '@/components/ui/Button';
+import ExportIcon from '@/components/ui/icons/export-icon';
 
 interface DashboardHeaderProps {
     user: any;

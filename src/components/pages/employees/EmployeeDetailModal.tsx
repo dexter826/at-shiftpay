@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
-import { Modal } from '../../ui/Modal';
-import Button from '../../ui/Button';
-import { Employee } from '../../../types';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { Employee } from '@/types';
 import { Phone, Calendar, CreditCard } from 'lucide-react';
-import PenIcon from '../../ui/icons/pen-icon';
-import { AnimatedIconHandle } from '../../ui/icons/types';
-import { useThemeStore } from '../../../stores';
-import BankCard from './BankCard';
+import PenIcon from '@/components/ui/icons/pen-icon';
+import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import { useThemeStore } from '@/stores';
+import BankCard from '@/components/pages/employees/BankCard';
 
 interface EmployeeDetailModalProps {
     isOpen: boolean;

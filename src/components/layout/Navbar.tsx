@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { LayoutDashboard, CalendarRange, Users, Wallet, Settings, LogOut, Moon, Sun } from "lucide-react";
-import { useThemeStore } from "../../stores";
+import { useThemeStore } from "@/stores";
 
 interface NavbarProps {
   currentTab: string;

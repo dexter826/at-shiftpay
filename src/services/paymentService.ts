@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import {
   collection,
   doc,
@@ -12,9 +12,9 @@ import {
   QueryDocumentSnapshot,
   Unsubscribe
 } from 'firebase/firestore';
-import { PaymentTransaction } from '../types';
-import { createRealtimeSubscription, executeBatchWithRetry } from './firebaseService';
-import { PaymentTransactionSchema } from '../utils/validation';
+import { PaymentTransaction } from '@/types';
+import { createRealtimeSubscription, executeBatchWithRetry } from '@/services/firebaseService';
+import { PaymentTransactionSchema } from '@/utils/validation';
 
 export const paymentService = {
   subscribePayments(userId: string, callback: (payments: PaymentTransaction[]) => void): Unsubscribe {

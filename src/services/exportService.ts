@@ -1,4 +1,4 @@
-import { Shift, Event, Employee, UserSettings, Location } from '../types';
+import { Shift, Event, Employee, UserSettings, Location } from '@/types';
 
 export const exportDetailedReport = (
     month: number,

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { ArrowUpDown, CalendarDays } from 'lucide-react';
-import SearchInput from '../../ui/SearchInput';
-import { Dropdown, DropdownOption } from '../../ui/Dropdown';
+import SearchInput from '@/components/ui/SearchInput';
+import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 
 
 interface PayrollFiltersProps {
