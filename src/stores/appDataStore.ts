@@ -47,6 +47,7 @@ interface AppDataState {
   };
   _unpaidShifts: Shift[];
   _extraEvents: Event[];
+  _activeUserId: string;
 
   initSubscriptions: (userId: string) => void;
   cleanupSubscriptions: () => void;
@@ -104,6 +105,7 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
   },
   _unpaidShifts: [],
   _extraEvents: [],
+  _activeUserId: '',
 
   refreshData: (userId) => {
     const state = get();
@@ -117,6 +119,8 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
       set({ isLoading: false });
       return;
     }
+
+    set({ _activeUserId: userId });
 
     const isBaseLoaded = (flags: AppDataState['_loadedFlags']) => {
       return !!(flags.employees && flags.locations && flags.settings);
@@ -278,6 +282,8 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
       });
 
       const unsubUnp = shiftService.subscribeUnpaidShifts(userId, async (data) => {
+        if (get()._activeUserId !== userId) return;
+
         const currentState = get();
         currentState._unpaidShifts = data;
 
@@ -287,12 +293,19 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
         );
         const missing = eventIds.filter((id) => id && !existingIds.has(id));
 
+        let extraEvents: Event[] = [];
         if (missing.length > 0) {
           try {
-            currentState._extraEvents = await eventService.getEventsByIds(userId, missing);
+            extraEvents = await eventService.getEventsByIds(userId, missing);
           } catch (e) {
             console.error(e);
           }
+        }
+
+        if (get()._activeUserId !== userId) return;
+
+        if (extraEvents.length > 0) {
+          currentState._extraEvents = extraEvents;
         }
         updateGlobalState();
       });
@@ -315,6 +328,13 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
     _dataCache.clear();
     _monthLoaded.clear();
     set({
+      employees: [],
+      locations: [],
+      events: [],
+      shifts: [],
+      settings: DEFAULT_SETTINGS,
+      totalDebt: 0,
+      _activeUserId: '',
       _unpaidShifts: [],
       _extraEvents: [],
       _loadedFlags: {
