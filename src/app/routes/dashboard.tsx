@@ -9,7 +9,7 @@ import {
   getMonthLabel,
   getWeekRange,
 } from '@/features/dashboard/dashboardData';
-import { buildPayrollSummary } from '@/features/payroll/payrollSummary';
+import { buildPayrollSummary, calculatePayrollStats } from '@/features/payroll/payrollSummary';
 import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
 import DashboardSkeleton from '@/features/dashboard/components/DashboardSkeleton';
 import KpiStrip from '@/features/dashboard/components/KpiStrip';
@@ -54,6 +54,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
     () => buildPayrollSummary(monthlyShifts, employees, monthlyEvents),
     [monthlyShifts, employees, monthlyEvents]
   );
+  const payrollStats = useMemo(() => calculatePayrollStats(payrollRows), [payrollRows]);
   const monthLabel = getMonthLabel(viewDate);
 
   const openCalendar = () => navigate('/calendar');
@@ -87,8 +88,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({
               <WeekBoard board={board} onOpenCalendar={openCalendar} />
               <TaskPanel
                 unassigned={board.kpis.unassigned}
-                unpaid={board.kpis.unpaidShifts}
-                advanced={board.kpis.advancedShifts}
+                unpaid={payrollStats.totalUnpaidShifts}
+                advanced={payrollStats.totalAdvancedShifts}
                 onOpenCalendar={openCalendar}
                 onOpenPayroll={openPayroll}
               />

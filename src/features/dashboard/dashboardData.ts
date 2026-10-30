@@ -45,8 +45,6 @@ export interface WeekBoard {
     shifts: number;
     amount: number;
     unassigned: number;
-    unpaidShifts: number;
-    advancedShifts: number;
   };
 }
 
@@ -209,8 +207,6 @@ export const buildWeekBoard = (
       shifts: weeklyShifts.length,
       amount: weeklyShifts.reduce((total, shift) => total + shift.amount, 0),
       unassigned: unassignedEvents.length,
-      unpaidShifts: weeklyShifts.filter((shift) => shift.status === 'unpaid').length,
-      advancedShifts: weeklyShifts.filter((shift) => shift.status === 'advanced').length,
     },
   };
 };

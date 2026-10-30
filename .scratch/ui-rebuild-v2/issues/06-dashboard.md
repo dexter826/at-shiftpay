@@ -114,3 +114,6 @@ Không sửa: shell, login, payroll/calendar, token/primitive, API.
 - Không có test suite/visual regression.
 - Tuần vắt qua tháng có thể thiếu ngày nếu store chỉ tải tháng hiện tại → hiển thị trống, không bịa.
 - Sổ lương chỉ hiển thị người có ca unpaid/advanced (paid không nằm trong summary), giống logic payroll hiện tại.
+
+
+2026-10-30 — Fix TaskPanel sau feedback: bỏ 3 dòng 0 việc + tag "Đã xong" lặp, bỏ số "00" và "0 việc"; panel chỉ hiện việc đang có count > 0, hoặc một empty state "Không có việc cần xử lý". Tách scope: "Sự kiện chưa xếp" theo tuần (khớp board/KPI), "Ca chưa thanh toán" và "Ca đã ứng" theo tháng (khớp Sổ lương). Count lấy từ payrollStats tháng thay vì shifts tuần.
