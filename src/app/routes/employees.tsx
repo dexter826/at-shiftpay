@@ -78,6 +78,7 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({
 
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [isDeletingEmployee, setIsDeletingEmployee] = useState(false);
 
   // Effects
   useEffect(() => {
@@ -114,10 +115,18 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({
   };
 
   const confirmDelete = async () => {
-    if (deleteConfirm) {
+    if (!deleteConfirm || isDeletingEmployee) return;
+
+    setIsDeletingEmployee(true);
+    try {
       await employeeService.deleteEmployee(deleteConfirm);
       showToast('Đã xóa nhân viên', 'success');
       setDeleteConfirm(null);
+    } catch (error) {
+      console.error('Delete employee failed:', error);
+      showToast('Không thể xóa nhân viên. Vui lòng thử lại', 'error');
+    } finally {
+      setIsDeletingEmployee(false);
     }
   };
 
@@ -187,11 +196,21 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({
         onClose={() => setDeleteConfirm(null)}
         footer={
           <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="flex-1">
+            <Button
+              variant="secondary"
+              onClick={() => setDeleteConfirm(null)}
+              className="flex-1"
+              disabled={isDeletingEmployee}
+            >
               Hủy
             </Button>
-            <Button variant="danger" onClick={confirmDelete} className="flex-1">
-              Xóa
+            <Button
+              variant="danger"
+              onClick={confirmDelete}
+              className="flex-1"
+              disabled={isDeletingEmployee}
+            >
+              {isDeletingEmployee ? 'Đang xóa...' : 'Xóa'}
             </Button>
           </div>
         }
