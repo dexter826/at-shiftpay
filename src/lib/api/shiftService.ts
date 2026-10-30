@@ -13,7 +13,8 @@ export const shiftService = {
     userId: string,
     month: number,
     year: number,
-    callback: (shifts: Shift[]) => void
+    callback: (shifts: Shift[]) => void,
+    onError?: (error: unknown) => void
   ): Unsubscribe {
     const q = buildMonthRangeQuery({
       collectionName: 'shifts',
@@ -22,7 +23,13 @@ export const shiftService = {
       year,
       userId,
     });
-    return createRealtimeSubscription<Shift>(q, callback, 'subscribeShiftsByMonth', ShiftSchema);
+    return createRealtimeSubscription<Shift>(
+      q,
+      callback,
+      'subscribeShiftsByMonth',
+      ShiftSchema,
+      onError
+    );
   },
 
   async getShiftsByMonth(userId: string, month: number, year: number): Promise<Shift[]> {
@@ -36,14 +43,24 @@ export const shiftService = {
     return executeBatchQuery<Shift>(q, ShiftSchema);
   },
 
-  subscribeUnpaidShifts(userId: string, callback: (shifts: Shift[]) => void): Unsubscribe {
+  subscribeUnpaidShifts(
+    userId: string,
+    callback: (shifts: Shift[]) => void,
+    onError?: (error: unknown) => void
+  ): Unsubscribe {
     const q = query(
       collection(db, 'shifts'),
       where('userId', '==', userId),
       where('status', 'in', ['unpaid', 'advanced']),
       orderBy('date', 'asc')
     );
-    return createRealtimeSubscription<Shift>(q, callback, 'subscribeUnpaidShifts', ShiftSchema);
+    return createRealtimeSubscription<Shift>(
+      q,
+      callback,
+      'subscribeUnpaidShifts',
+      ShiftSchema,
+      onError
+    );
   },
 
   async getUnpaidShifts(userId: string): Promise<Shift[]> {

@@ -19,13 +19,23 @@ import { createRealtimeSubscription } from '@/lib/api/firebaseService';
 import { LocationSchema } from '@/utils/validation';
 
 export const locationService = {
-  subscribeLocations(userId: string, callback: (locations: Location[]) => void): Unsubscribe {
+  subscribeLocations(
+    userId: string,
+    callback: (locations: Location[]) => void,
+    onError?: (error: unknown) => void
+  ): Unsubscribe {
     const q = query(
       collection(db, 'locations'),
       where('userId', '==', userId),
       orderBy('name', 'asc')
     );
-    return createRealtimeSubscription<Location>(q, callback, 'subscribeLocations', LocationSchema);
+    return createRealtimeSubscription<Location>(
+      q,
+      callback,
+      'subscribeLocations',
+      LocationSchema,
+      onError
+    );
   },
 
   async addLocation(

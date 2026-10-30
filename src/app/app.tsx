@@ -9,7 +9,7 @@ import { AppRouter } from '@/app/AppRouter';
 import { ExportModal } from '@/features/payroll/components/ExportModal';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { ToastProvider } from '@/components/ui/ToastProvider';
+import { ToastProvider, useToast } from '@/components/ui/ToastProvider';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
 import { useThemeStore } from '@/stores/themeStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -124,6 +124,7 @@ function AppShell() {
 
   return (
     <ToastProvider>
+      <DataErrorWatcher />
       <OfflineIndicator />
       {authLoading ? (
         <div className="flex items-center justify-center h-screen bg-[var(--bg-primary)]">
@@ -262,6 +263,20 @@ function AppContent({
       </Modal>
     </div>
   );
+}
+
+function DataErrorWatcher() {
+  const dataError = useAppDataStore((state) => state.dataError);
+  const setDataError = useAppDataStore((state) => state.setDataError);
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (!dataError) return;
+    showToast(dataError, 'error');
+    setDataError(null);
+  }, [dataError, setDataError, showToast]);
+
+  return null;
 }
 
 function App() {

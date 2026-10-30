@@ -67,7 +67,8 @@ export function createRealtimeSubscription<T>(
   q: Query,
   callback: (data: T[]) => void,
   errorContext: string,
-  schema?: z.ZodSchema<T>
+  schema?: z.ZodSchema<T>,
+  onError?: (error: unknown) => void
 ): Unsubscribe {
   return onSnapshot(
     q,
@@ -85,7 +86,7 @@ export function createRealtimeSubscription<T>(
     },
     (error) => {
       console.error(`Error in ${errorContext}:`, error);
-      callback([]);
+      onError?.(error);
     }
   );
 }

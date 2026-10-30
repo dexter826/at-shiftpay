@@ -14,7 +14,8 @@ export const eventService = {
     userId: string,
     month: number,
     year: number,
-    callback: (events: Event[]) => void
+    callback: (events: Event[]) => void,
+    onError?: (error: unknown) => void
   ): Unsubscribe {
     const q = buildMonthRangeQuery({
       collectionName: 'events',
@@ -23,7 +24,13 @@ export const eventService = {
       year,
       userId,
     });
-    return createRealtimeSubscription<Event>(q, callback, 'subscribeEventsByMonth', EventSchema);
+    return createRealtimeSubscription<Event>(
+      q,
+      callback,
+      'subscribeEventsByMonth',
+      EventSchema,
+      onError
+    );
   },
 
   async getEventsByMonth(userId: string, month: number, year: number): Promise<Event[]> {

@@ -15,13 +15,23 @@ import { createRealtimeSubscription } from '@/lib/api/firebaseService';
 import { EmployeeSchema } from '@/utils/validation';
 
 export const employeeService = {
-  subscribeEmployees(userId: string, callback: (employees: Employee[]) => void): Unsubscribe {
+  subscribeEmployees(
+    userId: string,
+    callback: (employees: Employee[]) => void,
+    onError?: (error: unknown) => void
+  ): Unsubscribe {
     const q = query(
       collection(db, 'employees'),
       where('userId', '==', userId),
       orderBy('createdAt', 'desc')
     );
-    return createRealtimeSubscription<Employee>(q, callback, 'subscribeEmployees', EmployeeSchema);
+    return createRealtimeSubscription<Employee>(
+      q,
+      callback,
+      'subscribeEmployees',
+      EmployeeSchema,
+      onError
+    );
   },
 
   async addEmployee(
