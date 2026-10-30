@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
-import { Modal } from '@/components/ui/Modal';
 import { Calendar, MapPin } from 'lucide-react';
+import { Modal } from '@/components/ui/Modal';
+import { Tag } from '@/components/ui/Tag';
 import { formatCurrency, formatDate } from '@/utils/format';
 import { PaymentTransaction, Shift, Event, Location } from '@/types/index';
 
@@ -13,6 +14,12 @@ interface TransactionDetailModalProps {
   locations: Location[];
 }
 
+const typeLabel = (type: PaymentTransaction['type']) => {
+  if (type === 'advance') return { label: 'Ứng lương', variant: 'info' as const };
+  if (type === 'settlement') return { label: 'Quyết toán', variant: 'highlight' as const };
+  return { label: 'Thanh toán', variant: 'neutral' as const };
+};
+
 const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
   isOpen,
   onClose,
@@ -21,102 +28,86 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
   events,
   locations,
 }) => {
-  return (
-    <Modal title="Chi tiết thanh toán" isOpen={isOpen} onClose={onClose} footer={null}>
-      <div className="space-y-3">
-        {/* Thông tin chung */}
-        <div className={`p-4 bg-surface border border-line rounded-md`}>
-          <div className="flex justify-between items-start mb-3">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className={`text-label font-medium text-ink-muted`}>Loại giao dịch</span>
-                {selectedTransaction?.type === 'advance' && (
-                  <span className="flex items-center gap-1.5 px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
-                    <span className="w-1.5 h-1.5 bg-info" />
-                    Ứng tiền
-                  </span>
-                )}
-                {selectedTransaction?.type === 'settlement' && (
-                  <span className="flex items-center gap-1.5 px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
-                    <span className="w-1.5 h-1.5 bg-accent-ink" />
-                    Quyết toán
-                  </span>
-                )}
-                {(!selectedTransaction?.type || selectedTransaction?.type === 'regular') && (
-                  <span className="flex items-center gap-1.5 px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
-                    <span className="w-1.5 h-1.5 bg-success" />
-                    Thanh toán thường
-                  </span>
-                )}
-              </div>
-              <span className={`text-data font-semibold text-ink tabular-nums`}>
-                {formatCurrency(selectedTransaction?.amount || 0)}
-              </span>
-            </div>
-            <div className="text-right">
-              <span className={`text-label font-medium text-ink-muted`}>Thời gian</span>
-              <p className={`text-body-sm font-medium text-ink-soft tabular-nums`}>
-                {selectedTransaction
-                  ? new Date(selectedTransaction.date).toLocaleString('vi-VN')
-                  : ''}
-              </p>
-            </div>
-          </div>
+  if (!selectedTransaction) return null;
+  const type = typeLabel(selectedTransaction.type);
 
-          {selectedTransaction?.note && (
-            <div className={`pt-2 border-t border-line`}>
-              <span className={`text-label font-medium text-ink-muted`}>Ghi chú:</span>
-              <p className={`text-body-sm text-ink-soft`}>{selectedTransaction.note}</p>
+  return (
+    <Modal title="Giao dịch" isOpen={isOpen} onClose={onClose}>
+      <div className="space-y-4">
+        <div className="space-y-3 border border-line bg-surface-2 p-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate text-body font-semibold text-ink">
+                {selectedTransaction.employeeName}
+              </p>
+              <Tag variant={type.variant} className="mt-1">
+                {type.label}
+              </Tag>
             </div>
+            <p className="shrink-0 font-mono text-data text-ink tabular-nums">
+              {formatCurrency(selectedTransaction.amount)}
+            </p>
+          </div>
+          <div className="flex items-center gap-1.5 border-t border-line pt-2 font-mono text-label text-ink-muted">
+            <Calendar size={12} aria-hidden="true" />
+            {new Date(selectedTransaction.date).toLocaleString('vi-VN', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </div>
+          {selectedTransaction.note && (
+            <p className="border-t border-line pt-2 text-body-sm text-ink-soft">
+              {selectedTransaction.note}
+            </p>
           )}
         </div>
 
-        <p className={`text-label font-medium text-ink-muted pt-2`}>Các ca làm việc</p>
-        {transactionShifts.length === 0 ? (
-          <div className={`py-4 text-center text-ink-muted`}>
-            <p className="text-body-sm">Không tìm thấy thông tin ca làm việc (Có thể đã bị xóa)</p>
-          </div>
-        ) : (
-          transactionShifts.map((s) => {
-            const event = events.find((e) => e.id === s.eventId);
-            return (
-              <div
-                key={s.id}
-                className={`flex justify-between items-center gap-3 p-3 border border-line rounded-md bg-surface-2`}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <Calendar size={16} className="text-ink-muted shrink-0" />
-                  <div className="min-w-0">
-                    <p className={`text-body-sm font-medium text-ink-soft truncate`}>
-                      {event?.title || 'Không rõ sự kiện'}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-label font-medium text-ink-soft`}>
-                        {s.session === 'morning' ? 'Tiệc Sáng' : 'Tiệc Chiều'}
-                      </span>
-                      <span className={`text-label font-medium text-ink-muted`}>•</span>
-                      <span className={`text-label font-medium text-ink-muted tabular-nums`}>
-                        {formatDate(s.date)}
-                      </span>
-                    </div>
-                    {event?.locationId && (
-                      <p
-                        className={`text-label font-medium text-ink-muted mt-0.5 flex items-center gap-1`}
-                      >
-                        <MapPin size={12} className="shrink-0" />
-                        {locations.find((l) => l.id === event.locationId)?.name ||
-                          'Không rõ địa điểm'}
+        <div className="space-y-2">
+          <p className="font-mono text-mono-label text-ink-muted">
+            Ca trong giao dịch ({transactionShifts.length})
+          </p>
+          {transactionShifts.length === 0 ? (
+            <p className="border border-line px-3 py-4 text-body-sm text-ink-muted">
+              Không tìm thấy ca của giao dịch (có thể đã bị xóa).
+            </p>
+          ) : (
+            <div className="divide-y divide-line border border-line">
+              {transactionShifts.map((shift) => {
+                const event = events.find((item) => item.id === shift.eventId);
+                const locationName =
+                  locations.find((item) => item.id === event?.locationId)?.name ??
+                  'Chưa có địa điểm';
+
+                return (
+                  <div
+                    key={shift.id}
+                    className="flex items-start justify-between gap-3 px-3 py-2.5"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate text-body-sm font-medium text-ink">
+                        {event?.title || 'Không rõ sự kiện'}
                       </p>
-                    )}
+                      <p className="font-mono text-label text-ink-muted">
+                        {shift.session === 'morning' ? 'Ca sáng' : 'Ca chiều'} ·{' '}
+                        {formatDate(shift.date)}
+                      </p>
+                      <p className="mt-0.5 flex items-center gap-1 text-label text-ink-muted">
+                        <MapPin size={11} aria-hidden="true" className="shrink-0" />
+                        <span className="truncate">{locationName}</span>
+                      </p>
+                    </div>
+                    <p className="shrink-0 font-mono text-body-sm text-ink tabular-nums">
+                      {formatCurrency(shift.amount)}
+                    </p>
                   </div>
-                </div>
-                <p className={`text-body-sm font-semibold text-ink tabular-nums`}>
-                  {formatCurrency(s.amount)}
-                </p>
-              </div>
-            );
-          })
-        )}
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </Modal>
   );

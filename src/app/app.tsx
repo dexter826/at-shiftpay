@@ -297,6 +297,7 @@ function AppContent({
                     events={events}
                     locations={locations}
                     loading={isLoading}
+                    onOpenExport={onOpenExport}
                   />
                 }
               />

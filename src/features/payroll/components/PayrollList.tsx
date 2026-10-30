@@ -1,170 +1,223 @@
-import React, { memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, ChevronRightIcon } from 'lucide-react';
-import { Skeleton } from '@/components/ui/Skeleton';
+import React, { memo, useState } from 'react';
+import { ChevronRight, Wallet } from 'lucide-react';
+import Button from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadMore } from '@/components/ui/LoadMore';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { Tag } from '@/components/ui/Tag';
 import { formatCurrency } from '@/utils/format';
-import { PayrollSummary, Employee } from '@/types/index';
-import { focusRingClasses } from '@/lib/utils';
-import { DURATION_BASE } from '@/lib/motion';
+import { Employee, PayrollSummary } from '@/types/index';
+import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface PayrollListProps {
   loading: boolean;
   items: PayrollSummary[];
   employees: Employee[];
   visibleCount: number;
-  setVisibleCount: React.Dispatch<React.SetStateAction<number>>;
-  onSelectEmployee: (id: string) => void;
-  onPaymentClick: (id: string) => void;
+  onLoadMore: () => void;
+  onSelectEmployee: (employeeId: string) => void;
   searchTerm: string;
+  onClearSearch: () => void;
 }
+
+const GRID_CLASSES = 'lg:grid-cols-[minmax(0,1fr)_170px_170px_40px]';
+
+const getInitials = (name: string) =>
+  name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase() || 'NV';
+
+const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl }) => {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const showPhoto = Boolean(imageUrl) && failedUrl !== imageUrl;
+
+  return showPhoto ? (
+    <img
+      src={imageUrl}
+      alt={name}
+      onError={() => setFailedUrl(imageUrl ?? null)}
+      className="h-10 w-10 shrink-0 rounded-full border border-line object-cover"
+    />
+  ) : (
+    <span
+      aria-hidden="true"
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-surface-2 text-label font-semibold text-ink-soft"
+    >
+      {getInitials(name)}
+    </span>
+  );
+};
+
+const AmountCell: React.FC<{
+  label: string;
+  amount: number;
+  count: number;
+  tone: 'warning' | 'info';
+}> = ({ label, amount, count, tone }) => (
+  <div className="flex items-center justify-between gap-2 lg:block">
+    <span className="font-mono text-label text-ink-muted lg:hidden">{label}</span>
+    <div className="text-right lg:text-left">
+      <p
+        className={cn(
+          'font-mono text-body-sm tabular-nums',
+          amount > 0 ? (tone === 'warning' ? 'text-warning' : 'text-info') : 'text-ink-muted'
+        )}
+      >
+        {amount > 0 ? formatCurrency(amount) : '—'}
+      </p>
+      <p className="text-label text-ink-muted">{count > 0 ? `${count} ca` : 'Không có'}</p>
+    </div>
+  </div>
+);
 
 const PayrollList: React.FC<PayrollListProps> = ({
   loading,
   items,
   employees,
   visibleCount,
-  setVisibleCount,
+  onLoadMore,
   onSelectEmployee,
-  onPaymentClick,
   searchTerm,
+  onClearSearch,
 }) => {
+  const hasMore = items.length > visibleCount;
+  const hasSearch = searchTerm.trim().length > 0;
+
   return (
-    <AnimatePresence mode="wait">
+    <section className="border border-line bg-surface">
+      <div
+        className={`hidden gap-3 border-b border-line bg-surface-2 px-4 py-2 lg:grid ${GRID_CLASSES}`}
+      >
+        <span className="font-mono text-mono-label text-ink-muted">Nhân viên</span>
+        <span className="font-mono text-mono-label text-ink-muted">Chưa trả</span>
+        <span className="font-mono text-mono-label text-ink-muted">Đã ứng</span>
+        <span className="sr-only">Chi tiết</span>
+      </div>
+
       {loading ? (
-        <motion.div
-          key="loading-list"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: DURATION_BASE }}
-          className="space-y-2"
-        >
-          {Array.from({ length: 5 }).map((_, i) => (
+        <div aria-busy="true" aria-label="Đang tải công nợ">
+          {Array.from({ length: 6 }, (_, index) => (
             <div
-              key={i}
-              className={`w-full p-3 bg-surface border border-line rounded-md flex justify-between items-center`}
+              key={index}
+              className={`grid gap-2 border-b border-line px-4 py-3 last:border-b-0 ${GRID_CLASSES}`}
             >
-              <div className="flex items-center gap-3 w-full">
-                <Skeleton variant="circular" width={36} height={36} />
-                <div className="flex-1 space-y-2">
-                  <Skeleton width="40%" height={16} />
-                  <Skeleton width="30%" height={12} />
+              <div className="flex items-center gap-3">
+                <Skeleton variant="circular" width={40} height={40} />
+                <div className="space-y-1.5">
+                  <Skeleton width={120} height={14} />
+                  <Skeleton width={80} height={11} />
                 </div>
-                <Skeleton width={80} height={20} />
+              </div>
+              <div className="hidden lg:block">
+                <Skeleton width={100} height={14} />
+                <Skeleton width={40} height={10} className="mt-1" />
+              </div>
+              <div className="hidden lg:block">
+                <Skeleton width={100} height={14} />
+                <Skeleton width={40} height={10} className="mt-1" />
+              </div>
+              <div className="hidden lg:block">
+                <Skeleton width={16} height={16} />
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
+      ) : items.length === 0 ? (
+        hasSearch ? (
+          <EmptyState
+            icon={<Wallet size={24} aria-hidden="true" />}
+            title="Không tìm thấy nhân viên"
+            description="Thử tên hoặc số điện thoại khác."
+            className="min-h-[280px]"
+            action={
+              <Button variant="outline" onClick={onClearSearch}>
+                Xóa tìm kiếm
+              </Button>
+            }
+          />
+        ) : (
+          <EmptyState
+            icon={<Wallet size={24} aria-hidden="true" />}
+            title="Không có công nợ"
+            description="Các ca đã trả sẽ nằm trong lịch sử."
+            className="min-h-[280px]"
+          />
+        )
       ) : (
-        <motion.div
-          key="payroll-list"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: DURATION_BASE }}
-          className="space-y-2"
-        >
-          {items.length === 0 ? (
-            <div className={`text-center py-10 text-ink-muted`}>
-              <CheckCircle size={48} className="mx-auto mb-2" />
-              <p>{searchTerm ? 'Không tìm thấy nhân viên nào' : 'Không có khoản nợ nào'}</p>
-            </div>
-          ) : (
-            <>
-              {items.slice(0, visibleCount).map((item) => {
-                const employee = employees.find((e) => e.id === item.employeeId);
-                const employeeImage = employee?.imageUrl;
-                const itemWithFees = item as typeof item & { totalFees?: number };
+        <>
+          {items.slice(0, visibleCount).map((item) => {
+            const employee = employees.find((entry) => entry.id === item.employeeId);
 
-                return (
-                  <button
-                    key={item.employeeId}
-                    onClick={() => {
-                      onSelectEmployee(item.employeeId);
-                      // Tự động mở thanh toán nếu sạch nợ (Moved logic to parent or handle here? Parent handles logic usually, but here we just trigger)
-                      // Logic in original was:
-                      // setSelectedEmpId(item.employeeId);
-                      // if (item.totalUnpaid > 0 && item.totalAdvanced === 0) {
-                      //   setShowPaymentModal(true);
-                      // }
-                      // We will delegate to onPaymentClick which might handle the check or we pass the check result
-                      if (item.totalUnpaid > 0 && item.totalAdvanced === 0) {
-                        onPaymentClick(item.employeeId);
-                      }
-                    }}
-                    className={`w-full p-3 bg-surface border border-line rounded-md hover:border-ink-muted transition-colors duration-fast ease-standard flex justify-between items-center ${focusRingClasses}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      {employeeImage ? (
-                        <img
-                          src={employeeImage}
-                          alt={item.employeeName}
-                          decoding="async"
-                          className={`w-9 h-9 rounded-full object-cover border ${item.totalUnpaid > 0 ? 'border-warning' : 'border-line'}`}
-                        />
-                      ) : (
-                        <div
-                          className={`w-9 h-9 rounded-full flex items-center justify-center text-body-sm font-medium text-ink-soft bg-surface-2`}
-                        >
-                          {item.employeeName.charAt(0)}
-                        </div>
-                      )}
-                      <div className="text-left">
-                        <div className="flex items-center gap-2">
-                          <p className={`text-body-sm font-medium text-ink-soft`}>
-                            {item.employeeName}
-                          </p>
-                          {itemWithFees.totalFees && itemWithFees.totalFees > 0 && (
-                            <span className="flex items-center px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
-                              Có phụ phí
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-label font-medium tabular-nums">
-                          {item.unpaidCount > 0 && (
-                            <span className="text-warning">{item.unpaidCount} công chưa trả</span>
-                          )}
-                          {item.advancedCount > 0 && (
-                            <span className="text-info">{item.advancedCount} công đã ứng</span>
-                          )}
-                          {item.unpaidCount === 0 && item.advancedCount === 0 && (
-                            <span className="text-ink-muted">Không có công nợ</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <div className="text-right">
-                        <span
-                          className={`text-body-sm font-semibold tabular-nums ${item.totalUnpaid > 0 ? 'text-warning' : 'text-ink-muted'}`}
-                        >
-                          {formatCurrency(item.totalUnpaid)}
+            return (
+              <button
+                key={item.employeeId}
+                type="button"
+                onClick={() => onSelectEmployee(item.employeeId)}
+                aria-label={`Xem công nợ của ${item.employeeName}`}
+                className={cn(
+                  'grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2 border-b border-line px-4 py-3 text-left last:border-b-0 hover:bg-surface-2/60 lg:grid-cols-[minmax(0,1fr)_170px_170px_40px] lg:items-center lg:gap-3',
+                  focusRingOnSurfaceClasses
+                )}
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <Avatar name={item.employeeName} imageUrl={employee?.imageUrl} />
+                  <div className="min-w-0">
+                    <span className="block max-w-full truncate text-body-sm font-semibold text-ink">
+                      {item.employeeName}
+                    </span>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {employee?.phone && (
+                        <span className="font-mono text-label text-ink-muted">
+                          {employee.phone}
                         </span>
-                        {item.totalAdvanced > 0 && (
-                          <p className="text-label font-medium text-info tabular-nums">
-                            Đã ứng: {formatCurrency(item.totalAdvanced)}
-                          </p>
-                        )}
-                      </div>
-                      <ChevronRightIcon size={16} className="text-ink-muted" />
+                      )}
+                      {!employee?.bankAccount && <Tag variant="warning">Chưa có TK</Tag>}
                     </div>
-                  </button>
-                );
-              })}
+                  </div>
+                </div>
+
+                <div className="col-span-2 lg:col-span-1">
+                  <AmountCell
+                    label="Chưa trả"
+                    amount={item.totalUnpaid}
+                    count={item.unpaidCount}
+                    tone="warning"
+                  />
+                </div>
+
+                <div className="col-span-2 lg:col-span-1">
+                  <AmountCell
+                    label="Đã ứng"
+                    amount={item.totalAdvanced}
+                    count={item.advancedCount}
+                    tone="info"
+                  />
+                </div>
+
+                <div className="hidden justify-end lg:flex">
+                  <ChevronRight size={16} aria-hidden="true" className="text-ink-muted" />
+                </div>
+              </button>
+            );
+          })}
+          {hasMore && (
+            <div className="border-t border-line p-3">
               <LoadMore
                 currentCount={visibleCount}
                 totalCount={items.length}
-                onLoadMore={() => setVisibleCount((prev) => prev + 15)}
+                onLoadMore={onLoadMore}
                 unit="nhân viên"
-                className="pt-2 pb-4"
               />
-            </>
+            </div>
           )}
-        </motion.div>
+        </>
       )}
-    </AnimatePresence>
+    </section>
   );
 };
 

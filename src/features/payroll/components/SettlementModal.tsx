@@ -1,13 +1,14 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { AlertTriangle, Calculator, Loader2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { useToast } from '@/components/ui/ToastProvider';
-/* removed unused import from @/stores/themeStore */
-import { Shift, PaymentTransaction, AdvanceBalance, Event, Location } from '@/types/index';
+import { Shift, PaymentTransaction } from '@/types/index';
 import { formatCurrency } from '@/utils/format';
 import { paymentService } from '@/lib/api/paymentService';
-import { Calculator, Loader2, AlertTriangle } from 'lucide-react';
+import { roundAmount, sumShiftAmounts } from '@/utils/payrollMath';
 import { useAuthStore } from '@/stores/authStore';
+import { cn } from '@/lib/utils';
 
 interface SettlementModalProps {
   isOpen: boolean;
@@ -15,10 +16,6 @@ interface SettlementModalProps {
   employeeId: string;
   employeeName: string;
   shifts: Shift[];
-  paymentHistory: PaymentTransaction[];
-  events: Event[];
-  locations: Location[];
-  onSuccess?: () => void;
 }
 
 export const SettlementModal: React.FC<SettlementModalProps> = ({
@@ -27,172 +24,185 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   employeeId,
   employeeName,
   shifts,
-  onSuccess,
 }) => {
-  const [isProcessing, setIsProcessing] = useState(false);
-  const { showToast } = useToast();
-
   const { user } = useAuthStore();
   const userId = user?.uid || '';
+  const { showToast } = useToast();
 
-  const [localAdvances, setLocalAdvances] = useState<PaymentTransaction[]>([]);
-  const [isLoadingAdvances, setIsLoadingAdvances] = useState(true); // Trạng thái loading mặc định
-  const [advancesError, setAdvancesError] = useState<string | null>(null);
+  const [advances, setAdvances] = useState<PaymentTransaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [retryNonce, setRetryNonce] = useState(0);
 
   useEffect(() => {
-    // Reset state mỗi khi mở modal
-    if (isOpen) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the fetch state for each opening
-      setIsLoadingAdvances(true);
-      setAdvancesError(null);
-      setLocalAdvances([]);
+    let active = true;
 
-      const fetchAdvances = async () => {
-        try {
-          const data = await paymentService.getUnsettledAdvances(employeeId, userId);
-          setLocalAdvances(data);
-        } catch (error) {
-          console.error('Failed to fetch advances:', error);
-          setAdvancesError('Không thể tải khoản ứng lương. Vui lòng đóng và thử lại.');
-          showToast('Không thể tải khoản ứng lương', 'error');
-        } finally {
-          setIsLoadingAdvances(false);
-        }
-      };
-      fetchAdvances();
-    } else {
-      // Xóa data cũ khi đóng
-      setIsLoadingAdvances(true);
-      setLocalAdvances([]);
-    }
-  }, [isOpen, employeeId, userId, showToast]);
+    paymentService
+      .getUnsettledAdvances(employeeId, userId)
+      .then((data) => {
+        if (active) setAdvances(data);
+      })
+      .catch((error) => {
+        if (!active) return;
+        console.error('Failed to fetch advances:', error);
+        setLoadError('Không thể tải khoản ứng lương.');
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
 
-  // Tính số dư nợ
-  const advanceBalance = useMemo((): AdvanceBalance => {
-    const employeeShifts = shifts.filter((s) => s.employeeId === employeeId);
-
-    // Dùng data thực tế từ DB
-    const totalAdvanced = localAdvances.reduce((sum, p) => sum + p.amount, 0);
-
-    const totalEarned = employeeShifts
-      .filter((s) => s.status === 'unpaid' || s.status === 'advanced')
-      .reduce((sum, s) => sum + s.amount, 0);
-
-    const balance = totalEarned - totalAdvanced;
-
-    return {
-      employeeId,
-      employeeName,
-      totalAdvanced,
-      totalEarned,
-      balance,
+    return () => {
+      active = false;
     };
-  }, [employeeId, employeeName, shifts, localAdvances]);
+  }, [employeeId, userId, retryNonce]);
 
-  // Tiền ứng chưa chốt
-  const unsettledAdvances = useMemo(() => {
-    return localAdvances;
-  }, [localAdvances]);
+  const advancedShifts = useMemo(
+    () => shifts.filter((shift) => shift.employeeId === employeeId && shift.status === 'advanced'),
+    [shifts, employeeId]
+  );
+  const unpaidShifts = useMemo(
+    () => shifts.filter((shift) => shift.employeeId === employeeId && shift.status === 'unpaid'),
+    [shifts, employeeId]
+  );
+  const settleableShifts = useMemo(
+    () => [...advancedShifts, ...unpaidShifts],
+    [advancedShifts, unpaidShifts]
+  );
 
-  // Gộp ca chưa trả để bù trừ công nợ
-  const settleableShifts = useMemo(() => {
-    return shifts.filter(
-      (s) => s.employeeId === employeeId && (s.status === 'advanced' || s.status === 'unpaid')
-    );
-  }, [shifts, employeeId]);
+  const totalAdvanced = advances.reduce((sum, payment) => sum + payment.amount, 0);
+  const totalEarned = roundAmount(sumShiftAmounts(settleableShifts));
+  const balance = totalEarned - totalAdvanced;
+  const canSettle =
+    !isLoading && !loadError && advances.length > 0 && settleableShifts.length > 0 && balance >= 0;
+
+  const handleRetry = () => {
+    setAdvances([]);
+    setLoadError(null);
+    setIsLoading(true);
+    setRetryNonce((value) => value + 1);
+  };
 
   const handleSettlement = async () => {
-    if (advancesError) {
-      showToast('Chưa tải được khoản ứng, không thể quyết toán', 'error');
-      return;
-    }
-    if (unsettledAdvances.length === 0 || settleableShifts.length === 0) {
-      showToast('Không có dữ liệu công hoặc tiền ứng để quyết toán', 'warning');
-      return;
-    }
+    if (!canSettle || isProcessing) return;
 
     setIsProcessing(true);
     try {
-      // Chốt sổ theo số dư thực
-      const settlementAmount = Math.round(advanceBalance.balance);
-
       await paymentService.settleAdvancePayment(
         employeeId,
         employeeName,
-        unsettledAdvances.map((p) => p.id),
-        settleableShifts.map((s) => s.id),
-        settlementAmount,
+        advances.map((payment) => payment.id),
+        settleableShifts.map((shift) => shift.id),
+        balance,
         userId
       );
-
-      showToast('Quyết toán tiền ứng thành công', 'success');
-      onSuccess?.();
+      showToast('Đã quyết toán.', 'success');
       onClose();
     } catch (error) {
       console.error('Settlement error:', error);
-      showToast('Có lỗi xảy ra khi quyết toán', 'error');
+      showToast('Không thể quyết toán. Thử lại.', 'error');
     } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <Modal title="Xác nhận quyết toán" isOpen={isOpen} onClose={onClose}>
-      <div className="space-y-6">
-        <div
-          className={`p-6 bg-surface border border-line rounded-md flex flex-col items-center text-center`}
-        >
-          {isLoadingAdvances ? (
-            <div className="py-4 space-y-3">
-              <Loader2 size={32} className="animate-spin text-accent-ink mx-auto" />
-              <p className={`text-body-sm text-ink-soft`}>Đang kiểm tra dữ liệu...</p>
-            </div>
-          ) : advancesError ? (
-            <div className="py-4 space-y-3 text-danger">
-              <AlertTriangle size={32} className="mx-auto" />
-              <p className="text-body-sm">{advancesError}</p>
-            </div>
-          ) : (
-            <>
-              <div className="mb-4 p-3 bg-surface-2 rounded-md">
-                <Calculator size={32} className="text-accent-ink" />
-              </div>
-
-              <h3 className={`text-title font-semibold text-ink mb-2`}>
-                Quyết toán cho {employeeName}?
-              </h3>
-
-              <div className="my-4">
-                <p className={`text-label text-ink-muted mb-1 font-medium`}>Số tiền cần trả thêm</p>
-                <p
-                  className={`text-data font-semibold tabular-nums ${advanceBalance.balance >= 0 ? 'text-warning' : 'text-info'}`}
-                >
-                  {formatCurrency(advanceBalance.balance)}
-                </p>
-              </div>
-
-              <p className={`text-body-sm text-ink-soft max-w-xs mx-auto`}>
-                Hành động này sẽ gạch nợ tất cả các khoản ứng và xác nhận thanh toán các ca làm việc
-                hiện tại.
-              </p>
-            </>
-          )}
-        </div>
-
-        <div className="flex gap-3">
+    <Modal
+      title="Quyết toán ứng lương"
+      isOpen={isOpen}
+      onClose={onClose}
+      footer={
+        <div className="flex gap-2">
           <Button variant="secondary" onClick={onClose} className="flex-1" disabled={isProcessing}>
-            Hủy bỏ
+            Hủy
           </Button>
           <Button
             onClick={handleSettlement}
             className="flex-1"
-            disabled={
-              isProcessing || isLoadingAdvances || !!advancesError || settleableShifts.length === 0
-            }
+            loading={isProcessing}
+            disabled={!canSettle}
           >
-            {isProcessing ? 'Đang xử lý...' : 'Xác nhận quyết toán'}
+            Quyết toán
           </Button>
         </div>
+      }
+    >
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 border border-line bg-surface-2 px-3 py-2.5">
+          <Calculator size={16} aria-hidden="true" className="text-ink-muted" />
+          <p className="text-body-sm font-semibold text-ink">{employeeName}</p>
+        </div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center gap-2 border border-line px-3 py-10 text-body-sm text-ink-muted">
+            <Loader2 size={18} aria-hidden="true" className="animate-spin" />
+            Đang tải khoản ứng…
+          </div>
+        ) : loadError ? (
+          <div className="space-y-3 border border-danger/30 bg-danger/5 px-3 py-4 text-center">
+            <AlertTriangle size={24} aria-hidden="true" className="mx-auto text-danger" />
+            <p className="text-body-sm text-danger">{loadError}</p>
+            <Button variant="outline" onClick={handleRetry}>
+              Thử lại
+            </Button>
+          </div>
+        ) : advances.length === 0 ? (
+          <div className="border border-line px-3 py-6 text-center text-body-sm text-ink-muted">
+            Không có khoản ứng chưa chốt.
+          </div>
+        ) : (
+          <>
+            <div className="grid gap-px border border-line bg-line sm:grid-cols-2">
+              <div className="bg-surface px-3 py-2.5">
+                <p className="font-mono text-mono-label text-ink-muted">Khoản ứng chưa chốt</p>
+                <p className="mt-0.5 font-mono text-body-sm text-info tabular-nums">
+                  {formatCurrency(totalAdvanced)}
+                </p>
+                <p className="text-label text-ink-muted">{advances.length} lần ứng</p>
+              </div>
+              <div className="bg-surface px-3 py-2.5">
+                <p className="font-mono text-mono-label text-ink-muted">Chênh lệch</p>
+                <p
+                  className={cn(
+                    'mt-0.5 font-mono text-body-sm tabular-nums',
+                    balance < 0 ? 'text-danger' : balance > 0 ? 'text-warning' : 'text-success'
+                  )}
+                >
+                  {formatCurrency(balance)}
+                </p>
+                <p className="text-label text-ink-muted">
+                  {balance < 0
+                    ? 'Ứng vượt lương hiện có'
+                    : balance > 0
+                      ? 'Còn phải trả khi chốt'
+                      : 'Không còn tiền cần trả'}
+                </p>
+              </div>
+              <div className="bg-surface px-3 py-2.5">
+                <p className="font-mono text-mono-label text-ink-muted">Ca đã ứng</p>
+                <p className="mt-0.5 font-mono text-body-sm text-ink">{advancedShifts.length} ca</p>
+              </div>
+              <div className="bg-surface px-3 py-2.5">
+                <p className="font-mono text-mono-label text-ink-muted">Ca chưa trả</p>
+                <p className="mt-0.5 font-mono text-body-sm text-ink">{unpaidShifts.length} ca</p>
+              </div>
+            </div>
+
+            {balance < 0 ? (
+              <div className="border border-danger/30 bg-danger/5 px-3 py-3">
+                <p className="text-body-sm text-danger">
+                  Đã ứng vượt lương hiện có {formatCurrency(Math.abs(balance))}. Cần thu hồi trước
+                  khi quyết toán.
+                </p>
+              </div>
+            ) : (
+              <p className="text-body-sm leading-relaxed text-ink-soft">
+                Quyết toán sẽ đánh dấu các khoản ứng là đã chốt và toàn bộ ca đang mở là đã trả. Số
+                tiền còn lại sẽ được ghi vào lịch sử.
+              </p>
+            )}
+          </>
+        )}
       </div>
     </Modal>
   );

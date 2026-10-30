@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
+import { Banknote, Calculator, Calendar, MapPin } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { Banknote, Calculator, Calendar, CheckCircle, MapPin } from 'lucide-react';
-import { formatCurrency, formatDate } from '@/utils/format';
 import { PayrollSummary, Shift, Event, Location } from '@/types/index';
+import { formatCurrency, formatDate } from '@/utils/format';
 
 interface EmployeeDetailModalProps {
   isOpen: boolean;
@@ -17,6 +17,56 @@ interface EmployeeDetailModalProps {
   locations: Location[];
 }
 
+const ShiftGroup: React.FC<{
+  title: string;
+  shifts: Shift[];
+  events: Event[];
+  locations: Location[];
+  tone: 'warning' | 'info';
+}> = ({ title, shifts, events, locations, tone }) => {
+  if (shifts.length === 0) return null;
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <p className="font-mono text-mono-label text-ink-muted">{title}</p>
+        <span className="font-mono text-mono-label text-ink-muted">{shifts.length} ca</span>
+      </div>
+      <div className="divide-y divide-line border border-line">
+        {shifts.map((shift) => {
+          const event = events.find((item) => item.id === shift.eventId);
+          const locationName =
+            locations.find((item) => item.id === event?.locationId)?.name ?? 'Chưa có địa điểm';
+
+          return (
+            <div key={shift.id} className="flex items-start justify-between gap-3 px-3 py-2.5">
+              <div className="min-w-0">
+                <p className="truncate text-body-sm font-medium text-ink">
+                  {event?.title || 'Không rõ sự kiện'}
+                </p>
+                <p className="font-mono text-label text-ink-muted">
+                  {shift.session === 'morning' ? 'Ca sáng' : 'Ca chiều'} · {formatDate(shift.date)}
+                </p>
+                <p className="mt-0.5 flex items-center gap-1 text-label text-ink-muted">
+                  <MapPin size={11} aria-hidden="true" className="shrink-0" />
+                  <span className="truncate">{locationName}</span>
+                </p>
+              </div>
+              <p
+                className={`shrink-0 font-mono text-body-sm tabular-nums ${
+                  tone === 'warning' ? 'text-warning' : 'text-info'
+                }`}
+              >
+                {formatCurrency(shift.amount)}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
   isOpen,
   onClose,
@@ -28,163 +78,100 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
   events,
   locations,
 }) => {
+  if (!selectedEmployeeSummary) return null;
+
+  const hasUnpaid = selectedEmployeeSummary.totalUnpaid > 0;
+  const hasAdvanced = selectedEmployeeSummary.advancedCount > 0;
+  const totalOpen = selectedEmployeeSummary.totalUnpaid + selectedEmployeeSummary.totalAdvanced;
+  const totalShifts = selectedEmployeeSummary.unpaidCount + selectedEmployeeSummary.advancedCount;
+
   return (
     <Modal
-      title={selectedEmployeeSummary?.employeeName || 'Chi tiết'}
+      title={selectedEmployeeSummary.employeeName}
       isOpen={isOpen}
       onClose={onClose}
       footer={
-        <div className="flex gap-2 w-full">
-          {selectedEmployeeSummary && selectedEmployeeSummary.totalUnpaid > 0 && (
-            <Button
-              onClick={onPayment}
-              className="flex-1"
-              variant={selectedEmployeeSummary.advancedCount > 0 ? 'warning' : 'primary'}
-            >
-              <Banknote size={16} />
-              Thanh toán / Ứng
-            </Button>
-          )}
-          {selectedEmployeeSummary && selectedEmployeeSummary.advancedCount > 0 && (
-            <Button onClick={onSettlement} className="flex-1">
-              <Calculator size={16} className="text-on-accent" />
-              Quyết toán
-            </Button>
-          )}
-        </div>
+        (hasUnpaid || hasAdvanced) && (
+          <div className="flex gap-2">
+            {hasUnpaid && (
+              <Button
+                onClick={onPayment}
+                className="flex-1"
+                variant="primary"
+                icon={<Banknote size={16} />}
+              >
+                Thanh toán / Ứng
+              </Button>
+            )}
+            {hasAdvanced && (
+              <Button
+                onClick={onSettlement}
+                className="flex-1"
+                variant={hasUnpaid ? 'outline' : 'primary'}
+                icon={<Calculator size={16} />}
+              >
+                Quyết toán
+              </Button>
+            )}
+          </div>
+        )
       }
     >
       <div className="space-y-4">
-        {/* Tổng quan */}
-        {selectedEmployeeSummary && (
-          <div className={`p-4 bg-surface border border-line rounded-md`}>
-            <div className="space-y-3">
-              <div>
-                <span className="text-ink-muted">Tổng tiền đã làm:</span>
-                <p className={`text-data font-semibold text-accent-ink tabular-nums`}>
-                  {formatCurrency(
-                    selectedEmployeeSummary.totalUnpaid + selectedEmployeeSummary.totalAdvanced
-                  )}
-                </p>
-              </div>
-
-              <div className="space-y-1 text-body-sm border-t border-dashed border-line pt-2 tabular-nums">
-                <div className="flex justify-between">
-                  <span className="text-ink-muted">Đã nhận (ứng):</span>
-                  <span className="text-info font-medium">
-                    {formatCurrency(selectedEmployeeSummary.totalAdvanced)}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-ink-muted">Còn lại cần trả:</span>
-                  <span className="text-warning font-semibold">
-                    {formatCurrency(selectedEmployeeSummary.totalUnpaid)}
-                  </span>
-                </div>
-              </div>
-            </div>
+        <div className="grid gap-px border border-line bg-line sm:grid-cols-3">
+          <div className="bg-surface px-3 py-2.5">
+            <p className="font-mono text-mono-label text-ink-muted">Còn phải trả</p>
+            <p
+              className={`mt-0.5 font-mono text-body-sm tabular-nums ${
+                hasUnpaid ? 'text-warning' : 'text-ink-muted'
+              }`}
+            >
+              {hasUnpaid ? formatCurrency(selectedEmployeeSummary.totalUnpaid) : '—'}
+            </p>
+            <p className="text-label text-ink-muted">{selectedEmployeeSummary.unpaidCount} ca</p>
           </div>
-        )}
+          <div className="bg-surface px-3 py-2.5">
+            <p className="font-mono text-mono-label text-ink-muted">Đã ứng</p>
+            <p
+              className={`mt-0.5 font-mono text-body-sm tabular-nums ${
+                hasAdvanced ? 'text-info' : 'text-ink-muted'
+              }`}
+            >
+              {hasAdvanced ? formatCurrency(selectedEmployeeSummary.totalAdvanced) : '—'}
+            </p>
+            <p className="text-label text-ink-muted">{selectedEmployeeSummary.advancedCount} ca</p>
+          </div>
+          <div className="bg-surface px-3 py-2.5">
+            <p className="font-mono text-mono-label text-ink-muted">Tổng lương chưa chốt</p>
+            <p className="mt-0.5 font-mono text-body-sm text-ink tabular-nums">
+              {formatCurrency(totalOpen)}
+            </p>
+            <p className="text-label text-ink-muted">{totalShifts} ca</p>
+          </div>
+        </div>
 
-        {/* Thông tin tạm ứng */}
-        {selectedUnpaidShifts.length === 0 ? (
-          selectedAdvancedShifts.length > 0 ? (
-            <>
-              <div className="flex justify-between items-center mb-2">
-                <p className={`text-label font-medium text-ink-muted`}>Ca đã ứng tiền</p>
-              </div>
-              {selectedAdvancedShifts.map((s) => {
-                const event = events.find((e) => e.id === s.eventId);
-                return (
-                  <div
-                    key={s.id}
-                    className={`flex justify-between items-center gap-3 p-3 border rounded-md border-line bg-surface-2`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Calendar size={16} className="text-info" />
-                      <div>
-                        <p className={`text-body-sm font-medium text-ink-soft`}>
-                          {event?.title || 'Không rõ sự kiện'}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <span className={`text-label font-medium text-ink-soft`}>
-                            {s.session === 'morning' ? 'Tiệc Sáng' : 'Tiệc Chiều'}
-                          </span>
-                          <span className={`text-label font-medium text-ink-muted`}>•</span>
-                          <span className={`text-label font-medium text-ink-muted tabular-nums`}>
-                            {formatDate(s.date)}
-                          </span>
-                        </div>
-                        {event?.locationId && (
-                          <p
-                            className={`text-label font-medium text-ink-muted mt-0.5 flex items-center gap-1`}
-                          >
-                            <MapPin size={12} />
-                            {locations.find((l) => l.id === event.locationId)?.name ||
-                              'Không rõ địa điểm'}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <p className={`text-body-sm font-semibold text-ink tabular-nums`}>
-                      {formatCurrency(s.amount)}
-                    </p>
-                  </div>
-                );
-              })}
-            </>
-          ) : (
-            <div className={`py-8 flex flex-col items-center justify-center text-ink-muted gap-2`}>
-              <CheckCircle size={32} className="text-success" />
-              <p className="text-body-sm">Không còn ca chưa thanh toán</p>
+        <div className="space-y-4">
+          <ShiftGroup
+            title="Ca chưa trả"
+            shifts={selectedUnpaidShifts}
+            events={events}
+            locations={locations}
+            tone="warning"
+          />
+          <ShiftGroup
+            title="Ca đã ứng"
+            shifts={selectedAdvancedShifts}
+            events={events}
+            locations={locations}
+            tone="info"
+          />
+          {selectedUnpaidShifts.length === 0 && selectedAdvancedShifts.length === 0 && (
+            <div className="flex items-center gap-2 border border-line px-3 py-4 text-body-sm text-ink-muted">
+              <Calendar size={16} aria-hidden="true" />
+              Không còn ca nào đang mở.
             </div>
-          )
-        ) : (
-          <>
-            <div className="flex justify-between items-center mb-2">
-              <p className={`text-label font-medium text-ink-muted`}>Công chưa trả</p>
-            </div>
-            {selectedUnpaidShifts.map((s) => {
-              const event = events.find((e) => e.id === s.eventId);
-              return (
-                <div
-                  key={s.id}
-                  className={`flex justify-between items-center gap-3 p-3 border rounded-md border-line bg-surface-2`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Calendar size={16} className="text-ink-muted" />
-                    <div>
-                      <p className={`text-body-sm font-medium text-ink-soft`}>
-                        {event?.title || 'Không rõ sự kiện'}
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-label font-medium text-ink-soft`}>
-                          {s.session === 'morning' ? 'Tiệc Sáng' : 'Tiệc Chiều'}
-                        </span>
-                        <span className={`text-label font-medium text-ink-muted`}>•</span>
-                        <span className={`text-label font-medium text-ink-muted tabular-nums`}>
-                          {formatDate(s.date)}
-                        </span>
-                      </div>
-                      {event?.locationId && (
-                        <p
-                          className={`text-label font-medium text-ink-muted mt-0.5 flex items-center gap-1`}
-                        >
-                          <MapPin size={12} />
-                          {locations.find((l) => l.id === event.locationId)?.name ||
-                            'Không rõ địa điểm'}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <p className={`text-body-sm font-semibold text-ink tabular-nums`}>
-                    {formatCurrency(s.amount)}
-                  </p>
-                </div>
-              );
-            })}
-          </>
-        )}
+          )}
+        </div>
       </div>
     </Modal>
   );
