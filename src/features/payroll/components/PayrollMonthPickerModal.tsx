@@ -1,6 +1,8 @@
 import React, { memo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface PayrollMonthPickerModalProps {
   isOpen: boolean;
@@ -25,35 +27,40 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       footer={
-        <button
+        <Button
+          variant="secondary"
+          fullWidth
           onClick={() => {
             setFilterDate('');
             onClose();
           }}
-          className={`w-full py-2.5 rounded-lg text-sm font-medium border border-line text-ink-soft hover:bg-line transition-colors`}
         >
           Xem tất cả lịch sử
-        </button>
+        </Button>
       }
     >
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between items-center px-2">
+        <div className="flex justify-between items-center px-4 py-2 bg-surface-2 rounded-md border border-dashed border-line">
           <button
+            type="button"
             onClick={() => setViewYear((prev) => prev - 1)}
-            className={`p-1 rounded-full hover:bg-line`}
+            aria-label="Năm trước"
+            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
-            <ChevronLeft size={20} className="text-ink-soft" />
+            <ChevronLeft size={18} className="text-ink-soft" />
           </button>
-          <span className={`text-lg font-bold text-ink`}>{viewYear}</span>
+          <span className={`text-body font-semibold text-ink tabular-nums`}>Năm {viewYear}</span>
           <button
+            type="button"
             onClick={() => setViewYear((prev) => prev + 1)}
-            className={`p-1 rounded-full hover:bg-line`}
+            aria-label="Năm sau"
+            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
-            <ChevronRight size={20} className="text-ink-soft" />
+            <ChevronRight size={18} className="text-ink-soft" />
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2.5">
           {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => {
             const monthStr = month.toString().padStart(2, '0');
             const value = `${viewYear}-${monthStr}`;
@@ -64,20 +71,16 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
             return (
               <button
                 key={month}
+                type="button"
                 onClick={() => {
                   setFilterDate(value);
                   onClose();
                 }}
-                className={`
-                         py-3 rounded-lg text-sm font-medium transition-colors border
-                         ${
-                           isSelected
-                             ? 'bg-accent text-on-accent border-accent'
-                             : `hover:bg-line
-                               border-line text-ink-soft
-                               ${isCurrentMonth ? 'border-accent/50 text-accent-ink' : ''}`
-                         }
-                      `}
+                className={`py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses} ${
+                  isSelected
+                    ? 'bg-accent text-on-accent border-accent'
+                    : `bg-surface-2 hover:bg-surface border-line text-ink-soft ${isCurrentMonth ? 'border-accent/45 text-accent-ink' : ''}`
+                }`}
               >
                 Tháng {month}
               </button>

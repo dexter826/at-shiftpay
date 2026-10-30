@@ -19,6 +19,7 @@ import {
   Wallet,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -163,50 +164,43 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     <Modal title="Thanh toán lương" isOpen={isOpen} onClose={onClose}>
       <div className="space-y-5">
         {/* Thông tin nhân viên & Ngân hàng */}
-        <div
-          className={`p-4 bg-surface border border-line rounded-2xl shadow-sm relative overflow-hidden`}
-        >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full -mr-12 -mt-12" />
-
-          <div className="flex items-center gap-4 relative">
+        <div className={`p-4 bg-surface border border-line rounded-md`}>
+          <div className="flex items-center gap-4">
             <div className="relative shrink-0">
               {currentEmployee?.imageUrl ? (
                 <img
                   src={currentEmployee.imageUrl}
                   alt={employeeSummary.employeeName}
-                  className="w-16 h-16 rounded-2xl object-cover border-2 border-surface shadow-sm"
+                  className="w-16 h-16 rounded-md object-cover border border-line"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center text-on-accent shadow-sm">
+                <div className="w-16 h-16 rounded-md bg-surface-2 flex items-center justify-center text-ink-soft">
                   <User size={32} />
                 </div>
               )}
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success border-2 border-surface rounded-full" />
             </div>
 
             <div className="min-w-0 flex-1 space-y-0.5">
-              <h3 className={`text-lg font-black text-ink leading-tight truncate`}>
+              <h3 className={`text-title font-semibold text-ink leading-tight truncate`}>
                 {employeeSummary.employeeName}
               </h3>
               {currentEmployee?.bankAccount ? (
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-1.5">
                     <Building2 size={12} className="text-accent-ink shrink-0" />
-                    <p className={`text-xs font-bold text-accent-ink truncate`}>
+                    <p className={`text-label font-medium text-accent-ink truncate`}>
                       {currentEmployee.bankAccount.bankName}
                     </p>
                   </div>
-                  <p className={`text-xs font-mono font-medium text-ink-soft tracking-wider`}>
+                  <p className={`text-label font-medium text-ink-soft tabular-nums`}>
                     {currentEmployee.bankAccount.accountNumber}
                   </p>
-                  <p
-                    className={`text-[10px] font-medium text-ink-soft uppercase opacity-80 truncate`}
-                  >
+                  <p className={`text-label font-medium text-ink-soft truncate`}>
                     {currentEmployee.bankAccount.accountName}
                   </p>
                 </div>
               ) : (
-                <p className={`text-xs text-ink-soft italic`}>Chưa cập nhật ngân hàng</p>
+                <p className={`text-label text-ink-soft italic`}>Chưa cập nhật ngân hàng</p>
               )}
             </div>
           </div>
@@ -214,12 +208,14 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
         {/* Loại thanh toán */}
         <div className="space-y-3">
-          <h4 className={`text-sm font-bold text-ink px-1`}>Loại thanh toán:</h4>
+          <h4 className={`text-body-sm font-semibold text-ink px-1`}>Loại thanh toán:</h4>
           <div className="grid grid-cols-2 gap-3">
             <button
+              type="button"
               onClick={() => setPaymentType('regular')}
-              className={`p-3 rounded-2xl border-2 transition-all relative text-center ${
-                paymentType === 'regular' ? 'border-accent bg-accent/10' : 'border-line bg-surface'
+              aria-pressed={paymentType === 'regular'}
+              className={`p-3 rounded-md border transition-colors duration-fast ease-standard relative text-center ${focusRingOnSurfaceClasses} ${
+                paymentType === 'regular' ? 'border-accent bg-surface-2' : 'border-line bg-surface'
               }`}
             >
               {paymentType === 'regular' && (
@@ -230,27 +226,19 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Banknote
                   size={16}
-                  className={paymentType === 'regular' ? 'text-accent-ink' : 'text-ink-soft'}
+                  className={paymentType === 'regular' ? 'text-accent-ink' : 'text-ink-muted'}
                 />
-                <span
-                  className={`font-bold text-sm ${paymentType === 'regular' ? 'text-accent-ink' : 'text-ink'}`}
-                >
-                  Thanh toán
-                </span>
+                <span className={`text-body-sm font-semibold text-ink`}>Thanh toán</span>
               </div>
-              <p
-                className={`text-[10px] leading-tight ${paymentType === 'regular' ? 'text-accent-ink/80' : 'text-ink-soft'}`}
-              >
-                Nguồn tiền tiệc
-              </p>
+              <p className={`text-label leading-tight text-ink-soft`}>Nguồn tiền tiệc</p>
             </button>
 
             <button
+              type="button"
               onClick={() => setPaymentType('advance')}
-              className={`p-3 rounded-2xl border-2 transition-all relative text-center ${
-                paymentType === 'advance'
-                  ? 'border-warning bg-warning/10'
-                  : 'border-line bg-surface'
+              aria-pressed={paymentType === 'advance'}
+              className={`p-3 rounded-md border transition-colors duration-fast ease-standard relative text-center ${focusRingOnSurfaceClasses} ${
+                paymentType === 'advance' ? 'border-warning bg-surface-2' : 'border-line bg-surface'
               }`}
             >
               {paymentType === 'advance' && (
@@ -261,19 +249,11 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Wallet
                   size={16}
-                  className={paymentType === 'advance' ? 'text-warning' : 'text-ink-soft'}
+                  className={paymentType === 'advance' ? 'text-warning' : 'text-ink-muted'}
                 />
-                <span
-                  className={`font-bold text-sm ${paymentType === 'advance' ? 'text-warning' : 'text-ink'}`}
-                >
-                  Ứng tiền
-                </span>
+                <span className={`text-body-sm font-semibold text-ink`}>Ứng tiền</span>
               </div>
-              <p
-                className={`text-[10px] leading-tight ${paymentType === 'advance' ? 'text-warning/80' : 'text-ink-soft'}`}
-              >
-                Nguồn cá nhân
-              </p>
+              <p className={`text-label leading-tight text-ink-soft`}>Nguồn cá nhân</p>
             </button>
           </div>
         </div>
@@ -281,15 +261,15 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         {/* Mã QR */}
         {currentEmployee?.bankAccount && selectedTotal > 0 && (
           <div
-            className={`p-4 bg-surface border-2 border-accent/30 rounded-2xl flex flex-col items-center justify-center space-y-3`}
+            className={`p-4 bg-surface border border-line rounded-md flex flex-col items-center justify-center space-y-3`}
           >
             <div className="flex items-center gap-2">
-              <QrCode size={18} className="text-accent-ink" />
-              <h4 className={`font-semibold text-ink`}>Quét mã chuyển khoản</h4>
+              <QrCode size={18} className="text-ink-soft" />
+              <h4 className={`text-body-sm font-semibold text-ink`}>Quét mã chuyển khoản</h4>
             </div>
 
             {qrCodeUrl && !qrError ? (
-              <div className={`bg-surface-2 p-3 rounded-2xl shadow-sm`}>
+              <div className={`bg-surface-2 p-3 rounded-md`}>
                 <img
                   src={qrCodeUrl}
                   alt="Mã QR chuyển khoản"
@@ -298,25 +278,25 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               </div>
             ) : (
               <div
-                className={`w-48 h-48 flex items-center justify-center bg-surface border border-line rounded-2xl`}
+                className={`w-48 h-48 flex items-center justify-center bg-surface-2 border border-line rounded-md`}
               >
                 <div className="text-center p-4">
                   {qrError ? (
                     <>
                       <AlertTriangle size={32} className="mx-auto mb-2 text-warning" />
-                      <p className={`text-xs text-ink-soft`}>{qrError}</p>
+                      <p className={`text-label text-ink-soft`}>{qrError}</p>
                     </>
                   ) : (
                     <>
                       <QrCode size={32} className="mx-auto mb-2 text-ink-muted" />
-                      <p className={`text-xs text-ink-soft`}>Đang tạo mã QR...</p>
+                      <p className={`text-label text-ink-soft`}>Đang tạo mã QR...</p>
                     </>
                   )}
                 </div>
               </div>
             )}
 
-            <p className={`text-[10px] text-ink-soft text-center italic`}>
+            <p className={`text-label text-ink-soft text-center italic`}>
               Nội dung: THANH TOAN TIEN LUONG {selectedShiftIds.length} CONG
             </p>
           </div>
@@ -324,10 +304,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
         {/* Cảnh báo thiếu ngân hàng */}
         {!currentEmployee?.bankAccount && selectedTotal > 0 && (
-          <div className="p-3 bg-danger/10 border border-danger/20 rounded-2xl flex items-center justify-center">
+          <div className="p-3 bg-danger/5 border border-danger/20 rounded-md flex items-center justify-center">
             <div className="flex items-center gap-2">
               <Building2 size={16} className="text-danger flex-shrink-0" />
-              <p className="text-sm font-medium text-danger">
+              <p className="text-body-sm font-medium text-danger">
                 Nhân viên không có thông tin ngân hàng
               </p>
             </div>
@@ -337,29 +317,32 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         {/* Danh sách ca chọn */}
         <div className="space-y-3">
           <div className="flex justify-between items-center px-1">
-            <h4 className={`text-sm font-bold text-ink`}>
+            <h4 className={`text-body-sm font-semibold text-ink`}>
               Ca được chọn ({selectedShiftIds.length})
             </h4>
             <button
+              type="button"
               onClick={onSelectAll}
-              className="text-xs font-medium text-accent-ink hover:text-accent-ink/80"
+              className={`inline-flex min-h-10 items-center px-1 rounded-sm text-label font-medium text-accent-ink hover:underline ${focusRingOnSurfaceClasses}`}
             >
               {selectedShiftIds.length === unpaidShifts.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
             </button>
           </div>
 
-          <div className={`max-h-64 overflow-y-auto border border-line rounded-2xl`}>
+          <div className={`max-h-64 overflow-y-auto border border-line rounded-md`}>
             {unpaidShifts.map((shift) => {
               const breakdown = getShiftBreakdown(shift);
               const event = events.find((e) => e.id === shift.eventId);
               return (
-                <div
+                <button
                   key={shift.id}
+                  type="button"
                   onClick={() => onShiftSelect(shift.id)}
-                  className={`flex items-center gap-3 p-3 border-b border-line last:border-b-0 cursor-pointer hover:bg-surface-2`}
+                  aria-pressed={selectedShiftIds.includes(shift.id)}
+                  className={`w-full flex items-center gap-3 p-3 border-b border-line last:border-b-0 text-left transition-colors duration-fast ease-standard hover:bg-surface-2 ${focusRingOnSurfaceClasses}`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
+                    className={`w-5 h-5 shrink-0 rounded-xs border-2 flex items-center justify-center transition-colors duration-fast ease-standard ${
                       selectedShiftIds.includes(shift.id)
                         ? 'bg-accent border-accent'
                         : 'border-line'
@@ -370,10 +353,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium text-ink truncate`}>
+                    <p className={`text-body-sm font-medium text-ink truncate`}>
                       {event?.title || 'Không rõ'}
                     </p>
-                    <div className={`text-xs text-ink-soft flex items-center gap-1 truncate`}>
+                    <div className={`text-label text-ink-soft flex items-center gap-1 truncate`}>
                       <MapPin size={12} className="shrink-0" />
                       <span className="truncate">
                         {locations.find((l) => l.id === event?.locationId)?.name ||
@@ -382,58 +365,60 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <div className={`text-sm font-bold text-ink`}>
+                    <div className={`text-body-sm font-semibold text-ink tabular-nums`}>
                       {formatCurrency(shift.amount)}
                     </div>
-                    <div className={`text-[10px] text-ink-soft mt-0.5`}>
+                    <div className={`text-label text-ink-soft mt-0.5 tabular-nums`}>
                       {formatShiftDate(shift.date, shift.session)}
                     </div>
                     {breakdown.surcharge > 0 && (
-                      <div className={`text-[9px] text-ink-soft opacity-80`}>
+                      <div className={`text-label text-ink-soft tabular-nums`}>
                         {formatCurrency(breakdown.base)} + {formatCurrency(breakdown.surcharge)}
                       </div>
                     )}
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
         </div>
 
         {/* Tổng hợp thanh toán */}
-        <div className={`p-4 bg-surface border border-line rounded-2xl space-y-4`}>
+        <div className={`p-4 bg-surface border border-line rounded-md space-y-4`}>
           <div className="flex justify-between items-center">
             <div>
-              <span className={`text-xs text-ink-soft block`}>Tổng chưa thanh toán</span>
-              <span className={`text-[10px] font-medium text-ink-soft`}>
+              <span className={`text-label text-ink-soft block`}>Tổng chưa thanh toán</span>
+              <span className={`text-label font-medium text-warning tabular-nums`}>
                 {employeeSummary.unpaidCount} ca làm việc
               </span>
             </div>
-            <span className={`font-bold text-ink`}>
+            <span className={`text-body-sm font-semibold text-warning tabular-nums`}>
               {formatCurrency(employeeSummary.totalUnpaid)}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
             <div>
-              <span className={`text-xs text-ink-soft block`}>Tổng đã ứng</span>
-              <span className={`text-[10px] font-medium text-warning`}>
+              <span className={`text-label text-ink-soft block`}>Tổng đã ứng</span>
+              <span className={`text-label font-medium text-info tabular-nums`}>
                 {employeeSummary.advancedCount} ca làm việc
               </span>
             </div>
-            <span className={`font-bold text-warning`}>
+            <span className={`text-body-sm font-semibold text-info tabular-nums`}>
               {formatCurrency(employeeSummary.totalAdvanced)}
             </span>
           </div>
 
           <div className="pt-4 border-t border-dashed border-line flex justify-between items-center">
             <div>
-              <span className={`text-sm font-bold text-ink block`}>Thanh toán đang chọn</span>
-              <span className={`text-[10px] font-bold text-accent-ink uppercase tracking-wider`}>
+              <span className={`text-body-sm font-semibold text-ink block`}>
+                Thanh toán đang chọn
+              </span>
+              <span className={`text-label font-medium text-ink-soft tabular-nums`}>
                 {selectedShiftIds.length} ca làm việc
               </span>
             </div>
-            <span className={`text-2xl font-black text-accent-ink`}>
+            <span className={`text-data font-semibold text-ink tabular-nums`}>
               {formatCurrency(selectedTotal)}
             </span>
           </div>
@@ -441,17 +426,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
         {/* Thao tác */}
         <div className="flex gap-3">
-          <Button
-            variant="secondary"
-            onClick={onClose}
-            className="flex-1 rounded-lg"
-            disabled={isProcessing}
-          >
+          <Button variant="secondary" onClick={onClose} className="flex-1" disabled={isProcessing}>
             Hủy
           </Button>
           <Button
             onClick={handlePayment}
-            className="flex-1 rounded-lg"
+            className="flex-1"
             disabled={selectedShiftIds.length === 0 || isProcessing}
           >
             {isProcessing ? 'Đang xử lý...' : paymentType === 'advance' ? 'Ứng tiền' : 'Thanh toán'}

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { formatCurrency } from '@/utils/format';
 import { Wallet } from 'lucide-react';
+import { DURATION_BASE } from '@/lib/motion';
 
 interface PayrollStatsProps {
   loading: boolean;
@@ -26,14 +27,15 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
   totalAdvancedShifts,
 }) => {
   return (
-    <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
+    <div className="p-4 bg-surface border border-line rounded-md">
       {/* Mobile UI */}
       <div className="block md:hidden">
         {/* Tổng đã làm - Lên trên */}
         <div className="text-center mb-4">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <Wallet size={20} className="text-info" />
-            <p className="text-xs text-blue-500 uppercase tracking-wide font-medium">Tổng đã làm</p>
+            <Wallet size={16} className="text-ink-soft" />
+            <p className="text-label font-medium text-ink-muted">Tổng đã làm</p>
+            <span className="w-1.5 h-1.5 rounded-xs bg-accent-ink" />
           </div>
           <AnimatePresence mode="wait">
             {loading ? (
@@ -42,7 +44,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: DURATION_BASE }}
               >
                 <Skeleton width={120} height={36} className="mx-auto" />
               </motion.div>
@@ -52,22 +54,25 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="text-3xl font-bold text-blue-500 tabular-nums"
+                transition={{ duration: DURATION_BASE }}
+                className="text-data font-semibold text-ink tabular-nums"
               >
                 {formatCurrency(totalEarned)}
               </motion.p>
             )}
           </AnimatePresence>
-          <p className="text-sm text-blue-500 mt-1">
+          <p className="text-body-sm text-ink-soft mt-1 tabular-nums">
             {totalShifts} công{totalFees > 0 ? ` (+ ${formatCurrency(totalFees)} phụ phí)` : ''}
           </p>
         </div>
 
         {/* Tình hình lương + Đã ứng (2 cột) */}
-        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-accent/20">
+        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-line">
           <div className="text-center flex flex-col items-center">
-            <p className="text-xs text-accent-ink uppercase tracking-wide">Tình hình lương</p>
+            <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-xs bg-warning" />
+              Tình hình lương
+            </p>
             <AnimatePresence mode="wait">
               {loading ? (
                 <motion.div
@@ -75,7 +80,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: DURATION_BASE }}
                   className="mt-1"
                 >
                   <Skeleton width={80} height={24} />
@@ -86,18 +91,21 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-lg font-bold text-accent-ink mt-1 tabular-nums"
+                  transition={{ duration: DURATION_BASE }}
+                  className="text-title font-semibold text-ink mt-1 tabular-nums"
                 >
                   {formatCurrency(totalDebt)}
                 </motion.p>
               )}
             </AnimatePresence>
-            <p className="text-xs text-accent-ink">{totalUnpaidShifts} công</p>
+            <p className="text-label text-ink-soft tabular-nums">{totalUnpaidShifts} công</p>
           </div>
 
           <div className="text-center flex flex-col items-center">
-            <p className="text-xs text-orange-500 uppercase tracking-wide">Đã ứng</p>
+            <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-xs bg-info" />
+              Đã ứng
+            </p>
             <AnimatePresence mode="wait">
               {loading ? (
                 <motion.div
@@ -105,7 +113,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: DURATION_BASE }}
                   className="mt-1"
                 >
                   <Skeleton width={80} height={24} />
@@ -116,16 +124,14 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`text-lg font-bold mt-1 tabular-nums ${totalAdvanced > 0 ? 'text-orange-500' : 'text-ink-muted'}`}
+                  transition={{ duration: DURATION_BASE }}
+                  className="text-title font-semibold text-ink mt-1 tabular-nums"
                 >
                   {formatCurrency(totalAdvanced)}
                 </motion.p>
               )}
             </AnimatePresence>
-            <p className={`text-xs ${totalAdvanced > 0 ? 'text-orange-500' : 'text-ink-muted'}`}>
-              {totalAdvancedShifts} công
-            </p>
+            <p className="text-label text-ink-soft tabular-nums">{totalAdvancedShifts} công</p>
           </div>
         </div>
       </div>
@@ -136,7 +142,10 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
           <div className="grid grid-cols-3 gap-6">
             {/* Tình hình lương */}
             <div>
-              <p className="text-xs text-accent-ink uppercase tracking-wide">Tình hình lương</p>
+              <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-xs bg-warning" />
+                Tình hình lương
+              </p>
               <AnimatePresence mode="wait">
                 {loading ? (
                   <motion.div
@@ -144,7 +153,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: DURATION_BASE }}
                     className="mt-1"
                   >
                     <Skeleton width={100} height={32} />
@@ -155,19 +164,22 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-2xl font-bold text-accent-ink mt-1"
+                    transition={{ duration: DURATION_BASE }}
+                    className="text-data font-semibold text-ink mt-1 tabular-nums"
                   >
                     {formatCurrency(totalDebt)}
                   </motion.p>
                 )}
               </AnimatePresence>
-              <p className="text-xs text-accent-ink mt-1">{totalUnpaidShifts} công</p>
+              <p className="text-label text-ink-soft mt-1 tabular-nums">{totalUnpaidShifts} công</p>
             </div>
 
             {/* Đã ứng */}
-            <div className={totalAdvanced > 0 ? '' : 'opacity-50'}>
-              <p className="text-xs text-orange-500 uppercase tracking-wide">Đã ứng</p>
+            <div>
+              <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-xs bg-info" />
+                Đã ứng
+              </p>
               <AnimatePresence mode="wait">
                 {loading ? (
                   <motion.div
@@ -175,7 +187,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: DURATION_BASE }}
                     className="mt-1"
                   >
                     <Skeleton width={100} height={28} />
@@ -186,23 +198,24 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={`text-2xl font-bold mt-1 ${totalAdvanced > 0 ? 'text-orange-500' : 'text-ink-muted'}`}
+                    transition={{ duration: DURATION_BASE }}
+                    className="text-data font-semibold text-ink mt-1 tabular-nums"
                   >
                     {formatCurrency(totalAdvanced)}
                   </motion.p>
                 )}
               </AnimatePresence>
-              <p
-                className={`text-xs mt-1 ${totalAdvanced > 0 ? 'text-orange-500' : 'text-ink-muted'}`}
-              >
+              <p className="text-label text-ink-soft mt-1 tabular-nums">
                 {totalAdvancedShifts} công
               </p>
             </div>
 
             {/* Tổng đã làm */}
             <div>
-              <p className="text-xs text-blue-500 uppercase tracking-wide">Tổng đã làm</p>
+              <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-xs bg-accent-ink" />
+                Tổng đã làm
+              </p>
               <AnimatePresence mode="wait">
                 {loading ? (
                   <motion.div
@@ -210,7 +223,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: DURATION_BASE }}
                     className="mt-1"
                   >
                     <Skeleton width={100} height={28} />
@@ -221,20 +234,20 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-2xl font-bold text-blue-500 mt-1"
+                    transition={{ duration: DURATION_BASE }}
+                    className="text-data font-semibold text-ink mt-1 tabular-nums"
                   >
                     {formatCurrency(totalEarned)}
                   </motion.p>
                 )}
               </AnimatePresence>
-              <p className="text-xs text-blue-500 mt-1">
+              <p className="text-label text-ink-soft mt-1 tabular-nums">
                 {totalShifts} công{totalFees > 0 ? ` (+ ${formatCurrency(totalFees)} phụ phí)` : ''}
               </p>
             </div>
           </div>
         </div>
-        <Wallet size={24} className="text-accent-ink/50" />
+        <Wallet size={24} className="text-ink-muted" />
       </div>
     </div>
   );

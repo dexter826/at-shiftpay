@@ -1,12 +1,11 @@
 import React, { useMemo, useState, useEffect, memo } from 'react';
 import { Shift, Employee, PaymentTransaction, Event, Location } from '@/types/index';
 import { paymentService } from '@/lib/api/paymentService';
+import { focusRingClasses } from '@/lib/utils';
 
-/* removed unused import from @/components/ui/ToastProvider */
 import { PaymentModal } from '@/features/payroll/components/PaymentModal';
 import { SettlementModal } from '@/features/payroll/components/SettlementModal';
 import { useAuthStore } from '@/stores/authStore';
-/* removed unused import from @/components/ui/Dropdown */
 
 // Import extracted components
 import PayrollStats from '@/features/payroll/components/PayrollStats';
@@ -223,14 +222,26 @@ const PayrollView: React.FC<PayrollViewProps> = ({
       {/* Tabs chuyển đổi */}
       <div className="flex px-4 md:px-6 pt-5 md:pt-6 pb-2 gap-4">
         <button
+          type="button"
           onClick={() => setActiveTab('payroll')}
-          className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'payroll' ? 'border-accent text-accent-ink' : 'border-transparent text-ink-muted hover:text-ink-soft'}`}
+          aria-pressed={activeTab === 'payroll'}
+          className={`inline-flex min-h-10 items-center pb-2 text-body-sm transition-colors duration-fast ease-standard border-b-2 ${focusRingClasses} ${
+            activeTab === 'payroll'
+              ? 'border-accent text-ink font-semibold'
+              : 'border-transparent text-ink-muted font-medium hover:text-ink-soft'
+          }`}
         >
           Chưa thanh toán
         </button>
         <button
+          type="button"
           onClick={() => setActiveTab('history')}
-          className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'history' ? 'border-accent text-accent-ink' : 'border-transparent text-ink-muted hover:text-ink-soft'}`}
+          aria-pressed={activeTab === 'history'}
+          className={`inline-flex min-h-10 items-center pb-2 text-body-sm font-medium transition-colors duration-fast ease-standard border-b-2 ${focusRingClasses} ${
+            activeTab === 'history'
+              ? 'border-accent text-ink font-semibold'
+              : 'border-transparent text-ink-muted hover:text-ink-soft'
+          }`}
         >
           Lịch sử
         </button>

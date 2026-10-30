@@ -140,40 +140,38 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
     <Modal title="Xác nhận quyết toán" isOpen={isOpen} onClose={onClose}>
       <div className="space-y-6">
         <div
-          className={`p-6 bg-surface border border-line rounded-2xl flex flex-col items-center text-center`}
+          className={`p-6 bg-surface border border-line rounded-md flex flex-col items-center text-center`}
         >
           {isLoadingAdvances ? (
             <div className="py-4 space-y-3">
               <Loader2 size={32} className="animate-spin text-accent-ink mx-auto" />
-              <p className={`text-sm text-ink-soft`}>Đang kiểm tra dữ liệu...</p>
+              <p className={`text-body-sm text-ink-soft`}>Đang kiểm tra dữ liệu...</p>
             </div>
           ) : advancesError ? (
-            <div className="py-4 space-y-3 text-red-500">
+            <div className="py-4 space-y-3 text-danger">
               <AlertTriangle size={32} className="mx-auto" />
-              <p className="text-sm">{advancesError}</p>
+              <p className="text-body-sm">{advancesError}</p>
             </div>
           ) : (
             <>
-              <div className="mb-4 p-3 bg-accent/10 rounded-full">
+              <div className="mb-4 p-3 bg-surface-2 rounded-md">
                 <Calculator size={32} className="text-accent-ink" />
               </div>
 
-              <h3 className={`text-lg font-medium text-ink mb-2`}>
+              <h3 className={`text-title font-semibold text-ink mb-2`}>
                 Quyết toán cho {employeeName}?
               </h3>
 
               <div className="my-4">
-                <p className={`text-sm text-ink-soft mb-1 uppercase tracking-wide font-medium`}>
-                  Số tiền cần trả thêm
-                </p>
+                <p className={`text-label text-ink-muted mb-1 font-medium`}>Số tiền cần trả thêm</p>
                 <p
-                  className={`text-3xl font-bold ${advanceBalance.balance >= 0 ? 'text-accent-ink' : 'text-orange-500'}`}
+                  className={`text-data font-semibold tabular-nums ${advanceBalance.balance >= 0 ? 'text-warning' : 'text-info'}`}
                 >
                   {formatCurrency(advanceBalance.balance)}
                 </p>
               </div>
 
-              <p className={`text-sm text-ink-soft max-w-xs mx-auto`}>
+              <p className={`text-body-sm text-ink-soft max-w-xs mx-auto`}>
                 Hành động này sẽ gạch nợ tất cả các khoản ứng và xác nhận thanh toán các ca làm việc
                 hiện tại.
               </p>
@@ -182,17 +180,12 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
         </div>
 
         <div className="flex gap-3">
-          <Button
-            variant="secondary"
-            onClick={onClose}
-            className="flex-1 rounded-lg"
-            disabled={isProcessing}
-          >
+          <Button variant="secondary" onClick={onClose} className="flex-1" disabled={isProcessing}>
             Hủy bỏ
           </Button>
           <Button
             onClick={handleSettlement}
-            className="flex-1 rounded-lg font-bold"
+            className="flex-1"
             disabled={
               isProcessing || isLoadingAdvances || !!advancesError || settleableShifts.length === 0
             }
