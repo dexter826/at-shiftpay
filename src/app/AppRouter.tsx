@@ -1,5 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { Activity } from 'react';
 import { Employee, Event, Shift, UserSettings, Location } from '@/types/index';
 
 import DashboardView from '@/app/routes/dashboard';
@@ -118,15 +117,9 @@ export function AppRouter({
   return (
     <div className="relative min-h-dynamic">
       {tabs.map((tab) => (
-        <div key={tab.id} className={activeTab === tab.id ? 'block' : 'hidden'}>
-          <motion.div
-            initial={false}
-            animate={{ opacity: activeTab === tab.id ? 1 : 0 }}
-            transition={{ duration: 0.15 }}
-          >
-            {tab.component}
-          </motion.div>
-        </div>
+        <Activity key={tab.id} mode={activeTab === tab.id ? 'visible' : 'hidden'}>
+          {tab.component}
+        </Activity>
       ))}
     </div>
   );
