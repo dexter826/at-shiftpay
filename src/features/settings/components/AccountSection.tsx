@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { User, Camera, Loader2, Edit2, Check, X, ChevronRight } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Camera, Check, ChevronRight, Edit2, Key, Loader2, Trash2, User, X } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { imageService } from '@/lib/api/imageService';
@@ -7,10 +7,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/ToastProvider';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { DeleteAccountModal } from '@/features/settings/components/DeleteAccountModal';
-import KeyIcon from '@/components/ui/icons/KeyIcon';
-import TrashIcon from '@/components/ui/icons/TrashIcon';
 import type { User as FirebaseUser } from 'firebase/auth';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface AccountSectionProps {
   user: FirebaseUser | null;
@@ -31,8 +28,6 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const avatarInputRef = useRef<HTMLInputElement>(null);
-  const passwordIconRef = useRef<AnimatedIconHandle>(null);
-  const deleteIconRef = useRef<AnimatedIconHandle>(null);
 
   const handleSaveDisplayName = async () => {
     if (!editedName.trim()) {
@@ -187,13 +182,11 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
 
         <button
           onClick={onChangePassword}
-          onMouseEnter={() => passwordIconRef.current?.startAnimation()}
-          onMouseLeave={() => passwordIconRef.current?.stopAnimation()}
           className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors text-left border-b border-line`}
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-accent/10 text-accent-ink">
-              <KeyIcon ref={passwordIconRef} size={20} />
+              <Key size={20} />
             </div>
             <div>
               <p className={`font-medium text-ink`}>Đổi mật khẩu</p>
@@ -205,13 +198,11 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
 
         <button
           onClick={() => setShowDeleteModal(true)}
-          onMouseEnter={() => deleteIconRef.current?.startAnimation()}
-          onMouseLeave={() => deleteIconRef.current?.stopAnimation()}
           className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors text-left group`}
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-red-500/10 text-red-500 group-hover:text-red-600">
-              <TrashIcon ref={deleteIconRef} size={20} />
+              <Trash2 size={20} />
             </div>
             <div>
               <p className={`font-medium text-ink group-hover:text-red-600`}>Xóa tài khoản</p>

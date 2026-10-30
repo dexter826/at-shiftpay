@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
+import { Download } from 'lucide-react';
 import type { User } from 'firebase/auth';
 import Button from '@/components/ui/Button';
-import ExportIcon from '@/components/ui/icons/ExportIcon';
 
 interface DashboardHeaderProps {
   user: User | null;
@@ -34,7 +34,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ user, onOpenExport })
             onClick={onOpenExport}
             variant="primary"
             className="flex items-center gap-2"
-            icon={<ExportIcon size={18} />}
+            icon={<Download size={18} />}
           >
             <span>Xuất báo cáo</span>
           </Button>

@@ -1,8 +1,7 @@
-import React, { useEffect, useId, useRef } from 'react';
+import React, { useRef, useEffect, useId } from 'react';
+import { X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import XIcon from '@/components/ui/icons/XIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
 import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import { DURATION_BASE, EASE_STANDARD } from '@/lib/motion';
 
@@ -21,7 +20,6 @@ const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, footer }) => {
-  const closeIconRef = React.useRef<AnimatedIconHandle>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const prefersReducedMotion = useReducedMotion();
@@ -118,12 +116,10 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
               <button
                 type="button"
                 onClick={onClose}
-                onMouseEnter={() => closeIconRef.current?.startAnimation()}
-                onMouseLeave={() => closeIconRef.current?.stopAnimation()}
                 aria-label="Đóng"
                 className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
               >
-                <XIcon ref={closeIconRef} size={18} />
+                <X size={18} />
               </button>
             </div>
 

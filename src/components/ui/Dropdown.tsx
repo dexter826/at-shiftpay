@@ -1,10 +1,6 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
+import { Check, ChevronDown, Search, X } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import ChevronIcon from '@/components/ui/icons/ChevronIcon';
-import SimpleCheckedIcon from '@/components/ui/icons/SimpleCheckedIcon';
-import MagnifierIcon from '@/components/ui/icons/MagnifierIcon';
-import XIcon from '@/components/ui/icons/XIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
 import { focusRingClasses, focusRingOnSurfaceClasses } from '@/lib/utils';
 import { DURATION_BASE, DURATION_FAST, EASE_STANDARD } from '@/lib/motion';
 
@@ -44,9 +40,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const prefersReducedMotion = useReducedMotion();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const chevronRef = useRef<AnimatedIconHandle>(null);
-  const searchIconRef = useRef<AnimatedIconHandle>(null);
-  const xIconRef = useRef<AnimatedIconHandle>(null);
 
   const closeDropdown = useCallback(() => {
     setIsOpen(false);
@@ -115,8 +108,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <button
         type="button"
         onClick={() => (isOpen ? closeDropdown() : setIsOpen(true))}
-        onMouseEnter={() => chevronRef.current?.startAnimation()}
-        onMouseLeave={() => chevronRef.current?.stopAnimation()}
         disabled={disabled}
         aria-expanded={isOpen}
         className={`w-full h-full flex items-center gap-2 px-3 py-2 bg-surface-2 border border-line rounded-sm text-body-sm text-ink-soft hover:border-ink-muted focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-fast ease-standard ${focusRingClasses} ${minWidth}`}
@@ -132,7 +123,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             ease: EASE_STANDARD,
           }}
         >
-          <ChevronIcon ref={chevronRef} size={16} className="text-ink-muted" />
+          <ChevronDown size={16} className="text-ink-muted" />
         </motion.div>
       </button>
 
@@ -150,13 +141,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
           >
             {searchable && (
               <div className={`p-2 border-b border-line`}>
-                <div
-                  className="relative"
-                  onMouseEnter={() => searchIconRef.current?.startAnimation()}
-                  onMouseLeave={() => searchIconRef.current?.stopAnimation()}
-                >
-                  <MagnifierIcon
-                    ref={searchIconRef}
+                <div className="relative">
+                  <Search
                     size={14}
                     className={`absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted`}
                   />
@@ -172,12 +158,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     <button
                       type="button"
                       onClick={() => setSearchTerm('')}
-                      onMouseEnter={() => xIconRef.current?.startAnimation()}
-                      onMouseLeave={() => xIconRef.current?.stopAnimation()}
                       aria-label="Xoá tìm kiếm"
                       className={`absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-sm text-ink-muted hover:bg-surface hover:text-ink transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                     >
-                      <XIcon ref={xIconRef} size={12} />
+                      <X size={12} />
                     </button>
                   )}
                 </div>
@@ -196,9 +180,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     <div className="flex items-center gap-2 group/opt">
                       {option.icon && <span className="text-current">{option.icon}</span>}
                       <span className="flex-1 truncate">{option.label}</span>
-                      {value === option.value && (
-                        <SimpleCheckedIcon size={14} className="text-accent-ink" />
-                      )}
+                      {value === option.value && <Check size={14} className="text-accent-ink" />}
                     </div>
                   </button>
                 ))

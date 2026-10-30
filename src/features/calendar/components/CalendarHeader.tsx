@@ -1,9 +1,5 @@
-import React, { memo, useRef } from 'react';
-import CalendarIcon from '@/components/ui/icons/CalendarIcon';
-import ChevronLeftIcon from '@/components/ui/icons/ChevronLeftIcon';
-import ChevronRightIcon from '@/components/ui/icons/ChevronRightIcon';
-import MapPinIcon from '@/components/ui/icons/MapPinIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import React, { memo } from 'react';
+import { Calendar, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 
 interface CalendarHeaderProps {
   displayDate: Date;
@@ -20,11 +16,6 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   onGoToToday,
   onNavigateToReviews,
 }) => {
-  const prevMonthRef = useRef<AnimatedIconHandle>(null);
-  const nextMonthRef = useRef<AnimatedIconHandle>(null);
-  const todayIconRef = useRef<AnimatedIconHandle>(null);
-  const locationManagerRef = useRef<AnimatedIconHandle>(null);
-
   const monthLabel = new Intl.DateTimeFormat('vi-VN', { month: 'long', year: 'numeric' }).format(
     displayDate
   );
@@ -34,30 +25,24 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
       <div className="flex items-center gap-1">
         <button
           onClick={onGoToToday}
-          onMouseEnter={() => todayIconRef.current?.startAnimation()}
-          onMouseLeave={() => todayIconRef.current?.stopAnimation()}
           className={`px-2.5 py-1.5 text-[11px] font-medium rounded border border-line hover:bg-line transition-colors mr-1 flex items-center gap-1`}
         >
-          <CalendarIcon ref={todayIconRef} size={12} />
+          <Calendar size={12} />
           Hôm nay
         </button>
         <button
           onClick={onPrevMonth}
           aria-label="Tháng trước"
-          onMouseEnter={() => prevMonthRef.current?.startAnimation()}
-          onMouseLeave={() => prevMonthRef.current?.stopAnimation()}
           className={`p-2 text-ink-muted hover:bg-line rounded transition-colors`}
         >
-          <ChevronLeftIcon ref={prevMonthRef} size={18} />
+          <ChevronLeft size={18} />
         </button>
         <button
           onClick={onNextMonth}
           aria-label="Tháng sau"
-          onMouseEnter={() => nextMonthRef.current?.startAnimation()}
-          onMouseLeave={() => nextMonthRef.current?.stopAnimation()}
           className={`p-2 text-ink-muted hover:bg-line rounded transition-colors`}
         >
-          <ChevronRightIcon ref={nextMonthRef} size={18} />
+          <ChevronRight size={18} />
         </button>
       </div>
       <h3 className={`text-sm font-medium text-ink capitalize`}>{monthLabel}</h3>
@@ -66,11 +51,9 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
           <button
             onClick={onNavigateToReviews}
             title="Quản lý địa điểm"
-            onMouseEnter={() => locationManagerRef.current?.startAnimation()}
-            onMouseLeave={() => locationManagerRef.current?.stopAnimation()}
             className={`h-9 w-9 flex items-center justify-center hover:bg-line rounded transition-colors text-accent-ink`}
           >
-            <MapPinIcon ref={locationManagerRef} size={18} />
+            <MapPin size={18} />
           </button>
         )}
       </div>

@@ -4,10 +4,16 @@ import Button from '@/components/ui/Button';
 import { Event, Shift, UserSettings, Location } from '@/types/index';
 import { formatDate, formatCurrency } from '@/utils/format';
 import { shiftBreakdown } from '@/utils/payrollMath';
-import { MapPin, Clock, Calendar, ThumbsUp, ThumbsDown, StickyNote } from 'lucide-react';
-import PenIcon from '@/components/ui/icons/PenIcon';
-import TrashIcon from '@/components/ui/icons/TrashIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Pencil,
+  StickyNote,
+  ThumbsDown,
+  ThumbsUp,
+  Trash2,
+} from 'lucide-react';
 
 interface EventDetailModalProps {
   event: Event | null;
@@ -29,9 +35,6 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const editIconRef = React.useRef<AnimatedIconHandle>(null);
-  const deleteIconRef = React.useRef<AnimatedIconHandle>(null);
-
   const eventShifts = useMemo(() => {
     if (!event) return [];
     return shifts.filter((s) => s.eventId === event.id);
@@ -57,11 +60,9 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               onEdit(event);
               onClose();
             }}
-            onMouseEnter={() => editIconRef.current?.startAnimation()}
-            onMouseLeave={() => editIconRef.current?.stopAnimation()}
             className="flex-1 hover:text-info"
           >
-            <PenIcon ref={editIconRef} size={14} />
+            <Pencil size={14} />
             Sửa
           </Button>
           <Button
@@ -70,11 +71,9 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               onDelete(event.id);
               onClose();
             }}
-            onMouseEnter={() => deleteIconRef.current?.startAnimation()}
-            onMouseLeave={() => deleteIconRef.current?.stopAnimation()}
             className="flex-1"
           >
-            <TrashIcon ref={deleteIconRef} size={14} />
+            <Trash2 size={14} />
             Xóa
           </Button>
         </div>

@@ -1,20 +1,19 @@
 import React, { memo } from 'react';
 /* removed unused import from framer-motion */
 import {
-  MapPin,
-  MessageSquare,
   Calendar,
   ExternalLink,
-  ThumbsUp,
-  ThumbsDown,
+  MapPin,
+  MessageSquare,
   Minus,
+  Pencil,
+  ThumbsDown,
+  ThumbsUp,
 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Location, Event } from '@/types/index';
 /* removed unused import from @/stores/themeStore */
-import PenIcon from '@/components/ui/icons/PenIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 
@@ -33,8 +32,6 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
   events,
   onEditClick,
 }) => {
-  const editIconRef = React.useRef<AnimatedIconHandle>(null);
-
   if (!location) return null;
 
   const hasCoords = location.latitude && location.longitude;
@@ -95,12 +92,10 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
             onClose();
             onEditClick(location);
           }}
-          onMouseEnter={() => editIconRef.current?.startAnimation()}
-          onMouseLeave={() => editIconRef.current?.stopAnimation()}
           fullWidth
           className="flex justify-center items-center gap-2"
         >
-          <PenIcon ref={editIconRef} size={18} color="currentColor" />
+          <Pencil size={18} color="currentColor" />
           Chỉnh sửa địa điểm
         </Button>
       }

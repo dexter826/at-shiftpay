@@ -1,8 +1,6 @@
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
-import ChevronLeftIcon from '@/components/ui/icons/ChevronLeftIcon';
-import ChevronRightIcon from '@/components/ui/icons/ChevronRightIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface PayrollMonthPickerModalProps {
   isOpen: boolean;
@@ -21,9 +19,6 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
   viewYear,
   setViewYear,
 }) => {
-  const prevMonthRef = useRef<AnimatedIconHandle>(null);
-  const nextMonthRef = useRef<AnimatedIconHandle>(null);
-
   return (
     <Modal
       title="Chọn thời gian"
@@ -45,20 +40,16 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
         <div className="flex justify-between items-center px-2">
           <button
             onClick={() => setViewYear((prev) => prev - 1)}
-            onMouseEnter={() => prevMonthRef.current?.startAnimation()}
-            onMouseLeave={() => prevMonthRef.current?.stopAnimation()}
             className={`p-1 rounded-full hover:bg-line`}
           >
-            <ChevronLeftIcon ref={prevMonthRef} size={20} className="text-ink-soft" />
+            <ChevronLeft size={20} className="text-ink-soft" />
           </button>
           <span className={`text-lg font-bold text-ink`}>{viewYear}</span>
           <button
             onClick={() => setViewYear((prev) => prev + 1)}
-            onMouseEnter={() => nextMonthRef.current?.startAnimation()}
-            onMouseLeave={() => nextMonthRef.current?.stopAnimation()}
             className={`p-1 rounded-full hover:bg-line`}
           >
-            <ChevronRightIcon ref={nextMonthRef} size={20} className="text-ink-soft" />
+            <ChevronRight size={20} className="text-ink-soft" />
           </button>
         </div>
 

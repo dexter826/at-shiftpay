@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import React, { useRef, lazy, Suspense, useEffect, useState } from 'react';
 import type { User } from 'firebase/auth';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router';
 import { Employee, Event, Shift, Location, UserSettings } from '@/types/index';

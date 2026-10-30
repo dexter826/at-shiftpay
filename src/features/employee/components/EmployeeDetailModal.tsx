@@ -2,9 +2,7 @@ import React, { memo } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Employee } from '@/types/index';
-import { Phone, Calendar, CreditCard } from 'lucide-react';
-import PenIcon from '@/components/ui/icons/PenIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import { Calendar, CreditCard, Pencil, Phone } from 'lucide-react';
 /* removed unused import from @/stores/themeStore */
 import BankCard from '@/features/employee/components/BankCard';
 
@@ -21,8 +19,6 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
   employee,
   onEditClick,
 }) => {
-  const editIconRef = React.useRef<AnimatedIconHandle>(null);
-
   if (!employee) return null;
 
   const joinedDate = employee.createdAt
@@ -45,12 +41,10 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
             onClose();
             onEditClick(employee);
           }}
-          onMouseEnter={() => editIconRef.current?.startAnimation()}
-          onMouseLeave={() => editIconRef.current?.stopAnimation()}
           fullWidth
           className="flex justify-center items-center gap-2"
         >
-          <PenIcon ref={editIconRef} size={18} color="currentColor" />
+          <Pencil size={18} color="currentColor" />
           Chỉnh sửa hồ sơ
         </Button>
       }

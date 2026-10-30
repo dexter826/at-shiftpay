@@ -1,11 +1,10 @@
 import React, { useState, useMemo, memo } from 'react';
+import { Trash2, X } from 'lucide-react';
 import { Event, Shift, Employee, UserSettings, Location } from '@/types/index';
 import { eventService } from '@/lib/api/eventService';
 import { useToast } from '@/components/ui/ToastProvider';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import XIcon from '@/components/ui/icons/XIcon';
-import TrashIcon from '@/components/ui/icons/TrashIcon';
 import { toDateKey } from '@/utils/format';
 
 // Modals
@@ -260,7 +259,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               variant="secondary"
               onClick={() => setDeleteConfirm(null)}
               className="flex-1"
-              icon={<XIcon size={16} />}
+              icon={<X size={16} />}
               disabled={isDeletingEvent}
             >
               Hủy
@@ -269,7 +268,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               variant="danger"
               onClick={confirmDeleteEvent}
               className="flex-1"
-              icon={<TrashIcon size={16} />}
+              icon={<Trash2 size={16} />}
               disabled={isDeletingEvent}
             >
               {isDeletingEvent ? 'Đang xóa...' : 'Xóa'}

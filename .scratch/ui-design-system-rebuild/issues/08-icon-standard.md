@@ -6,7 +6,18 @@
 
 **Status:** ready-for-agent
 
-- [ ] Every local icon is audited: replaced by a lucide equivalent where one exists, redrawn to match where none does.
-- [ ] No duplicate icons for the same meaning remain.
-- [ ] Icon sizing and color follow semantic tokens; no hardcoded icon colors.
-- [ ] The logo is untouched.
+- [x] Every local icon is audited: replaced by a lucide equivalent where one exists, redrawn to match where none does.
+- [x] No duplicate icons for the same meaning remain.
+- [x] Icon sizing and color follow semantic tokens; no hardcoded icon colors.
+- [x] The logo is untouched.
+
+## Comments
+
+2026-10-30 — Implemented (static verification only, per user instruction).
+
+- All 27 local icons were audited. Every one was already a thin wrapper around a lucide icon with a no-op animation handle, so each had a direct equivalent and nothing needed redrawing. The 16 used wrappers were replaced at their 14 call sites with the same lucide components (ArrowLeft, Calendar, Check, ChevronDown/Left/Right, Download, Eye/EyeOff, Key, MapPin, Pencil, Plus, Search, Trash2, X); the 11 unused ones were deleted with the set.
+- `Pen`/`Pencil` and `Calendar`/`CalendarDays` were resolved to the names the rest of the app already uses (`Pencil`, `Calendar`) so no two glyphs carry the same meaning.
+- `src/components/ui/icons/` and the orphaned `src/components/ui/types.ts` are gone; the animated-icon hover machinery (`AnimatedIconHandle`, refs, `startAnimation`/`stopAnimation` handlers) was removed along with it, so icons now inherit color from their text token.
+- No duplicate icon meanings remain; lucide is the only icon source (57 files import it).
+- The logo and Lottie splash animation are untouched.
+- Gates: `tsc` 0, `eslint` 0 (no warnings), `vite build` 0.

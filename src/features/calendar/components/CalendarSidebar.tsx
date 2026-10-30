@@ -1,9 +1,6 @@
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ThumbsUp, ThumbsDown, Pencil, Trash2 } from 'lucide-react';
-import PlusIcon from '@/components/ui/icons/PlusIcon';
-import MapPinIcon from '@/components/ui/icons/MapPinIcon';
-import { AnimatedIconHandle } from '@/components/ui/icons/types';
+import { Calendar, MapPin, Pencil, Plus, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Event, Shift, Location } from '@/types/index';
 import { formatDate } from '@/utils/format';
@@ -31,9 +28,6 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
   onDeleteEvent,
   onViewEvent,
 }) => {
-  const headerAddRef = useRef<AnimatedIconHandle>(null);
-  const emptyAddRef = useRef<AnimatedIconHandle>(null);
-
   return (
     <div className={`bg-surface border border-line rounded-lg lg:h-full flex flex-col`}>
       {selectedDate ? (
@@ -45,11 +39,9 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
             </div>
             <button
               onClick={onAddEvent}
-              onMouseEnter={() => headerAddRef.current?.startAnimation()}
-              onMouseLeave={() => headerAddRef.current?.stopAnimation()}
               className={`p-2 rounded-lg bg-accent hover:bg-accent/90 text-on-accent shadow-sm shadow-accent/30 transition-all active:scale-95`}
             >
-              <PlusIcon ref={headerAddRef} size={16} className="text-on-accent" />
+              <Plus size={16} className="text-on-accent" />
             </button>
           </div>
 
@@ -89,11 +81,9 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                   <p>Chưa có sự kiện</p>
                   <button
                     onClick={onAddEvent}
-                    onMouseEnter={() => emptyAddRef.current?.startAnimation()}
-                    onMouseLeave={() => emptyAddRef.current?.stopAnimation()}
                     className="text-accent-ink mt-1 hover:underline text-xs flex items-center justify-center gap-1"
                   >
-                    <PlusIcon ref={emptyAddRef} size={12} />
+                    <Plus size={12} />
                     Tạo mới
                   </button>
                 </motion.div>
@@ -133,7 +123,7 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                                 <p
                                   className={`text-[11px] text-info mt-0.5 flex items-center gap-1 min-w-0`}
                                 >
-                                  <MapPinIcon size={12} className="flex-shrink-0" />
+                                  <MapPin size={12} className="flex-shrink-0" />
                                   <span className="truncate">{loc.name}</span>
                                 </p>
                               )}
