@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Shift, PayrollSummary, Event } from '@/types/index';
+import { shiftBreakdown } from '@/utils/payrollMath';
 
 interface UsePayrollDataProps {
   shifts: Shift[];
@@ -29,22 +30,8 @@ export const usePayrollData = ({ shifts, employees, events }: UsePayrollDataProp
 
     shifts.forEach((s) => {
       if (map[s.employeeId]) {
-        const event = events.find((e) => e.id === s.eventId && e.date === s.date);
-        let shiftFee = 0;
-
-        if (event?.surcharge && event.surcharge > 0) {
-          if (!event.surchargeDistribution || event.surchargeDistribution.type === 'equal') {
-            const shiftsInEvent = shifts.filter(
-              (sh) => sh.eventId === event.id && sh.date === event.date
-            );
-            const uniqueEmployees = new Set(shiftsInEvent.map((sh) => sh.employeeId));
-            shiftFee = event.surcharge / uniqueEmployees.size;
-          } else if (event.surchargeDistribution.type === 'selected') {
-            if (event.surchargeDistribution.selectedEmployeeIds?.includes(s.employeeId)) {
-              shiftFee = event.surcharge / event.surchargeDistribution.selectedEmployeeIds.length;
-            }
-          }
-        }
+        const event = events.find((e) => e.id === s.eventId);
+        const shiftFee = event ? shiftBreakdown(s, event).surcharge : 0;
 
         if (s.status === 'unpaid') {
           map[s.employeeId].unpaidCount += 1;

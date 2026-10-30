@@ -7,6 +7,7 @@ import { Shift, PayrollSummary, Event, Employee, Location } from '@/types/index'
 import { formatCurrency } from '@/utils/format';
 import { paymentService } from '@/lib/api/paymentService';
 import { vietQRService } from '@/lib/api/vietqrService';
+import { shiftBreakdown, roundAmount, sumShiftAmounts } from '@/utils/payrollMath';
 import {
   Banknote,
   AlertTriangle,
@@ -61,7 +62,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     return shifts.filter((s) => selectedShiftIds.includes(s.id));
   }, [shifts, selectedShiftIds]);
 
-  const selectedTotal = selectedShifts.reduce((sum, shift) => sum + shift.amount, 0);
+  const selectedTotal = roundAmount(sumShiftAmounts(selectedShifts));
 
   const currentEmployee = useMemo(() => {
     if (!employeeSummary) return null;
@@ -108,20 +109,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   // Tách lương cơ bản và phụ phí
   const getShiftBreakdown = (shift: Shift) => {
     const event = events.find((e) => e.id === shift.eventId);
-    if (!event || !event.surcharge || event.surcharge === 0) {
-      return {
-        baseSalary: shift.amount,
-        surcharge: 0,
-      };
-    }
-
-    const baseSalary = event.amount || 0;
-    const surchargePerPerson = shift.amount - baseSalary;
-
-    return {
-      baseSalary: baseSalary,
-      surcharge: surchargePerPerson,
-    };
+    return shiftBreakdown(shift, event);
   };
 
   // Format ngày giờ ca làm
@@ -426,8 +414,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     </div>
                     {breakdown.surcharge > 0 && (
                       <div className={`text-[9px] ${'text-[var(--text-secondary)]'} opacity-80`}>
-                        {formatCurrency(breakdown.baseSalary)} +{' '}
-                        {formatCurrency(breakdown.surcharge)}
+                        {formatCurrency(breakdown.base)} + {formatCurrency(breakdown.surcharge)}
                       </div>
                     )}
                   </div>

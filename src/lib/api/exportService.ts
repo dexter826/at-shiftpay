@@ -120,7 +120,7 @@ export const exportDetailedReport = (
       group.workerNames.join('; '),
       group.eventAmount.toString(),
       group.surcharge.toString(),
-      group.amount.toString(),
+      Math.round(group.amount).toString(),
     ];
     csvRows.push(row);
   });

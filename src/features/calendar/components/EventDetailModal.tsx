@@ -3,6 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Event, Shift, UserSettings, Location } from '@/types/index';
 import { formatDate, formatCurrency } from '@/utils/format';
+import { shiftBreakdown } from '@/utils/payrollMath';
 import { useThemeStore } from '@/stores/themeStore';
 import { MapPin, Clock, Calendar, ThumbsUp, ThumbsDown, StickyNote } from 'lucide-react';
 import PenIcon from '@/components/ui/icons/PenIcon';
@@ -133,13 +134,23 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
             <div className="flex items-center justify-end gap-1.5">
               <span className={`text-[11px] text-[var(--text-muted)]`}>Lương:</span>
               <span className={`text-xs font-bold text-[var(--text-primary)]`}>
-                {formatCurrency((event.amount || settings.shiftRate) * eventShifts.length)}
+                {formatCurrency(
+                  eventShifts.reduce((sum, shift) => sum + shiftBreakdown(shift, event).base, 0)
+                )}
               </span>
             </div>
             {event.surcharge > 0 && (
               <div className="flex items-center justify-end gap-1.5 text-blue-500">
                 <span className="text-[11px] font-medium">Phụ phí:</span>
-                <span className="text-xs font-bold">+{formatCurrency(event.surcharge)}</span>
+                <span className="text-xs font-bold">
+                  +
+                  {formatCurrency(
+                    eventShifts.reduce(
+                      (sum, shift) => sum + shiftBreakdown(shift, event).surcharge,
+                      0
+                    )
+                  )}
+                </span>
               </div>
             )}
             {event.surchargeDistribution && event.surcharge > 0 && (

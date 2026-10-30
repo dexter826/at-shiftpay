@@ -254,10 +254,10 @@ export const EventModal: React.FC<EventModalProps> = ({
 
     if (surchargeDistributionType === 'equal') {
       const totalPeople = getSelectedCount();
-      return totalPeople > 0 ? surcharge / totalPeople : 0;
+      return totalPeople > 0 ? Math.round(surcharge / totalPeople) : 0;
     } else {
       const selectedCount = Object.values(surchargeSelectedEmployees).filter(Boolean).length;
-      return selectedCount > 0 ? surcharge / selectedCount : 0;
+      return selectedCount > 0 ? Math.round(surcharge / selectedCount) : 0;
     }
   };
 
@@ -413,6 +413,7 @@ export const EventModal: React.FC<EventModalProps> = ({
             finalAmount += getSurchargePerPerson();
           }
         }
+        finalAmount = Math.round(finalAmount);
 
         const prevShift = existingShifts.find(
           (s) => s.employeeId === empId && s.session === selectedSession

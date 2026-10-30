@@ -116,7 +116,7 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
     setIsProcessing(true);
     try {
       // Chốt sổ theo số dư thực
-      const settlementAmount = advanceBalance.balance;
+      const settlementAmount = Math.round(advanceBalance.balance);
 
       await paymentService.settleAdvancePayment(
         employeeId,
