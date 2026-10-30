@@ -8,8 +8,8 @@ import React, {
   useRef,
 } from 'react';
 import { CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { focusRingClasses } from '@/lib/utils';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import { DURATION_FAST, EASE_STANDARD } from '@/lib/motion';
 
 type ToastType = 'success' | 'error' | 'warning';
@@ -43,35 +43,48 @@ const ToastItem: React.FC<{ toast: Toast; onRemove: (id: number) => void }> = ({
     return () => clearTimeout(timer);
   }, [toast.id, toast.duration, onRemove]);
 
-  const icons = {
-    success: <CheckCircle size={18} className="text-success" />,
-    error: <XCircle size={18} className="text-danger" />,
-    warning: <AlertCircle size={18} className="text-warning" />,
-  };
+  const prefersReducedMotion = useReducedMotion();
 
-  const borderColors = {
-    success: 'border-success/40',
-    error: 'border-danger/40',
-    warning: 'border-warning/40',
-  };
+  const toastStyles = {
+    success: {
+      icon: <CheckCircle size={18} className="text-success" />,
+      border: 'border-success/40',
+      role: 'status',
+    },
+    error: {
+      icon: <XCircle size={18} className="text-danger" />,
+      border: 'border-danger/40',
+      role: 'alert',
+    },
+    warning: {
+      icon: <AlertCircle size={18} className="text-warning" />,
+      border: 'border-warning/40',
+      role: 'status',
+    },
+  } as const;
+
+  const { icon, border, role } = toastStyles[toast.type];
 
   return (
     <motion.div
-      role={toast.type === 'error' ? 'alert' : 'status'}
-      className={`flex items-center gap-3 px-4 py-3 rounded-md border bg-surface ${borderColors[toast.type]}`}
+      role={role}
+      className={`flex items-center gap-3 px-4 py-2.5 rounded-md border bg-surface ${border}`}
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: DURATION_FAST, ease: EASE_STANDARD }}
+      transition={{
+        duration: prefersReducedMotion ? 0 : DURATION_FAST,
+        ease: EASE_STANDARD,
+      }}
       layout
     >
-      {icons[toast.type]}
+      {icon}
       <span className={`text-body-sm text-ink flex-1`}>{toast.message}</span>
       <button
         type="button"
         onClick={() => onRemove(toast.id)}
         aria-label="Đóng thông báo"
-        className={`p-1 rounded-xs text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingClasses}`}
+        className={`flex h-10 w-10 items-center justify-center rounded-sm text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
       >
         <X size={16} />
       </button>

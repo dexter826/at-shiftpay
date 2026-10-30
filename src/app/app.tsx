@@ -1,5 +1,4 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { MotionConfig } from 'framer-motion';
 import type { User } from 'firebase/auth';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router';
 import { Employee, Event, Shift, Location, UserSettings } from '@/types/index';
@@ -384,10 +383,4 @@ function App() {
   return <AppShell />;
 }
 
-const AppRoot = () => (
-  <MotionConfig reducedMotion="user">
-    <App />
-  </MotionConfig>
-);
-
-export default AppRoot;
+export default App;

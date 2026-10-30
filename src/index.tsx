@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
+import { MotionConfig } from 'framer-motion';
 import App from '@/app/app';
 import { ErrorBoundary } from '@/app/ErrorBoundary';
 
@@ -14,7 +15,9 @@ root.render(
   <React.StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
-        <App />
+        <MotionConfig reducedMotion="user">
+          <App />
+        </MotionConfig>
       </BrowserRouter>
     </ErrorBoundary>
   </React.StrictMode>

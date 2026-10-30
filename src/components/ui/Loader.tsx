@@ -24,7 +24,7 @@ const Loader = ({ fullScreen = true }: { fullScreen?: boolean }) => {
       }
     >
       <div className="relative flex h-[110px] w-[200px] flex-col items-center justify-end overflow-x-hidden">
-        <div className="mb-[6px] w-[130px] animate-[loader-motion_1s_linear_infinite]">
+        <div className="mb-[6px] w-[130px] animate-loader-motion">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 198 93">
             <path
               strokeWidth={3}
@@ -111,9 +111,9 @@ const Loader = ({ fullScreen = true }: { fullScreen?: boolean }) => {
           <TruckWheel />
           <TruckWheel />
         </div>
-        <div className="relative h-[2px] w-full self-end rounded-[3px] bg-illustration-road">
-          <span className="absolute right-[-50%] h-full w-[20px] animate-[loader-road_1.4s_linear_infinite] rounded-[3px] border-l-[10px] border-illustration-dash bg-illustration-road" />
-          <span className="absolute right-[-65%] h-full w-[10px] animate-[loader-road_1.4s_linear_infinite] rounded-[3px] border-l-[4px] border-illustration-dash bg-illustration-road" />
+        <div className="relative h-[2px] w-full self-end rounded-xs bg-illustration-road">
+          <span className="absolute right-[-50%] h-full w-[20px] animate-loader-road rounded-xs border-l-[10px] border-illustration-dash bg-illustration-road" />
+          <span className="absolute right-[-65%] h-full w-[10px] animate-loader-road rounded-xs border-l-[4px] border-illustration-dash bg-illustration-road" />
         </div>
         <svg
           xmlSpace="preserve"
@@ -123,7 +123,7 @@ const Loader = ({ fullScreen = true }: { fullScreen?: boolean }) => {
           id="Capa_1"
           version="1.1"
           fill="var(--color-illustration-lamp)"
-          className="absolute right-[-90%] bottom-0 h-[90px] animate-[loader-road_1.4s_linear_infinite]"
+          className="absolute right-[-90%] bottom-0 h-[90px] animate-loader-road"
         >
           <path
             d="M252.882,0c-37.781,0-68.686,29.953-70.245,67.358h-6.917v8.954c-26.109,2.163-45.463,10.011-45.463,19.366h9.993

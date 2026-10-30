@@ -1,9 +1,9 @@
 import React, { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import XIcon from '@/components/ui/icons/XIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
-import { focusRingClasses } from '@/lib/utils';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import { DURATION_BASE, EASE_STANDARD } from '@/lib/motion';
 
 interface ModalProps {
@@ -24,6 +24,11 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
   const closeIconRef = React.useRef<AnimatedIconHandle>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const prefersReducedMotion = useReducedMotion();
+  const transition = {
+    duration: prefersReducedMotion ? 0 : DURATION_BASE,
+    ease: EASE_STANDARD,
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -89,7 +94,7 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: DURATION_BASE, ease: EASE_STANDARD }}
+          transition={transition}
         >
           <motion.div
             ref={dialogRef}
@@ -101,13 +106,13 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
-            transition={{ duration: DURATION_BASE, ease: EASE_STANDARD }}
+            transition={transition}
           >
             {/* Tiêu đề */}
             <div
               className={`px-4 py-3 border-b border-line flex justify-between items-center flex-shrink-0`}
             >
-              <h3 id={titleId} className={`text-title font-semibold text-ink`}>
+              <h3 id={titleId} className={`text-title text-ink`}>
                 {title}
               </h3>
               <button
@@ -116,7 +121,7 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
                 onMouseEnter={() => closeIconRef.current?.startAnimation()}
                 onMouseLeave={() => closeIconRef.current?.stopAnimation()}
                 aria-label="Đóng"
-                className={`p-2 text-ink-muted hover:text-ink hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingClasses}`}
+                className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
               >
                 <XIcon ref={closeIconRef} size={18} />
               </button>

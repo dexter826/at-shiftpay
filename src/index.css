@@ -3,6 +3,7 @@
 /* Primitive tier: raw palette steps. Components never reference these directly. */
 :root {
   --palette-graphite-975: oklch(0.17 0.006 80);
+  --palette-graphite-1000: oklch(0.12 0.005 80);
   --palette-graphite-950: oklch(0.2 0.015 80);
   --palette-graphite-925: oklch(0.21 0.008 80);
   --palette-graphite-875: oklch(0.25 0.009 80);
@@ -73,9 +74,12 @@
   --duration-fast: 140ms;
   --duration-base: 200ms;
   --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-loader-motion: loader-motion 1s linear infinite;
+  --animate-loader-road: loader-road 1.4s linear infinite;
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
 
   --color-ring: var(--color-accent);
-  --color-scrim: oklch(0.12 0.005 80);
+  --color-scrim: var(--palette-graphite-1000);
   --color-canvas: var(--palette-graphite-975);
   --color-surface: var(--palette-graphite-925);
   --color-surface-2: var(--palette-graphite-875);
@@ -141,6 +145,16 @@ html.light {
   --color-illustration-lamp: var(--palette-illustration-lamp-light);
   --color-illustration-road: var(--palette-illustration-road-light);
   --color-illustration-dash: var(--palette-illustration-dash-light);
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 @keyframes loader-motion {
