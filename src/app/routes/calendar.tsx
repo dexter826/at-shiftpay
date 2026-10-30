@@ -57,6 +57,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     } else {
       setLocalDate(newDate);
     }
+
+    const monthPrefix = `${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, '0')}`;
+    setSelectedDate((current) =>
+      current && current.startsWith(monthPrefix) ? current : `${monthPrefix}-01`
+    );
   };
 
   const [selectedDate, setSelectedDate] = useState<string | null>(() => {
@@ -69,6 +74,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [isDeletingEvent, setIsDeletingEvent] = useState(false);
   const [viewingEvent, setViewingEvent] = useState<Event | null>(null);
 
   const daysInMonth = useMemo(() => {
@@ -154,7 +160,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   };
 
   const confirmDeleteEvent = async () => {
-    if (deleteConfirm) {
+    if (!deleteConfirm || isDeletingEvent) return;
+
+    setIsDeletingEvent(true);
+    try {
       const eventShifts = shifts.filter((s: Shift) => s.eventId === deleteConfirm);
       await eventService.deleteEventWithShifts(
         deleteConfirm,
@@ -162,6 +171,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       );
       showToast('Đã xóa sự kiện', 'success');
       setDeleteConfirm(null);
+    } catch (error) {
+      console.error('Delete event failed:', error);
+      showToast('Không thể xóa sự kiện. Vui lòng thử lại', 'error');
+    } finally {
+      setIsDeletingEvent(false);
     }
   };
 
@@ -254,6 +268,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               onClick={() => setDeleteConfirm(null)}
               className="flex-1"
               icon={<XIcon size={16} />}
+              disabled={isDeletingEvent}
             >
               Hủy
             </Button>
@@ -262,8 +277,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               onClick={confirmDeleteEvent}
               className="flex-1"
               icon={<TrashIcon size={16} />}
+              disabled={isDeletingEvent}
             >
-              Xóa
+              {isDeletingEvent ? 'Đang xóa...' : 'Xóa'}
             </Button>
           </div>
         }
