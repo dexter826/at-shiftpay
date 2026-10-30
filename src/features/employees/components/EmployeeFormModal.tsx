@@ -7,7 +7,7 @@ import { Employee } from '@/types/index';
 import { useToast } from '@/components/ui/Toast';
 import { dbService, deleteField } from '@/services';
 import { vietQRService, VietQRBank } from '@/services/vietqrService';
-import { ImageCropperModal } from '@/components/modals';
+import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { areValuesEqual } from '@/utils/compare';
 
 interface EmployeeFormModalProps {

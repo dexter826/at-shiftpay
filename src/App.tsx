@@ -3,7 +3,7 @@ import Loader from '@/components/ui/Loading';
 import { Navbar, OfflineIndicator } from '@/components/layouts';
 import { Login } from '@/app/routes/login';
 import { Splashscreen, AppRouter, PullToRefresh } from '@/components/common';
-import { ExportModal } from '@/components/modals';
+import { ExportModal } from '@/features/payroll/components/ExportModal';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { ToastProvider } from '@/components/ui/Toast';

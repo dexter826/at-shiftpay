@@ -8,13 +8,13 @@ import XIcon from '@/components/ui/icons/x-icon';
 import TrashIcon from '@/components/ui/icons/trash-icon';
 
 // Modals
-import { EventModal } from '@/components/pages/calendar/EventModal';
-import { EventDetailModal } from '@/components/pages/calendar/EventDetailModal';
+import { EventModal } from '@/features/calendar/components/EventModal';
+import { EventDetailModal } from '@/features/calendar/components/EventDetailModal';
 
 // New Components
-import CalendarHeader from '@/components/pages/calendar/CalendarHeader';
-import CalendarGrid from '@/components/pages/calendar/CalendarGrid';
-import CalendarSidebar from '@/components/pages/calendar/CalendarSidebar';
+import CalendarHeader from '@/features/calendar/components/CalendarHeader';
+import CalendarGrid from '@/features/calendar/components/CalendarGrid';
+import CalendarSidebar from '@/features/calendar/components/CalendarSidebar';
 
 interface CalendarViewProps {
   events: Event[];

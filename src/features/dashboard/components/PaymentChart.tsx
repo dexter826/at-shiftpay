@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { Wallet } from 'lucide-react';
-import ChartTooltip from '@/components/pages/dashboard/ChartTooltip';
+import ChartTooltip from '@/features/dashboard/components/ChartTooltip';
 
 interface PaymentChartProps {
     data: Array<{ name: string; value: number; color: string }>;

@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Event, Location } from '@/types/index';
-import CalendarDay from '@/components/pages/calendar/CalendarDay';
+import CalendarDay from '@/features/calendar/components/CalendarDay';
 
 interface CalendarGridProps {
     daysInMonth: Date[];

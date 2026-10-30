@@ -2,11 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Employee, Event, Shift, UserSettings, Location } from '@/types/index';
 
-import Dashboard from '@/components/pages/Dashboard';
-import CalendarView from '@/components/pages/CalendarView';
+import Dashboard from '@/app/routes/dashboard';
+import CalendarView from '@/app/routes/calendar';
 import EmployeeManager from '@/app/routes/employees';
-import PayrollView from '@/components/pages/PayrollView';
-import SettingsView from '@/components/pages/SettingsView';
+import PayrollView from '@/app/routes/payroll';
+import SettingsView from '@/app/routes/settings';
 import LocationManager from '@/app/routes/locations';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';

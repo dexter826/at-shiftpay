@@ -7,11 +7,11 @@ import Button from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useAppDataStore } from '@/stores';
 
-import DashboardHeader from '@/components/pages/dashboard/DashboardHeader';
-import DashboardStats from '@/components/pages/dashboard/DashboardStats';
-import ActivityChart from '@/components/pages/dashboard/ActivityChart';
-import PaymentChart from '@/components/pages/dashboard/PaymentChart';
-import { MonthPickerModal } from '@/components/modals/MonthPickerModal';
+import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
+import DashboardStats from '@/features/dashboard/components/DashboardStats';
+import ActivityChart from '@/features/dashboard/components/ActivityChart';
+import PaymentChart from '@/features/dashboard/components/PaymentChart';
+import { MonthPickerModal } from '@/features/dashboard/components/MonthPickerModal';
 
 interface DashboardProps {
     user: any;

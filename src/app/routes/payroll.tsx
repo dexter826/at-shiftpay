@@ -3,21 +3,21 @@ import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/ty
 import { dbService } from '@/services';
 
 import { useToast } from '@/components/ui/Toast';
-import { PaymentModal } from '@/components/pages/payroll/PaymentModal';
-import { SettlementModal } from '@/components/pages/payroll/SettlementModal';
+import { PaymentModal } from '@/features/payroll/components/PaymentModal';
+import { SettlementModal } from '@/features/payroll/components/SettlementModal';
 import { useAuthStore } from '@/stores';
 import { DropdownOption } from '@/components/ui/Dropdown';
 
 // Import extracted components
-import PayrollStats from '@/components/pages/payroll/PayrollStats';
-import PayrollFilters from '@/components/pages/payroll/PayrollFilters';
-import PayrollList from '@/components/pages/payroll/PayrollList';
-import HistoryList from '@/components/pages/payroll/HistoryList';
-import EmployeeDetailModal from '@/components/pages/payroll/PayrollEmployeeDetailModal';
-import TransactionDetailModal from '@/components/pages/payroll/TransactionDetailModal';
-import ConfirmPaymentModal from '@/components/pages/payroll/ConfirmPaymentModal';
-import MonthPickerModal from '@/components/pages/payroll/MonthPickerModal';
-import { usePayrollData } from '@/components/pages/payroll/hooks/usePayrollData';
+import PayrollStats from '@/features/payroll/components/PayrollStats';
+import PayrollFilters from '@/features/payroll/components/PayrollFilters';
+import PayrollList from '@/features/payroll/components/PayrollList';
+import HistoryList from '@/features/payroll/components/HistoryList';
+import EmployeeDetailModal from '@/features/payroll/components/PayrollEmployeeDetailModal';
+import TransactionDetailModal from '@/features/payroll/components/TransactionDetailModal';
+import ConfirmPaymentModal from '@/features/payroll/components/ConfirmPaymentModal';
+import MonthPickerModal from '@/features/payroll/components/MonthPickerModal';
+import { usePayrollData } from '@/features/payroll/hooks/usePayrollData';
 
 interface PayrollViewProps {
   shifts: Shift[];

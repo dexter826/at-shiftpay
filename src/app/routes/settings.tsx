@@ -3,8 +3,8 @@ import { UserSettings } from '@/types/index';
 import Switch from '@/components/ui/Switch';
 import { LogOut, Sun, Moon } from 'lucide-react';
 import { useThemeStore } from '@/stores';
-import AccountSection from '@/components/pages/settings/AccountSection';
-import WorkConfigSection from '@/components/pages/settings/WorkConfigSection';
+import AccountSection from '@/features/settings/components/AccountSection';
+import WorkConfigSection from '@/features/settings/components/WorkConfigSection';
 
 interface SettingsViewProps {
     user: any;
