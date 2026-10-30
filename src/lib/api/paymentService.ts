@@ -159,7 +159,9 @@ export const paymentService = {
       return payments.filter((p) => !p.settledAt);
     } catch (error) {
       console.error('getUnsettledAdvances error:', error);
-      return [];
+      throw new Error(
+        `Không thể tải khoản ứng lương: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
     }
   },
 };

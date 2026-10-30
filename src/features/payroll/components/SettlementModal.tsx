@@ -6,7 +6,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { Shift, PaymentTransaction, AdvanceBalance, Event, Location } from '@/types/index';
 import { formatCurrency, formatDate } from '@/utils/format';
 import { paymentService } from '@/lib/api/paymentService';
-import { Calculator, Loader2 } from 'lucide-react';
+import { Calculator, Loader2, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 
 interface SettlementModalProps {
@@ -40,11 +40,13 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
 
   const [localAdvances, setLocalAdvances] = useState<PaymentTransaction[]>([]);
   const [isLoadingAdvances, setIsLoadingAdvances] = useState(true); // Trạng thái loading mặc định
+  const [advancesError, setAdvancesError] = useState<string | null>(null);
 
   useEffect(() => {
     // Reset state mỗi khi mở modal
     if (isOpen) {
       setIsLoadingAdvances(true);
+      setAdvancesError(null);
       setLocalAdvances([]);
 
       const fetchAdvances = async () => {
@@ -53,6 +55,8 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
           setLocalAdvances(data);
         } catch (error) {
           console.error('Failed to fetch advances:', error);
+          setAdvancesError('Không thể tải khoản ứng lương. Vui lòng đóng và thử lại.');
+          showToast('Không thể tải khoản ứng lương', 'error');
         } finally {
           setIsLoadingAdvances(false);
         }
@@ -100,6 +104,10 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   }, [shifts, employeeId]);
 
   const handleSettlement = async () => {
+    if (advancesError) {
+      showToast('Chưa tải được khoản ứng, không thể quyết toán', 'error');
+      return;
+    }
     if (unsettledAdvances.length === 0 || settleableShifts.length === 0) {
       showToast('Không có dữ liệu công hoặc tiền ứng để quyết toán', 'warning');
       return;
@@ -140,6 +148,11 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
             <div className="py-4 space-y-3">
               <Loader2 size={32} className="animate-spin text-primary mx-auto" />
               <p className={`text-sm text-[var(--text-secondary)]`}>Đang kiểm tra dữ liệu...</p>
+            </div>
+          ) : advancesError ? (
+            <div className="py-4 space-y-3 text-red-500">
+              <AlertTriangle size={32} className="mx-auto" />
+              <p className="text-sm">{advancesError}</p>
             </div>
           ) : (
             <>
@@ -184,7 +197,9 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
           <Button
             onClick={handleSettlement}
             className="flex-1 rounded-lg font-bold"
-            disabled={isProcessing || isLoadingAdvances || settleableShifts.length === 0}
+            disabled={
+              isProcessing || isLoadingAdvances || !!advancesError || settleableShifts.length === 0
+            }
           >
             {isProcessing ? 'Đang xử lý...' : 'Xác nhận quyết toán'}
           </Button>
