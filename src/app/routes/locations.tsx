@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import Button from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { focusRingClasses } from '@/lib/utils';
 
 // Import extracted components
 import LocationStats from '@/features/location/components/LocationStats';
@@ -176,16 +177,18 @@ const LocationView: React.FC<LocationViewProps> = ({
           <div className="flex items-center gap-3">
             {onBack && (
               <button
+                type="button"
                 onClick={onBack}
-                className={`p-2 rounded-full transition-colors hover:bg-line flex items-center justify-center`}
+                aria-label="Quay lại"
                 title="Quay lại"
+                className={`flex h-10 w-10 items-center justify-center rounded-sm border border-line text-ink-soft hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingClasses}`}
               >
-                <ArrowLeft size={20} className="text-ink" />
+                <ArrowLeft size={20} />
               </button>
             )}
             <div>
-              <h2 className={`text-xl font-semibold text-ink`}>Quản lý địa điểm</h2>
-              <p className={`text-sm text-ink-soft mt-0.5`}>
+              <h2 className={`text-title font-semibold text-ink`}>Quản lý địa điểm</h2>
+              <p className={`text-body-sm text-ink-soft mt-0.5`}>
                 Danh sách các địa điểm và đánh giá chất lượng.
               </p>
             </div>
@@ -259,7 +262,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           </div>
         }
       >
-        <p className={`text-sm text-ink-soft`}>
+        <p className={`text-body-sm text-ink-soft`}>
           Bạn có chắc chắn muốn xóa địa điểm này? Hành động này không thể hoàn tác.
         </p>
       </Modal>

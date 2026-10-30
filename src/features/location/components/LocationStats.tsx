@@ -13,25 +13,25 @@ const LocationStats: React.FC<LocationStatsProps> = ({ stats }) => {
   return (
     <div className="flex gap-2 shrink-0">
       <div
-        className={`bg-surface border border-line px-3 py-1.5 rounded-lg flex items-center gap-2`}
-        title="Tổng địa điểm"
+        className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface border border-line text-label font-medium text-ink`}
       >
-        <MapPin size={14} className="text-accent-ink" />
-        <span className={`text-xs font-medium text-ink`}>{stats.total}</span>
+        <span className="sr-only">Tổng địa điểm</span>
+        <MapPin size={12} className="text-accent-ink" />
+        <span className="tabular-nums">{stats.total}</span>
       </div>
       <div
-        className={`bg-surface border border-line px-3 py-1.5 rounded-lg flex items-center gap-2`}
-        title="Đánh giá tốt"
+        className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface border border-line text-label font-medium text-ink`}
       >
-        <ThumbsUp size={14} className="text-green-500" />
-        <span className={`text-xs font-medium text-ink`}>{stats.high}</span>
+        <span className="sr-only">Đánh giá tốt</span>
+        <ThumbsUp size={12} className="text-success" />
+        <span className="tabular-nums">{stats.high}</span>
       </div>
       <div
-        className={`bg-surface border border-line px-3 py-1.5 rounded-lg flex items-center gap-2`}
-        title="Đánh giá kém"
+        className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface border border-line text-label font-medium text-ink`}
       >
-        <ThumbsDown size={14} className="text-red-500" />
-        <span className={`text-xs font-medium text-ink`}>{stats.low}</span>
+        <span className="sr-only">Đánh giá kém</span>
+        <ThumbsDown size={12} className="text-danger" />
+        <span className="tabular-nums">{stats.low}</span>
       </div>
     </div>
   );

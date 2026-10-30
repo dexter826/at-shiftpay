@@ -39,7 +39,7 @@ const LocationList: React.FC<LocationListProps> = ({
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className={`bg-surface border border-line rounded-2xl overflow-hidden flex flex-col shadow-sm`}
+                className={`bg-surface border border-line rounded-md overflow-hidden flex flex-col`}
               >
                 <Skeleton width="100%" height={200} />
                 <div className="p-5 space-y-4 flex-1">
@@ -66,10 +66,10 @@ const LocationList: React.FC<LocationListProps> = ({
             key="empty"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`col-span-full text-center py-20 text-ink-muted bg-surface border border-line rounded-lg border-dashed`}
+            className={`col-span-full text-center py-20 text-ink-muted bg-surface border border-line rounded-md border-dashed`}
           >
-            <MapPin size={48} className="mx-auto mb-4 opacity-20" />
-            <p className="text-lg">Không tìm thấy địa điểm nào</p>
+            <MapPin size={48} className="mx-auto mb-4 text-ink-muted" />
+            <p className="text-body">Không tìm thấy địa điểm nào</p>
           </motion.div>
         ) : (
           <>
