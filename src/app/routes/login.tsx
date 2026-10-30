@@ -20,6 +20,7 @@ import LoginHeader from '@/features/auth/components/login/LoginHeader';
 import VerificationView from '@/features/auth/components/login/VerificationView';
 import QuickLoginView from '@/features/auth/components/login/QuickLoginView';
 import AuthForm from '@/features/auth/components/login/AuthForm';
+import { focusRingClasses } from '@/lib/utils';
 
 interface LoginProps {
   onLogin: () => void;
@@ -234,12 +235,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   return (
     <div className="min-h-dynamic bg-canvas flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Decorative blobs */}
-      <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-accent/[0.04] pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-accent/[0.03] pointer-events-none" />
-
       <div className="w-full max-w-md relative z-10">
-        <div className="bg-surface border border-line rounded-lg p-6">
+        <div className="bg-surface border border-line rounded-md p-6">
           <LoginHeader />
 
           <div className="mt-4">
@@ -309,13 +306,13 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         </div>
 
-        <p className="text-xs text-ink-muted text-center mt-6 flex items-center justify-center gap-1.5">
-          Made with <Heart size={11} className="text-red-500 fill-red-500" /> by
+        <p className="text-label font-medium text-ink-muted text-center mt-6 flex items-center justify-center gap-1.5">
+          Made with <Heart size={12} className="text-ink-muted" /> by
           <a
             href="https://github.com/dexter826/dexter826"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-accent-ink hover:text-ink transition-colors"
+            className={`inline-flex min-h-10 items-center rounded-sm font-semibold text-ink-muted hover:text-ink transition-colors duration-fast ease-standard ${focusRingClasses}`}
           >
             MOB
           </a>

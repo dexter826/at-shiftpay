@@ -1,22 +1,28 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { DURATION_BASE, EASE_STANDARD } from '@/lib/motion';
 
 interface ValidationErrorProps {
   message: string;
 }
 
-export const ValidationError: React.FC<ValidationErrorProps> = ({ message }) => (
-  <AnimatePresence>
-    {message && (
-      <motion.div
-        initial={{ height: 0, opacity: 0, marginTop: 0 }}
-        animate={{ height: 'auto', opacity: 1, marginTop: 4 }}
-        exit={{ height: 0, opacity: 0, marginTop: 0 }}
-        transition={{ duration: 0.2 }}
-        className="overflow-hidden"
-      >
-        <p className="text-danger text-xs ml-1 font-medium leading-tight">{message}</p>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
+export const ValidationError: React.FC<ValidationErrorProps> = ({ message }) => {
+  const shouldReduceMotion = useReducedMotion();
+  return (
+    <AnimatePresence>
+      {message && (
+        <motion.div
+          initial={{ height: 0, opacity: 0, marginTop: 0 }}
+          animate={{ height: 'auto', opacity: 1, marginTop: 4 }}
+          exit={{ height: 0, opacity: 0, marginTop: 0 }}
+          transition={{ duration: shouldReduceMotion ? 0 : DURATION_BASE, ease: EASE_STANDARD }}
+          className="overflow-hidden"
+        >
+          <p role="alert" className="text-danger text-body-sm ml-1">
+            {message}
+          </p>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};

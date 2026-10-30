@@ -4,6 +4,8 @@ import { auth } from '@/lib/firebase';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { useToast } from '@/components/ui/ToastProvider';
+import { Loader2 } from 'lucide-react';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface ForgotPasswordModalProps {
   isOpen: boolean;
@@ -47,27 +49,31 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen
       isOpen={isOpen}
       onClose={onClose}
       footer={
-        <Button onClick={handleSubmit} disabled={loading} fullWidth className="">
-          {loading && (
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          )}
+        <Button onClick={handleSubmit} disabled={loading} fullWidth>
+          {loading && <Loader2 size={16} className="animate-spin" />}
           Gửi yêu cầu
         </Button>
       }
     >
       <div className="space-y-4">
-        <p className={`text-sm text-ink-soft`}>
+        <p className={`text-body-sm text-ink-soft`}>
           Nhập email của bạn để nhận liên kết đặt lại mật khẩu.
         </p>
         <div>
-          <label className={`block text-xs text-ink-soft mb-1.5`}>Email</label>
+          <label
+            htmlFor="reset-password-email"
+            className={`block text-label font-medium text-ink-muted mb-1.5`}
+          >
+            Email
+          </label>
           <input
+            id="reset-password-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Nhập email của bạn"
             autoComplete="email"
-            className={`w-full p-2.5 rounded-lg border focus:outline-none focus:border-accent bg-surface-2 border-line text-ink`}
+            className={`w-full min-h-10 p-2.5 rounded-sm border bg-surface-2 border-ink-muted hover:border-ink text-body-sm text-ink placeholder:text-ink-muted ${focusRingOnSurfaceClasses}`}
           />
         </div>
       </div>

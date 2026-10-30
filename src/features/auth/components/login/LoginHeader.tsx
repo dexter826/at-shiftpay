@@ -7,7 +7,7 @@ const LoginHeader: React.FC = () => {
   return (
     <div className="w-full pb-0 flex flex-col items-center z-10 relative gap-2">
       <img src="/logo_text.png" alt="ShiftPay" className="h-8 object-contain" />
-      <p className="text-xs text-ink-muted">Quản lý ca làm &amp; tính công</p>
+      <p className="text-body-sm text-ink-muted">Quản lý ca làm &amp; tính công</p>
     </div>
   );
 };
