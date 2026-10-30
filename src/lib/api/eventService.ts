@@ -70,19 +70,20 @@ export const eventService = {
     eventData: Omit<Event, 'id'>,
     shiftsData: Omit<Shift, 'id'>[]
   ): Promise<void> {
+    const eventRef = doc(collection(db, 'events'));
+    const shiftRefs = shiftsData.map(() => doc(collection(db, 'shifts')));
+
     try {
       await executeBatchWithRetry(async () => {
         const batch = writeBatch(db);
 
-        const eventRef = doc(collection(db, 'events'));
         batch.set(eventRef, {
           ...eventData,
           userId: (eventData as any).userId || shiftsData[0]?.userId || '',
         });
 
-        shiftsData.forEach((shiftData) => {
-          const shiftRef = doc(collection(db, 'shifts'));
-          batch.set(shiftRef, { ...shiftData, eventId: eventRef.id });
+        shiftsData.forEach((shiftData, index) => {
+          batch.set(shiftRefs[index], { ...shiftData, eventId: eventRef.id });
         });
 
         await batch.commit();
@@ -104,6 +105,8 @@ export const eventService = {
       delete: string[];
     }
   ): Promise<void> {
+    const createRefs = shifts.create.map(() => doc(collection(db, 'shifts')));
+
     try {
       await executeBatchWithRetry(async () => {
         const batch = writeBatch(db);
@@ -111,9 +114,8 @@ export const eventService = {
         const eventRef = doc(db, 'events', eventId);
         batch.update(eventRef, eventData);
 
-        shifts.create.forEach((shiftData) => {
-          const shiftRef = doc(collection(db, 'shifts'));
-          batch.set(shiftRef, { ...shiftData, eventId });
+        shifts.create.forEach((shiftData, index) => {
+          batch.set(createRefs[index], { ...shiftData, eventId });
         });
 
         shifts.update.forEach(({ id, data }) => {
