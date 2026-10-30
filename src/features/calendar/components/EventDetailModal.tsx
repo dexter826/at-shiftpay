@@ -209,7 +209,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               {eventShifts.map((shift) => (
                 <div
                   key={shift.id}
-                  className={`flex flex-col gap-0.5 p-2 ${'bg-surface-2 border-line'} border rounded-lg shadow-sm`}
+                  className={`flex flex-col gap-0.5 p-2 bg-surface-2 border-line border rounded-lg shadow-sm`}
                 >
                   <span className={`text-xs font-semibold text-ink truncate`}>
                     {shift.employeeName}

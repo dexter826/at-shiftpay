@@ -7,12 +7,15 @@ const Switch = () => {
 
   return (
     <button
+      type="button"
+      role="switch"
+      aria-checked={isDark}
       onClick={toggleTheme}
-      className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${'bg-surface-2'}`}
+      className="relative w-11 h-6 rounded-full transition-colors duration-fast bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
       aria-label={isDark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'}
     >
       <span
-        className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm flex items-center justify-center transition-transform duration-200 ${
+        className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-ink shadow-sm flex items-center justify-center transition-transform duration-fast ${
           isDark ? 'translate-x-5' : 'translate-x-0'
         }`}
       >
@@ -21,7 +24,7 @@ const Switch = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="w-3 h-3 text-ink-muted"
+            className="w-3 h-3 text-canvas"
           >
             <path
               fillRule="evenodd"
@@ -34,7 +37,7 @@ const Switch = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="w-3 h-3 text-accent-ink"
+            className="w-3 h-3 text-canvas"
           >
             <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
           </svg>

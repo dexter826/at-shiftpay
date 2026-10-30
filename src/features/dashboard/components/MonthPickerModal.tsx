@@ -107,7 +107,7 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
                                       isSelected
                                         ? 'bg-accent text-on-accent border-accent shadow-sm shadow-accent/20 scale-[0.98]'
                                         : `
-                                            ${'bg-surface-2 hover:bg-surface border-line text-ink-soft'}
+                                            bg-surface-2 hover:bg-surface border-line text-ink-soft
                                             ${isCurrentMonth ? 'border-accent/45 text-accent-ink' : ''}
                                         `
                                     }

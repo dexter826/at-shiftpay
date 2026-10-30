@@ -8,6 +8,27 @@
     />
     <title>ShiftPay</title>
 
+    <!-- Apply the saved theme before first paint to avoid a wrong-theme flash -->
+    <script>
+      (function () {
+        var theme = 'dark';
+        try {
+          var stored = localStorage.getItem('theme');
+          if (stored) {
+            var parsed = JSON.parse(stored);
+            var saved = parsed && parsed.state && parsed.state.theme;
+            if (saved === 'light' || saved === 'dark') {
+              theme = saved;
+            }
+          }
+        } catch (error) {
+          // Corrupted storage falls back to the dark default.
+        }
+        document.documentElement.classList.add(theme);
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

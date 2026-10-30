@@ -9,19 +9,23 @@ interface ThemeState {
   setTheme: (theme: Theme) => void;
 }
 
+const applyTheme = (theme: Theme) => {
+  document.documentElement.classList.remove('light', 'dark');
+  document.documentElement.classList.add(theme);
+  document.documentElement.style.colorScheme = theme;
+};
+
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({
       theme: 'dark',
       toggleTheme: () => {
         const newTheme = get().theme === 'dark' ? 'light' : 'dark';
-        document.documentElement.classList.remove('light', 'dark');
-        document.documentElement.classList.add(newTheme);
+        applyTheme(newTheme);
         set({ theme: newTheme });
       },
       setTheme: (theme) => {
-        document.documentElement.classList.remove('light', 'dark');
-        document.documentElement.classList.add(theme);
+        applyTheme(theme);
         set({ theme });
       },
     }),
@@ -29,8 +33,7 @@ export const useThemeStore = create<ThemeState>()(
       name: 'theme',
       onRehydrateStorage: () => (state) => {
         if (state) {
-          document.documentElement.classList.remove('light', 'dark');
-          document.documentElement.classList.add(state.theme);
+          applyTheme(state.theme);
         }
       },
     }
