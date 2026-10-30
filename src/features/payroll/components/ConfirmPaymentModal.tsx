@@ -1,7 +1,7 @@
 import React, { memo, useRef } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import SimpleCheckedIcon from '@/components/ui/icons/simple-checked-icon';
+import SimpleCheckedIcon from '@/components/ui/icons/SimpleCheckedIcon';
 import { formatCurrency } from '@/utils/format';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 import { PayrollSummary } from '@/types/index';

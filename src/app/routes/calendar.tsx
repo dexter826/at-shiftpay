@@ -4,8 +4,8 @@ import { eventService } from '@/lib/api/eventService';
 import { useToast } from '@/components/ui/ToastProvider';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import XIcon from '@/components/ui/icons/x-icon';
-import TrashIcon from '@/components/ui/icons/trash-icon';
+import XIcon from '@/components/ui/icons/XIcon';
+import TrashIcon from '@/components/ui/icons/TrashIcon';
 
 // Modals
 import { EventModal } from '@/features/calendar/components/EventModal';

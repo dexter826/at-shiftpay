@@ -7,8 +7,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/components/ui/ToastProvider';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { DeleteAccountModal } from '@/features/settings/components/DeleteAccountModal';
-import KeyIcon from '@/components/ui/icons/key-icon';
-import TrashIcon from '@/components/ui/icons/trash-icon';
+import KeyIcon from '@/components/ui/icons/KeyIcon';
+import TrashIcon from '@/components/ui/icons/TrashIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface AccountSectionProps {

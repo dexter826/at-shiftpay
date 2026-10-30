@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { ArrowUpDown } from 'lucide-react';
-import PlusIcon from '@/components/ui/icons/plus-icon';
+import PlusIcon from '@/components/ui/icons/PlusIcon';
 import Button from '@/components/ui/Button';
 import SearchInput from '@/components/ui/SearchInput';
 import { Dropdown } from '@/components/ui/Dropdown';

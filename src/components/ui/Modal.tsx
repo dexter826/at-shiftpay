@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import XIcon from '@/components/ui/icons/x-icon';
+import XIcon from '@/components/ui/icons/XIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface ModalProps {

@@ -1,7 +1,7 @@
 import React, { memo, useRef } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import ChevronLeftIcon from '@/components/ui/icons/chevron-left-icon';
-import ChevronRightIcon from '@/components/ui/icons/chevron-right-icon';
+import ChevronLeftIcon from '@/components/ui/icons/ChevronLeftIcon';
+import ChevronRightIcon from '@/components/ui/icons/ChevronRightIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface PayrollMonthPickerModalProps {

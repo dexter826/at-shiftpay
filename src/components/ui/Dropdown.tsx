@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ChevronIcon from '@/components/ui/icons/chevron-icon';
-import SimpleCheckedIcon from '@/components/ui/icons/simple-checked-icon';
-import MagnifierIcon from '@/components/ui/icons/magnifier-icon';
-import XIcon from '@/components/ui/icons/x-icon';
+import ChevronIcon from '@/components/ui/icons/ChevronIcon';
+import SimpleCheckedIcon from '@/components/ui/icons/SimpleCheckedIcon';
+import MagnifierIcon from '@/components/ui/icons/MagnifierIcon';
+import XIcon from '@/components/ui/icons/XIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 export interface DropdownOption {

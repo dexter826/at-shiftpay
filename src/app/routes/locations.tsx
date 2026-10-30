@@ -1,14 +1,14 @@
 import React, { useState, useMemo, useRef, useEffect, memo } from 'react';
-import ArrowNarrowLeftIcon from '@/components/ui/icons/arrow-narrow-left-icon';
+import ArrowNarrowLeftIcon from '@/components/ui/icons/ArrowNarrowLeftIcon';
 import { Location, Event } from '@/types/index';
 import { locationService } from '@/lib/api/locationService';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import Button from '@/components/ui/Button';
-import PlusIcon from '@/components/ui/icons/plus-icon';
-import TrashIcon from '@/components/ui/icons/trash-icon';
-import XIcon from '@/components/ui/icons/x-icon';
+import PlusIcon from '@/components/ui/icons/PlusIcon';
+import TrashIcon from '@/components/ui/icons/TrashIcon';
+import XIcon from '@/components/ui/icons/XIcon';
 import { Modal } from '@/components/ui/Modal';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 

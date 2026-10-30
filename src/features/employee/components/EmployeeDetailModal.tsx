@@ -3,7 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Employee } from '@/types/index';
 import { Phone, Calendar, CreditCard } from 'lucide-react';
-import PenIcon from '@/components/ui/icons/pen-icon';
+import PenIcon from '@/components/ui/icons/PenIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 import { useThemeStore } from '@/stores/themeStore';
 import BankCard from '@/features/employee/components/BankCard';

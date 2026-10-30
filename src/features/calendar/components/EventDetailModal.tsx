@@ -8,8 +8,8 @@ import {
     MapPin, Clock, Calendar,
     ThumbsUp, ThumbsDown, StickyNote
 } from 'lucide-react';
-import PenIcon from '@/components/ui/icons/pen-icon';
-import TrashIcon from '@/components/ui/icons/trash-icon';
+import PenIcon from '@/components/ui/icons/PenIcon';
+import TrashIcon from '@/components/ui/icons/TrashIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface EventDetailModalProps {

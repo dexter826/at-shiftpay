@@ -13,7 +13,7 @@ import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { Location, Event } from "@/types/index";
 import { useThemeStore } from '@/stores/themeStore';
-import PenIcon from "@/components/ui/icons/pen-icon";
+import PenIcon from "@/components/ui/icons/PenIcon";
 import { AnimatedIconHandle } from "@/components/ui/icons/types";
 
 const LOCATIONIQ_API_KEY =

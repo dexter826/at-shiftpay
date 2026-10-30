@@ -1,8 +1,8 @@
 import React, { memo, useRef } from 'react';
-import CalendarIcon from '@/components/ui/icons/calendar-icon';
-import ChevronLeftIcon from '@/components/ui/icons/chevron-left-icon';
-import ChevronRightIcon from '@/components/ui/icons/chevron-right-icon';
-import MapPinIcon from '@/components/ui/icons/map-pin-icon';
+import CalendarIcon from '@/components/ui/icons/CalendarIcon';
+import ChevronLeftIcon from '@/components/ui/icons/ChevronLeftIcon';
+import ChevronRightIcon from '@/components/ui/icons/ChevronRightIcon';
+import MapPinIcon from '@/components/ui/icons/MapPinIcon';
 import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
 interface CalendarHeaderProps {
