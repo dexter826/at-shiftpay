@@ -90,13 +90,13 @@ components:
     textColor: '{colors.on-accent}'
     typography: '{typography.body-sm}'
     rounded: '{rounded.sm}'
-    padding: 9px 14px
+    padding: 10px 14px
   button-ghost:
     backgroundColor: transparent
     textColor: '{colors.ink-muted}'
     typography: '{typography.body-sm}'
     rounded: '{rounded.sm}'
-    padding: 9px 14px
+    padding: 10px 14px
   icon-button:
     backgroundColor: transparent
     textColor: '{colors.ink-muted}'
@@ -156,7 +156,7 @@ Small radii: 3px for chips, 4px for buttons and navigation, 6px for cards. Borde
 
 ## Components
 
-Buttons are 4px-radius, 13px/600 text, 9px × 14px padding; primary uses accent with dark ink, ghost uses a line and muted text that brightens on hover. Cards and stat cards share surface, 1px line, and radius, differing only in padding. Status chips are 3px-radius, surface-2, with a 6px colored square dot and a 12px label; the dot carries the status color, never a tinted pill. Active navigation is surface-2 with a 2px inset accent bar. Table rows use body-sm with tabular numerals for hours and money.
+Buttons are 4px-radius, 13px/600 text, 10px × 14px padding; primary uses accent with dark ink, ghost uses a line and muted text that brightens on hover. Cards and stat cards share surface, 1px line, and radius, differing only in padding. Status chips are 3px-radius, surface-2, with a 6px colored square dot and a 12px label; the dot carries the status color, never a tinted pill. Active navigation is surface-2 with a 2px inset accent bar. Table rows use body-sm with tabular numerals for hours and money.
 
 ## Do's and Don'ts
 

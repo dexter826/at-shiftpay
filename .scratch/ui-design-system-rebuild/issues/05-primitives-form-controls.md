@@ -9,7 +9,7 @@
 - [x] All five primitives are styled exclusively through semantic tokens; no raw values.
 - [x] Hover, active, disabled, invalid where applicable, and focus-visible states are defined and meet WCAG AA in both themes.
 - [x] Prop APIs are unchanged; any new variants are additive.
-- [x] The primitives are verified on the screens that use them most in both themes and at both breakpoints.
+- [x] The primitives are verified statically across their usage sites; visual verification on screens and breakpoints is deferred to the screen tickets (user instruction).
 
 ## Comments
 
@@ -21,3 +21,11 @@
 - SearchInput: 4px radius, body-sm text, ring focus, 40px clear button with label and focus state, disabled state.
 - TimePicker: 4px trigger with hover/focus ring and `aria-haspopup`/`aria-expanded`, flat panel (no shadow), surface-2 highlight.
 - No raw palette or hex values remain in the five files. Gates: `tsc` 0, `eslint` 0, `vite build` 0. Visual verification on screens/breakpoints deferred to the screen tickets, per the user's instruction; contrast is carried by token pairs verified at the token layer.
+
+2026-10-30 — Review fixes.
+
+- Shared `focusRingClasses`/`peerFocusRingClasses` in utils; all five primitives use one ring recipe, and `ease-standard` is applied everywhere.
+- Button padding 10×14 (height ≥38px); DESIGN.md updated to match.
+- Checkbox unchecked border and switch track border use `ink-muted` (≥5:1 against canvas); hover states are visible border shifts; checkbox label gets 500 weight.
+- Switch now uses lucide Sun/Moon with a 4px track; the focus ring hugs the track via `group-focus-visible`.
+- TimePicker honors reduced-motion via `useReducedMotion`, includes the visible time in its aria-label, drops the unused `aria-haspopup`, and uses body/title tokens with a flat border instead of a ring; SearchInput disables the clear button and dims its icon when disabled.

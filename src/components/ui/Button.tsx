@@ -1,5 +1,6 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
+import { focusRingClasses } from '@/lib/utils';
 
 type ButtonVariant = 'primary' | 'danger' | 'secondary' | 'outline' | 'success' | 'warning';
 
@@ -32,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 px-[14px] py-[9px] text-body-sm font-semibold rounded-sm transition-all duration-fast active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas disabled:opacity-60 disabled:cursor-not-allowed ${fullWidth ? 'w-full' : ''} ${variantStyles[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 px-3.5 py-2.5 text-body-sm font-semibold rounded-sm transition-all duration-fast ease-standard active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed ${focusRingClasses} ${fullWidth ? 'w-full' : ''} ${variantStyles[variant]} ${className}`}
       disabled={disabled || loading}
       {...props}
     >

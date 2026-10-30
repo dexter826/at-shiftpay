@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import { peerFocusRingClasses } from '@/lib/utils';
 
 interface CheckboxProps {
   checked: boolean;
@@ -25,16 +26,16 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id }) => 
           className="peer sr-only"
         />
         <div
-          className={`w-4 h-4 rounded-xs border transition-colors duration-fast hover:border-accent/60 ${
-            checked ? 'bg-accent border-accent' : 'border-line bg-transparent'
-          } peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-canvas`}
+          className={`w-4 h-4 rounded-xs border transition-colors duration-fast ease-standard hover:border-ink ${
+            checked ? 'bg-accent border-accent' : 'border-ink-muted bg-transparent'
+          } ${peerFocusRingClasses}`}
         >
           {checked && (
             <Check size={12} className="text-on-accent absolute inset-0 m-auto" strokeWidth={3} />
           )}
         </div>
       </div>
-      {label && <span className="text-label text-ink-muted">{label}</span>}
+      {label && <span className="text-label font-medium text-ink-muted">{label}</span>}
     </label>
   );
 };
