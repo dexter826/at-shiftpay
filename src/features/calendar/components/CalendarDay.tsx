@@ -1,84 +1,147 @@
 import React, { memo } from 'react';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { ThumbsUp, ThumbsDown } from 'lucide-react';
-import { Event, Location } from '@/types/index';
-/* removed unused import from @/stores/themeStore */
+import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
+import { Event, Location, Shift } from '@/types/index';
 
 interface CalendarDayProps {
   date: Date;
   events: Event[];
+  shiftsByEvent: Record<string, Shift[]>;
   locations: Location[];
   isSelected: boolean;
   isToday: boolean;
   isCurrentMonth: boolean;
-  onClick: (date: Date) => void;
+  isFirstColumn: boolean;
+  tabIndex: number;
+  onSelect: (date: Date) => void;
+  onKeyDown: React.KeyboardEventHandler<HTMLButtonElement>;
+  registerRef: (element: HTMLButtonElement | null) => void;
 }
+
+const WEEKDAYS = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
 
 const CalendarDay: React.FC<CalendarDayProps> = ({
   date,
   events,
+  shiftsByEvent,
   locations,
   isSelected,
   isToday,
   isCurrentMonth,
-  onClick,
+  isFirstColumn,
+  tabIndex,
+  onSelect,
+  onKeyDown,
+  registerRef,
 }) => {
-  // Using dateStr for key prop happens in parent
+  const eventCount = events.length;
+  const needsStaffing = events.some((event) => (shiftsByEvent[event.id]?.length ?? 0) === 0);
+  const dateLabel = `${WEEKDAYS[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}`;
+  const eventLabel =
+    eventCount === 0
+      ? 'chưa có sự kiện'
+      : `${eventCount} sự kiện${needsStaffing ? ', cần xếp' : ''}`;
+  const ariaLabel = `${dateLabel}${isCurrentMonth ? '' : ' (tháng khác)'}, ${eventLabel}`;
 
   return (
-    <motion.button
-      onClick={() => onClick(date)}
-      whileHover={{ zIndex: 10 }}
-      whileTap={{ scale: 0.95 }}
-      className={`aspect-square lg:aspect-auto flex flex-col items-center justify-center rounded-sm text-body-sm transition-colors duration-fast ease-standard relative overflow-hidden ${focusRingOnSurfaceClasses} ${
+    <button
+      ref={registerRef}
+      type="button"
+      role="gridcell"
+      aria-label={ariaLabel}
+      aria-selected={isSelected}
+      aria-current={isToday ? 'date' : undefined}
+      tabIndex={tabIndex}
+      onClick={() => onSelect(date)}
+      onKeyDown={onKeyDown}
+      className={cn(
+        'relative flex h-full w-full flex-col gap-1 p-1.5 text-center transition-colors duration-fast ease-standard',
+        'min-h-11 md:min-h-[112px] md:items-stretch md:text-left',
+        isFirstColumn ? '' : 'border-l border-line',
         isSelected
-          ? 'bg-accent text-on-accent'
+          ? 'bg-accent-soft'
           : isToday
-            ? 'bg-surface-2 text-accent-ink font-semibold ring-2 ring-line'
-            : `${isCurrentMonth ? 'text-ink' : 'text-ink-muted opacity-40'} hover:bg-surface-2`
-      }`}
+            ? 'bg-accent-soft/40'
+            : isCurrentMonth
+              ? 'bg-surface hover:bg-surface-2'
+              : 'bg-surface-2/40 hover:bg-surface-2',
+        focusRingOnSurfaceClasses
+      )}
     >
-      <span className="relative z-10">{date.getDate()}</span>
+      <span
+        className={cn(
+          'mx-auto inline-flex h-6 min-w-6 items-center justify-center rounded-sm px-1 font-mono text-label md:mx-0 md:h-7 md:min-w-7 md:text-body-sm',
+          isSelected
+            ? 'bg-accent font-semibold text-on-accent'
+            : isToday
+              ? 'border border-accent text-accent-ink'
+              : isCurrentMonth
+                ? 'text-ink'
+                : 'text-ink-muted'
+        )}
+      >
+        {date.getDate()}
+      </span>
 
-      {events.length > 0 && (
-        <div className="absolute top-1 right-1 flex flex-col gap-0.5 pointer-events-none">
-          {events.length > 1 && (
-            <div
-              className={`min-w-4 h-4 px-1 rounded-xs flex items-center justify-center text-label leading-none font-semibold ${isSelected ? 'bg-on-accent text-accent' : 'bg-accent text-on-accent'}`}
+      <span className="hidden w-full min-w-0 flex-1 flex-col gap-1 md:flex">
+        {events.slice(0, 2).map((event) => {
+          const hasShifts = (shiftsByEvent[event.id]?.length ?? 0) > 0;
+          const locationName = locations.find((item) => item.id === event.locationId)?.name;
+          const meta = [event.time, locationName].filter(Boolean).join(' · ');
+
+          return (
+            <span
+              key={event.id}
+              className={cn(
+                'flex min-w-0 flex-col gap-0.5 border-l-2 px-1.5 py-1',
+                hasShifts
+                  ? 'border-accent bg-surface text-ink'
+                  : 'border-highlight-ink bg-highlight text-highlight-ink'
+              )}
             >
-              {events.length}
-            </div>
-          )}
-        </div>
-      )}
+              <span className="line-clamp-1 text-[11px] font-semibold leading-tight">
+                {event.title || 'Tiệc'}
+              </span>
+              {(meta || !hasShifts) && (
+                <span
+                  className={cn(
+                    'line-clamp-1 font-mono text-[9px] leading-tight',
+                    hasShifts ? 'text-ink-muted' : 'font-semibold text-highlight-ink'
+                  )}
+                >
+                  {!hasShifts && 'Cần xếp'}
+                  {!hasShifts && meta ? ' · ' : ''}
+                  {meta}
+                </span>
+              )}
+            </span>
+          );
+        })}
+        {eventCount > 2 && (
+          <span className="font-mono text-[9px] text-ink-muted">+{eventCount - 2} sự kiện</span>
+        )}
+      </span>
 
-      {events.length > 0 && (
-        <div className="flex flex-wrap justify-center gap-1 mt-1 px-1">
-          {events.slice(0, 3).map((evt, i) => {
-            const loc = locations.find((l) => l.id === evt.locationId);
-            return (
-              <div key={i} className="flex items-center">
-                {loc?.review === 'high' ? (
-                  <ThumbsUp size={10} className={isSelected ? 'text-on-accent' : 'text-success'} />
-                ) : loc?.review === 'low' ? (
-                  <ThumbsDown size={10} className={isSelected ? 'text-on-accent' : 'text-danger'} />
-                ) : (
-                  <div
-                    className={`w-1.5 h-1.5 rounded-xs ${isSelected ? 'bg-on-accent/60' : 'bg-accent/60'}`}
-                  />
-                )}
-              </div>
-            );
-          })}
-          {events.length > 3 && (
-            <div
-              className={`w-1 h-1 rounded-xs ${isSelected ? 'bg-on-accent/40' : 'bg-ink-muted'}`}
+      <span className="flex items-center justify-center gap-1 md:hidden">
+        {events.slice(0, 3).map((event) => {
+          const hasShifts = (shiftsByEvent[event.id]?.length ?? 0) > 0;
+          return (
+            <span
+              key={event.id}
+              aria-hidden="true"
+              className={cn(
+                'h-1.5 w-1.5 rounded-xs',
+                hasShifts ? 'bg-accent' : 'border border-highlight-ink bg-transparent'
+              )}
             />
-          )}
-        </div>
-      )}
-    </motion.button>
+          );
+        })}
+        {eventCount > 3 && (
+          <span className="font-mono text-[9px] leading-none text-ink-muted">
+            +{eventCount - 3}
+          </span>
+        )}
+      </span>
+    </button>
   );
 };
 

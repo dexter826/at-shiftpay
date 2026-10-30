@@ -1,31 +1,24 @@
-import React, { useState, useMemo, memo } from 'react';
-import { Trash2, X } from 'lucide-react';
+import React, { memo, useMemo, useState } from 'react';
 import { Event, Shift, Employee, UserSettings, Location } from '@/types/index';
 import { eventService } from '@/lib/api/eventService';
 import { useToast } from '@/components/ui/ToastProvider';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { toDateKey } from '@/utils/format';
-
-// Modals
+import { parseDateOnly, toDateKey } from '@/utils/format';
 import { EventModal } from '@/features/calendar/components/EventModal';
 import { EventDetailModal } from '@/features/calendar/components/EventDetailModal';
-
-// New Components
 import CalendarHeader from '@/features/calendar/components/CalendarHeader';
 import CalendarGrid from '@/features/calendar/components/CalendarGrid';
-import CalendarSidebar from '@/features/calendar/components/CalendarSidebar';
+import DayAgenda from '@/features/calendar/components/DayAgenda';
 
 interface CalendarViewProps {
   events: Event[];
   shifts: Shift[];
   employees: Employee[];
   locations: Location[];
-  totalDebt: number;
   settings: UserSettings;
   currentDate?: Date;
   onDateChange?: (date: Date) => void;
-  onNavigateToReviews?: () => void;
   loading?: boolean;
 }
 
@@ -37,229 +30,196 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   settings,
   currentDate: propDate,
   onDateChange,
-  onNavigateToReviews,
   loading = false,
 }) => {
   const { showToast } = useToast();
 
-  const [localDate, setLocalDate] = useState(new Date());
-  const displayDate = propDate || localDate;
+  const [localDate, setLocalDate] = useState(() => new Date());
+  const displayDate = propDate ?? localDate;
 
-  const handleMonthChange = (newDate: Date) => {
-    if (onDateChange) {
-      onDateChange(newDate);
-    } else {
-      setLocalDate(newDate);
-    }
-
-    const monthPrefix = `${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, '0')}`;
-    setSelectedDate((current) =>
-      current && current.startsWith(monthPrefix) ? current : `${monthPrefix}-01`
-    );
-  };
-
-  const [selectedDate, setSelectedDate] = useState<string | null>(() => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  });
+  const [selectedDate, setSelectedDate] = useState(() => toDateKey(propDate ?? new Date()));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [isDeletingEvent, setIsDeletingEvent] = useState(false);
   const [viewingEvent, setViewingEvent] = useState<Event | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Event | null>(null);
+  const [isDeletingEvent, setIsDeletingEvent] = useState(false);
 
   const daysInMonth = useMemo(() => {
     const year = displayDate.getFullYear();
     const month = displayDate.getMonth();
-    const firstDayOfMonth = new Date(year, month, 1);
-    const days: Date[] = [];
+    const firstDayOffset = (new Date(year, month, 1).getDay() + 6) % 7;
 
-    // Các ngày của tháng trước
-    const prevMonthLastDay = new Date(year, month, 0);
-    const prevDaysCount = firstDayOfMonth.getDay();
-    for (let i = prevDaysCount - 1; i >= 0; i--) {
-      days.push(new Date(year, month - 1, prevMonthLastDay.getDate() - i));
-    }
-
-    // Các ngày của tháng hiện tại
-    const date = new Date(firstDayOfMonth);
-    while (date.getMonth() === month) {
-      days.push(new Date(date));
-      date.setDate(date.getDate() + 1);
-    }
-
-    // Lấp đầy lưới 42 ô
-    const nextDaysCount = 42 - days.length;
-    for (let i = 1; i <= nextDaysCount; i++) {
-      days.push(new Date(year, month + 1, i));
-    }
-    return days;
+    return Array.from(
+      { length: 42 },
+      (_, index) => new Date(year, month, 1 - firstDayOffset + index)
+    );
   }, [displayDate]);
-
-  const prevMonth = () =>
-    handleMonthChange(new Date(displayDate.getFullYear(), displayDate.getMonth() - 1, 1));
-  const nextMonth = () =>
-    handleMonthChange(new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 1));
-  const goToToday = () => {
-    const today = new Date();
-    const todayStr = toDateKey(today);
-
-    const isSameMonth =
-      displayDate.getFullYear() === today.getFullYear() &&
-      displayDate.getMonth() === today.getMonth();
-
-    if (isSameMonth && selectedDate === todayStr) return;
-
-    handleMonthChange(new Date(today.getFullYear(), today.getMonth(), 1));
-    setSelectedDate(todayStr);
-  };
 
   const eventsByDate = useMemo(() => {
     const map: Record<string, Event[]> = {};
-    events.forEach((e: Event) => {
-      if (!map[e.date]) map[e.date] = [];
-      map[e.date].push(e);
+    events.forEach((event) => {
+      if (!map[event.date]) map[event.date] = [];
+      map[event.date].push(event);
     });
     return map;
   }, [events]);
 
+  const shiftsByEvent = useMemo(() => {
+    const map: Record<string, Shift[]> = {};
+    shifts.forEach((shift) => {
+      if (!map[shift.eventId]) map[shift.eventId] = [];
+      map[shift.eventId].push(shift);
+    });
+    return map;
+  }, [shifts]);
+
+  const selectedEvents = eventsByDate[selectedDate] ?? [];
+
+  const setMonth = (monthStart: Date) => {
+    if (onDateChange) onDateChange(monthStart);
+    else setLocalDate(monthStart);
+  };
+
+  const clampSelectionToMonth = (monthStart: Date) => {
+    const day = parseDateOnly(selectedDate).getDate();
+    const lastDay = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0).getDate();
+    setSelectedDate(
+      toDateKey(new Date(monthStart.getFullYear(), monthStart.getMonth(), Math.min(day, lastDay)))
+    );
+  };
+
+  const changeMonth = (offset: number) => {
+    const monthStart = new Date(displayDate.getFullYear(), displayDate.getMonth() + offset, 1);
+    setMonth(monthStart);
+    clampSelectionToMonth(monthStart);
+  };
+
+  const goToToday = () => {
+    const today = new Date();
+    const sameMonth =
+      displayDate.getFullYear() === today.getFullYear() &&
+      displayDate.getMonth() === today.getMonth();
+
+    if (!sameMonth) setMonth(new Date(today.getFullYear(), today.getMonth(), 1));
+    setSelectedDate(toDateKey(today));
+  };
+
   const handleDateClick = (date: Date) => {
     setSelectedDate(toDateKey(date));
 
-    if (date.getMonth() !== displayDate.getMonth()) {
-      handleMonthChange(new Date(date.getFullYear(), date.getMonth(), 1));
+    if (
+      date.getMonth() !== displayDate.getMonth() ||
+      date.getFullYear() !== displayDate.getFullYear()
+    ) {
+      setMonth(new Date(date.getFullYear(), date.getMonth(), 1));
     }
   };
 
-  const [shiftsForEditing, setShiftsForEditing] = useState<Shift[]>([]);
-
   const handleAddEvent = () => {
-    setShiftsForEditing([]);
     setEditingEvent(null);
     setIsModalOpen(true);
   };
 
-  const handleEditEvent = (evt: Event) => {
-    const eventShifts = shifts.filter((s: Shift) => s.eventId === evt.id);
-    setShiftsForEditing(eventShifts);
-    setEditingEvent(evt);
+  const handleEditEvent = (event: Event) => {
+    setEditingEvent(event);
     setIsModalOpen(true);
   };
 
-  const handleDeleteEvent = (id: string) => {
-    setDeleteConfirm(id);
+  const handleDeleteEvent = (eventId: string) => {
+    const event = events.find((item) => item.id === eventId);
+    if (event) setDeleteTarget(event);
   };
 
   const confirmDeleteEvent = async () => {
-    if (!deleteConfirm || isDeletingEvent) return;
+    if (!deleteTarget || isDeletingEvent) return;
 
     setIsDeletingEvent(true);
     try {
-      const eventShifts = shifts.filter((s: Shift) => s.eventId === deleteConfirm);
+      const eventShifts = shiftsByEvent[deleteTarget.id] ?? [];
       await eventService.deleteEventWithShifts(
-        deleteConfirm,
-        eventShifts.map((s: Shift) => s.id)
+        deleteTarget.id,
+        eventShifts.map((shift) => shift.id)
       );
-      showToast('Đã xóa sự kiện', 'success');
-      setDeleteConfirm(null);
+      showToast('Đã xóa sự kiện.', 'success');
+      setDeleteTarget(null);
     } catch (error) {
       console.error('Delete event failed:', error);
-      showToast('Không thể xóa sự kiện. Vui lòng thử lại', 'error');
+      showToast('Không thể xóa sự kiện. Thử lại.', 'error');
     } finally {
       setIsDeletingEvent(false);
     }
   };
 
-  const handleViewEvent = (evt: Event) => {
-    setViewingEvent(evt);
-  };
-
-  const selectedEvents = selectedDate ? eventsByDate[selectedDate] || [] : [];
-
-  // Shifts for sidebar display logic (only needed if logic was complex, but Sidebar does it simply)
-  // Sidebar takes "shifts" (all shifts) and filters mainly by eventId,
-  // but originally CalendarView calculated "shiftsForDisplay" just for day count in sidebar.
-  // `CalendarSidebar` now receives full `shifts` array and filters by eventId/session inside map.
-  // Wait, `CalendarSidebar` loops through `selectedEvents`, then for each event filters `shifts`.
-  // So passing `shifts` (all shifts) is fine, but maybe inefficient if `shifts` is huge.
-  // Or I can filter `shiftsForDisplay` here and pass it.
-  // Original `CalendarView`: `shiftsForDisplay` = `shifts.filter(s => s.date === selectedDate)`.
-  // Sidebar logic: `shiftsForDisplay.filter(...)`
-  // So I should pass `shiftsForDisplay` to `CalendarSidebar` as `shifts`.
-
-  const shiftsForDisplay = useMemo(() => {
-    if (!selectedDate) return [];
-    return shifts.filter((s: Shift) => s.date === selectedDate);
-  }, [selectedDate, shifts]);
+  const deleteShiftCount = deleteTarget ? (shiftsByEvent[deleteTarget.id]?.length ?? 0) : 0;
 
   return (
-    <div className={`pb-28 md:pb-0 bg-canvas min-h-screen relative`}>
-      <div className="px-4 pt-5 pb-4 md:px-6 md:pt-6 md:pb-6 flex flex-col lg:flex-row gap-4 lg:gap-6 lg:h-[calc(100vh-3rem)]">
-        {/* Calendar Main */}
-        <div className="flex-1">
-          <div className={`bg-surface border border-line rounded-md lg:h-full flex flex-col`}>
-            <CalendarHeader
-              displayDate={displayDate}
-              onPrevMonth={prevMonth}
-              onNextMonth={nextMonth}
-              onGoToToday={goToToday}
-              onNavigateToReviews={onNavigateToReviews}
-            />
+    <div className="min-h-dynamic bg-canvas">
+      <div className="mx-auto max-w-[1400px] px-4 py-5 md:px-6 md:py-6">
+        <CalendarHeader
+          displayDate={displayDate}
+          onPrevMonth={() => changeMonth(-1)}
+          onNextMonth={() => changeMonth(1)}
+          onGoToToday={goToToday}
+          onAddEvent={handleAddEvent}
+        />
 
+        <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+          <section className="min-w-0 border border-line bg-surface">
             <CalendarGrid
               daysInMonth={daysInMonth}
               displayDate={displayDate}
               eventsByDate={eventsByDate}
+              shiftsByEvent={shiftsByEvent}
               selectedDate={selectedDate}
               locations={locations}
               loading={loading}
               onDateClick={handleDateClick}
             />
-          </div>
-        </div>
+          </section>
 
-        {/* Sidebar */}
-        <div className="w-full lg:w-72">
-          <CalendarSidebar
+          <DayAgenda
             selectedDate={selectedDate}
             events={selectedEvents}
-            shifts={shiftsForDisplay}
+            shiftsByEvent={shiftsByEvent}
             locations={locations}
             loading={loading}
-            onAddEvent={handleAddEvent}
             onEditEvent={handleEditEvent}
             onDeleteEvent={handleDeleteEvent}
-            onViewEvent={handleViewEvent}
+            onViewEvent={setViewingEvent}
           />
         </div>
       </div>
 
-      <EventModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        date={selectedDate || new Date().toISOString().split('T')[0]}
-        existingEvent={editingEvent}
-        existingShifts={shiftsForEditing}
-        employees={employees}
-        locations={locations}
-        settings={settings}
-        onSuccess={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <EventModal
+          isOpen
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingEvent(null);
+          }}
+          date={selectedDate}
+          existingEvent={editingEvent}
+          existingShifts={editingEvent ? (shiftsByEvent[editingEvent.id] ?? []) : []}
+          employees={employees}
+          locations={locations}
+          settings={settings}
+          onSuccess={() => {
+            setIsModalOpen(false);
+            setEditingEvent(null);
+          }}
+        />
+      )}
 
       <Modal
-        title="Xác nhận xóa"
-        isOpen={!!deleteConfirm}
-        onClose={() => setDeleteConfirm(null)}
+        title="Xóa sự kiện?"
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
         footer={
           <div className="flex gap-2">
             <Button
               variant="secondary"
-              onClick={() => setDeleteConfirm(null)}
+              onClick={() => setDeleteTarget(null)}
               className="flex-1"
-              icon={<X size={16} />}
               disabled={isDeletingEvent}
             >
               Hủy
@@ -268,15 +228,22 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               variant="danger"
               onClick={confirmDeleteEvent}
               className="flex-1"
-              icon={<Trash2 size={16} />}
-              disabled={isDeletingEvent}
+              loading={isDeletingEvent}
             >
-              {isDeletingEvent ? 'Đang xóa...' : 'Xóa'}
+              Xóa sự kiện
             </Button>
           </div>
         }
       >
-        <p className="text-body-sm text-ink-soft">Bạn có chắc muốn xóa sự kiện này?</p>
+        {deleteTarget && (
+          <p className="text-body-sm text-ink-soft">
+            Sự kiện “{deleteTarget.title || 'Tiệc'}”
+            {deleteShiftCount > 0
+              ? ` và ${deleteShiftCount} ca liên quan sẽ bị xóa.`
+              : ' sẽ bị xóa.'}{' '}
+            Không thể hoàn tác.
+          </p>
+        )}
       </Modal>
 
       <EventDetailModal
@@ -287,7 +254,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         onClose={() => setViewingEvent(null)}
         onEdit={handleEditEvent}
         onDelete={handleDeleteEvent}
-        settings={settings}
       />
     </div>
   );

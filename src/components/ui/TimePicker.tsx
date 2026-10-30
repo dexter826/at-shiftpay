@@ -7,6 +7,7 @@ interface TimePickerProps {
   value: string; // HH:mm
   onChange: (value: string) => void;
   className?: string;
+  ariaLabel?: string;
 }
 
 const pad = (value: string | number) => String(value).padStart(2, '0');
@@ -21,7 +22,12 @@ const minutesOptions: DropdownOption[] = Array.from({ length: 60 }, (_, index) =
   label: pad(index),
 }));
 
-export const TimePicker: React.FC<TimePickerProps> = ({ value, onChange, className = '' }) => {
+export const TimePicker: React.FC<TimePickerProps> = ({
+  value,
+  onChange,
+  className = '',
+  ariaLabel = 'Thời gian',
+}) => {
   const [rawHours, rawMinutes] = value.split(':');
   const hours = pad(Number.isFinite(Number(rawHours)) ? rawHours : 7);
   const minutes = pad(Number.isFinite(Number(rawMinutes)) ? rawMinutes : 30);
@@ -30,7 +36,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({ value, onChange, classNa
   const setMinutes = (nextMinutes: string) => onChange(`${hours}:${nextMinutes}`);
 
   return (
-    <div role="group" aria-label="Thời gian" className={cn('flex items-center gap-1.5', className)}>
+    <div role="group" aria-label={ariaLabel} className={cn('flex items-center gap-1.5', className)}>
       <Clock size={14} aria-hidden="true" className="shrink-0 text-ink-muted" />
       <Dropdown
         options={hoursOptions}

@@ -9,9 +9,17 @@ interface ModalProps {
   onClose: () => void;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  size?: 'md' | 'lg';
 }
 
-export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, footer }) => {
+export const Modal: React.FC<ModalProps> = ({
+  title,
+  isOpen,
+  onClose,
+  children,
+  footer,
+  size = 'md',
+}) => {
   return (
     <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogPrimitive.Portal>
@@ -24,7 +32,8 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
             aria-describedby={undefined}
             className={cn(
               'pointer-events-auto flex max-h-[85dvh] w-full flex-col overflow-hidden border border-line bg-surface outline-none',
-              'rounded-t-sm md:max-w-md md:rounded-sm',
+              'rounded-t-sm md:rounded-sm',
+              size === 'lg' ? 'md:max-w-2xl' : 'md:max-w-md',
               'data-[state=open]:animate-content-in'
             )}
           >

@@ -26,7 +26,7 @@ interface NavbarProps {
 
 const navItems = [
   { id: 'dashboard', label: 'Tổng quan', icon: LayoutDashboard },
-  { id: 'calendar', label: 'Lịch tiệc', icon: CalendarRange },
+  { id: 'calendar', label: 'Lịch sự kiện', icon: CalendarRange },
   { id: 'employees', label: 'Nhân sự', icon: Users },
   { id: 'payroll', label: 'Thanh toán', icon: Wallet },
   { id: 'settings', label: 'Cài đặt', icon: Settings },

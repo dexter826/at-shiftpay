@@ -29,7 +29,7 @@ const Gallery = import.meta.env.DEV ? lazy(() => import('@/dev/Gallery')) : null
 
 const TAB_NAMES = {
   dashboard: 'Tổng quan',
-  calendar: 'Lịch tiệc',
+  calendar: 'Lịch sự kiện',
   employees: 'Nhân sự',
   payroll: 'Thanh toán',
   locations: 'Địa điểm',
@@ -61,7 +61,6 @@ function AppShell() {
     isCalendarLoading,
     viewDate,
     setViewDate,
-    totalDebt,
     initSubscriptions,
     cleanupSubscriptions,
     refreshData,
@@ -174,7 +173,6 @@ function AppShell() {
           isCalendarLoading={isCalendarLoading}
           viewDate={viewDate}
           setViewDate={setViewDate}
-          totalDebt={totalDebt}
           refreshData={refreshData}
           onOpenExport={handleOpenExport}
           isExportModalOpen={isExportModalOpen}
@@ -202,7 +200,6 @@ function AppContent({
   isCalendarLoading,
   viewDate,
   setViewDate,
-  totalDebt,
   refreshData,
   onOpenExport,
   isExportModalOpen,
@@ -224,7 +221,6 @@ function AppContent({
   isCalendarLoading: boolean;
   viewDate: Date;
   setViewDate: (date: Date) => void;
-  totalDebt: number;
   refreshData: (userId: string) => void;
   onOpenExport: () => void;
   isExportModalOpen: boolean;
@@ -277,11 +273,9 @@ function AppContent({
                     shifts={shifts}
                     employees={employees}
                     locations={locations}
-                    totalDebt={totalDebt}
                     settings={settings}
                     currentDate={viewDate}
                     onDateChange={setViewDate}
-                    onNavigateToReviews={() => navigate('/locations')}
                     loading={isLoading || isCalendarLoading}
                   />
                 }

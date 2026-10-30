@@ -7,11 +7,19 @@ interface CheckboxProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label?: string;
+  children?: React.ReactNode;
   id?: string;
   disabled?: boolean;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id, disabled }) => {
+const Checkbox: React.FC<CheckboxProps> = ({
+  checked,
+  onChange,
+  label,
+  children,
+  id,
+  disabled,
+}) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
   return (
@@ -39,7 +47,11 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label, id, disab
           <Check size={12} strokeWidth={3} aria-hidden="true" />
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
-      {label && <span className="text-label font-medium text-ink-muted">{label}</span>}
+      {children ? (
+        <span className="min-w-0 flex-1">{children}</span>
+      ) : (
+        label && <span className="text-label font-medium text-ink-muted">{label}</span>
+      )}
     </label>
   );
 };

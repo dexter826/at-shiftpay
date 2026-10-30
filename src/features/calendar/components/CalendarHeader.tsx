@@ -1,13 +1,13 @@
 import React, { memo } from 'react';
-import { focusRingOnSurfaceClasses } from '@/lib/utils';
-import { Calendar, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import Button from '@/components/ui/Button';
 
 interface CalendarHeaderProps {
   displayDate: Date;
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onGoToToday: () => void;
-  onNavigateToReviews?: () => void;
+  onAddEvent: () => void;
 }
 
 const CalendarHeader: React.FC<CalendarHeaderProps> = ({
@@ -15,54 +15,50 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   onPrevMonth,
   onNextMonth,
   onGoToToday,
-  onNavigateToReviews,
+  onAddEvent,
 }) => {
-  const monthLabel = new Intl.DateTimeFormat('vi-VN', { month: 'long', year: 'numeric' }).format(
-    displayDate
-  );
+  const monthLabel = `Tháng ${displayDate.getMonth() + 1} · ${displayDate.getFullYear()}`;
 
   return (
-    <div className={`flex items-center justify-between px-4 py-3 border-b border-line`}>
-      <div className="flex items-center gap-1">
-        <button
-          type="button"
-          onClick={onGoToToday}
-          className={`min-h-10 px-3 text-label font-medium rounded-sm border border-line hover:bg-surface-2 transition-colors duration-fast ease-standard mr-1 flex items-center gap-1 ${focusRingOnSurfaceClasses}`}
-        >
-          <Calendar size={12} />
-          Hôm nay
-        </button>
-        <button
-          type="button"
-          onClick={onPrevMonth}
-          aria-label="Tháng trước"
-          className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          type="button"
-          onClick={onNextMonth}
-          aria-label="Tháng sau"
-          className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
-        >
-          <ChevronRight size={18} />
-        </button>
+    <header className="flex flex-col gap-3 border-b border-line pb-4 md:flex-row md:items-end md:justify-between">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p aria-live="polite" className="font-mono text-mono-label text-ink-muted">
+            {monthLabel}
+          </p>
+          <h1 className="mt-1 text-display text-ink">Lịch sự kiện</h1>
+        </div>
+        <Button onClick={onAddEvent} icon={<Plus size={16} />} className="md:hidden">
+          Thêm sự kiện
+        </Button>
       </div>
-      <h3 className={`text-body-sm font-medium text-ink capitalize`}>{monthLabel}</h3>
-      <div className="flex items-center gap-1">
-        {onNavigateToReviews && (
-          <button
-            type="button"
-            onClick={onNavigateToReviews}
-            aria-label="Quản lý địa điểm"
-            className={`flex h-10 w-10 items-center justify-center hover:bg-surface-2 rounded-sm transition-colors duration-fast ease-standard text-accent-ink ${focusRingOnSurfaceClasses}`}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-1">
+          <Button
+            variant="outline"
+            className="w-11 px-0"
+            onClick={onPrevMonth}
+            aria-label="Tháng trước"
           >
-            <MapPin size={18} />
-          </button>
-        )}
+            <ChevronLeft size={16} aria-hidden="true" />
+          </Button>
+          <Button variant="outline" onClick={onGoToToday}>
+            Hôm nay
+          </Button>
+          <Button
+            variant="outline"
+            className="w-11 px-0"
+            onClick={onNextMonth}
+            aria-label="Tháng sau"
+          >
+            <ChevronRight size={16} aria-hidden="true" />
+          </Button>
+        </div>
+        <Button onClick={onAddEvent} icon={<Plus size={16} />} className="hidden md:inline-flex">
+          Thêm sự kiện
+        </Button>
       </div>
-    </div>
+    </header>
   );
 };
 
