@@ -25,7 +25,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
       <div className="flex items-center gap-1">
         <button
           onClick={onGoToToday}
-          className={`px-2.5 py-1.5 text-[11px] font-medium rounded border border-line hover:bg-line transition-colors mr-1 flex items-center gap-1`}
+          className={`px-2.5 py-1.5 text-label font-medium rounded border border-line hover:bg-line transition-colors mr-1 flex items-center gap-1`}
         >
           <Calendar size={12} />
           Hôm nay

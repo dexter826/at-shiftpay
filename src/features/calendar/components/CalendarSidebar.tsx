@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, Pencil, Plus, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -29,17 +30,17 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
   onViewEvent,
 }) => {
   return (
-    <div className={`bg-surface border border-line rounded-lg lg:h-full flex flex-col`}>
+    <div className={`bg-surface border border-line rounded-md lg:h-full flex flex-col`}>
       {selectedDate ? (
         <div className="flex flex-col h-full">
           <div className={`px-4 py-3 border-b border-line flex justify-between items-center`}>
             <div>
-              <p className={`text-[11px] text-ink-muted uppercase tracking-wide`}>Ngày chọn</p>
+              <p className={`text-label text-ink-muted`}>Ngày chọn</p>
               <h3 className={`text-sm font-medium text-ink mt-0.5`}>{formatDate(selectedDate)}</h3>
             </div>
             <button
               onClick={onAddEvent}
-              className={`p-2 rounded-lg bg-accent hover:bg-accent/90 text-on-accent shadow-sm shadow-accent/30 transition-all active:scale-95`}
+              className={`p-2 rounded-sm bg-accent hover:bg-accent/90 text-on-accent transition-all active:scale-95`}
             >
               <Plus size={16} className="text-on-accent" />
             </button>
@@ -57,7 +58,7 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                   className="space-y-2"
                 >
                   {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className={`p-3 border border-line rounded-lg bg-surface-2`}>
+                    <div key={i} className={`p-3 border border-line rounded-md bg-surface-2`}>
                       <div className="flex justify-between items-start gap-2 mb-2">
                         <Skeleton variant="circular" width={14} height={14} />
                         <div className="flex-1">
@@ -102,7 +103,7 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                       <div
                         key={evt.id}
                         onClick={() => onViewEvent(evt)}
-                        className={`group p-3 bg-surface-2 border border-line rounded-lg hover:border-accent/50 transition-colors cursor-pointer`}
+                        className={`group p-3 bg-surface-2 border border-line rounded-md hover:border-ink-muted transition-colors cursor-pointer`}
                       >
                         <div className="flex justify-between items-start gap-2">
                           <div className="flex items-start gap-2 flex-1 min-w-0">
@@ -121,7 +122,7 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                               </div>
                               {loc && (
                                 <p
-                                  className={`text-[11px] text-info mt-0.5 flex items-center gap-1 min-w-0`}
+                                  className={`text-label text-info mt-0.5 flex items-center gap-1 min-w-0`}
                                 >
                                   <MapPin size={12} className="flex-shrink-0" />
                                   <span className="truncate">{loc.name}</span>
@@ -140,14 +141,14 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                           >
                             <button
                               onClick={() => onEditEvent(evt)}
-                              className="p-2 rounded-lg text-ink-muted hover:text-accent-ink hover:bg-accent/5 transition-colors"
+                              className={`p-2 rounded-sm text-ink-muted hover:text-accent-ink hover:bg-surface-2 transition-colors ${focusRingOnSurfaceClasses}`}
                               title="Sửa"
                             >
                               <Pencil size={14} />
                             </button>
                             <button
                               onClick={() => onDeleteEvent(evt.id)}
-                              className="p-2 rounded-lg text-ink-muted hover:text-danger hover:bg-danger/5 transition-colors"
+                              className={`p-2 rounded-sm text-ink-muted hover:text-danger hover:bg-danger/10 transition-colors ${focusRingOnSurfaceClasses}`}
                               title="Xóa"
                             >
                               <Trash2 size={14} />
@@ -163,7 +164,7 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                             return (
                               <span
                                 key={session}
-                                className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${session === 'morning' ? 'bg-warning/10 text-warning' : 'bg-surface-2 text-accent-ink'}`}
+                                className={`text-label px-1.5 py-0.5 rounded font-medium ${session === 'morning' ? 'bg-warning/10 text-warning' : 'bg-surface-2 text-accent-ink'}`}
                               >
                                 {session === 'morning' ? 'Sáng' : 'Chiều'}: {count} công
                               </span>

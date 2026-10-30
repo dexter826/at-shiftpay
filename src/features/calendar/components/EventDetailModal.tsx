@@ -81,7 +81,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
     >
       <div className="space-y-4">
         {/* 1. Thời gian & Địa điểm */}
-        <div className={`p-3 rounded-lg border border-line bg-surface-2 space-y-3`}>
+        <div className={`p-3 rounded-md border border-line bg-surface-2 space-y-3`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Calendar size={15} className="text-accent-ink" />
@@ -105,20 +105,18 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
 
         {/* 2. Tài chính */}
         <div
-          className={`p-3.5 bg-surface-2 border border-line rounded-lg flex items-center justify-between`}
+          className={`p-3.5 bg-surface-2 border border-line rounded-sm flex items-center justify-between`}
         >
           <div>
-            <p className={`text-[11px] text-ink-muted font-semibold uppercase tracking-wider mb-1`}>
-              Tổng tiền sự kiện
-            </p>
+            <p className={`text-label text-ink-muted font-semibold mb-1`}>Tổng tiền sự kiện</p>
             <p className={`text-2xl font-black text-accent-ink`}>
               {formatCurrency(eventShifts.reduce((sum, shift) => sum + shift.amount, 0))}
             </p>
           </div>
           <div className="text-right space-y-1">
             <div className="flex items-center justify-end gap-1.5">
-              <span className={`text-[11px] text-ink-muted`}>Lương:</span>
-              <span className={`text-xs font-bold text-ink`}>
+              <span className={`text-label text-ink-muted`}>Lương:</span>
+              <span className={`text-xs font-semibold text-ink`}>
                 {formatCurrency(
                   eventShifts.reduce((sum, shift) => sum + shiftBreakdown(shift, event).base, 0)
                 )}
@@ -126,8 +124,8 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
             </div>
             {(event.surcharge ?? 0) > 0 && (
               <div className="flex items-center justify-end gap-1.5 text-info">
-                <span className="text-[11px] font-medium">Phụ phí:</span>
-                <span className="text-xs font-bold">
+                <span className="text-label font-medium">Phụ phí:</span>
+                <span className="text-xs font-semibold">
                   +
                   {formatCurrency(
                     eventShifts.reduce(
@@ -139,7 +137,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               </div>
             )}
             {event.surchargeDistribution && (event.surcharge ?? 0) > 0 && (
-              <p className={`text-[10px] text-ink-muted italic`}>
+              <p className={`text-label text-ink-muted italic`}>
                 (
                 {event.surchargeDistribution.type === 'equal'
                   ? 'Chia đều'
@@ -155,16 +153,16 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
           <div className="space-y-3">
             {locationInfo?.review && (
               <div
-                className={`p-4 rounded-lg border ${locationInfo.review === 'high' ? 'border-success/20 bg-success/5' : 'border-danger/20 bg-danger/5'}`}
+                className={`p-4 rounded-md border ${locationInfo.review === 'high' ? 'border-success/20 bg-success/5' : 'border-danger/20 bg-danger/5'}`}
               >
                 <div className="flex items-center gap-2 mb-2.5">
                   {locationInfo.review === 'high' ? (
-                    <div className="flex items-center gap-2 text-success font-bold text-sm">
+                    <div className="flex items-center gap-2 text-success font-semibold text-sm">
                       <ThumbsUp size={16} fill="currentColor" />
                       <span>Đánh giá địa điểm: Tốt</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 text-danger font-bold text-sm">
+                    <div className="flex items-center gap-2 text-danger font-semibold text-sm">
                       <ThumbsDown size={16} fill="currentColor" />
                       <span>Đánh giá địa điểm: Kém</span>
                     </div>
@@ -181,9 +179,9 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
             )}
 
             {event.note && (
-              <div className={`p-3 rounded-lg border border-line bg-surface-2`}>
+              <div className={`p-3 rounded-md border border-line bg-surface-2`}>
                 <p
-                  className={`text-[11px] text-ink-muted font-bold uppercase tracking-wider mb-1.5 flex items-center gap-1.5`}
+                  className={`text-label text-ink-muted font-semibold mb-1.5 flex items-center gap-1.5`}
                 >
                   <StickyNote size={12} />
                   Ghi chú sự kiện
@@ -198,7 +196,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
         {eventShifts.length > 0 && (
           <div className="space-y-2">
             <div className="flex justify-between items-center px-1">
-              <p className={`text-[11px] text-ink-muted font-bold uppercase tracking-wider`}>
+              <p className={`text-label text-ink-muted font-semibold`}>
                 Nhân viên ({eventShifts.length})
               </p>
             </div>
@@ -208,16 +206,16 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
               {eventShifts.map((shift) => (
                 <div
                   key={shift.id}
-                  className={`flex flex-col gap-0.5 p-2 bg-surface-2 border-line border rounded-lg shadow-sm`}
+                  className={`flex flex-col gap-0.5 p-2 bg-surface-2 border-line border rounded-sm`}
                 >
                   <span className={`text-xs font-semibold text-ink truncate`}>
                     {shift.employeeName}
                   </span>
                   <div className="flex items-center gap-1.5">
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${shift.session === 'morning' ? 'bg-warning' : 'bg-accent'}`}
+                      className={`w-1.5 h-1.5 rounded-xs ${shift.session === 'morning' ? 'bg-warning' : 'bg-accent'}`}
                     ></span>
-                    <span className={`text-[9px] font-medium text-ink-muted`}>
+                    <span className={`text-label font-medium text-ink-muted`}>
                       {shift.session === 'morning' ? 'Sáng' : 'Chiều'}
                     </span>
                   </div>

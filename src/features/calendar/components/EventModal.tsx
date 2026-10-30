@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import { Employee, Shift, ShiftSession, Event, UserSettings, Location } from '@/types/index';
 import { shiftService } from '@/lib/api/shiftService';
 import { locationService } from '@/lib/api/locationService';
@@ -447,14 +448,14 @@ export const EventModal: React.FC<EventModalProps> = ({
                   if (titleError) validateTitle();
                 }}
                 onBlur={() => validateTitle()}
-                className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none ${
+                className={`w-full pl-10 pr-4 py-2.5 border rounded-sm text-body-sm focus:outline-none ${focusRingOnSurfaceClasses} ${
                   titleError
-                    ? 'border-red-500 focus:border-red-500'
-                    : `border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`
+                    ? 'border-danger focus:border-danger'
+                    : `border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:border-accent`
                 }`}
               />
             </div>
-            {titleError && <p className="text-red-500 text-xs mt-1">{titleError}</p>}
+            {titleError && <p className="text-danger text-xs mt-1">{titleError}</p>}
           </div>
           <div>
             <label className={`block text-xs font-semibold mb-1.5 text-ink-muted`}>
@@ -477,7 +478,7 @@ export const EventModal: React.FC<EventModalProps> = ({
               placeholder="Nhập địa điểm"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`}
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-sm text-body-sm focus:outline-none ${focusRingOnSurfaceClasses} border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:border-accent`}
             />
           </div>
 
@@ -499,7 +500,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                   {/* Autocomplete Suggestions */}
                   {suggestions.length > 0 && (
                     <div
-                      className={`mt-1 border border-line rounded-lg overflow-hidden bg-surface shadow-sm max-h-32 overflow-y-auto`}
+                      className={`mt-1 border border-line rounded-md overflow-hidden bg-surface max-h-32 overflow-y-auto`}
                     >
                       {suggestions.slice(0, 5).map((loc, idx) => (
                         <button
@@ -521,12 +522,12 @@ export const EventModal: React.FC<EventModalProps> = ({
                   {/* Warning/Success History */}
                   {exactMatch && (exactMatch.review || exactMatch.reviewNote) && (
                     <div
-                      className={`p-3 rounded-lg border flex items-start gap-3 ${
+                      className={`p-3 rounded-md border flex items-start gap-3 ${
                         exactMatch.review === 'low'
-                          ? 'bg-red-500/10 border-red-500/20 text-red-600'
+                          ? 'bg-danger/10 border-danger/20 text-danger'
                           : exactMatch.review === 'high'
-                            ? 'bg-green-500/10 border-green-500/20 text-green-600'
-                            : `bg-slate-500/10 border-slate-500/20 text-ink-soft`
+                            ? 'bg-success/10 border-success/20 text-success'
+                            : `bg-surface-2 border-line text-ink-soft`
                       }`}
                     >
                       <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
@@ -561,7 +562,7 @@ export const EventModal: React.FC<EventModalProps> = ({
               placeholder="Nhập ghi chú"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none h-20 resize-none border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`}
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-sm text-body-sm focus:outline-none ${focusRingOnSurfaceClasses} h-20 resize-none border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:border-accent`}
             />
           </div>
         </div>
@@ -575,9 +576,9 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => setReview('high')}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 review === 'high'
-                  ? 'border-green-500/50 bg-green-500/10 text-green-500'
+                  ? 'border-success/50 bg-success/10 text-success'
                   : `border-line text-ink-muted hover:border-accent/50`
               }`}
             >
@@ -587,7 +588,7 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => setReview(undefined)}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 review === undefined
                   ? 'border-accent/50 bg-accent/10 text-accent-ink'
                   : `border-line text-ink-muted hover:border-accent/50`
@@ -599,10 +600,10 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => setReview('low')}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 review === 'low'
-                  ? 'border-red-500/50 bg-red-500/10 text-red-500'
-                  : `border-line text-ink-muted hover:border-red-500/50`
+                  ? 'border-danger/50 bg-danger/10 text-danger'
+                  : `border-line text-ink-muted hover:border-danger/50`
               }`}
             >
               <ThumbsDown size={16} />
@@ -622,11 +623,11 @@ export const EventModal: React.FC<EventModalProps> = ({
               placeholder="Nhập lý do hoặc nhận xét cụ thể..."
               value={reviewNote}
               onChange={(e) => setReviewNote(e.target.value)}
-              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none h-20 resize-none border-line bg-surface-2 text-ink placeholder-slate-500 ${
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-sm text-body-sm focus:outline-none ${focusRingOnSurfaceClasses} h-20 resize-none border-line bg-surface-2 text-ink placeholder:text-ink-muted ${
                 review === 'high'
-                  ? 'focus:border-green-500/50'
+                  ? 'focus:border-success/50'
                   : review === 'low'
-                    ? 'focus:border-red-500/50'
+                    ? 'focus:border-danger/50'
                     : 'focus:border-accent'
               }`}
             />
@@ -640,9 +641,9 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => selectSession('morning')}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 selectedSession === 'morning'
-                  ? 'border-orange-500/50 bg-orange-500/10 text-orange-500'
+                  ? 'border-warning/50 bg-warning/10 text-warning'
                   : `border-line text-ink-muted hover:border-accent/50`
               }`}
             >
@@ -652,7 +653,7 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => selectSession('afternoon')}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+              className={`p-2.5 rounded-sm border text-body-sm font-medium flex items-center justify-center gap-2 transition-colors ${
                 selectedSession === 'afternoon'
                   ? 'border-accent/50 bg-accent/10 text-accent-ink'
                   : `border-line text-ink-muted hover:border-accent/50`
@@ -680,7 +681,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                   type="number"
                   value={amount || ''}
                   onChange={(e) => setAmount(e.target.value === '' ? 0 : Number(e.target.value))}
-                  className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`}
+                  className={`w-full pl-10 pr-4 py-2.5 border rounded-sm text-body-sm focus:outline-none ${focusRingOnSurfaceClasses} border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:border-accent`}
                 />
               </div>
             </div>
@@ -696,7 +697,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                   value={surcharge || ''}
                   onChange={(e) => setSurcharge(e.target.value === '' ? 0 : Number(e.target.value))}
                   placeholder="0"
-                  className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-line bg-surface-2 text-ink placeholder-slate-500 focus:border-accent`}
+                  className={`w-full pl-10 pr-4 py-2.5 border rounded-sm text-body-sm focus:outline-none ${focusRingOnSurfaceClasses} border-line bg-surface-2 text-ink placeholder:text-ink-muted focus:border-accent`}
                 />
               </div>
             </div>
@@ -708,7 +709,7 @@ export const EventModal: React.FC<EventModalProps> = ({
           <div>
             <label
               className={`block text-xs mb-1.5 ${
-                theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+                theme === 'dark' ? 'text-ink-muted' : 'text-ink-muted'
               }`}
             >
               Phân phối phụ phí
@@ -746,7 +747,7 @@ export const EventModal: React.FC<EventModalProps> = ({
             {/* Danh sách người nhận */}
             {surchargeDistributionType === 'selected' && (
               <div
-                className={`border rounded-lg divide-y max-h-32 overflow-y-auto border-line divide-line`}
+                className={`border rounded-md divide-y max-h-32 overflow-y-auto border-line divide-line`}
               >
                 {Object.entries(assignments)
                   .filter(([_, isAssigned]) => isAssigned)
@@ -770,11 +771,11 @@ export const EventModal: React.FC<EventModalProps> = ({
                           {emp.name}
                         </span>
                         <div
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                          className={`w-5 h-5 rounded-xs border-2 flex items-center justify-center transition-colors ${
                             isSelected ? 'bg-accent border-accent' : 'border-line'
                           }`}
                         >
-                          {isSelected && <Check size={12} className="text-white" />}
+                          {isSelected && <Check size={12} className="text-on-accent" />}
                         </div>
                       </div>
                     );

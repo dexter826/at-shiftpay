@@ -200,7 +200,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       <div className="px-4 pt-5 pb-4 md:px-6 md:pt-6 md:pb-6 flex flex-col lg:flex-row gap-4 lg:gap-6 lg:h-[calc(100vh-3rem)]">
         {/* Calendar Main */}
         <div className="flex-1">
-          <div className={`bg-surface border border-line rounded-lg lg:h-full flex flex-col`}>
+          <div className={`bg-surface border border-line rounded-md lg:h-full flex flex-col`}>
             <CalendarHeader
               displayDate={displayDate}
               onPrevMonth={prevMonth}

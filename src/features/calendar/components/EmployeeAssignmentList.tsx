@@ -37,11 +37,11 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
   }, [employees, searchTerm, initialSelectedIds, shiftCounts]);
 
   return (
-    <div className={`border rounded-lg divide-y max-h-48 overflow-y-auto border-line divide-line`}>
+    <div className={`border rounded-md divide-y max-h-48 overflow-y-auto border-line divide-line`}>
       {employees.length === 0 ? (
-        <div className={`p-3 text-center text-xs text-ink-muted`}>Chưa có nhân viên</div>
+        <div className={`p-3 text-center text-label text-ink-muted`}>Chưa có nhân viên</div>
       ) : sortedEmployees.length === 0 ? (
-        <div className={`p-3 text-center text-xs text-ink-muted`}>Không tìm thấy nhân viên</div>
+        <div className={`p-3 text-center text-label text-ink-muted`}>Không tìm thấy nhân viên</div>
       ) : (
         sortedEmployees.map((employee) => {
           const shiftCount = shiftCounts[employee.id] || 0;
@@ -57,22 +57,24 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
             >
               <div className="flex items-center gap-2 flex-1">
                 <span
-                  className={`text-sm truncate text-ink-soft ${isSelected ? 'font-medium' : ''}`}
+                  className={`text-body-sm truncate text-ink-soft ${isSelected ? 'font-medium' : ''}`}
                 >
                   {employee.name}
                 </span>
                 {shiftCount > 0 && (
-                  <span className={`text-xs px-1.5 py-0.5 rounded-full bg-line text-ink-muted`}>
+                  <span
+                    className={`text-label px-1.5 py-0.5 rounded-xs bg-surface-2 text-ink-muted`}
+                  >
                     {shiftCount}
                   </span>
                 )}
               </div>
               <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                className={`w-5 h-5 rounded-xs border-2 flex items-center justify-center transition-colors ${
                   isSelected ? 'bg-accent border-accent' : 'border-line'
                 }`}
               >
-                {isSelected && <Check size={12} className="text-white" />}
+                {isSelected && <Check size={12} className="text-on-accent" />}
               </div>
             </div>
           );
