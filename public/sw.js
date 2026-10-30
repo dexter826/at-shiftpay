@@ -1,10 +1,14 @@
-const CACHE_NAME = 'at-shiftpay-v2';
+const CACHE_NAME = 'at-shiftpay-v3';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/index.css',
     '/favicon.ico',
     '/apple-touch-icon.png',
+    '/icon-192.png',
+    '/icon-512.png',
+    '/manifest.json',
+    '/brand/mark-reversed.svg',
+    '/brand/lockup-white.svg',
     '/logo_text.png',
     '/avatar.png',
     '/background.png'

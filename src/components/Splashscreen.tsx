@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
-import Lottie from 'lottie-react';
 import { useReducedMotion } from 'framer-motion';
-import splashScreenAnimation from '@/assets/splashscreen.json';
 
-const SPLASHSCREEN_DURATION = 2000;
-const REDUCED_MOTION_DURATION = 600;
+const SPLASHSCREEN_DURATION = 800;
+const REDUCED_MOTION_DURATION = 300;
 
 interface SplashscreenProps {
   onComplete: () => void;
@@ -22,14 +20,19 @@ export const Splashscreen: React.FC<SplashscreenProps> = ({ onComplete }) => {
   }, [onComplete, prefersReducedMotion]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-canvas">
-      <div className="w-full max-w-md px-4 flex justify-center">
-        {prefersReducedMotion ? (
-          <img src="/logo_text.png" alt="ShiftPay" className="h-10 object-contain" />
-        ) : (
-          <Lottie animationData={splashScreenAnimation} loop={false} autoplay />
-        )}
-      </div>
+    <div
+      role="status"
+      aria-label="Đang mở ShiftPay"
+      className="fixed inset-0 z-[120] flex flex-col items-center justify-center gap-5 bg-brand px-6"
+    >
+      <img
+        src="/brand/lockup-white.svg"
+        alt="ShiftPay"
+        className="w-[250px] max-w-[70%] object-contain"
+      />
+      <span className="font-mono text-mono-label text-on-brand/90">
+        Quản lý ca làm &amp; tính lương
+      </span>
     </div>
   );
 };

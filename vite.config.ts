@@ -47,7 +47,6 @@ export default defineConfig(() => {
             ],
             'charts-vendor': ['recharts'],
             'icons-vendor': ['lucide-react'],
-            'lottie-vendor': ['lottie-react'],
             'framer-motion-vendor': ['framer-motion'],
             'cropper-vendor': ['react-easy-crop'],
             'core-vendor': ['zod', 'zustand', 'clsx', 'tailwind-merge'],

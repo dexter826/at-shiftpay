@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 interface PullToRefreshProps {
   onRefresh: () => Promise<void> | void;
@@ -13,6 +13,7 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
   const startYRef = React.useRef(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const PULL_THRESHOLD = 80;
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -109,7 +110,9 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
       </div>
       <motion.div
         animate={{ y: pullDistance }}
-        transition={{ type: 'spring', damping: 20, stiffness: 200 }}
+        transition={
+          prefersReducedMotion ? { duration: 0 } : { type: 'spring', damping: 20, stiffness: 200 }
+        }
       >
         {children}
       </motion.div>
