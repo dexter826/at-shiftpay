@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Loader from '@/components/ui/Loader';
 import { Navbar } from '@/components/layouts/Navbar';
 import { OfflineIndicator } from '@/components/layouts/OfflineIndicator';
@@ -78,10 +78,13 @@ function AppShell() {
   }, [user, initSubscriptions, cleanupSubscriptions]);
 
   // Sync khi đổi ngày
+  const lastViewDateRef = useRef<Date | null>(null);
   useEffect(() => {
-    if (user) {
-      initSubscriptions(user.uid);
-    }
+    if (!user) return;
+    const previous = lastViewDateRef.current;
+    lastViewDateRef.current = viewDate;
+    if (!previous || previous === viewDate) return;
+    initSubscriptions(user.uid);
   }, [viewDate, user, initSubscriptions]);
 
   const handleOpenExport = () => {
@@ -108,6 +111,7 @@ function AppShell() {
       setIsExportModalOpen(false);
     } catch (error) {
       console.error('Export failed:', error);
+      useAppDataStore.getState().setDataError('Xuất báo cáo thất bại. Vui lòng thử lại.');
     } finally {
       setIsExporting(false);
     }
@@ -152,6 +156,7 @@ function AppShell() {
           onOpenExport={handleOpenExport}
           isExportModalOpen={isExportModalOpen}
           setIsExportModalOpen={setIsExportModalOpen}
+          isExporting={isExporting}
           onExportReport={handleExportReport}
           showLogoutConfirm={showLogoutConfirm}
           onCloseLogoutConfirm={() => setShowLogoutConfirm(false)}
@@ -181,6 +186,7 @@ function AppContent({
   onOpenExport,
   isExportModalOpen,
   setIsExportModalOpen,
+  isExporting,
   onExportReport,
   showLogoutConfirm,
   onCloseLogoutConfirm,
@@ -204,6 +210,7 @@ function AppContent({
   onOpenExport: () => void;
   isExportModalOpen: boolean;
   setIsExportModalOpen: (open: boolean) => void;
+  isExporting: boolean;
   onExportReport: (month: number, year: number, onlyDebt: boolean) => void;
   showLogoutConfirm: boolean;
   onCloseLogoutConfirm: () => void;
@@ -239,6 +246,7 @@ function AppContent({
       <ExportModal
         isOpen={isExportModalOpen}
         onClose={() => setIsExportModalOpen(false)}
+        isExporting={isExporting}
         onExport={onExportReport}
       />
 

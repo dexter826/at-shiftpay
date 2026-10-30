@@ -6,10 +6,16 @@ import { FileDown, CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isExporting?: boolean;
   onExport: (month: number, year: number, onlyDebt: boolean) => void;
 }
 
-export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, onExport }) => {
+export const ExportModal: React.FC<ExportModalProps> = ({
+  isOpen,
+  onClose,
+  isExporting = false,
+  onExport,
+}) => {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -29,12 +35,17 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, onExp
       onClose={onClose}
       footer={
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+          <Button variant="secondary" onClick={onClose} className="flex-1" disabled={isExporting}>
             Hủy
           </Button>
-          <Button variant="primary" onClick={handleExport} className="flex-1">
+          <Button
+            variant="primary"
+            onClick={handleExport}
+            className="flex-1"
+            disabled={isExporting}
+          >
             <FileDown size={16} className="text-white" />
-            Xuất CSV
+            {isExporting ? 'Đang xuất...' : 'Xuất CSV'}
           </Button>
         </div>
       }
