@@ -15,7 +15,6 @@ import PayrollList from '@/features/payroll/components/PayrollList';
 import HistoryList from '@/features/payroll/components/HistoryList';
 import EmployeeDetailModal from '@/features/payroll/components/PayrollEmployeeDetailModal';
 import TransactionDetailModal from '@/features/payroll/components/TransactionDetailModal';
-import ConfirmPaymentModal from '@/features/payroll/components/ConfirmPaymentModal';
 import PayrollMonthPickerModal from '@/features/payroll/components/PayrollMonthPickerModal';
 import { usePayrollData } from '@/features/payroll/hooks/usePayrollData';
 
@@ -102,16 +101,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
     }
   }, [employees]);
 
-  const [payConfirm, setPayConfirm] = useState(false);
   const { showToast } = useToast();
-
-  const handlePay = async () => {
-    if (selectedShiftIds.length === 0) {
-      showToast('Vui lòng chọn ít nhất một ca để thanh toán', 'error');
-      return;
-    }
-    setPayConfirm(true);
-  };
 
   // Chọn/Bỏ chọn
   const handleSelectAll = () => {
@@ -127,38 +117,6 @@ const PayrollView: React.FC<PayrollViewProps> = ({
     setSelectedShiftIds((prev) =>
       prev.includes(shiftId) ? prev.filter((id) => id !== shiftId) : [...prev, shiftId]
     );
-  };
-
-  const confirmPay = async () => {
-    if (!selectedEmpId || selectedShiftIds.length === 0) return;
-    try {
-      const selectedShifts = shifts.filter((s) => selectedShiftIds.includes(s.id));
-      const totalAmount = selectedShifts.reduce((sum, s) => sum + s.amount, 0);
-      const employee = employees.find((e) => e.id === selectedEmpId);
-
-      if (!employee) return;
-
-      const paymentData = {
-        employeeId: selectedEmpId,
-        employeeName: employee.name,
-        amount: totalAmount,
-        date: Date.now(),
-        shiftIds: selectedShiftIds,
-        type: 'regular' as const,
-        note: `Thanh toán ${selectedShiftIds.length} ca làm việc`,
-        userId: userId,
-      };
-
-      await paymentService.createPaymentTransaction(paymentData, selectedShiftIds);
-
-      showToast('Đã thanh toán thành công', 'success');
-      setSelectedEmpId(null);
-      setPayConfirm(false);
-      setSelectedShiftIds([]);
-    } catch (error) {
-      console.error('Error:', error);
-      showToast('Có lỗi xảy ra', 'error');
-    }
   };
 
   const selectedEmployeeSummary = selectedEmpId
@@ -182,13 +140,6 @@ const PayrollView: React.FC<PayrollViewProps> = ({
     if (!selectedTransactionId) return null;
     return paymentHistory.find((p) => p.id === selectedTransactionId);
   }, [selectedTransactionId, paymentHistory]);
-
-  // Tổng tiền các ca đã chọn
-  const selectedShiftsTotal = useMemo(() => {
-    return selectedUnpaidShifts
-      .filter((shift) => selectedShiftIds.includes(shift.id))
-      .reduce((sum, shift) => sum + shift.amount, 0);
-  }, [selectedUnpaidShifts, selectedShiftIds]);
 
   // Reset theo nhân viên
   React.useEffect(() => {
@@ -320,16 +271,6 @@ const PayrollView: React.FC<PayrollViewProps> = ({
         transactionShifts={transactionShifts}
         events={events}
         locations={locations}
-      />
-
-      {/* Xác nhận thanh toán */}
-      <ConfirmPaymentModal
-        isOpen={payConfirm}
-        onClose={() => setPayConfirm(false)}
-        onConfirm={confirmPay}
-        selectedShiftsTotal={selectedShiftsTotal}
-        selectedEmployeeSummary={selectedEmployeeSummary}
-        selectedCount={selectedShiftIds.length}
       />
 
       {/* Chọn tháng */}
