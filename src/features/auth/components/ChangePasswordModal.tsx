@@ -165,13 +165,12 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               onChange={(e) => setCurrentPassword(e.target.value)}
               className={inputStyle}
               placeholder="Nhập mật khẩu hiện tại"
-              autoComplete="current-password"
             />
             <button
               type="button"
               onClick={() => setShowCurrentPassword(!showCurrentPassword)}
               aria-label={showCurrentPassword ? 'Ẩn mật khẩu hiện tại' : 'Hiện mật khẩu hiện tại'}
-              className={`flex h-10 w-10 items-center justify-center rounded-xs text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
             >
               {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -195,13 +194,12 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               onChange={(e) => setNewPassword(e.target.value)}
               className={inputStyle}
               placeholder="Nhập mật khẩu mới (min 6 ký tự)"
-              autoComplete="new-password"
             />
             <button
               type="button"
               onClick={() => setShowNewPassword(!showNewPassword)}
               aria-label={showNewPassword ? 'Ẩn mật khẩu mới' : 'Hiện mật khẩu mới'}
-              className={`flex h-10 w-10 items-center justify-center rounded-xs text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
             >
               {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -225,13 +223,12 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               onChange={(e) => setConfirmPassword(e.target.value)}
               className={inputStyle}
               placeholder="Nhập lại mật khẩu mới"
-              autoComplete="new-password"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               aria-label={showConfirmPassword ? 'Ẩn mật khẩu xác nhận' : 'Hiện mật khẩu xác nhận'}
-              className={`flex h-10 w-10 items-center justify-center rounded-xs text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset`}
             >
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>

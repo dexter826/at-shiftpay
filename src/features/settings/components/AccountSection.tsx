@@ -104,7 +104,7 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
 
   return (
     <section>
-      <div className={`flex items-center gap-2 mb-4 px-1 text-label font-medium text-ink-muted`}>
+      <div className={`flex items-center gap-2 mb-4 px-1 text-title font-semibold text-ink`}>
         <User size={16} />
         <span>Tài khoản</span>
       </div>
@@ -116,7 +116,7 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
             onClick={() => !isUploadingAvatar && avatarInputRef.current?.click()}
             disabled={isUploadingAvatar}
             aria-label="Đổi ảnh đại diện"
-            className={`relative w-16 h-16 rounded-full border border-line bg-surface-2 group flex-shrink-0 transition-colors duration-fast ease-standard hover:border-ink-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset disabled:cursor-not-allowed`}
+            className={`relative w-16 h-16 rounded-full border border-line bg-surface-2 group flex-shrink-0 transition-colors duration-fast ease-standard hover:border-ink-muted disabled:cursor-not-allowed ${focusRingOnSurfaceClasses}`}
           >
             <span className="absolute inset-0 overflow-hidden rounded-full">
               {user?.photoURL ? (
@@ -166,7 +166,7 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
                   onClick={handleSaveDisplayName}
                   disabled={savingName}
                   aria-label="Lưu tên hiển thị"
-                  className={`flex h-10 w-10 items-center justify-center rounded-sm border border-line bg-surface-2 text-success hover:bg-surface transition-colors duration-fast ease-standard disabled:opacity-60 ${focusRingOnSurfaceClasses}`}
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard disabled:opacity-60 ${focusRingOnSurfaceClasses}`}
                 >
                   <Check size={18} />
                 </button>
@@ -175,7 +175,7 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
                   onClick={handleCancelEditName}
                   disabled={savingName}
                   aria-label="Hủy sửa tên"
-                  className={`flex h-10 w-10 items-center justify-center rounded-sm border border-line bg-surface-2 text-danger hover:bg-surface transition-colors duration-fast ease-standard disabled:opacity-60 ${focusRingOnSurfaceClasses}`}
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard disabled:opacity-60 ${focusRingOnSurfaceClasses}`}
                 >
                   <X size={18} />
                 </button>
@@ -202,10 +202,10 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
         <button
           type="button"
           onClick={onChangePassword}
-          className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors duration-fast ease-standard text-left border-b border-line ${rowFocus}`}
+          className={`w-full flex items-center justify-between p-4 ${itemHover} transition-colors duration-fast ease-standard text-left border-b border-dashed border-line ${rowFocus}`}
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-sm bg-surface-2 text-accent-ink">
+            <div className="p-2 rounded-sm bg-surface-2 text-ink-muted">
               <Key size={20} />
             </div>
             <div>

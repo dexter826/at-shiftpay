@@ -50,7 +50,7 @@ const WorkConfigSection: React.FC<WorkConfigSectionProps> = ({ userUid, settings
 
   return (
     <section>
-      <div className={`flex items-center gap-2 mb-4 px-1 text-label font-medium text-ink-muted`}>
+      <div className={`flex items-center gap-2 mb-4 px-1 text-title font-semibold text-ink`}>
         <Briefcase size={16} />
         <span>Cấu hình công việc</span>
       </div>
