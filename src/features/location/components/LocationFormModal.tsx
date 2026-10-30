@@ -241,7 +241,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
                   value={lat}
                   onChange={(e) => setLat(e.target.value)}
                   placeholder="Vĩ độ (Latitude)"
-                  className={`w-full px-3 py-2.5 rounded-sm border border-line text-body-sm overflow-hidden text-ellipsis bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+                  className={`w-full px-3 py-2.5 rounded-sm border border-line text-body-sm overflow-hidden text-ellipsis tabular-nums bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                 />
               </div>
               <div className="relative flex-1">
@@ -254,7 +254,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
                   value={lng}
                   onChange={(e) => setLng(e.target.value)}
                   placeholder="Kinh độ (Longitude)"
-                  className={`w-full px-3 py-2.5 rounded-sm border border-line text-body-sm overflow-hidden text-ellipsis bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
+                  className={`w-full px-3 py-2.5 rounded-sm border border-line text-body-sm overflow-hidden text-ellipsis tabular-nums bg-surface-2 text-ink placeholder:text-ink-muted focus:outline-none hover:border-ink-muted transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
                 />
               </div>
             </div>
@@ -265,17 +265,20 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
         </div>
 
         <div>
-          <label className={`block text-label font-medium mb-2 text-ink-muted`}>
+          <p
+            id="location-review-label"
+            className={`block text-label font-medium mb-2 text-ink-muted`}
+          >
             Đánh giá chất lượng
-          </label>
-          <div className="flex gap-3">
+          </p>
+          <div role="group" aria-labelledby="location-review-label" className="flex gap-3">
             <button
               type="button"
               onClick={() => setReview('high')}
               aria-pressed={review === 'high'}
               className={`flex-1 p-2.5 min-h-10 rounded-sm border text-body-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 review === 'high'
-                  ? 'border-success/50 bg-success/5 text-success'
+                  ? 'border-success/50 bg-success/10 text-ink'
                   : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >
@@ -301,7 +304,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
               aria-pressed={review === 'low'}
               className={`flex-1 p-2.5 min-h-10 rounded-sm border text-body-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses} ${
                 review === 'low'
-                  ? 'border-danger/50 bg-danger/5 text-danger'
+                  ? 'border-danger/50 bg-danger/10 text-ink'
                   : `border-line text-ink-muted hover:border-ink-muted`
               }`}
             >

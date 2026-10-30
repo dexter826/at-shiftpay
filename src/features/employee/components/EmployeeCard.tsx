@@ -50,7 +50,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
         type="button"
         onClick={() => onClick(employee)}
         aria-label={`Xem hồ sơ ${employee.name}`}
-        className={`absolute inset-0 cursor-pointer rounded-md transition-colors duration-fast ease-standard hover:bg-canvas/30 ${focusRingClasses}`}
+        className={`absolute inset-0 cursor-pointer rounded-md transition-colors duration-fast ease-standard hover:bg-surface-2/70 ${focusRingClasses}`}
       />
 
       {/* Bank status chip: the dot carries the status color */}

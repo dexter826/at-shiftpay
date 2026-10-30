@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { MapPin, MessageSquare, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 import { Location } from '@/types/index';
-import { focusRingClasses } from '@/lib/utils';
+import { focusRingClasses, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 
@@ -13,7 +13,6 @@ interface LocationCardProps {
   onEdit: (loc: Location) => void;
   onDelete: (id: string) => void;
   onViewDetail: (loc: Location) => void;
-  index: number;
   theme: string;
 }
 
@@ -45,9 +44,9 @@ const LocationCard: React.FC<LocationCardProps> = ({
   };
 
   return (
-    <div className="relative flex flex-col rounded-md overflow-hidden bg-surface border border-line">
-      {/* Map image */}
-      <div className="relative h-50 overflow-hidden">
+    <div className="relative flex flex-col rounded-md bg-surface border border-line">
+      {/* Phần hình ảnh */}
+      <div className="relative h-50 overflow-hidden rounded-t-md">
         <img
           src={mapUrl}
           alt={location.name}
@@ -66,20 +65,20 @@ const LocationCard: React.FC<LocationCardProps> = ({
         )}
       </div>
 
-      {/* Open-detail target */}
+      {/* Vùng bấm mở chi tiết */}
       <button
         type="button"
         onClick={() => onViewDetail(location)}
         aria-label={`Xem chi tiết ${location.name}`}
-        className={`absolute inset-0 cursor-pointer rounded-md transition-colors duration-fast ease-standard hover:bg-canvas/30 ${focusRingClasses}`}
+        className={`absolute inset-0 cursor-pointer rounded-md transition-colors duration-fast ease-standard hover:bg-surface-2/70 ${focusRingClasses}`}
       />
 
-      {/* Actions */}
+      {/* Nút thao tác */}
       <div className="absolute top-2 right-2 flex items-center gap-1.5">
         <button
           type="button"
           onClick={handleOpenInGoogleMaps}
-          className="flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard"
+          className={`flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           aria-label={`Mở ${location.name} trong Google Maps`}
           title="Xem trên Google Maps"
         >
@@ -88,7 +87,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
         <button
           type="button"
           onClick={() => onEdit(location)}
-          className="flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard"
+          className={`flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-ink hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           aria-label={`Sửa địa điểm ${location.name}`}
           title="Sửa địa điểm"
         >
@@ -97,7 +96,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
         <button
           type="button"
           onClick={() => onDelete(location.id)}
-          className="flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-danger hover:bg-surface-2 transition-colors duration-fast ease-standard"
+          className={`flex h-10 w-10 items-center justify-center rounded-sm bg-surface border border-line text-ink-muted hover:text-danger hover:bg-surface-2 transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           aria-label={`Xóa địa điểm ${location.name}`}
           title="Xóa địa điểm"
         >
@@ -105,8 +104,8 @@ const LocationCard: React.FC<LocationCardProps> = ({
         </button>
       </div>
 
-      {/* Info */}
-      <div className="flex-1 p-5">
+      {/* Phần thông tin */}
+      <div className="relative flex-1 p-5 pointer-events-none">
         <div className="space-y-1.5">
           <h3 className={`text-title font-semibold text-ink leading-tight line-clamp-1`}>
             {location.name}

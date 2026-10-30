@@ -73,7 +73,7 @@ const LocationList: React.FC<LocationListProps> = ({
           </motion.div>
         ) : (
           <>
-            {locations.slice(0, visibleCount).map((loc, idx) => (
+            {locations.slice(0, visibleCount).map((loc) => (
               <LocationCard
                 key={loc.id}
                 location={loc}
@@ -81,7 +81,6 @@ const LocationList: React.FC<LocationListProps> = ({
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onViewDetail={onViewDetail}
-                index={idx}
                 theme={theme}
               />
             ))}

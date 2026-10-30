@@ -1,14 +1,5 @@
 import React, { memo } from 'react';
-import {
-  Calendar,
-  ExternalLink,
-  MapPin,
-  MessageSquare,
-  Minus,
-  Pencil,
-  ThumbsDown,
-  ThumbsUp,
-} from 'lucide-react';
+import { Calendar, ExternalLink, MapPin, MessageSquare, Pencil } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Location, Event } from '@/types/index';
@@ -58,7 +49,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
     if (location.review === 'high') {
       return (
         <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-          <ThumbsUp size={12} className="text-success" />
+          <span className="w-1.5 h-1.5 rounded-xs bg-success" />
           <span>Tốt</span>
         </div>
       );
@@ -66,14 +57,14 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
     if (location.review === 'low') {
       return (
         <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-          <ThumbsDown size={12} className="text-danger" />
+          <span className="w-1.5 h-1.5 rounded-xs bg-danger" />
           <span>Kém</span>
         </div>
       );
     }
     return (
       <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-        <Minus size={12} className="text-ink-muted" />
+        <span className="w-1.5 h-1.5 rounded-xs bg-ink-muted" />
         <span>Thường</span>
       </div>
     );
