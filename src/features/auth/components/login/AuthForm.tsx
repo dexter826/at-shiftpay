@@ -11,8 +11,6 @@ interface AuthFormProps {
   savedUser: SavedUser | null;
   showQuickLogin: boolean;
   onBackToQuickLogin: () => void;
-  verificationSent: boolean;
-  verificationEmail: string;
   onSubmit: (e: React.FormEvent) => Promise<void>;
   email: string;
   onEmailChange: (value: string) => void;
@@ -47,8 +45,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
   savedUser,
   showQuickLogin,
   onBackToQuickLogin,
-  verificationSent,
-  verificationEmail,
   onSubmit,
   email,
   onEmailChange,
@@ -102,15 +98,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
       <h2 className="text-2xl font-bold text-primary text-center mb-5">
         {isSignUp ? 'Đăng ký' : 'Đăng nhập'}
       </h2>
-
-      {verificationSent && (
-        <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-600 dark:text-emerald-400">
-          <p className="font-medium">Đăng ký thành công!</p>
-          <p className="mt-0.5 opacity-90">
-            Email xác thực đã gửi đến <span className="font-bold">{verificationEmail}</span>
-          </p>
-        </div>
-      )}
 
       <AnimatePresence>
         {error && (
