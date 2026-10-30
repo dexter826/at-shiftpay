@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChevronIcon from '@/components/ui/icons/ChevronIcon';
 import SimpleCheckedIcon from '@/components/ui/icons/SimpleCheckedIcon';
@@ -45,11 +45,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const searchIconRef = useRef<AnimatedIconHandle>(null);
   const xIconRef = useRef<AnimatedIconHandle>(null);
 
+  const closeDropdown = useCallback(() => {
+    setIsOpen(false);
+    setSearchTerm('');
+  }, []);
+
   // Đóng khi click ra ngoài
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        closeDropdown();
       }
     };
 
@@ -60,7 +65,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, closeDropdown]);
 
   // Focus vào ô tìm kiếm khi mở
   useEffect(() => {
@@ -69,16 +74,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
         searchInputRef.current?.focus();
       }, 100);
     }
-    if (!isOpen) {
-      setSearchTerm('');
-    }
   }, [isOpen, searchable]);
 
   // Đóng khi nhấn Esc
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setIsOpen(false);
+        closeDropdown();
       }
     };
 
@@ -89,7 +91,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, closeDropdown]);
 
   const filteredOptions = useMemo(() => {
     if (!searchable || !searchTerm) return options;
@@ -102,14 +104,14 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   const handleSelect = (optionValue: string) => {
     onChange(optionValue);
-    setIsOpen(false);
+    closeDropdown();
   };
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => (isOpen ? closeDropdown() : setIsOpen(true))}
         onMouseEnter={() => chevronRef.current?.startAnimation()}
         onMouseLeave={() => chevronRef.current?.stopAnimation()}
         disabled={disabled}

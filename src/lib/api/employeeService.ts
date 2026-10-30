@@ -46,7 +46,10 @@ export const employeeService = {
       });
     } catch (error) {
       console.error('addEmployee error:', error);
-      throw new Error(`Không thể thêm nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể thêm nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 
@@ -56,7 +59,10 @@ export const employeeService = {
       await updateDoc(docRef, data);
     } catch (error) {
       console.error('updateEmployee error:', error);
-      throw new Error(`Không thể cập nhật nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể cập nhật nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 
@@ -65,7 +71,10 @@ export const employeeService = {
       await deleteDoc(doc(db, 'employees', id));
     } catch (error) {
       console.error('deleteEmployee error:', error);
-      throw new Error(`Không thể xóa nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể xóa nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 };

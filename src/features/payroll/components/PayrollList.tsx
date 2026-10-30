@@ -4,12 +4,12 @@ import { CheckCircle2, ChevronRightIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { LoadMore } from '@/components/ui/LoadMore';
 import { formatCurrency } from '@/utils/format';
-import { PayrollSummary } from '@/types/index';
+import { PayrollSummary, Employee } from '@/types/index';
 
 interface PayrollListProps {
   loading: boolean;
   items: PayrollSummary[];
-  employees: any[];
+  employees: Employee[];
   visibleCount: number;
   setVisibleCount: React.Dispatch<React.SetStateAction<number>>;
   onSelectEmployee: (id: string) => void;
@@ -72,7 +72,7 @@ const PayrollList: React.FC<PayrollListProps> = ({
             <>
               {items.slice(0, visibleCount).map((item) => {
                 const employee = employees.find((e) => e.id === item.employeeId);
-                const employeeImage = employee?.imageUrl || employee?.avatar;
+                const employeeImage = employee?.imageUrl;
                 const itemWithFees = item as typeof item & { totalFees?: number };
 
                 return (

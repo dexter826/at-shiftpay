@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
-import { Shift, PayrollSummary, Event } from '@/types/index';
+import { Shift, Employee, PayrollSummary, Event } from '@/types/index';
 import { shiftBreakdown } from '@/utils/payrollMath';
 
 interface UsePayrollDataProps {
   shifts: Shift[];
-  employees: any[];
+  employees: Employee[];
   events: Event[];
 }
 
@@ -86,7 +86,7 @@ export const usePayrollData = ({ shifts, employees, events }: UsePayrollDataProp
     const totalUnpaidShifts = summary.reduce((acc, curr) => acc + curr.unpaidCount, 0);
     const totalAdvancedShifts = summary.reduce((acc, curr) => acc + curr.advancedCount, 0);
     const totalShifts = totalUnpaidShifts + totalAdvancedShifts;
-    const totalFees = summary.reduce((acc, curr) => acc + ((curr as any).totalFees || 0), 0);
+    const totalFees = summary.reduce((acc, curr) => acc + (curr.totalFees || 0), 0);
 
     return {
       totalDebt,

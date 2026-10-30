@@ -11,7 +11,8 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
   const [pullDistance, setPullDistance] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const startYRef = React.useRef(0);
-  const containerRef = React.useRef<HTMLDivElement>(null);  const PULL_THRESHOLD = 80;
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const PULL_THRESHOLD = 80;
 
   useEffect(() => {
     const container = containerRef.current;

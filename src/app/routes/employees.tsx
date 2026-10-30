@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, memo } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import { Employee, Shift } from '@/types/index';
 import { employeeService } from '@/lib/api/employeeService';
 import { Modal } from '@/components/ui/Modal';
@@ -19,10 +19,7 @@ interface EmployeeViewProps {
   loading?: boolean;
 }
 
-const EmployeeView: React.FC<EmployeeViewProps> = ({
-  employees,
-  shifts,  loading = false,
-}) => {
+const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading = false }) => {
   const { showToast } = useToast();
   const { user } = useAuthStore();
   const userId = user?.uid || '';
@@ -78,12 +75,17 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isDeletingEmployee, setIsDeletingEmployee] = useState(false);
 
-  // Effects
-  useEffect(() => {
-    setVisibleCount(18);
-  }, [searchTerm, sortBy]);
-
   // Handlers
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setVisibleCount(18);
+  };
+
+  const handleSortChange = (value: 'name' | 'shifts' | 'recent') => {
+    setSortBy(value);
+    setVisibleCount(18);
+  };
+
   const handleLoadMore = () => {
     setVisibleCount((prev) => Math.min(prev + 18, filteredAndSortedEmployees.length));
   };
@@ -129,12 +131,13 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({
   };
 
   // Filter & Sort Logic
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- React Compiler is not enabled; memoization stays manual
   const filteredAndSortedEmployees = useMemo(() => {
     const filtered = employees.filter(
       (e) => e.name.toLowerCase().includes(searchTerm.toLowerCase()) || e.phone.includes(searchTerm)
     );
 
-    return filtered.sort((a, b) => {
+    return [...filtered].sort((a, b) => {
       switch (sortBy) {
         case 'name':
           return a.name.localeCompare(b.name, 'vi');
@@ -161,10 +164,10 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({
         loading={loading}
         onAdd={openAddModal}
         searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onClearSearch={() => setSearchTerm('')}
+        onSearchChange={handleSearchChange}
+        onClearSearch={() => handleSearchChange('')}
         sortBy={sortBy}
-        onSortChange={setSortBy}
+        onSortChange={handleSortChange}
       />
 
       <EmployeeList

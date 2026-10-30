@@ -1,9 +1,10 @@
 import React, { memo } from 'react';
+import type { User } from 'firebase/auth';
 import Button from '@/components/ui/Button';
 import ExportIcon from '@/components/ui/icons/ExportIcon';
 
 interface DashboardHeaderProps {
-  user: any;
+  user: User | null;
   onOpenExport: () => void;
 }
 

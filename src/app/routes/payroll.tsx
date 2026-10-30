@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, memo } from 'react';
-import { Shift, PaymentTransaction, Event, Location } from '@/types/index';
+import { Shift, Employee, PaymentTransaction, Event, Location } from '@/types/index';
 import { paymentService } from '@/lib/api/paymentService';
 
 /* removed unused import from @/components/ui/ToastProvider */
@@ -20,7 +20,7 @@ import { usePayrollData } from '@/features/payroll/hooks/usePayrollData';
 
 interface PayrollViewProps {
   shifts: Shift[];
-  employees: any[];
+  employees: Employee[];
   events: Event[];
   locations: Location[];
   loading?: boolean;
@@ -69,12 +69,16 @@ const PayrollView: React.FC<PayrollViewProps> = ({
     totalFees,
   } = stats;
 
-  // Reset phan trang khi doi tim kiem hoac tab
-  useEffect(() => {
-    if (activeTab === 'payroll') {
-      setPayrollVisibleCount(15);
-    }
-  }, [activeTab, payrollSearchTerm, payrollSortBy]);
+  // Reset phan trang khi doi tim kiem
+  const handlePayrollSearchChange = (value: string) => {
+    setPayrollSearchTerm(value);
+    setPayrollVisibleCount(15);
+  };
+
+  const handlePayrollSortChange = (value: 'amount' | 'shifts' | 'name') => {
+    setPayrollSortBy(value);
+    setPayrollVisibleCount(15);
+  };
 
   useEffect(() => {
     if (!userId) return;
@@ -92,7 +96,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({
   useEffect(() => {
     if (employees.length > 0) {
       employees.forEach((emp) => {
-        const empImage = emp.imageUrl || emp.avatar;
+        const empImage = emp.imageUrl;
         if (empImage) {
           const img = new Image();
           img.src = empImage;
@@ -118,18 +122,19 @@ const PayrollView: React.FC<PayrollViewProps> = ({
 
   const selectedEmployeeSummary =
     (selectedEmpId ? summary.find((s) => s.employeeId === selectedEmpId) : null) ?? null;
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- React Compiler is not enabled; memoization stays manual
   const selectedUnpaidShifts = useMemo(() => {
     if (!selectedEmpId) return [];
-    return shifts
-      .filter((s) => s.employeeId === selectedEmpId && s.status === 'unpaid')
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    return [...shifts.filter((s) => s.employeeId === selectedEmpId && s.status === 'unpaid')].sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
   }, [selectedEmpId, shifts]);
 
   const selectedAdvancedShifts = useMemo(() => {
     if (!selectedEmpId) return [];
-    return shifts
-      .filter((s) => s.employeeId === selectedEmpId && s.status === 'advanced')
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    return [
+      ...shifts.filter((s) => s.employeeId === selectedEmpId && s.status === 'advanced'),
+    ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [selectedEmpId, shifts]);
 
   const selectedTransaction = useMemo(() => {
@@ -137,15 +142,13 @@ const PayrollView: React.FC<PayrollViewProps> = ({
     return paymentHistory.find((p) => p.id === selectedTransactionId);
   }, [selectedTransactionId, paymentHistory]);
 
-  // Reset theo nhân viên
-  React.useEffect(() => {
-    if (selectedEmpId && selectedUnpaidShifts.length > 0) {
-      // Mặc định chọn tất cả khi mở modal
-      setSelectedShiftIds(selectedUnpaidShifts.map((shift) => shift.id));
-    } else {
-      setSelectedShiftIds([]);
-    }
-  }, [selectedEmpId, selectedUnpaidShifts]);
+  // Chọn nhân viên và mặc định chọn mọi ca chưa trả
+  const selectEmployee = (id: string) => {
+    setSelectedEmpId(id);
+    setSelectedShiftIds(
+      shifts.filter((s) => s.employeeId === id && s.status === 'unpaid').map((s) => s.id)
+    );
+  };
 
   const transactionShifts = useMemo(() => {
     if (!selectedTransaction) return [];
@@ -207,9 +210,9 @@ const PayrollView: React.FC<PayrollViewProps> = ({
       <PayrollFilters
         activeTab={activeTab}
         payrollSearchTerm={payrollSearchTerm}
-        setPayrollSearchTerm={setPayrollSearchTerm}
+        setPayrollSearchTerm={handlePayrollSearchChange}
         payrollSortBy={payrollSortBy}
-        setPayrollSortBy={setPayrollSortBy}
+        setPayrollSortBy={handlePayrollSortChange}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         filterDate={filterDate}
@@ -227,9 +230,9 @@ const PayrollView: React.FC<PayrollViewProps> = ({
             employees={employees}
             visibleCount={payrollVisibleCount}
             setVisibleCount={setPayrollVisibleCount}
-            onSelectEmployee={setSelectedEmpId}
+            onSelectEmployee={selectEmployee}
             onPaymentClick={(id) => {
-              setSelectedEmpId(id);
+              selectEmployee(id);
               setShowPaymentModal(true);
             }}
             searchTerm={payrollSearchTerm}

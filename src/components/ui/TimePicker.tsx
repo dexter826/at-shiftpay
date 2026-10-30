@@ -89,12 +89,12 @@ export const TimePicker: React.FC<TimePickerProps> = ({ value, onChange, classNa
 
   const formatNumber = (n: number) => n.toString().padStart(2, '0');
 
-  const handleHourChange = (newHour: any) => {
-    onChange(`${formatNumber(newHour as number)}:${formatNumber(minutes)}`);
+  const handleHourChange = (newHour: string | number) => {
+    onChange(`${formatNumber(Number(newHour))}:${formatNumber(minutes)}`);
   };
 
-  const handleMinuteChange = (newMinute: any) => {
-    onChange(`${formatNumber(hours)}:${formatNumber(newMinute as number)}`);
+  const handleMinuteChange = (newMinute: string | number) => {
+    onChange(`${formatNumber(hours)}:${formatNumber(Number(newMinute))}`);
   };
 
   return (

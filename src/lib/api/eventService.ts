@@ -79,7 +79,7 @@ export const eventService = {
 
         batch.set(eventRef, {
           ...eventData,
-          userId: (eventData as any).userId || shiftsData[0]?.userId || '',
+          userId: eventData.userId || shiftsData[0]?.userId || '',
         });
 
         shiftsData.forEach((shiftData, index) => {
@@ -90,7 +90,10 @@ export const eventService = {
       });
     } catch (error) {
       console.error('createEventWithShifts error:', error);
-      throw new Error(`Không thể tạo sự kiện và ca làm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể tạo sự kiện và ca làm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 
@@ -129,7 +132,10 @@ export const eventService = {
       });
     } catch (error) {
       console.error('batchUpdateEvent error:', error);
-      throw new Error(`Không thể cập nhật sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể cập nhật sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 
@@ -146,7 +152,10 @@ export const eventService = {
       await batch.commit();
     } catch (error) {
       console.error('deleteEventWithShifts error:', error);
-      throw new Error(`Không thể xóa sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể xóa sự kiện: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 };

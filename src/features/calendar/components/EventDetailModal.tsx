@@ -28,7 +28,8 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
   isOpen,
   onClose,
   onEdit,
-  onDelete,}) => {
+  onDelete,
+}) => {
   const theme = useThemeStore((state) => state.theme);
 
   const editIconRef = React.useRef<AnimatedIconHandle>(null);

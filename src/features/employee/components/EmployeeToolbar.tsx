@@ -59,7 +59,9 @@ const EmployeeToolbar: React.FC<EmployeeToolbarProps> = ({
         <Dropdown
           options={sortOptions}
           value={sortBy}
-          onChange={(value) => onSortChange(value as any)}
+          onChange={(value) => {
+            if (value === 'name' || value === 'shifts' || value === 'recent') onSortChange(value);
+          }}
           icon={<ArrowUpDown size={16} />}
           disabled={loading}
           className="h-10"

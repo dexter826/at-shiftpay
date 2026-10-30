@@ -32,7 +32,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
   location,
   events,
   onEditClick,
-}) => {
+}) => {
   const editIconRef = React.useRef<AnimatedIconHandle>(null);
 
   if (!location) return null;

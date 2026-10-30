@@ -28,10 +28,11 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen
       showToast('Đã gửi email đặt lại mật khẩu', 'success');
       onClose();
       setEmail('');
-    } catch (error: any) {
+    } catch (error) {
+      const code = (error as { code?: string }).code;
       console.error('Reset password error:', error);
       let message = 'Có lỗi xảy ra khi gửi email';
-      if (error.code === 'auth/invalid-email') {
+      if (code === 'auth/invalid-email') {
         message = 'Email không hợp lệ';
       }
       showToast(message, 'error');

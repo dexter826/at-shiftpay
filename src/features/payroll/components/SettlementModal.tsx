@@ -26,7 +26,8 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   onClose,
   employeeId,
   employeeName,
-  shifts,  onSuccess,
+  shifts,
+  onSuccess,
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { showToast } = useToast();
@@ -41,6 +42,7 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   useEffect(() => {
     // Reset state mỗi khi mở modal
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the fetch state for each opening
       setIsLoadingAdvances(true);
       setAdvancesError(null);
       setLocalAdvances([]);
@@ -63,7 +65,7 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
       setIsLoadingAdvances(true);
       setLocalAdvances([]);
     }
-  }, [isOpen, employeeId, userId]);
+  }, [isOpen, employeeId, userId, showToast]);
 
   // Tính số dư nợ
   const advanceBalance = useMemo((): AdvanceBalance => {

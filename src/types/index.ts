@@ -84,6 +84,7 @@ export interface PayrollSummary {
   totalUnpaid: number;
   advancedCount: number; // Số ca đã ứng
   totalAdvanced: number; // Tổng tiền đã ứng
+  totalFees?: number; // Tổng phụ phí trong các ca
   netAmount: number; // Thực nhận
 }
 

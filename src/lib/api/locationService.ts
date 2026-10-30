@@ -1,5 +1,18 @@
 import { db } from '@/lib/firebase';
-import { collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, Unsubscribe, getDocs, where, limit, deleteField } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+  Unsubscribe,
+  getDocs,
+  where,
+  limit,
+  deleteField,
+} from 'firebase/firestore';
 import { Location } from '@/types/index';
 import { createRealtimeSubscription } from '@/lib/api/firebaseService';
 import { LocationSchema } from '@/utils/validation';
@@ -27,11 +40,11 @@ export const locationService = {
   async addLocation(
     data: {
       name: string;
-      address?: string;
-      latitude?: number;
-      longitude?: number;
-      review?: 'high' | 'low';
-      reviewNote?: string;
+      address?: string | null;
+      latitude?: number | null;
+      longitude?: number | null;
+      review?: 'high' | 'low' | null;
+      reviewNote?: string | null;
     },
     userId: string
   ): Promise<string> {
@@ -48,7 +61,10 @@ export const locationService = {
       return docRef.id;
     } catch (error) {
       console.error('addLocation error:', error);
-      throw new Error(`Không thể thêm địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể thêm địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 
@@ -61,7 +77,10 @@ export const locationService = {
       await updateDoc(docRef, updateData);
     } catch (error) {
       console.error('updateLocation error:', error);
-      throw new Error(`Không thể cập nhật địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể cập nhật địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 
@@ -70,7 +89,10 @@ export const locationService = {
       await deleteDoc(doc(db, 'locations', id));
     } catch (error) {
       console.error('deleteLocation error:', error);
-      throw new Error(`Không thể xóa địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`, { cause: error });
+      throw new Error(
+        `Không thể xóa địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`,
+        { cause: error }
+      );
     }
   },
 

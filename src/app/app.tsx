@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import type { User } from 'firebase/auth';
+import { Employee, Event, Shift, Location, UserSettings } from '@/types/index';
 import Loader from '@/components/ui/Loader';
 import { Navbar } from '@/components/layouts/Navbar';
 import { OfflineIndicator } from '@/components/layouts/OfflineIndicator';
@@ -20,7 +22,8 @@ import { exportDetailedReport } from '@/lib/api/exportService';
 
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 
-function AppShell() {  const { user, loading: authLoading, init: initAuth, logout } = useAuthStore();
+function AppShell() {
+  const { user, loading: authLoading, init: initAuth, logout } = useAuthStore();
   const {
     employees,
     locations,
@@ -195,12 +198,12 @@ function AppContent({
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
   onLogout: () => void;
-  user: any;
-  employees: any[];
-  locations: any[];
-  events: any[];
-  shifts: any[];
-  settings: any;
+  user: User | null;
+  employees: Employee[];
+  locations: Location[];
+  events: Event[];
+  shifts: Shift[];
+  settings: UserSettings;
   isLoading: boolean;
   isCalendarLoading: boolean;
   viewDate: Date;
@@ -220,10 +223,14 @@ function AppContent({
     <div className="min-h-dynamic bg-[var(--bg-primary)]">
       <Navbar currentTab={activeTab} setTab={(t) => setActiveTab(t as Tab)} onLogout={onLogout} />
       <main className="md:pl-60">
-        <PullToRefresh onRefresh={() => refreshData(user.uid)}>
+        <PullToRefresh
+          onRefresh={() => {
+            if (user) refreshData(user.uid);
+          }}
+        >
           <AppRouter
             activeTab={activeTab}
-            setActiveTab={(t) => setActiveTab(t as any)}
+            setActiveTab={setActiveTab}
             user={user}
             employees={employees}
             locations={locations}

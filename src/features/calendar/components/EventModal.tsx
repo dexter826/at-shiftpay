@@ -1,9 +1,21 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Employee, Shift, ShiftSession, Event, UserSettings, Location } from '@/types/index';
 import { shiftService } from '@/lib/api/shiftService';
 import { locationService } from '@/lib/api/locationService';
 import { eventService } from '@/lib/api/eventService';
-import { Sun, Moon, Check, AlertCircle, Banknote, ThumbsUp, ThumbsDown, Minus, MapPin, Type, FileText } from 'lucide-react';
+import {
+  Sun,
+  Moon,
+  Check,
+  AlertCircle,
+  Banknote,
+  ThumbsUp,
+  ThumbsDown,
+  Minus,
+  MapPin,
+  Type,
+  FileText,
+} from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { TimePicker } from '@/components/ui/TimePicker';
@@ -60,10 +72,26 @@ export const EventModal: React.FC<EventModalProps> = ({
   const [titleError, setTitleError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [employeeShiftCounts, setEmployeeShiftCounts] = useState<Record<string, number>>({});
-  const [initialState, setInitialState] = useState<any>(null);
+  const [initialState, setInitialState] = useState<Record<string, unknown> | null>(null);
   const [initialSelectedIds, setInitialSelectedIds] = useState<Set<string>>(new Set());
 
   const initialStateRef = useRef<string | null>(null);
+
+  const loadEmployeeShiftCounts = useCallback(async () => {
+    try {
+      const shifts = await shiftService.getUnpaidShifts(userId);
+      const counts: Record<string, number> = {};
+
+      shifts.forEach((shift) => {
+        counts[shift.employeeId] = (counts[shift.employeeId] || 0) + 1;
+      });
+
+      setEmployeeShiftCounts(counts);
+    } catch (error) {
+      console.error('Error loading employee shift counts:', error);
+      setEmployeeShiftCounts({});
+    }
+  }, [userId]);
 
   useEffect(() => {
     const initKey = `${existingEvent?.id ?? 'new'}:${date}:${locations.length > 0 ? 'loc' : 'noloc'}`;
@@ -76,6 +104,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
     if (isOpen) {
       if (existingEvent) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- form is initialized from the edited event when the modal opens
         setTitle(existingEvent.title);
 
         // Tìm địa điểm từ ID
@@ -187,23 +216,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         setInitialState(null);
       }
     }
-  }, [isOpen, existingEvent, existingShifts, settings, locations, date]);
-
-  const loadEmployeeShiftCounts = async () => {
-    try {
-      const shifts = await shiftService.getUnpaidShifts(userId);
-      const counts: Record<string, number> = {};
-
-      shifts.forEach((shift) => {
-        counts[shift.employeeId] = (counts[shift.employeeId] || 0) + 1;
-      });
-
-      setEmployeeShiftCounts(counts);
-    } catch (error) {
-      console.error('Error loading employee shift counts:', error);
-      setEmployeeShiftCounts({});
-    }
-  };
+  }, [isOpen, existingEvent, existingShifts, settings, locations, date, loadEmployeeShiftCounts]);
 
   const selectSession = (session: ShiftSession) => {
     if (selectedSession === session) {
@@ -329,6 +342,7 @@ export const EventModal: React.FC<EventModalProps> = ({
     reviewNote,
     initialState,
     existingEvent,
+    locations,
   ]);
 
   const handleSubmit = async () => {
@@ -432,7 +446,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         }
       });
 
-      const surchargeDistribution: any =
+      const surchargeDistribution: Event['surchargeDistribution'] =
         surcharge > 0
           ? {
               type: surchargeDistributionType,
@@ -445,7 +459,7 @@ export const EventModal: React.FC<EventModalProps> = ({
           .map(([id]) => id);
       }
 
-      const eventData: any = {
+      const eventData: Omit<Event, 'id'> = {
         date,
         title: finalTitle,
         locationId,

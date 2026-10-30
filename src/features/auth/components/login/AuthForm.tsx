@@ -4,10 +4,11 @@ import { User, Lock, Eye, EyeOff, ChevronLeft } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import { ValidationError } from '@/features/auth/components/login/ValidationError';
+import type { SavedUser } from '@/stores/authStore';
 
 interface AuthFormProps {
   isSignUp: boolean;
-  savedUser: any;
+  savedUser: SavedUser | null;
   showQuickLogin: boolean;
   onBackToQuickLogin: () => void;
   verificationSent: boolean;

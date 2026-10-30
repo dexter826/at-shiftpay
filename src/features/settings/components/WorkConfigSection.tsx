@@ -19,12 +19,13 @@ const WorkConfigSection: React.FC<WorkConfigSectionProps> = ({ userUid, settings
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- draft form mirrors the settings prop
     setEditSettings(settings); // Sync with props when they change
   }, [settings]);
 
   const hasChanges = JSON.stringify(editSettings) !== JSON.stringify(settings);
 
-  const handleChange = (key: keyof UserSettings, value: any) => {
+  const handleChange = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
     setEditSettings((prev) => ({ ...prev, [key]: value }));
   };
 

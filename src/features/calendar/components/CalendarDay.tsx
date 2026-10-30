@@ -22,7 +22,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
   isToday,
   isCurrentMonth,
   onClick,
-}) => {  // Using dateStr for key prop happens in parent
+}) => {
+  // Using dateStr for key prop happens in parent
 
   return (
     <motion.button

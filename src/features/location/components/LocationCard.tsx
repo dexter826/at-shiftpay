@@ -23,7 +23,8 @@ const LocationCard: React.FC<LocationCardProps> = ({
   onEdit,
   onDelete,
   onViewDetail,
-  index,}) => {
+  index,
+}) => {
   const hasCoords = location.latitude && location.longitude;
   const mapUrl = hasCoords
     ? `https://maps.locationiq.com/v3/staticmap?key=${LOCATIONIQ_API_KEY}&center=${location.latitude},${location.longitude}&zoom=17&size=600x400&markers=icon:large-blue-cutout|${location.latitude},${location.longitude}`

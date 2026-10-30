@@ -46,11 +46,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const [localDate, setLocalDate] = useState(new Date());
   const displayDate = propDate || localDate;
 
-  // Đồng bộ localDate khi propDate thay đổi
-  React.useEffect(() => {
-    if (propDate) setLocalDate(propDate);
-  }, [propDate]);
-
   const handleMonthChange = (newDate: Date) => {
     if (onDateChange) {
       onDateChange(newDate);

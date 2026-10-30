@@ -2,9 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, RefreshCw, LogOut } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import type { User } from 'firebase/auth';
 
 interface VerificationViewProps {
-  currentUser: any;
+  currentUser: User | null;
   loading: boolean;
   onCheckVerification: () => Promise<void>;
   onResendEmail: () => Promise<void>;

@@ -20,7 +20,7 @@ const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
   onClose,
   employee,
   onEditClick,
-}) => {
+}) => {
   const editIconRef = React.useRef<AnimatedIconHandle>(null);
 
   if (!employee) return null;

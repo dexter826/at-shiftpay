@@ -16,7 +16,9 @@ import { AnimatedIconHandle } from '@/components/ui/icons/types';
 import LocationStats from '@/features/location/components/LocationStats';
 import LocationToolbar from '@/features/location/components/LocationToolbar';
 import LocationList from '@/features/location/components/LocationList';
-import LocationFormModal from '@/features/location/components/LocationFormModal';
+import LocationFormModal, {
+  type LocationFormData,
+} from '@/features/location/components/LocationFormModal';
 import LocationDetailModal from '@/features/location/components/LocationDetailModal';
 
 const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
@@ -53,10 +55,20 @@ const LocationView: React.FC<LocationViewProps> = ({
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  // Reset pagination on filter change
-  useEffect(() => {
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
     setVisibleCount(12);
-  }, [searchTerm, filterType, sortBy]);
+  };
+
+  const handleFilterChange = (value: 'all' | 'high' | 'low') => {
+    setFilterType(value);
+    setVisibleCount(12);
+  };
+
+  const handleSortChange = (value: 'name' | 'count' | 'newest') => {
+    setSortBy(value);
+    setVisibleCount(12);
+  };
 
   // Preload static maps
   useEffect(() => {
@@ -130,7 +142,7 @@ const LocationView: React.FC<LocationViewProps> = ({
     setIsDetailModalOpen(true);
   };
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: LocationFormData) => {
     try {
       if (editingLocation) {
         await locationService.updateLocation(editingLocation.id, data);
@@ -211,12 +223,12 @@ const LocationView: React.FC<LocationViewProps> = ({
         {/* Toolbar */}
         <LocationToolbar
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          onClearSearch={() => setSearchTerm('')}
+          onSearchChange={handleSearchChange}
+          onClearSearch={() => handleSearchChange('')}
           filterType={filterType}
-          onFilterChange={setFilterType}
+          onFilterChange={handleFilterChange}
           sortBy={sortBy}
-          onSortChange={setSortBy}
+          onSortChange={handleSortChange}
         />
 
         {/* List */}

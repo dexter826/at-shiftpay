@@ -6,28 +6,19 @@ interface ScrollToTopButtonProps {
   activeTab: string;
 }
 
+const ENABLED_TABS = ['dashboard', 'employees', 'payroll', 'locations'];
+
 const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ activeTab }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const enabledTabs = ['dashboard', 'employees', 'payroll', 'locations'];
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.scrollY > 400 && enabledTabs.includes(activeTab)) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
+    const onScroll = () => setIsScrolled(window.scrollY > 400);
 
-    if (!enabledTabs.includes(activeTab)) {
-      setIsVisible(false);
-    } else {
-      toggleVisibility();
-    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
-  }, [activeTab]);
+  const isVisible = isScrolled && ENABLED_TABS.includes(activeTab);
 
   const scrollToTop = () => {
     window.scrollTo({

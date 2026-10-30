@@ -96,13 +96,14 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
       setTimeout(() => {
         handleClose();
       }, 2000);
-    } catch (err: any) {
+    } catch (err) {
+      const code = (err as { code?: string }).code;
       console.error('Change password error:', err);
-      if (err.code === 'auth/wrong-password') {
+      if (code === 'auth/wrong-password') {
         setError('Mật khẩu hiện tại không đúng');
-      } else if (err.code === 'auth/weak-password') {
+      } else if (code === 'auth/weak-password') {
         setError('Mật khẩu quá yếu');
-      } else if (err.code === 'auth/requires-recent-login') {
+      } else if (code === 'auth/requires-recent-login') {
         setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
       } else {
         setError('Không thể đổi mật khẩu. Vui lòng thử lại sau.');
