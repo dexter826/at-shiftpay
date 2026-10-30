@@ -6,7 +6,6 @@ import SearchInput from '@/components/ui/SearchInput';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Skeleton } from '@/components/ui/Skeleton';
 
-
 interface EmployeeToolbarProps {
   employeeCount: number;
   loading: boolean;
@@ -28,12 +27,10 @@ const EmployeeToolbar: React.FC<EmployeeToolbarProps> = ({
   sortBy,
   onSortChange,
 }) => {
-  
-
   const sortOptions = [
     { value: 'name', label: 'Tên A-Z' },
     { value: 'shifts', label: 'Nhiều công' },
-    { value: 'recent', label: 'Mới nhất' }
+    { value: 'recent', label: 'Mới nhất' },
   ];
 
   return (
@@ -44,12 +41,7 @@ const EmployeeToolbar: React.FC<EmployeeToolbarProps> = ({
             {loading ? <Skeleton width={120} height={24} /> : `${employeeCount} nhân viên`}
           </h1>
         </div>
-        <Button
-          onClick={onAdd}
-          disabled={loading}
-          className=""
-          icon={<PlusIcon size={18} />}
-        >
+        <Button onClick={onAdd} disabled={loading} className="" icon={<PlusIcon size={18} />}>
           <span className="hidden sm:inline">Thêm mới</span>
         </Button>
       </div>

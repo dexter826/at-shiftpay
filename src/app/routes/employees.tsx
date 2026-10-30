@@ -19,7 +19,12 @@ interface EmployeeViewProps {
   loading?: boolean;
 }
 
-const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events = [], loading = false }) => {
+const EmployeeView: React.FC<EmployeeViewProps> = ({
+  employees,
+  shifts,
+  events = [],
+  loading = false,
+}) => {
   const { showToast } = useToast();
   const { user } = useAuthStore();
   const userId = user?.uid || '';
@@ -30,9 +35,13 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events =
 
   const shiftCountByEmployee = useMemo(() => {
     const counts: Record<string, number> = {};
-    shifts.forEach(s => {
+    shifts.forEach((s) => {
       const d = new Date(s.date);
-      if (d.getMonth() === currentMonth && d.getFullYear() === currentYear && s.status === 'unpaid') {
+      if (
+        d.getMonth() === currentMonth &&
+        d.getFullYear() === currentYear &&
+        s.status === 'unpaid'
+      ) {
         counts[s.employeeId] = (counts[s.employeeId] || 0) + 1;
       }
     });
@@ -42,10 +51,18 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events =
   // Điều kiện xóa nhân viên
   const canDeleteEmployee = (empId: string): { canDelete: boolean; reason?: string } => {
     const today = new Date().toISOString().split('T')[0];
-    const unpaidShifts = shifts.filter(s => s.employeeId === empId && s.status === 'unpaid');
-    if (unpaidShifts.length > 0) return { canDelete: false, reason: `Nhân viên còn ${unpaidShifts.length} công chưa thanh toán` };
-    const futureShifts = shifts.filter(s => s.employeeId === empId && s.date >= today);
-    if (futureShifts.length > 0) return { canDelete: false, reason: `Nhân viên đang có ${futureShifts.length} ca làm sắp tới` };
+    const unpaidShifts = shifts.filter((s) => s.employeeId === empId && s.status === 'unpaid');
+    if (unpaidShifts.length > 0)
+      return {
+        canDelete: false,
+        reason: `Nhân viên còn ${unpaidShifts.length} công chưa thanh toán`,
+      };
+    const futureShifts = shifts.filter((s) => s.employeeId === empId && s.date >= today);
+    if (futureShifts.length > 0)
+      return {
+        canDelete: false,
+        reason: `Nhân viên đang có ${futureShifts.length} ca làm sắp tới`,
+      };
     return { canDelete: true };
   };
 
@@ -69,7 +86,7 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events =
 
   // Handlers
   const handleLoadMore = () => {
-    setVisibleCount(prev => Math.min(prev + 18, filteredAndSortedEmployees.length));
+    setVisibleCount((prev) => Math.min(prev + 18, filteredAndSortedEmployees.length));
   };
 
   const openAddModal = () => {
@@ -106,14 +123,14 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events =
 
   // Filter & Sort Logic
   const filteredAndSortedEmployees = useMemo(() => {
-    const filtered = employees.filter(e =>
-      e.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      e.phone.includes(searchTerm)
+    const filtered = employees.filter(
+      (e) => e.name.toLowerCase().includes(searchTerm.toLowerCase()) || e.phone.includes(searchTerm)
     );
 
     return filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'name': return a.name.localeCompare(b.name, 'vi');
+        case 'name':
+          return a.name.localeCompare(b.name, 'vi');
         case 'shifts':
           const aShifts = shiftCountByEmployee[a.id] || 0;
           const bShifts = shiftCountByEmployee[b.id] || 0;
@@ -122,7 +139,8 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events =
           const aCreatedAt = a.createdAt ? new Date(a.createdAt).getTime() : 0;
           const bCreatedAt = b.createdAt ? new Date(b.createdAt).getTime() : 0;
           return bCreatedAt - aCreatedAt;
-        default: return 0;
+        default:
+          return 0;
       }
     });
   }, [employees, searchTerm, sortBy, shiftCountByEmployee]);
@@ -167,24 +185,18 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events =
         onClose={() => setDeleteConfirm(null)}
         footer={
           <div className="flex gap-2">
-            <Button
-              variant="secondary"
-              onClick={() => setDeleteConfirm(null)}
-              className="flex-1"
-            >
+            <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="flex-1">
               Hủy
             </Button>
-            <Button
-              variant="danger"
-              onClick={confirmDelete}
-              className="flex-1"
-            >
+            <Button variant="danger" onClick={confirmDelete} className="flex-1">
               Xóa
             </Button>
           </div>
         }
       >
-        <p className={`text-sm text-[var(--text-secondary)]`}>Bạn có chắc muốn xóa nhân viên này?</p>
+        <p className={`text-sm text-[var(--text-secondary)]`}>
+          Bạn có chắc muốn xóa nhân viên này?
+        </p>
       </Modal>
 
       {/* Lỗi xóa */}
@@ -193,11 +205,7 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, events =
         isOpen={!!deleteError}
         onClose={() => setDeleteError(null)}
         footer={
-          <Button
-            variant="secondary"
-            onClick={() => setDeleteError(null)}
-            fullWidth
-          >
+          <Button variant="secondary" onClick={() => setDeleteError(null)} fullWidth>
             Đã hiểu
           </Button>
         }

@@ -12,7 +12,7 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-      }
+      },
     },
     build: {
       target: 'es2015',
@@ -22,11 +22,11 @@ export default defineConfig(() => {
           drop_console: true,
           drop_debugger: true,
           pure_funcs: ['console.log', 'console.info', 'console.debug'],
-          passes: 2
+          passes: 2,
         },
         mangle: {
-          safari10: true
-        }
+          safari10: true,
+        },
       },
       cssMinify: true,
       reportCompressedSize: false,
@@ -38,7 +38,12 @@ export default defineConfig(() => {
         output: {
           manualChunks: {
             'react-vendor': ['react', 'react-dom'],
-            'firebase-vendor': ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage'],
+            'firebase-vendor': [
+              'firebase/app',
+              'firebase/firestore',
+              'firebase/auth',
+              'firebase/storage',
+            ],
             'charts-vendor': ['recharts'],
             'icons-vendor': ['lucide-react'],
             'lottie-vendor': ['lottie-react'],
@@ -46,12 +51,12 @@ export default defineConfig(() => {
             'picker-vendor': ['@ncdai/react-wheel-picker'],
             'framer-motion-vendor': ['framer-motion'],
             'cropper-vendor': ['react-easy-crop'],
-            'core-vendor': ['zod', 'zustand', 'clsx', 'tailwind-merge']
-          }
-        }
+            'core-vendor': ['zod', 'zustand', 'clsx', 'tailwind-merge'],
+          },
+        },
       },
       chunkSizeWarningLimit: 600,
-      assetsInclude: ['**/*.json']
-    }
+      assetsInclude: ['**/*.json'],
+    },
   };
 });

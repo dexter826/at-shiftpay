@@ -38,7 +38,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   currentDate: propDate,
   onDateChange,
   onNavigateToReviews,
-  loading = false
+  loading = false,
 }) => {
   const { showToast } = useToast();
 
@@ -98,8 +98,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     return days;
   }, [displayDate]);
 
-  const prevMonth = () => handleMonthChange(new Date(displayDate.getFullYear(), displayDate.getMonth() - 1, 1));
-  const nextMonth = () => handleMonthChange(new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 1));
+  const prevMonth = () =>
+    handleMonthChange(new Date(displayDate.getFullYear(), displayDate.getMonth() - 1, 1));
+  const nextMonth = () =>
+    handleMonthChange(new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 1));
   const goToToday = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -107,7 +109,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     const day = String(today.getDate()).padStart(2, '0');
     const todayStr = `${year}-${month}-${day}`;
 
-    const isSameMonth = displayDate.getFullYear() === today.getFullYear() &&
+    const isSameMonth =
+      displayDate.getFullYear() === today.getFullYear() &&
       displayDate.getMonth() === today.getMonth();
 
     if (isSameMonth && selectedDate === todayStr) return;
@@ -128,7 +131,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const handleDateClick = (date: Date) => {
     // Chống lệch ngày do múi giờ
     const offset = date.getTimezoneOffset();
-    const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+    const localDate = new Date(date.getTime() - offset * 60 * 1000);
     const dateStr = localDate.toISOString().split('T')[0];
     setSelectedDate(dateStr);
 
@@ -159,7 +162,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const confirmDeleteEvent = async () => {
     if (deleteConfirm) {
       const eventShifts = shifts.filter((s: Shift) => s.eventId === deleteConfirm);
-      await eventService.deleteEventWithShifts(deleteConfirm, eventShifts.map((s: Shift) => s.id));
+      await eventService.deleteEventWithShifts(
+        deleteConfirm,
+        eventShifts.map((s: Shift) => s.id)
+      );
       showToast('Đã xóa sự kiện', 'success');
       setDeleteConfirm(null);
     }
@@ -170,10 +176,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   };
 
   const selectedEvents = selectedDate ? eventsByDate[selectedDate] || [] : [];
-  
+
   // Shifts for sidebar display logic (only needed if logic was complex, but Sidebar does it simply)
-  // Sidebar takes "shifts" (all shifts) and filters mainly by eventId, 
-  // but originally CalendarView calculated "shiftsForDisplay" just for day count in sidebar. 
+  // Sidebar takes "shifts" (all shifts) and filters mainly by eventId,
+  // but originally CalendarView calculated "shiftsForDisplay" just for day count in sidebar.
   // `CalendarSidebar` now receives full `shifts` array and filters by eventId/session inside map.
   // Wait, `CalendarSidebar` loops through `selectedEvents`, then for each event filters `shifts`.
   // So passing `shifts` (all shifts) is fine, but maybe inefficient if `shifts` is huge.
@@ -181,7 +187,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   // Original `CalendarView`: `shiftsForDisplay` = `shifts.filter(s => s.date === selectedDate)`.
   // Sidebar logic: `shiftsForDisplay.filter(...)`
   // So I should pass `shiftsForDisplay` to `CalendarSidebar` as `shifts`.
-  
+
   const shiftsForDisplay = useMemo(() => {
     if (!selectedDate) return [];
     return shifts.filter((s: Shift) => s.date === selectedDate);
@@ -192,40 +198,42 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       <div className="px-4 pt-5 pb-4 md:px-6 md:pt-6 md:pb-6 flex flex-col lg:flex-row gap-4 lg:gap-6 lg:h-[calc(100vh-3rem)]">
         {/* Calendar Main */}
         <div className="flex-1">
-          <div className={`bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg lg:h-full flex flex-col`}>
-             <CalendarHeader 
-                displayDate={displayDate}
-                onPrevMonth={prevMonth}
-                onNextMonth={nextMonth}
-                onGoToToday={goToToday}
-                onNavigateToReviews={onNavigateToReviews}
-             />
+          <div
+            className={`bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg lg:h-full flex flex-col`}
+          >
+            <CalendarHeader
+              displayDate={displayDate}
+              onPrevMonth={prevMonth}
+              onNextMonth={nextMonth}
+              onGoToToday={goToToday}
+              onNavigateToReviews={onNavigateToReviews}
+            />
 
-             <CalendarGrid 
-                daysInMonth={daysInMonth}
-                displayDate={displayDate}
-                eventsByDate={eventsByDate}
-                selectedDate={selectedDate}
-                locations={locations}
-                loading={loading}
-                onDateClick={handleDateClick}
-             />
+            <CalendarGrid
+              daysInMonth={daysInMonth}
+              displayDate={displayDate}
+              eventsByDate={eventsByDate}
+              selectedDate={selectedDate}
+              locations={locations}
+              loading={loading}
+              onDateClick={handleDateClick}
+            />
           </div>
         </div>
 
         {/* Sidebar */}
         <div className="w-full lg:w-72">
-           <CalendarSidebar 
-              selectedDate={selectedDate}
-              events={selectedEvents}
-              shifts={shiftsForDisplay}
-              locations={locations}
-              loading={loading}
-              onAddEvent={handleAddEvent}
-              onEditEvent={handleEditEvent}
-              onDeleteEvent={handleDeleteEvent}
-              onViewEvent={handleViewEvent}
-           />
+          <CalendarSidebar
+            selectedDate={selectedDate}
+            events={selectedEvents}
+            shifts={shiftsForDisplay}
+            locations={locations}
+            loading={loading}
+            onAddEvent={handleAddEvent}
+            onEditEvent={handleEditEvent}
+            onDeleteEvent={handleDeleteEvent}
+            onViewEvent={handleViewEvent}
+          />
         </div>
       </div>
 
@@ -247,8 +255,22 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         onClose={() => setDeleteConfirm(null)}
         footer={
           <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="flex-1" icon={<XIcon size={16} />}>Hủy</Button>
-            <Button variant="danger" onClick={confirmDeleteEvent} className="flex-1" icon={<TrashIcon size={16} />}>Xóa</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setDeleteConfirm(null)}
+              className="flex-1"
+              icon={<XIcon size={16} />}
+            >
+              Hủy
+            </Button>
+            <Button
+              variant="danger"
+              onClick={confirmDeleteEvent}
+              className="flex-1"
+              icon={<TrashIcon size={16} />}
+            >
+              Xóa
+            </Button>
           </div>
         }
       >

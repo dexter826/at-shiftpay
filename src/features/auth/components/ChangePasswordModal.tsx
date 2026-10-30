@@ -14,8 +14,6 @@ interface ChangePasswordModalProps {
 }
 
 export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
-
-
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -99,7 +97,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
         handleClose();
       }, 2000);
     } catch (err: any) {
-      console.error("Change password error:", err);
+      console.error('Change password error:', err);
       if (err.code === 'auth/wrong-password') {
         setError('Mật khẩu hiện tại không đúng');
       } else if (err.code === 'auth/weak-password') {
@@ -110,7 +108,8 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
         setError('Đã xảy ra lỗi: ' + (err.message || 'Vui lòng thử lại sau'));
       }
     } finally {
-      if (!success) { // Giữ loading nếu thất bại
+      if (!success) {
+        // Giữ loading nếu thất bại
         setLoading(false);
       }
     }
@@ -123,19 +122,10 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
       onClose={handleClose}
       footer={
         <div className="flex gap-2 w-full">
-          <Button
-            variant="secondary"
-            onClick={handleClose}
-            className="flex-1"
-            disabled={loading}
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1" disabled={loading}>
             Hủy
           </Button>
-          <Button
-            onClick={handleSubmit}
-            className="flex-1"
-            disabled={loading}
-          >
+          <Button onClick={handleSubmit} className="flex-1" disabled={loading}>
             {!loading && <Check size={16} />}
             {loading ? 'Đang xử lý...' : 'Cập nhật'}
           </Button>
@@ -144,13 +134,13 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
     >
       <form onSubmit={handleSubmit} className="space-y-4 py-2">
         {/* Username ẩn hỗ trợ password manager */}
-        <input 
-          type="text" 
-          name="username" 
-          value={auth.currentUser?.email || ''} 
-          readOnly 
-          className="hidden" 
-          autoComplete="username" 
+        <input
+          type="text"
+          name="username"
+          value={auth.currentUser?.email || ''}
+          readOnly
+          className="hidden"
+          autoComplete="username"
         />
         {error && (
           <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-sm rounded-lg">
@@ -168,8 +158,12 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
 
         {/* Mật khẩu hiện tại */}
         <div>
-          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>Mật khẩu hiện tại</label>
-          <div className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}>
+          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>
+            Mật khẩu hiện tại
+          </label>
+          <div
+            className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}
+          >
             <Lock size={18} className="text-[var(--text-muted)]" />
             <input
               type={showCurrentPassword ? 'text' : 'password'}
@@ -183,24 +177,32 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               tabIndex={-1}
               onClick={() => setShowCurrentPassword(!showCurrentPassword)}
               onMouseEnter={() => {
-                  if (showCurrentPassword) currentEyeOffRef.current?.startAnimation();
-                  else currentEyeRef.current?.startAnimation();
+                if (showCurrentPassword) currentEyeOffRef.current?.startAnimation();
+                else currentEyeRef.current?.startAnimation();
               }}
               onMouseLeave={() => {
-                  if (showCurrentPassword) currentEyeOffRef.current?.stopAnimation();
-                  else currentEyeRef.current?.stopAnimation();
+                if (showCurrentPassword) currentEyeOffRef.current?.stopAnimation();
+                else currentEyeRef.current?.stopAnimation();
               }}
               className={`text-[var(--text-muted)] hover:text-primary transition-colors`}
             >
-              {showCurrentPassword ? <EyeOffIcon ref={currentEyeOffRef} size={18} /> : <EyeIcon ref={currentEyeRef} size={18} />}
+              {showCurrentPassword ? (
+                <EyeOffIcon ref={currentEyeOffRef} size={18} />
+              ) : (
+                <EyeIcon ref={currentEyeRef} size={18} />
+              )}
             </button>
           </div>
         </div>
 
         {/* Mật khẩu mới */}
         <div>
-          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>Mật khẩu mới</label>
-          <div className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}>
+          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>
+            Mật khẩu mới
+          </label>
+          <div
+            className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}
+          >
             <Lock size={18} className="text-[var(--text-muted)]" />
             <input
               type={showNewPassword ? 'text' : 'password'}
@@ -214,24 +216,32 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               tabIndex={-1}
               onClick={() => setShowNewPassword(!showNewPassword)}
               onMouseEnter={() => {
-                  if (showNewPassword) newEyeOffRef.current?.startAnimation();
-                  else newEyeRef.current?.startAnimation();
+                if (showNewPassword) newEyeOffRef.current?.startAnimation();
+                else newEyeRef.current?.startAnimation();
               }}
               onMouseLeave={() => {
-                  if (showNewPassword) newEyeOffRef.current?.stopAnimation();
-                  else newEyeRef.current?.stopAnimation();
+                if (showNewPassword) newEyeOffRef.current?.stopAnimation();
+                else newEyeRef.current?.stopAnimation();
               }}
               className={`text-[var(--text-muted)] hover:text-primary transition-colors`}
             >
-              {showNewPassword ? <EyeOffIcon ref={newEyeOffRef} size={18} /> : <EyeIcon ref={newEyeRef} size={18} />}
+              {showNewPassword ? (
+                <EyeOffIcon ref={newEyeOffRef} size={18} />
+              ) : (
+                <EyeIcon ref={newEyeRef} size={18} />
+              )}
             </button>
           </div>
         </div>
 
         {/* Xác nhận mật khẩu mới */}
         <div>
-          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>Xác nhận mật khẩu mới</label>
-          <div className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}>
+          <label className={`block text-xs font-medium text-[var(--text-muted)] mb-1.5`}>
+            Xác nhận mật khẩu mới
+          </label>
+          <div
+            className={`flex items-center border-b-2 border-[var(--border-color)] pb-2 transition-colors focus-within:border-primary`}
+          >
             <Lock size={18} className="text-[var(--text-muted)]" />
             <input
               type={showConfirmPassword ? 'text' : 'password'}
@@ -245,16 +255,20 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               tabIndex={-1}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               onMouseEnter={() => {
-                  if (showConfirmPassword) confirmEyeOffRef.current?.startAnimation();
-                  else confirmEyeRef.current?.startAnimation();
+                if (showConfirmPassword) confirmEyeOffRef.current?.startAnimation();
+                else confirmEyeRef.current?.startAnimation();
               }}
               onMouseLeave={() => {
-                  if (showConfirmPassword) confirmEyeOffRef.current?.stopAnimation();
-                  else confirmEyeRef.current?.stopAnimation();
+                if (showConfirmPassword) confirmEyeOffRef.current?.stopAnimation();
+                else confirmEyeRef.current?.stopAnimation();
               }}
               className={`text-[var(--text-muted)] hover:text-primary transition-colors`}
             >
-              {showConfirmPassword ? <EyeOffIcon ref={confirmEyeOffRef} size={18} /> : <EyeIcon ref={confirmEyeRef} size={18} />}
+              {showConfirmPassword ? (
+                <EyeOffIcon ref={confirmEyeOffRef} size={18} />
+              ) : (
+                <EyeIcon ref={confirmEyeRef} size={18} />
+              )}
             </button>
           </div>
         </div>

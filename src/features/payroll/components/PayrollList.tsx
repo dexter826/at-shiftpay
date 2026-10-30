@@ -27,8 +27,6 @@ const PayrollList: React.FC<PayrollListProps> = ({
   onPaymentClick,
   searchTerm,
 }) => {
-  
-
   return (
     <AnimatePresence mode="wait">
       {loading ? (
@@ -41,7 +39,10 @@ const PayrollList: React.FC<PayrollListProps> = ({
           className="space-y-2"
         >
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className={`w-full p-3 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg flex justify-between items-center`}>
+            <div
+              key={i}
+              className={`w-full p-3 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg flex justify-between items-center`}
+            >
               <div className="flex items-center gap-3 w-full">
                 <Skeleton variant="circular" width={36} height={36} />
                 <div className="flex-1 space-y-2">
@@ -70,7 +71,7 @@ const PayrollList: React.FC<PayrollListProps> = ({
           ) : (
             <>
               {items.slice(0, visibleCount).map((item) => {
-                const employee = employees.find(e => e.id === item.employeeId);
+                const employee = employees.find((e) => e.id === item.employeeId);
                 const employeeImage = employee?.imageUrl || employee?.avatar;
                 const itemWithFees = item as typeof item & { totalFees?: number };
 
@@ -80,7 +81,7 @@ const PayrollList: React.FC<PayrollListProps> = ({
                     onClick={() => {
                       onSelectEmployee(item.employeeId);
                       // Tự động mở thanh toán nếu sạch nợ (Moved logic to parent or handle here? Parent handles logic usually, but here we just trigger)
-                      // Logic in original was: 
+                      // Logic in original was:
                       // setSelectedEmpId(item.employeeId);
                       // if (item.totalUnpaid > 0 && item.totalAdvanced === 0) {
                       //   setShowPaymentModal(true);
@@ -101,14 +102,21 @@ const PayrollList: React.FC<PayrollListProps> = ({
                           className={`w-9 h-9 rounded-full object-cover border-2 ${item.totalUnpaid > 0 ? 'border-primary' : 'border-[var(--border-color)]'}`}
                         />
                       ) : (
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium ${item.totalUnpaid > 0 ? 'bg-primary/10 text-primary' : 'hover:bg-[var(--border-color)] text-[var(--text-muted)]'
-                          }`}>
+                        <div
+                          className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium ${
+                            item.totalUnpaid > 0
+                              ? 'bg-primary/10 text-primary'
+                              : 'hover:bg-[var(--border-color)] text-[var(--text-muted)]'
+                          }`}
+                        >
                           {item.employeeName.charAt(0)}
                         </div>
                       )}
                       <div className="text-left">
                         <div className="flex items-center gap-2">
-                          <p className={`text-sm font-medium text-[var(--text-secondary)]`}>{item.employeeName}</p>
+                          <p className={`text-sm font-medium text-[var(--text-secondary)]`}>
+                            {item.employeeName}
+                          </p>
                           {itemWithFees.totalFees && itemWithFees.totalFees > 0 && (
                             <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-500 border border-blue-500/30 rounded">
                               Có phụ phí
@@ -117,9 +125,7 @@ const PayrollList: React.FC<PayrollListProps> = ({
                         </div>
                         <div className="flex items-center gap-2 text-xs">
                           {item.unpaidCount > 0 && (
-                            <span className="text-primary">
-                              {item.unpaidCount} công chưa trả
-                            </span>
+                            <span className="text-primary">{item.unpaidCount} công chưa trả</span>
                           )}
                           {item.advancedCount > 0 && (
                             <span className="text-orange-500">
@@ -135,7 +141,9 @@ const PayrollList: React.FC<PayrollListProps> = ({
 
                     <div className="flex items-center gap-2">
                       <div className="text-right">
-                        <span className={`text-sm font-medium tabular-nums ${item.totalUnpaid > 0 ? 'text-primary' : 'text-[var(--text-muted)]'}`}>
+                        <span
+                          className={`text-sm font-medium tabular-nums ${item.totalUnpaid > 0 ? 'text-primary' : 'text-[var(--text-muted)]'}`}
+                        >
                           {formatCurrency(item.totalUnpaid)}
                         </span>
                         {item.totalAdvanced > 0 && (
@@ -152,7 +160,7 @@ const PayrollList: React.FC<PayrollListProps> = ({
               <LoadMore
                 currentCount={visibleCount}
                 totalCount={items.length}
-                onLoadMore={() => setVisibleCount(prev => prev + 15)}
+                onLoadMore={() => setVisibleCount((prev) => prev + 15)}
                 unit="nhân viên"
                 className="pt-2 pb-4"
               />

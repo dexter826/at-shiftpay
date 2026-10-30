@@ -21,7 +21,7 @@ import { exportDetailedReport } from '@/lib/api/exportService';
 type Tab = 'dashboard' | 'calendar' | 'employees' | 'payroll' | 'settings' | 'locations';
 
 function AppShell() {
-  const theme = useThemeStore(state => state.theme);
+  const theme = useThemeStore((state) => state.theme);
   const { user, loading: authLoading, init: initAuth, logout } = useAuthStore();
   const {
     employees,
@@ -38,7 +38,7 @@ function AppShell() {
     setActiveTab,
     initSubscriptions,
     cleanupSubscriptions,
-    refreshData
+    refreshData,
   } = useAppDataStore();
 
   // Cập nhật tiêu đề trang theo Tab và cuộn lên đầu trang
@@ -50,7 +50,7 @@ function AppShell() {
         employees: 'Nhân sự',
         payroll: 'Thanh toán',
         locations: 'Địa điểm',
-        settings: 'Cài đặt'
+        settings: 'Cài đặt',
       };
       document.title = `${tabNames[activeTab]} - ShiftPay`;
       window.scrollTo(0, 0);
@@ -93,12 +93,21 @@ function AppShell() {
       setIsExporting(true);
       const [fetchedEvents, fetchedShifts] = await Promise.all([
         eventService.getEventsByMonth(user.uid, month, year),
-        shiftService.getShiftsByMonth(user.uid, month, year)
+        shiftService.getShiftsByMonth(user.uid, month, year),
       ]);
-      await exportDetailedReport(month, year, fetchedEvents, fetchedShifts, employees, locations, settings, onlyDebt);
+      await exportDetailedReport(
+        month,
+        year,
+        fetchedEvents,
+        fetchedShifts,
+        employees,
+        locations,
+        settings,
+        onlyDebt
+      );
       setIsExportModalOpen(false);
     } catch (error) {
-      console.error("Export failed:", error);
+      console.error('Export failed:', error);
     } finally {
       setIsExporting(false);
     }
@@ -120,8 +129,8 @@ function AppShell() {
         <div className="flex items-center justify-center h-screen bg-[var(--bg-primary)]">
           <Loader />
         </div>
-      ) : (!user || !user.emailVerified) ? (
-        <Login onLogin={() => { }} />
+      ) : !user || !user.emailVerified ? (
+        <Login onLogin={() => {}} />
       ) : (
         <AppContent
           activeTab={activeTab}
@@ -174,7 +183,7 @@ function AppContent({
   onExportReport,
   showLogoutConfirm,
   onCloseLogoutConfirm,
-  onConfirmLogout
+  onConfirmLogout,
 }: {
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
@@ -201,11 +210,7 @@ function AppContent({
 }) {
   return (
     <div className="min-h-dynamic bg-[var(--bg-primary)]">
-      <Navbar
-        currentTab={activeTab}
-        setTab={(t) => setActiveTab(t as Tab)}
-        onLogout={onLogout}
-      />
+      <Navbar currentTab={activeTab} setTab={(t) => setActiveTab(t as Tab)} onLogout={onLogout} />
       <main className="md:pl-60">
         <PullToRefresh onRefresh={() => refreshData(user.uid)}>
           <AppRouter
@@ -242,18 +247,10 @@ function AppContent({
         onClose={onCloseLogoutConfirm}
         footer={
           <div className="flex gap-2">
-            <Button
-              variant="secondary"
-              onClick={onCloseLogoutConfirm}
-              className="flex-1"
-            >
+            <Button variant="secondary" onClick={onCloseLogoutConfirm} className="flex-1">
               Hủy
             </Button>
-            <Button
-              variant="danger"
-              onClick={onConfirmLogout}
-              className="flex-1"
-            >
+            <Button variant="danger" onClick={onConfirmLogout} className="flex-1">
               Đăng xuất
             </Button>
           </div>

@@ -44,7 +44,7 @@ export function AppRouter({
   setViewDate,
   totalDebt,
   onLogout,
-  onOpenExport
+  onOpenExport,
 }: AppRouterProps) {
   const tabs = [
     {
@@ -61,7 +61,7 @@ export function AppRouter({
           onNavigateToSettings={() => setActiveTab('settings')}
           onOpenExport={onOpenExport}
         />
-      )
+      ),
     },
     {
       id: 'calendar',
@@ -78,18 +78,13 @@ export function AppRouter({
           onNavigateToReviews={() => setActiveTab('locations')}
           loading={loading || calendarLoading}
         />
-      )
+      ),
     },
     {
       id: 'employees',
       component: (
-        <EmployeeView
-          employees={employees}
-          shifts={shifts}
-          events={events}
-          loading={loading}
-        />
-      )
+        <EmployeeView employees={employees} shifts={shifts} events={events} loading={loading} />
+      ),
     },
     {
       id: 'payroll',
@@ -101,7 +96,7 @@ export function AppRouter({
           locations={locations}
           loading={loading}
         />
-      )
+      ),
     },
     {
       id: 'locations',
@@ -112,27 +107,18 @@ export function AppRouter({
           loading={loading}
           onBack={() => setActiveTab('calendar')}
         />
-      )
+      ),
     },
     {
       id: 'settings',
-      component: (
-        <SettingsView
-          user={user}
-          settings={settings}
-          onLogout={onLogout}
-        />
-      )
-    }
+      component: <SettingsView user={user} settings={settings} onLogout={onLogout} />,
+    },
   ];
 
   return (
     <div className="relative min-h-dynamic">
       {tabs.map((tab) => (
-        <div
-          key={tab.id}
-          className={activeTab === tab.id ? "block" : "hidden"}
-        >
+        <div key={tab.id} className={activeTab === tab.id ? 'block' : 'hidden'}>
           <motion.div
             initial={false}
             animate={{ opacity: activeTab === tab.id ? 1 : 0 }}
@@ -144,4 +130,4 @@ export function AppRouter({
       ))}
     </div>
   );
-};
+}

@@ -1,4 +1,14 @@
-import { collection, query, where, orderBy, onSnapshot, getDocs, Unsubscribe, Query, WriteBatch } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  getDocs,
+  Unsubscribe,
+  Query,
+  WriteBatch,
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { safeValidate } from '@/utils/validation';
 import { z } from 'zod';
@@ -20,7 +30,7 @@ export function buildMonthRangeQuery({
   year,
   userId,
   orderByField,
-  orderDirection = 'desc'
+  orderDirection = 'desc',
 }: DateRangeQuery): Query {
   let startDate: string;
   let endDate: string;
@@ -62,11 +72,11 @@ export function createRealtimeSubscription<T>(
   return onSnapshot(
     q,
     (snapshot) => {
-      const rawData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      
+      const rawData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
       if (schema) {
         const validData = rawData
-          .map(item => safeValidate(schema, item))
+          .map((item) => safeValidate(schema, item))
           .filter((item): item is T => item !== null);
         callback(validData);
       } else {
@@ -82,14 +92,14 @@ export function createRealtimeSubscription<T>(
 
 export async function executeBatchQuery<T>(q: Query, schema?: z.ZodSchema<T>): Promise<T[]> {
   const snapshot = await getDocs(q);
-  const rawData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  
+  const rawData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
   if (schema) {
     return rawData
-      .map(item => safeValidate(schema, item))
+      .map((item) => safeValidate(schema, item))
       .filter((item): item is T => item !== null);
   }
-  
+
   return rawData as T[];
 }
 
@@ -99,7 +109,7 @@ export async function executeBatchWithRetry(
   delayMs: number = 1000
 ): Promise<void> {
   let lastError: Error | null = null;
-  
+
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       await batchOperation();
@@ -107,13 +117,12 @@ export async function executeBatchWithRetry(
     } catch (error) {
       lastError = error instanceof Error ? error : new Error('Unknown error');
       console.warn(`Batch operation failed (attempt ${attempt + 1}/${maxRetries}):`, error);
-      
+
       if (attempt < maxRetries - 1) {
-        await new Promise(resolve => setTimeout(resolve, delayMs * (attempt + 1)));
+        await new Promise((resolve) => setTimeout(resolve, delayMs * (attempt + 1)));
       }
     }
   }
-  
+
   throw new Error(`Batch operation failed sau ${maxRetries} lần thử: ${lastError?.message}`);
 }
-

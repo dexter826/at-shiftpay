@@ -16,7 +16,6 @@ interface ModalProps {
 let openModalCount = 0;
 
 export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, footer }) => {
-
   const closeIconRef = React.useRef<AnimatedIconHandle>(null);
 
   useEffect(() => {
@@ -51,7 +50,9 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
             transition={{ duration: 0.2 }}
           >
             {/* Tiêu đề */}
-            <div className={`px-4 py-3 border-b border-[var(--border-color)] flex justify-between items-center flex-shrink-0`}>
+            <div
+              className={`px-4 py-3 border-b border-[var(--border-color)] flex justify-between items-center flex-shrink-0`}
+            >
               <h3 className={`text-base font-semibold text-[var(--text-primary)]`}>{title}</h3>
               <button
                 onClick={onClose}
@@ -64,9 +65,7 @@ export const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, 
             </div>
 
             {/* Nội dung */}
-            <div className="overflow-y-auto p-4 flex-1">
-              {children}
-            </div>
+            <div className="overflow-y-auto p-4 flex-1">{children}</div>
 
             {/* Chân trang */}
             {footer && (

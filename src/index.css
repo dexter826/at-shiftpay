@@ -3,153 +3,165 @@
 @tailwind utilities;
 
 @layer base {
+  html,
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-tap-highlight-color: transparent;
+    font-family:
+      'Be Vietnam Pro',
+      system-ui,
+      -apple-system,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-    html,
-    body {
-        background-color: var(--bg-primary);
-        color: var(--text-primary);
-        -webkit-tap-highlight-color: transparent;
-        font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-    *,
-    *::before,
-    *::after {
-        transition-property: background-color, border-color, color, fill, stroke;
-        transition-duration: 300ms;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    }
+  *:hover {
+    transition-duration: 150ms !important;
+  }
 
-    *:hover {
-        transition-duration: 150ms !important;
-    }
+  button,
+  a,
+  [role='button'],
+  .no-select {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
 
-    button,
-    a,
-    [role="button"],
-    .no-select {
-        -webkit-touch-callout: none;
-        user-select: none;
-    }
+  input,
+  textarea,
+  [contenteditable='true'],
+  .selectable {
+    user-select: text;
+  }
 
-    input,
-    textarea,
-    [contenteditable="true"],
-    .selectable {
-        user-select: text;
-    }
+  /* Tabular numbers for financial/data displays */
+  .tabular-nums,
+  [data-type='number'],
+  .payroll-amount,
+  .stat-value {
+    font-variant-numeric: tabular-nums;
+  }
 
-    /* Tabular numbers for financial/data displays */
-    .tabular-nums,
-    [data-type="number"],
-    .payroll-amount,
-    .stat-value {
-        font-variant-numeric: tabular-nums;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
-        font-weight: 600;
-    }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family:
+      'Be Vietnam Pro',
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-weight: 600;
+  }
 }
 
 :root {
-    --bg-primary: #1a1a18;
-    --bg-secondary: #242420;
-    --bg-card: #1e1e1b;
-    --border-color: #2c2c28;
-    --text-primary: #e8e7e2;
-    --text-secondary: #9e9d96;
-    --text-muted: #6b6a65;
-    --scrollbar-track: transparent;
-    --scrollbar-thumb: #3a3a35;
-    --scrollbar-thumb-hover: #ecb52d;
-    --tile: #ecb52d;
+  --bg-primary: #1a1a18;
+  --bg-secondary: #242420;
+  --bg-card: #1e1e1b;
+  --border-color: #2c2c28;
+  --text-primary: #e8e7e2;
+  --text-secondary: #9e9d96;
+  --text-muted: #6b6a65;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #3a3a35;
+  --scrollbar-thumb-hover: #ecb52d;
+  --tile: #ecb52d;
 }
 
 html.light {
-    --bg-primary: #f6f5f1;
-    --bg-secondary: #fbfaf7;
-    --bg-card: #ffffff;
-    --border-color: #e6e5e0;
-    --text-primary: #1c1b18;
-    --text-secondary: #5c5b56;
-    --text-muted: #8b8a85;
-    --scrollbar-track: transparent;
-    --scrollbar-thumb: #d4d3ce;
-    --scrollbar-thumb-hover: #ecb52d;
-    --tile: #facc15;
+  --bg-primary: #f6f5f1;
+  --bg-secondary: #fbfaf7;
+  --bg-card: #ffffff;
+  --border-color: #e6e5e0;
+  --text-primary: #1c1b18;
+  --text-secondary: #5c5b56;
+  --text-muted: #8b8a85;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #d4d3ce;
+  --scrollbar-thumb-hover: #ecb52d;
+  --tile: #facc15;
 }
 
 /* Scrollbar chung */
 * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 /* Webkit */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 10px;
-    transition: background 0.2s ease;
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
+  background: var(--scrollbar-thumb-hover);
 }
 
 ::-webkit-scrollbar-thumb:active {
-    background: #d4a028;
-    /* Primary đậm */
+  background: #d4a028;
+  /* Primary đậm */
 }
 
 @layer utilities {
-    .pb-safe {
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-    }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 
-    .pt-safe {
-        padding-top: env(safe-area-inset-top, 0px);
-    }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
 
-    .pl-safe {
-        padding-left: env(safe-area-inset-left, 0px);
-    }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left, 0px);
+  }
 
-    .pr-safe {
-        padding-right: env(safe-area-inset-right, 0px);
-    }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right, 0px);
+  }
 
-    .min-h-dynamic {
-        min-height: 100dvh;
-    }
+  .min-h-dynamic {
+    min-height: 100dvh;
+  }
 
-    .scrollbar-thin {
-        scrollbar-width: thin;
-    }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
 
-    .scrollbar-thin::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
-    }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
 
-    .scrollbar-thin::-webkit-scrollbar-thumb {
-        background: var(--scrollbar-thumb);
-        border-radius: 4px;
-    }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+  }
 
-    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-        background: var(--scrollbar-thumb-hover);
-    }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
 }

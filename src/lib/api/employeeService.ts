@@ -8,7 +8,7 @@ import {
   query,
   where,
   orderBy,
-  Unsubscribe
+  Unsubscribe,
 } from 'firebase/firestore';
 import { Employee, BankAccount } from '@/types/index';
 import { createRealtimeSubscription } from '@/lib/api/firebaseService';
@@ -24,7 +24,10 @@ export const employeeService = {
     return createRealtimeSubscription<Employee>(q, callback, 'subscribeEmployees', EmployeeSchema);
   },
 
-  async addEmployee(data: { name: string; phone: string; imageUrl?: string; bankAccount?: BankAccount }, userId: string): Promise<void> {
+  async addEmployee(
+    data: { name: string; phone: string; imageUrl?: string; bankAccount?: BankAccount },
+    userId: string
+  ): Promise<void> {
     try {
       await addDoc(collection(db, 'employees'), {
         ...data,
@@ -33,7 +36,9 @@ export const employeeService = {
       });
     } catch (error) {
       console.error('addEmployee error:', error);
-      throw new Error(`Không thể thêm nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
+      throw new Error(
+        `Không thể thêm nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
     }
   },
 
@@ -43,7 +48,9 @@ export const employeeService = {
       await updateDoc(docRef, data);
     } catch (error) {
       console.error('updateEmployee error:', error);
-      throw new Error(`Không thể cập nhật nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
+      throw new Error(
+        `Không thể cập nhật nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
     }
   },
 
@@ -52,7 +59,9 @@ export const employeeService = {
       await deleteDoc(doc(db, 'employees', id));
     } catch (error) {
       console.error('deleteEmployee error:', error);
-      throw new Error(`Không thể xóa nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
+      throw new Error(
+        `Không thể xóa nhân viên: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
     }
   },
 };

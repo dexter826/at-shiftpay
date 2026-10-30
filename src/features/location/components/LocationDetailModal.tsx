@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import { motion } from "framer-motion";
+import React, { memo } from 'react';
+import { motion } from 'framer-motion';
 import {
   MapPin,
   MessageSquare,
@@ -8,16 +8,15 @@ import {
   ThumbsUp,
   ThumbsDown,
   Minus,
-} from "lucide-react";
-import { Modal } from "@/components/ui/Modal";
-import Button from "@/components/ui/Button";
-import { Location, Event } from "@/types/index";
+} from 'lucide-react';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { Location, Event } from '@/types/index';
 import { useThemeStore } from '@/stores/themeStore';
-import PenIcon from "@/components/ui/icons/PenIcon";
-import { AnimatedIconHandle } from "@/components/ui/icons/types";
+import PenIcon from '@/components/ui/icons/PenIcon';
+import { AnimatedIconHandle } from '@/components/ui/icons/types';
 
-const LOCATIONIQ_API_KEY =
-  import.meta.env.VITE_LOCATIONIQ_API_KEY || "free_key_placeholder";
+const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY || 'free_key_placeholder';
 
 interface LocationDetailModalProps {
   isOpen: boolean;
@@ -34,8 +33,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
   events,
   onEditClick,
 }) => {
-  const theme = useThemeStore(state => state.theme);
-
+  const theme = useThemeStore((state) => state.theme);
 
   const editIconRef = React.useRef<AnimatedIconHandle>(null);
 
@@ -53,17 +51,17 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
 
   const handleOpenInGoogleMaps = () => {
     const { latitude, longitude, address } = location;
-    let url = "";
+    let url = '';
     if (latitude && longitude) {
       url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
     } else if (address && address.trim()) {
       url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.trim())}`;
     }
-    if (url) window.open(url, "_blank");
+    if (url) window.open(url, '_blank');
   };
 
   const renderReviewBadge = () => {
-    if (location.review === "high") {
+    if (location.review === 'high') {
       return (
         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold border border-green-500/20">
           <ThumbsUp size={14} />
@@ -71,7 +69,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
         </div>
       );
     }
-    if (location.review === "low") {
+    if (location.review === 'low') {
       return (
         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 text-red-500 text-xs font-bold border border-red-500/20">
           <ThumbsDown size={14} />
@@ -125,7 +123,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
             <img
               src={mapUrl}
               alt={location.name}
-              className={`w-full h-full object-cover ${!hasCoords ? "blur-[2px] opacity-60" : ""}`}
+              className={`w-full h-full object-cover ${!hasCoords ? 'blur-[2px] opacity-60' : ''}`}
             />
             {!hasCoords && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/10">
@@ -148,16 +146,13 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
           <div className="flex items-start gap-3 p-4 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
             <MapPin size={20} className="text-primary shrink-0 mt-0.5" />
             <span className={`text-sm leading-relaxed text-[var(--text-secondary)]`}>
-              {location.address || "Địa chỉ chưa xác định"}
+              {location.address || 'Địa chỉ chưa xác định'}
             </span>
           </div>
 
           {location.reviewNote && (
             <div className="flex items-start gap-3 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 italic">
-              <MessageSquare
-                size={18}
-                className="text-amber-500 shrink-0 mt-1"
-              />
+              <MessageSquare size={18} className="text-amber-500 shrink-0 mt-1" />
               <p className={`text-sm text-[var(--text-secondary)] leading-relaxed`}>
                 "{location.reviewNote}"
               </p>
@@ -180,15 +175,12 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
           <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
             {locationEvents.length > 0 ? (
               locationEvents.map((event, idx) => {
-                const eventDate = new Date(event.date).toLocaleDateString(
-                  "vi-VN",
-                  {
-                    weekday: "short",
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  },
-                );
+                const eventDate = new Date(event.date).toLocaleDateString('vi-VN', {
+                  weekday: 'short',
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                });
                 return (
                   <div
                     key={event.id}
@@ -199,9 +191,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
                         <Calendar size={20} />
                       </div>
                       <div>
-                        <div
-                          className={`text-sm font-bold text-[var(--text-primary)]`}
-                        >
+                        <div className={`text-sm font-bold text-[var(--text-primary)]`}>
                           {event.title}
                         </div>
                         <div className={`text-[11px] text-[var(--text-secondary)]`}>
@@ -211,7 +201,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
                     </div>
                     <div className="text-right">
                       <div className={`text-xs font-black text-[var(--text-primary)]`}>
-                        {event.amount?.toLocaleString("vi-VN")}đ
+                        {event.amount?.toLocaleString('vi-VN')}đ
                       </div>
                     </div>
                   </div>
@@ -220,9 +210,7 @@ const LocationDetailModal: React.FC<LocationDetailModalProps> = ({
             ) : (
               <div className="text-center py-8 opacity-40">
                 <Calendar size={32} className="mx-auto mb-2" />
-                <p className="text-xs font-medium">
-                  Chưa có lịch sử làm việc tại đây
-                </p>
+                <p className="text-xs font-medium">Chưa có lịch sử làm việc tại đây</p>
               </div>
             )}
           </div>

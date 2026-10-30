@@ -78,9 +78,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
 }) => {
   const inputClass = (hasError: boolean) =>
     `w-full bg-transparent pl-9 pr-9 py-2 rounded-lg border text-sm transition-colors ${
-      hasError
-        ? 'border-red-500'
-        : 'border-[var(--border-color)] focus:border-primary'
+      hasError ? 'border-red-500' : 'border-[var(--border-color)] focus:border-primary'
     } focus:outline-none text-[var(--text-primary)]`;
 
   return (
@@ -92,7 +90,10 @@ const AuthForm: React.FC<AuthFormProps> = ({
       transition={{ duration: 0.2 }}
     >
       {!isSignUp && savedUser && !showQuickLogin && (
-        <button onClick={onBackToQuickLogin} className="mb-4 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-primary transition-colors">
+        <button
+          onClick={onBackToQuickLogin}
+          className="mb-4 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-primary transition-colors"
+        >
           <ChevronLeft size={20} />
         </button>
       )}
@@ -104,14 +105,23 @@ const AuthForm: React.FC<AuthFormProps> = ({
       {verificationSent && (
         <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-600 dark:text-emerald-400">
           <p className="font-medium">Đăng ký thành công!</p>
-          <p className="mt-0.5 opacity-90">Email xác thực đã gửi đến <span className="font-bold">{verificationEmail}</span></p>
+          <p className="mt-0.5 opacity-90">
+            Email xác thực đã gửi đến <span className="font-bold">{verificationEmail}</span>
+          </p>
         </div>
       )}
 
       <AnimatePresence>
         {error && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-3">
-            <div className="p-2.5 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-500 text-center">{error}</div>
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden mb-3"
+          >
+            <div className="p-2.5 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-500 text-center">
+              {error}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -120,18 +130,45 @@ const AuthForm: React.FC<AuthFormProps> = ({
         <div className="space-y-1">
           <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">Email</label>
           <div className="relative">
-            <User size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-            <input type="email" value={email} onChange={(e) => onEmailChange(e.target.value)} onBlur={() => onValidateEmail(email)} className={inputClass(!!emailError)} placeholder="Nhập email" autoComplete="email" />
+            <User
+              size={14}
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => onEmailChange(e.target.value)}
+              onBlur={() => onValidateEmail(email)}
+              className={inputClass(!!emailError)}
+              placeholder="Nhập email"
+              autoComplete="email"
+            />
           </div>
           <ValidationError message={emailError} />
         </div>
 
         {isSignUp && (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">Họ và tên</label>
+            <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">
+              Họ và tên
+            </label>
             <div className="relative">
-              <User size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-              <input type="text" value={fullName} onChange={(e) => { setFullName(e.target.value); if (fullNameError) onValidateFullName(e.target.value); }} onBlur={() => onValidateFullName(fullName)} className={inputClass(!!fullNameError)} placeholder="Nhập họ tên" autoComplete="name" />
+              <User
+                size={14}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+              />
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                  if (fullNameError) onValidateFullName(e.target.value);
+                }}
+                onBlur={() => onValidateFullName(fullName)}
+                className={inputClass(!!fullNameError)}
+                placeholder="Nhập họ tên"
+                autoComplete="name"
+              />
             </div>
             <ValidationError message={fullNameError} />
           </div>
@@ -140,9 +177,27 @@ const AuthForm: React.FC<AuthFormProps> = ({
         <div className="space-y-1">
           <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">Mật khẩu</label>
           <div className="relative">
-            <Lock size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-            <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => { setPassword(e.target.value); if (passwordError) onValidatePassword(e.target.value); }} onBlur={() => onValidatePassword(password)} className={`${inputClass(!!passwordError)} pr-9`} placeholder="Nhập mật khẩu" autoComplete={isSignUp ? 'new-password' : 'current-password'} />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+            <Lock
+              size={14}
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+            />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (passwordError) onValidatePassword(e.target.value);
+              }}
+              onBlur={() => onValidatePassword(password)}
+              className={`${inputClass(!!passwordError)} pr-9`}
+              placeholder="Nhập mật khẩu"
+              autoComplete={isSignUp ? 'new-password' : 'current-password'}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+            >
               {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
             </button>
           </div>
@@ -151,11 +206,31 @@ const AuthForm: React.FC<AuthFormProps> = ({
 
         {isSignUp && (
           <div className="space-y-1">
-            <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">Xác nhận mật khẩu</label>
+            <label className="text-xs font-medium text-[var(--text-secondary)] ml-1">
+              Xác nhận mật khẩu
+            </label>
             <div className="relative">
-              <Lock size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-              <input type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); if (confirmPasswordError) onValidateConfirmPassword(e.target.value); }} onBlur={() => onValidateConfirmPassword(confirmPassword)} className={`${inputClass(!!confirmPasswordError)} pr-9`} placeholder="Nhập lại mật khẩu" autoComplete="new-password" />
-              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+              <Lock
+                size={14}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+              />
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (confirmPasswordError) onValidateConfirmPassword(e.target.value);
+                }}
+                onBlur={() => onValidateConfirmPassword(confirmPassword)}
+                className={`${inputClass(!!confirmPasswordError)} pr-9`}
+                placeholder="Nhập lại mật khẩu"
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+              >
                 {showConfirmPassword ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
             </div>
@@ -166,12 +241,18 @@ const AuthForm: React.FC<AuthFormProps> = ({
         {!isSignUp && (
           <div className="flex items-center justify-between pt-1">
             <Checkbox checked={rememberMe} onChange={setRememberMe} label="Ghi nhớ đăng nhập" />
-            <button type="button" onClick={onForgotPassword} className="text-xs text-primary hover:underline font-medium">Quên mật khẩu?</button>
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="text-xs text-primary hover:underline font-medium"
+            >
+              Quên mật khẩu?
+            </button>
           </div>
         )}
 
         <Button type="submit" disabled={loading} fullWidth className="h-10 text-sm mt-1">
-          {loading ? 'Đang xử lý...' : (isSignUp ? 'Đăng ký' : 'Đăng nhập')}
+          {loading ? 'Đang xử lý...' : isSignUp ? 'Đăng ký' : 'Đăng nhập'}
         </Button>
       </form>
 

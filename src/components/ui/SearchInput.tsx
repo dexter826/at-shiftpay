@@ -6,13 +6,13 @@ interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   containerClassName?: string;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ 
-  onClear, 
-  containerClassName = '', 
-  value, 
-  onChange, 
+const SearchInput: React.FC<SearchInputProps> = ({
+  onClear,
+  containerClassName = '',
+  value,
+  onChange,
   className = '',
-  ...props 
+  ...props
 }) => {
   const hasValue = value && String(value).length > 0;
 
@@ -22,7 +22,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
   return (
     <div className={`relative ${containerClassName}`}>
-      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
+      <Search
+        size={16}
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none"
+      />
       <input
         value={value}
         onChange={onChange}

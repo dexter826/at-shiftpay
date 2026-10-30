@@ -31,7 +31,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  
+
   // Bank State
   const [bankList, setBankList] = useState<VietQRBank[]>([]);
   const [bankId, setBankId] = useState('');
@@ -73,12 +73,14 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
           name: editingEmployee.name,
           phone: editingEmployee.phone,
           imageUrl: editingEmployee.imageUrl || '',
-          bankAccount: editingEmployee.bankAccount ? {
-            bankId: editingEmployee.bankAccount.bankId,
-            bankName: editingEmployee.bankAccount.bankName,
-            accountNumber: editingEmployee.bankAccount.accountNumber,
-            accountName: editingEmployee.bankAccount.accountName
-          } : null
+          bankAccount: editingEmployee.bankAccount
+            ? {
+                bankId: editingEmployee.bankAccount.bankId,
+                bankName: editingEmployee.bankAccount.bankName,
+                accountNumber: editingEmployee.bankAccount.accountNumber,
+                accountName: editingEmployee.bankAccount.accountName,
+              }
+            : null,
         });
       } else {
         // Add mode
@@ -98,22 +100,35 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   const hasChanged = useMemo(() => {
     if (!editingEmployee || !initialState) return true;
 
-    const bankAccount = bankId && accountNumber && accountName ? {
-      bankId,
-      bankName,
-      accountNumber,
-      accountName
-    } : null;
+    const bankAccount =
+      bankId && accountNumber && accountName
+        ? {
+            bankId,
+            bankName,
+            accountNumber,
+            accountName,
+          }
+        : null;
 
     const currentState = {
       name: name.trim(),
       phone: phone.trim(),
       imageUrl: imageUrl.trim(),
-      bankAccount: bankAccount
+      bankAccount: bankAccount,
     };
 
     return !areValuesEqual(currentState, initialState);
-  }, [name, phone, imageUrl, bankId, bankName, accountNumber, accountName, initialState, editingEmployee]);
+  }, [
+    name,
+    phone,
+    imageUrl,
+    bankId,
+    bankName,
+    accountNumber,
+    accountName,
+    initialState,
+    editingEmployee,
+  ]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -173,12 +188,15 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
       }
     }
 
-    const bankAccount = bankId && accountNumber && accountName ? {
-      bankId,
-      bankName,
-      accountNumber,
-      accountName
-    } : null;
+    const bankAccount =
+      bankId && accountNumber && accountName
+        ? {
+            bankId,
+            bankName,
+            accountNumber,
+            accountName,
+          }
+        : null;
 
     try {
       const isEditing = !!editingEmployee;
@@ -187,7 +205,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
       const employeeData: any = {
         name: name.trim(),
         phone: phone.trim(),
-        imageUrl: imageUrl.trim()
+        imageUrl: imageUrl.trim(),
       };
 
       if (bankAccount) {
@@ -214,29 +232,27 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   return (
     <>
       <Modal
-        title={editingEmployee ? "Sửa thông tin" : "Thêm nhân viên"}
+        title={editingEmployee ? 'Sửa thông tin' : 'Thêm nhân viên'}
         isOpen={isOpen}
         onClose={onClose}
         footer={
           <div className="flex gap-2">
-            <Button
-              variant="secondary"
-              onClick={onClose}
-              className="flex-1"
-            >
+            <Button variant="secondary" onClick={onClose} className="flex-1">
               Hủy
             </Button>
-              <Button
-                onClick={handleSubmit}
-                className="flex-1"
-                disabled={!hasChanged}
-              >
-                Lưu
-              </Button>
+            <Button onClick={handleSubmit} className="flex-1" disabled={!hasChanged}>
+              Lưu
+            </Button>
           </div>
         }
       >
-        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+        <form
+          className="space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
           {error && (
             <div className="p-2.5 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg">
               {error}
@@ -250,7 +266,9 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               {imageUrl ? (
                 <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
               ) : (
-                <div className={`w-full h-full flex items-center justify-center text-[var(--text-muted)]`}>
+                <div
+                  className={`w-full h-full flex items-center justify-center text-[var(--text-muted)]`}
+                >
                   <Camera size={24} />
                 </div>
               )}
@@ -288,7 +306,9 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
             />
           </div>
           <div>
-            <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>Số điện thoại (tùy chọn)</label>
+            <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
+              Số điện thoại (tùy chọn)
+            </label>
             <input
               type="tel"
               placeholder="Nhập số điện thoại"
@@ -303,7 +323,9 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Building2 size={14} className="text-primary" />
-                <label className={`text-xs font-medium text-[var(--text-primary)]`}>Thông tin ngân hàng (tùy chọn)</label>
+                <label className={`text-xs font-medium text-[var(--text-primary)]`}>
+                  Thông tin ngân hàng (tùy chọn)
+                </label>
               </div>
               <button
                 type="button"
@@ -327,14 +349,14 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                 <Dropdown
                   options={[
                     { value: '', label: '-- Chọn ngân hàng --' },
-                    ...bankList.map(bank => ({
+                    ...bankList.map((bank) => ({
                       value: bank.bin,
-                      label: `${bank.shortName} - ${bank.name}`
-                    }))
+                      label: `${bank.shortName} - ${bank.name}`,
+                    })),
                   ]}
                   value={bankId}
                   onChange={(value) => {
-                    const selectedBank = bankList.find(b => b.bin === value);
+                    const selectedBank = bankList.find((b) => b.bin === value);
                     setBankId(value);
                     setBankName(selectedBank?.shortName || '');
                   }}
@@ -347,7 +369,9 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               </div>
 
               <div>
-                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>Số tài khoản</label>
+                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
+                  Số tài khoản
+                </label>
                 <input
                   type="text"
                   placeholder="Nhập số tài khoản"
@@ -358,7 +382,9 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
               </div>
 
               <div>
-                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>Tên chủ tài khoản</label>
+                <label className={`block text-xs text-[var(--text-muted)] mb-1.5`}>
+                  Tên chủ tài khoản
+                </label>
                 <input
                   type="text"
                   placeholder="Nhập tên chủ tài khoản"

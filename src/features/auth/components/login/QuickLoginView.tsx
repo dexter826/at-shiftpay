@@ -24,9 +24,21 @@ interface QuickLoginViewProps {
 }
 
 const QuickLoginView: React.FC<QuickLoginViewProps> = ({
-  savedUser, onRemoveAccount, onSubmit, onSwitchAccount, onForgotPassword,
-  password, setPassword, passwordError, onValidatePassword,
-  showPassword, setShowPassword, error, rememberMe, setRememberMe, loading,
+  savedUser,
+  onRemoveAccount,
+  onSubmit,
+  onSwitchAccount,
+  onForgotPassword,
+  password,
+  setPassword,
+  passwordError,
+  onValidatePassword,
+  showPassword,
+  setShowPassword,
+  error,
+  rememberMe,
+  setRememberMe,
+  loading,
 }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }}
@@ -36,9 +48,17 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
   >
     <div className="relative">
       <div className="w-20 h-20 rounded-full border-2 border-primary/30 overflow-hidden">
-        <img src={savedUser.photoURL || '/avatar.png'} alt={savedUser.displayName} className="w-full h-full object-cover" />
+        <img
+          src={savedUser.photoURL || '/avatar.png'}
+          alt={savedUser.displayName}
+          className="w-full h-full object-cover"
+        />
       </div>
-      <button type="button" onClick={onRemoveAccount} className="absolute -top-1 -right-1 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white p-0.5 rounded-full transition-colors">
+      <button
+        type="button"
+        onClick={onRemoveAccount}
+        className="absolute -top-1 -right-1 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white p-0.5 rounded-full transition-colors"
+      >
         <X size={12} />
       </button>
     </div>
@@ -50,12 +70,37 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
     </div>
 
     <form onSubmit={onSubmit} className="w-full space-y-3">
-      <input type="text" name="username" value={savedUser.email} readOnly className="hidden" autoComplete="username" />
+      <input
+        type="text"
+        name="username"
+        value={savedUser.email}
+        readOnly
+        className="hidden"
+        autoComplete="username"
+      />
       <div className="text-left space-y-1">
         <div className="relative">
-          <Lock size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-          <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => { setPassword(e.target.value); if (passwordError) onValidatePassword(e.target.value); }} className={`w-full bg-transparent pl-9 pr-9 py-2 rounded-lg border text-sm transition-colors ${passwordError ? 'border-red-500' : 'border-[var(--border-color)] focus:border-primary'} focus:outline-none text-[var(--text-primary)]`} placeholder="Nhập mật khẩu" autoComplete="current-password" autoFocus />
-          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+          <Lock
+            size={14}
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+          />
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (passwordError) onValidatePassword(e.target.value);
+            }}
+            className={`w-full bg-transparent pl-9 pr-9 py-2 rounded-lg border text-sm transition-colors ${passwordError ? 'border-red-500' : 'border-[var(--border-color)] focus:border-primary'} focus:outline-none text-[var(--text-primary)]`}
+            placeholder="Nhập mật khẩu"
+            autoComplete="current-password"
+            autoFocus
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+          >
             {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
           </button>
         </div>
@@ -64,22 +109,39 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
 
       <AnimatePresence>
         {error && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-            <div className="p-2 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-500">{error}</div>
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="p-2 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-500">
+              {error}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       <div className="flex items-center justify-between pt-1">
         <Checkbox checked={rememberMe} onChange={setRememberMe} label="Ghi nhớ" />
-        <button type="button" onClick={onForgotPassword} className="text-xs text-primary hover:underline font-medium">Quên mật khẩu?</button>
+        <button
+          type="button"
+          onClick={onForgotPassword}
+          className="text-xs text-primary hover:underline font-medium"
+        >
+          Quên mật khẩu?
+        </button>
       </div>
 
       <Button type="submit" disabled={loading} fullWidth className="h-10 text-sm">
         {loading ? 'Đang đăng nhập...' : 'Tiếp tục'}
       </Button>
 
-      <button type="button" onClick={onSwitchAccount} className="text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors flex items-center justify-center gap-1 mx-auto">
+      <button
+        type="button"
+        onClick={onSwitchAccount}
+        className="text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors flex items-center justify-center gap-1 mx-auto"
+      >
         <span>Đăng nhập tài khoản khác</span>
         <ChevronRight size={12} />
       </button>

@@ -1,17 +1,19 @@
-import { forwardRef, useImperativeHandle } from "react";
-import type { AnimatedIconHandle, AnimatedIconProps } from "@/components/ui/icons/types";
-import { ExternalLink } from "lucide-react";
+import { forwardRef, useImperativeHandle } from 'react';
+import type { AnimatedIconHandle, AnimatedIconProps } from '@/components/ui/icons/types';
+import { ExternalLink } from 'lucide-react';
 
 const ExternalLinkIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(
-  ({ size = 24, color = "currentColor", strokeWidth = 2, className = "" }, ref) => {
+  ({ size = 24, color = 'currentColor', strokeWidth = 2, className = '' }, ref) => {
     useImperativeHandle(ref, () => ({
       startAnimation: () => {},
       stopAnimation: () => {},
     }));
 
-    return <ExternalLink size={size} color={color} strokeWidth={strokeWidth} className={className} />;
-  },
+    return (
+      <ExternalLink size={size} color={color} strokeWidth={strokeWidth} className={className} />
+    );
+  }
 );
 
-ExternalLinkIcon.displayName = "ExternalLinkIcon";
+ExternalLinkIcon.displayName = 'ExternalLinkIcon';
 export default ExternalLinkIcon;

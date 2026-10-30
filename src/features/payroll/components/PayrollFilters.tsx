@@ -3,7 +3,6 @@ import { ArrowUpDown, CalendarDays } from 'lucide-react';
 import SearchInput from '@/components/ui/SearchInput';
 import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 
-
 interface PayrollFiltersProps {
   activeTab: 'payroll' | 'history';
   payrollSearchTerm: string;
@@ -30,12 +29,10 @@ const PayrollFilters: React.FC<PayrollFiltersProps> = ({
   onOpenFilterModal,
   setViewYear,
 }) => {
-  
-
   const payrollSortOptions: DropdownOption[] = [
     { value: 'amount', label: 'Số tiền cao' },
     { value: 'shifts', label: 'Nhiều công' },
-    { value: 'name', label: 'Tên A-Z' }
+    { value: 'name', label: 'Tên A-Z' },
   ];
 
   if (activeTab === 'payroll') {
@@ -44,7 +41,9 @@ const PayrollFilters: React.FC<PayrollFiltersProps> = ({
         <SearchInput
           placeholder="Nhập tên nhân viên"
           value={payrollSearchTerm}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPayrollSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setPayrollSearchTerm(e.target.value)
+          }
           onClear={() => setPayrollSearchTerm('')}
           containerClassName="flex-1"
         />
@@ -77,9 +76,14 @@ const PayrollFilters: React.FC<PayrollFiltersProps> = ({
         }}
         className="flex items-center gap-2 px-3 h-10 border border-[var(--border-color)] rounded-lg bg-[var(--bg-card)] text-sm text-[var(--text-primary)]"
       >
-        <CalendarDays size={16} className={filterDate ? 'text-primary' : 'text-[var(--text-muted)]'} />
+        <CalendarDays
+          size={16}
+          className={filterDate ? 'text-primary' : 'text-[var(--text-muted)]'}
+        />
         <span className={filterDate ? 'text-primary font-medium' : 'text-[var(--text-muted)]'}>
-          {filterDate ? `Tháng ${filterDate.split('-')[1]}/${filterDate.split('-')[0]}` : 'Tất cả thời gian'}
+          {filterDate
+            ? `Tháng ${filterDate.split('-')[1]}/${filterDate.split('-')[0]}`
+            : 'Tất cả thời gian'}
         </span>
       </button>
     </div>

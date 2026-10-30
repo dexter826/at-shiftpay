@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Employee,
   Shift,
@@ -7,7 +7,7 @@ import {
   UserSettings,
   DEFAULT_SETTINGS,
   Location,
-} from "@/types/index";
+} from '@/types/index';
 import { shiftService } from '@/lib/api/shiftService';
 import { locationService } from '@/lib/api/locationService';
 import { eventService } from '@/lib/api/eventService';
@@ -24,13 +24,13 @@ import {
   Type,
   FileText,
   Search,
-} from "lucide-react";
-import { Modal } from "@/components/ui/Modal";
-import Button from "@/components/ui/Button";
-import { TimePicker } from "@/components/ui/TimePicker";
-import { useToast } from "@/components/ui/ToastProvider";
-import SearchInput from "@/components/ui/SearchInput";
-import { areValuesEqual } from "@/utils/compare";
+} from 'lucide-react';
+import { Modal } from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { TimePicker } from '@/components/ui/TimePicker';
+import { useToast } from '@/components/ui/ToastProvider';
+import SearchInput from '@/components/ui/SearchInput';
+import { areValuesEqual } from '@/utils/compare';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 
@@ -61,34 +61,28 @@ export const EventModal: React.FC<EventModalProps> = ({
   const { theme } = useThemeStore();
   const userId = user?.uid || '';
   const { showToast } = useToast();
-  const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
-  const [note, setNote] = useState("");
-  const [time, setTime] = useState("");
+  const [title, setTitle] = useState('');
+  const [location, setLocation] = useState('');
+  const [note, setNote] = useState('');
+  const [time, setTime] = useState('');
   const [amount, setAmount] = useState<number>(settings.shiftRate);
   const [surcharge, setSurcharge] = useState<number>(0);
-  const [surchargeDistributionType, setSurchargeDistributionType] = useState<
-    "equal" | "selected"
-  >("equal");
+  const [surchargeDistributionType, setSurchargeDistributionType] = useState<'equal' | 'selected'>(
+    'equal'
+  );
   const [surchargeSelectedEmployees, setSurchargeSelectedEmployees] = useState<
     Record<string, boolean>
   >({});
-  const [selectedSession, setSelectedSession] = useState<ShiftSession | null>(
-    null
-  );
+  const [selectedSession, setSelectedSession] = useState<ShiftSession | null>(null);
   const [assignments, setAssignments] = useState<Record<string, boolean>>({});
-  const [review, setReview] = useState<"high" | "low" | undefined>(undefined);
-  const [reviewNote, setReviewNote] = useState("");
+  const [review, setReview] = useState<'high' | 'low' | undefined>(undefined);
+  const [reviewNote, setReviewNote] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [titleError, setTitleError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [employeeShiftCounts, setEmployeeShiftCounts] = useState<
-    Record<string, number>
-  >({});
+  const [titleError, setTitleError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [employeeShiftCounts, setEmployeeShiftCounts] = useState<Record<string, number>>({});
   const [initialState, setInitialState] = useState<any>(null);
-  const [initialSelectedIds, setInitialSelectedIds] = useState<Set<string>>(
-    new Set()
-  );
+  const [initialSelectedIds, setInitialSelectedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isOpen) {
@@ -97,18 +91,18 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         // Tìm địa điểm từ ID
         const loc = locations.find((l) => l.id === existingEvent.locationId);
-        setLocation(loc ? loc.name : "");
+        setLocation(loc ? loc.name : '');
 
-        setNote(existingEvent.note || "");
-        setTime(existingEvent.time || "");
+        setNote(existingEvent.note || '');
+        setTime(existingEvent.time || '');
 
         // Lấy đánh giá địa điểm
         if (loc) {
           setReview(loc.review);
-          setReviewNote(loc.reviewNote || "");
+          setReviewNote(loc.reviewNote || '');
         } else {
           setReview(undefined);
-          setReviewNote("");
+          setReviewNote('');
         }
 
         const newAssignments: Record<string, boolean> = {};
@@ -137,48 +131,40 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         // Khôi phục phân phối phụ phí
         if (existingEvent.surchargeDistribution) {
-          setSurchargeDistributionType(
-            existingEvent.surchargeDistribution.type
-          );
+          setSurchargeDistributionType(existingEvent.surchargeDistribution.type);
           if (
-            existingEvent.surchargeDistribution.type === "selected" &&
+            existingEvent.surchargeDistribution.type === 'selected' &&
             existingEvent.surchargeDistribution.selectedEmployeeIds
           ) {
             const selectedSurchargeEmps: Record<string, boolean> = {};
-            existingEvent.surchargeDistribution.selectedEmployeeIds.forEach(
-              (id) => {
-                selectedSurchargeEmps[id] = true;
-              }
-            );
+            existingEvent.surchargeDistribution.selectedEmployeeIds.forEach((id) => {
+              selectedSurchargeEmps[id] = true;
+            });
             setSurchargeSelectedEmployees(selectedSurchargeEmps);
           }
         } else {
-          setSurchargeDistributionType("equal");
+          setSurchargeDistributionType('equal');
           setSurchargeSelectedEmployees({});
         }
 
         // Đặt giờ theo ca
         if (!existingEvent.time && detectedSession) {
-          setTime(
-            detectedSession === "morning"
-              ? settings.morningTime
-              : settings.afternoonTime
-          );
+          setTime(detectedSession === 'morning' ? settings.morningTime : settings.afternoonTime);
         }
       } else {
-        setTitle("");
-        setLocation("");
-        setNote("");
-        setTime("");
+        setTitle('');
+        setLocation('');
+        setNote('');
+        setTime('');
         setAmount(settings.shiftRate);
         setSurcharge(0);
-        setSurchargeDistributionType("equal");
+        setSurchargeDistributionType('equal');
         setSurchargeSelectedEmployees({});
         setSelectedSession(null);
         setAssignments({});
         setInitialSelectedIds(new Set());
         setReview(undefined);
-        setReviewNote("");
+        setReviewNote('');
       }
 
       loadEmployeeShiftCounts();
@@ -188,7 +174,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         const loc = locations.find((l) => l.id === existingEvent.locationId);
         if (loc) {
           setReview(loc.review);
-          setReviewNote(loc.reviewNote || "");
+          setReviewNote(loc.reviewNote || '');
         }
       }
 
@@ -197,18 +183,16 @@ export const EventModal: React.FC<EventModalProps> = ({
         const loc = locations.find((l) => l.id === existingEvent.locationId);
         setInitialState({
           title: existingEvent.title,
-          locationId: existingEvent.locationId || "",
-          note: existingEvent.note || "",
-          time: existingEvent.time || "",
+          locationId: existingEvent.locationId || '',
+          note: existingEvent.note || '',
+          time: existingEvent.time || '',
           amount: existingEvent.amount || settings.shiftRate,
           surcharge: existingEvent.surcharge || 0,
           surchargeDistribution: existingEvent.surchargeDistribution,
-          assignments: Object.fromEntries(
-            existingShifts.map((s) => [s.employeeId, true])
-          ),
+          assignments: Object.fromEntries(existingShifts.map((s) => [s.employeeId, true])),
           session: existingShifts[0]?.session || null,
           review: loc?.review,
-          reviewNote: loc?.reviewNote || "",
+          reviewNote: loc?.reviewNote || '',
         });
       } else {
         setInitialState(null);
@@ -227,7 +211,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
       setEmployeeShiftCounts(counts);
     } catch (error) {
-      console.error("Error loading employee shift counts:", error);
+      console.error('Error loading employee shift counts:', error);
       setEmployeeShiftCounts({});
     }
   };
@@ -236,15 +220,13 @@ export const EventModal: React.FC<EventModalProps> = ({
     if (selectedSession === session) {
       setSelectedSession(null);
       setAssignments({});
-      setTime("");
+      setTime('');
     } else {
       setSelectedSession(session);
       setAssignments({});
-      setSearchTerm("");
+      setSearchTerm('');
       // Đặt giờ mặc định
-      setTime(
-        session === "morning" ? settings.morningTime : settings.afternoonTime
-      );
+      setTime(session === 'morning' ? settings.morningTime : settings.afternoonTime);
     }
   };
 
@@ -255,19 +237,16 @@ export const EventModal: React.FC<EventModalProps> = ({
     }));
   };
 
-  const getSelectedCount = () =>
-    Object.values(assignments).filter(Boolean).length;
+  const getSelectedCount = () => Object.values(assignments).filter(Boolean).length;
 
   const getSurchargePerPerson = () => {
     if (!surcharge || surcharge === 0) return 0;
 
-    if (surchargeDistributionType === "equal") {
+    if (surchargeDistributionType === 'equal') {
       const totalPeople = getSelectedCount();
       return totalPeople > 0 ? surcharge / totalPeople : 0;
     } else {
-      const selectedCount = Object.values(surchargeSelectedEmployees).filter(
-        Boolean
-      ).length;
+      const selectedCount = Object.values(surchargeSelectedEmployees).filter(Boolean).length;
       return selectedCount > 0 ? surcharge / selectedCount : 0;
     }
   };
@@ -281,10 +260,10 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   const formatDateTitle = (dateStr: string) => {
     const date = new Date(dateStr);
-    const dayNames = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+    const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
     const dayOfWeek = dayNames[date.getDay()];
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
     return `${dayOfWeek}, ${day}/${month}`;
   };
 
@@ -311,7 +290,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   const validateTitle = (value: string) => {
     // Không bắt buộc tên
-    setTitleError("");
+    setTitleError('');
     return true;
   };
 
@@ -321,27 +300,25 @@ export const EventModal: React.FC<EventModalProps> = ({
     const currentSurchargeDistribution =
       surcharge > 0
         ? {
-          type: surchargeDistributionType,
-          selectedEmployeeIds:
-            surchargeDistributionType === "selected"
-              ? Object.entries(surchargeSelectedEmployees)
-                .filter(([_, selected]) => selected)
-                .map(([id]) => id)
-              : undefined,
-        }
+            type: surchargeDistributionType,
+            selectedEmployeeIds:
+              surchargeDistributionType === 'selected'
+                ? Object.entries(surchargeSelectedEmployees)
+                    .filter(([_, selected]) => selected)
+                    .map(([id]) => id)
+                : undefined,
+          }
         : undefined;
 
     const currentState = {
-      title: title.trim() || "Tiệc",
-      locationId: locations.find((l) => l.name === location.trim())?.id || "",
+      title: title.trim() || 'Tiệc',
+      locationId: locations.find((l) => l.name === location.trim())?.id || '',
       note: note.trim(),
       time,
       amount,
       surcharge,
       surchargeDistribution: currentSurchargeDistribution,
-      assignments: Object.fromEntries(
-        Object.entries(assignments).filter(([_, v]) => v)
-      ),
+      assignments: Object.fromEntries(Object.entries(assignments).filter(([_, v]) => v)),
       session: selectedSession,
       review,
       reviewNote: reviewNote.trim(),
@@ -367,21 +344,23 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   const handleSubmit = async () => {
     // Tên mặc định là "Tiệc"
-    const finalTitle = title.trim() || "Tiệc";
+    const finalTitle = title.trim() || 'Tiệc';
     if (!selectedSession) {
-      showToast("Chọn một ca làm việc", "error");
+      showToast('Chọn một ca làm việc', 'error');
       return;
     }
     if (getSelectedCount() === 0) {
-      showToast("Chọn ít nhất 1 nhân viên", "error");
+      showToast('Chọn ít nhất 1 nhân viên', 'error');
       return;
     }
 
     // Kiểm tra người nhận phụ phí
-    if (surcharge > 0 && surchargeDistributionType === "selected") {
-      const selectedSurchargeCount = Object.values(surchargeSelectedEmployees).filter(Boolean).length;
+    if (surcharge > 0 && surchargeDistributionType === 'selected') {
+      const selectedSurchargeCount = Object.values(surchargeSelectedEmployees).filter(
+        Boolean
+      ).length;
       if (selectedSurchargeCount === 0) {
-        showToast("Chọn ít nhất 1 người nhận phụ phí", "error");
+        showToast('Chọn ít nhất 1 người nhận phụ phí', 'error');
         return;
       }
     }
@@ -390,7 +369,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
     try {
       // Xử lý Địa điểm & Đánh giá
-      let locationId = "";
+      let locationId = '';
       if (location.trim()) {
         locationId = await locationService.findOrCreateLocation(userId, location.trim(), {
           review,
@@ -402,7 +381,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       const isEditing = !!existingEvent;
 
       // Phân loại: Thêm, Sửa, Xóa
-      const shiftsToCreate: Omit<Shift, "id">[] = [];
+      const shiftsToCreate: Omit<Shift, 'id'>[] = [];
       const shiftsToUpdate: { id: string; data: Partial<Shift> }[] = [];
       const shiftIdsToDelete: string[] = [];
 
@@ -415,10 +394,10 @@ export const EventModal: React.FC<EventModalProps> = ({
         // Tính lương kèm phụ phí
         let finalAmount = amount;
         if (surcharge > 0) {
-          if (surchargeDistributionType === "equal") {
+          if (surchargeDistributionType === 'equal') {
             finalAmount += getSurchargePerPerson();
           } else if (
-            surchargeDistributionType === "selected" &&
+            surchargeDistributionType === 'selected' &&
             surchargeSelectedEmployees[empId]
           ) {
             finalAmount += getSurchargePerPerson();
@@ -440,14 +419,14 @@ export const EventModal: React.FC<EventModalProps> = ({
           });
         } else {
           // Tạo ca mới
-          const shiftData: Omit<Shift, "id"> = {
-            eventId: "",
+          const shiftData: Omit<Shift, 'id'> = {
+            eventId: '',
             date: date,
             employeeId: empId,
             employeeName: emp.name,
             session: selectedSession!,
             amount: finalAmount,
-            status: "unpaid",
+            status: 'unpaid',
             userId: userId,
           };
           shiftsToCreate.push(shiftData);
@@ -463,19 +442,15 @@ export const EventModal: React.FC<EventModalProps> = ({
         }
       });
 
-
-
       const surchargeDistribution: any =
         surcharge > 0
           ? {
-            type: surchargeDistributionType,
-          }
+              type: surchargeDistributionType,
+            }
           : undefined;
 
-      if (surchargeDistribution && surchargeDistributionType === "selected") {
-        surchargeDistribution.selectedEmployeeIds = Object.entries(
-          surchargeSelectedEmployees
-        )
+      if (surchargeDistribution && surchargeDistributionType === 'selected') {
+        surchargeDistribution.selectedEmployeeIds = Object.entries(surchargeSelectedEmployees)
           .filter(([_, selected]) => selected)
           .map(([id]) => id);
       }
@@ -507,13 +482,10 @@ export const EventModal: React.FC<EventModalProps> = ({
         await eventService.createEventWithShifts(eventData, shiftsToCreate);
       }
 
-      showToast(
-        isEditing ? "Đã cập nhật sự kiện" : "Đã tạo sự kiện mới",
-        "success"
-      );
+      showToast(isEditing ? 'Đã cập nhật sự kiện' : 'Đã tạo sự kiện mới', 'success');
       onSuccess();
     } catch (err) {
-      showToast("Có lỗi xảy ra. Vui lòng thử lại.", "error");
+      showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -531,12 +503,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       onClose={onClose}
       footer={
         <div className="flex gap-2">
-          <Button
-            variant="secondary"
-            onClick={onClose}
-            className="flex-1"
-            disabled={isSubmitting}
-          >
+          <Button variant="secondary" onClick={onClose} className="flex-1" disabled={isSubmitting}>
             Hủy
           </Button>
           <Button
@@ -545,19 +512,16 @@ export const EventModal: React.FC<EventModalProps> = ({
             loading={isSubmitting}
             disabled={!hasChanged}
           >
-            {existingEvent ? "Cập nhật" : "Lưu"}
+            {existingEvent ? 'Cập nhật' : 'Lưu'}
           </Button>
         </div>
       }
     >
       <div className="space-y-4">
-
         {/* Tên & Thời gian */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label
-              className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}
-            >
+            <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
               Tên sự kiện
             </label>
             <div className="relative">
@@ -574,20 +538,17 @@ export const EventModal: React.FC<EventModalProps> = ({
                   if (titleError) validateTitle(e.target.value);
                 }}
                 onBlur={() => validateTitle(title)}
-                className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none ${titleError
-                  ? "border-red-500 focus:border-red-500"
-                  : `border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`
-                  }`}
+                className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none ${
+                  titleError
+                    ? 'border-red-500 focus:border-red-500'
+                    : `border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`
+                }`}
               />
             </div>
-            {titleError && (
-              <p className="text-red-500 text-xs mt-1">{titleError}</p>
-            )}
+            {titleError && <p className="text-red-500 text-xs mt-1">{titleError}</p>}
           </div>
           <div>
-            <label
-              className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}
-            >
+            <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
               Thời gian bắt đầu
             </label>
             <TimePicker value={time} onChange={setTime} />
@@ -596,9 +557,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Địa điểm */}
         <div className="space-y-2">
-          <label
-            className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}
-          >
+          <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
             Địa điểm
           </label>
           <div className="relative">
@@ -642,7 +601,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                           onClick={() => {
                             setLocation(loc.name);
                             setReview(loc.review);
-                            setReviewNote(loc.reviewNote || "");
+                            setReviewNote(loc.reviewNote || '');
                           }}
                           className={`w-full px-3 py-2 text-left text-xs hover:bg-[var(--border-color)] transition-colors border-b last:border-0 border-[var(--border-color)] text-[var(--text-secondary)]`}
                         >
@@ -655,30 +614,29 @@ export const EventModal: React.FC<EventModalProps> = ({
                   {/* Warning/Success History */}
                   {exactMatch && (exactMatch.review || exactMatch.reviewNote) && (
                     <div
-                      className={`p-3 rounded-lg border flex items-start gap-3 ${exactMatch.review === "low"
-                        ? "bg-red-500/10 border-red-500/20 text-red-600"
-                        : exactMatch.review === "high"
-                          ? "bg-green-500/10 border-green-500/20 text-green-600"
-                          : `bg-slate-500/10 border-slate-500/20 text-[var(--text-secondary)]`
-                        }`}
+                      className={`p-3 rounded-lg border flex items-start gap-3 ${
+                        exactMatch.review === 'low'
+                          ? 'bg-red-500/10 border-red-500/20 text-red-600'
+                          : exactMatch.review === 'high'
+                            ? 'bg-green-500/10 border-green-500/20 text-green-600'
+                            : `bg-slate-500/10 border-slate-500/20 text-[var(--text-secondary)]`
+                      }`}
                     >
                       <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
                       <div className="text-xs">
                         <p>
-                          Địa điểm này từng được đánh giá{" "}
+                          Địa điểm này từng được đánh giá{' '}
                           <strong>
-                            {exactMatch.review === "low"
-                              ? "Kém"
-                              : exactMatch.review === "high"
-                                ? "Tốt"
-                                : "Thường"}
+                            {exactMatch.review === 'low'
+                              ? 'Kém'
+                              : exactMatch.review === 'high'
+                                ? 'Tốt'
+                                : 'Thường'}
                           </strong>
                           .
                         </p>
                         {exactMatch.reviewNote && (
-                          <p className="mt-1 italic opacity-80">
-                            "{exactMatch.reviewNote}"
-                          </p>
+                          <p className="mt-1 italic opacity-80">"{exactMatch.reviewNote}"</p>
                         )}
                       </div>
                     </div>
@@ -689,16 +647,11 @@ export const EventModal: React.FC<EventModalProps> = ({
         </div>
 
         <div>
-          <label
-            className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}
-          >
+          <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
             Ghi chú
           </label>
           <div className="relative">
-            <FileText
-              className={`absolute left-3 top-3 text-[var(--text-muted)]`}
-              size={18}
-            />
+            <FileText className={`absolute left-3 top-3 text-[var(--text-muted)]`} size={18} />
             <textarea
               placeholder="Nhập ghi chú"
               value={note}
@@ -710,19 +663,18 @@ export const EventModal: React.FC<EventModalProps> = ({
 
         {/* Đánh giá sự kiện */}
         <div>
-          <label
-            className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}
-          >
+          <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
             Đánh giá sự kiện
           </label>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
-              onClick={() => setReview("high")}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${review === "high"
-                ? "border-green-500/50 bg-green-500/10 text-green-500"
-                : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
-                }`}
+              onClick={() => setReview('high')}
+              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+                review === 'high'
+                  ? 'border-green-500/50 bg-green-500/10 text-green-500'
+                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+              }`}
             >
               <ThumbsUp size={16} />
               Tốt
@@ -730,21 +682,23 @@ export const EventModal: React.FC<EventModalProps> = ({
             <button
               type="button"
               onClick={() => setReview(undefined)}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${review === undefined
-                ? "border-primary/50 bg-primary/10 text-primary"
-                : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
-                }`}
+              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+                review === undefined
+                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+              }`}
             >
               <Minus size={16} />
               Thường
             </button>
             <button
               type="button"
-              onClick={() => setReview("low")}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${review === "low"
-                ? "border-red-500/50 bg-red-500/10 text-red-500"
-                : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-red-500/50`
-                }`}
+              onClick={() => setReview('low')}
+              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+                review === 'low'
+                  ? 'border-red-500/50 bg-red-500/10 text-red-500'
+                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-red-500/50`
+              }`}
             >
               <ThumbsDown size={16} />
               Kém
@@ -755,53 +709,51 @@ export const EventModal: React.FC<EventModalProps> = ({
         {/* Lý do đánh giá */}
         <div className="space-y-1.5 pt-1">
           <label className={`block text-xs font-semibold text-[var(--text-muted)]`}>
-            Lý do đánh giá ({review === "high" ? "Tốt" : review === "low" ? "Kém" : "Thường"})
+            Lý do đánh giá ({review === 'high' ? 'Tốt' : review === 'low' ? 'Kém' : 'Thường'})
           </label>
           <div className="relative">
-            <FileText
-              className={`absolute left-3 top-3 text-[var(--text-muted)]`}
-              size={18}
-            />
+            <FileText className={`absolute left-3 top-3 text-[var(--text-muted)]`} size={18} />
             <textarea
               placeholder="Nhập lý do hoặc nhận xét cụ thể..."
               value={reviewNote}
               onChange={(e) => setReviewNote(e.target.value)}
-              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none h-20 resize-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 ${review === "high"
-                ? "focus:border-green-500/50"
-                : review === "low"
-                  ? "focus:border-red-500/50"
-                  : "focus:border-primary"
-                }`}
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none h-20 resize-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 ${
+                review === 'high'
+                  ? 'focus:border-green-500/50'
+                  : review === 'low'
+                    ? 'focus:border-red-500/50'
+                    : 'focus:border-primary'
+              }`}
             />
           </div>
         </div>
 
         {/* Chọn ca */}
         <div>
-          <label
-            className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}
-          >
+          <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
             Ca làm việc
           </label>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
-              onClick={() => selectSession("morning")}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${selectedSession === "morning"
-                ? "border-orange-500/50 bg-orange-500/10 text-orange-500"
-                : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
-                }`}
+              onClick={() => selectSession('morning')}
+              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+                selectedSession === 'morning'
+                  ? 'border-orange-500/50 bg-orange-500/10 text-orange-500'
+                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+              }`}
             >
               <Sun size={16} />
               Tiệc Sáng
             </button>
             <button
               type="button"
-              onClick={() => selectSession("afternoon")}
-              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${selectedSession === "afternoon"
-                ? "border-primary/50 bg-primary/10 text-primary"
-                : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
-                }`}
+              onClick={() => selectSession('afternoon')}
+              className={`p-2.5 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+                selectedSession === 'afternoon'
+                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  : `border-[var(--border-color)] text-[var(--text-muted)] hover:border-primary/50`
+              }`}
             >
               <Moon size={16} />
               Tiệc Chiều
@@ -813,9 +765,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         {selectedSession && (
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label
-                className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}
-              >
+              <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
                 Lương/người
               </label>
               <div className="relative">
@@ -825,20 +775,14 @@ export const EventModal: React.FC<EventModalProps> = ({
                 />
                 <input
                   type="number"
-                  value={amount || ""}
-                  onChange={(e) =>
-                    setAmount(
-                      e.target.value === "" ? 0 : Number(e.target.value)
-                    )
-                  }
+                  value={amount || ''}
+                  onChange={(e) => setAmount(e.target.value === '' ? 0 : Number(e.target.value))}
                   className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`}
                 />
               </div>
             </div>
             <div>
-              <label
-                className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}
-              >
+              <label className={`block text-xs font-semibold mb-1.5 text-[var(--text-muted)]`}>
                 Phụ phí
               </label>
               <div className="relative">
@@ -848,12 +792,8 @@ export const EventModal: React.FC<EventModalProps> = ({
                 />
                 <input
                   type="number"
-                  value={surcharge || ""}
-                  onChange={(e) =>
-                    setSurcharge(
-                      e.target.value === "" ? 0 : Number(e.target.value)
-                    )
-                  }
+                  value={surcharge || ''}
+                  onChange={(e) => setSurcharge(e.target.value === '' ? 0 : Number(e.target.value))}
                   placeholder="0"
                   className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-primary)] placeholder-slate-500 focus:border-primary`}
                 />
@@ -866,8 +806,9 @@ export const EventModal: React.FC<EventModalProps> = ({
         {selectedSession && surcharge > 0 && (
           <div>
             <label
-              className={`block text-xs mb-1.5 ${theme === "dark" ? "text-slate-400" : "text-slate-500"
-                }`}
+              className={`block text-xs mb-1.5 ${
+                theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+              }`}
             >
               Phân phối phụ phí
             </label>
@@ -879,13 +820,11 @@ export const EventModal: React.FC<EventModalProps> = ({
                   type="radio"
                   name="surchargeDistribution"
                   value="equal"
-                  checked={surchargeDistributionType === "equal"}
-                  onChange={() => setSurchargeDistributionType("equal")}
+                  checked={surchargeDistributionType === 'equal'}
+                  onChange={() => setSurchargeDistributionType('equal')}
                   className="accent-primary"
                 />
-                <span className={`text-sm text-[var(--text-secondary)]`}>
-                  Chia đều cho tất cả
-                </span>
+                <span className={`text-sm text-[var(--text-secondary)]`}>Chia đều cho tất cả</span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer">
@@ -893,20 +832,18 @@ export const EventModal: React.FC<EventModalProps> = ({
                   type="radio"
                   name="surchargeDistribution"
                   value="selected"
-                  checked={surchargeDistributionType === "selected"}
+                  checked={surchargeDistributionType === 'selected'}
                   onChange={() => {
-                    setSurchargeDistributionType("selected");
+                    setSurchargeDistributionType('selected');
                   }}
                   className="accent-primary"
                 />
-                <span className={`text-sm text-[var(--text-secondary)]`}>
-                  Chọn người nhận
-                </span>
+                <span className={`text-sm text-[var(--text-secondary)]`}>Chọn người nhận</span>
               </label>
             </div>
 
             {/* Danh sách người nhận */}
-            {surchargeDistributionType === "selected" && (
+            {surchargeDistributionType === 'selected' && (
               <div
                 className={`border rounded-lg divide-y max-h-32 overflow-y-auto border-[var(--border-color)] divide-[var(--border-color)]`}
               >
@@ -916,31 +853,31 @@ export const EventModal: React.FC<EventModalProps> = ({
                     const emp = employees.find((e) => e.id === empId);
                     if (!emp) return null;
 
-                    const isSelected =
-                      surchargeSelectedEmployees[empId] || false;
+                    const isSelected = surchargeSelectedEmployees[empId] || false;
 
                     return (
                       <div
                         key={empId}
                         onClick={() => toggleSurchargeEmployee(empId)}
-                        className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-primary/5 ${isSelected ? "bg-primary/10" : ""
-                          }`}
+                        className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-primary/5 ${
+                          isSelected ? 'bg-primary/10' : ''
+                        }`}
                       >
                         <span
-                          className={`text-sm text-[var(--text-secondary)] ${isSelected ? "font-medium" : ""
-                            }`}
+                          className={`text-sm text-[var(--text-secondary)] ${
+                            isSelected ? 'font-medium' : ''
+                          }`}
                         >
                           {emp.name}
                         </span>
                         <div
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected
-                            ? "bg-primary border-primary"
-                            : "border-[var(--border-color)]"
-                            }`}
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                            isSelected
+                              ? 'bg-primary border-primary'
+                              : 'border-[var(--border-color)]'
+                          }`}
                         >
-                          {isSelected && (
-                            <Check size={12} className="text-white" />
-                          )}
+                          {isSelected && <Check size={12} className="text-white" />}
                         </div>
                       </div>
                     );
@@ -949,14 +886,10 @@ export const EventModal: React.FC<EventModalProps> = ({
             )}
 
             {/* Hiển thị tính toán */}
-            {surchargeDistributionType === "selected" && (
+            {surchargeDistributionType === 'selected' && (
               <p className={`text-xs mt-2 text-[var(--text-muted)]`}>
-                {
-                  Object.values(surchargeSelectedEmployees).filter(Boolean)
-                    .length
-                }{" "}
-                người được chọn -{" "}
-                {getSurchargePerPerson().toLocaleString("vi-VN")} VND/người
+                {Object.values(surchargeSelectedEmployees).filter(Boolean).length} người được chọn -{' '}
+                {getSurchargePerPerson().toLocaleString('vi-VN')} VND/người
               </p>
             )}
           </div>
@@ -999,13 +932,15 @@ export const EventModal: React.FC<EventModalProps> = ({
                     <div
                       key={emp.id}
                       onClick={() => toggleAssignment(emp.id)}
-                      className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-primary/5 ${isSelected ? "bg-primary/10" : ""
-                        }`}
+                      className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-primary/5 ${
+                        isSelected ? 'bg-primary/10' : ''
+                      }`}
                     >
                       <div className="flex items-center gap-2 flex-1">
                         <span
-                          className={`text-sm truncate text-[var(--text-secondary)] ${isSelected ? "font-medium" : ""
-                            }`}
+                          className={`text-sm truncate text-[var(--text-secondary)] ${
+                            isSelected ? 'font-medium' : ''
+                          }`}
                         >
                           {emp.name}
                         </span>
@@ -1018,14 +953,11 @@ export const EventModal: React.FC<EventModalProps> = ({
                         )}
                       </div>
                       <div
-                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected
-                          ? "bg-primary border-primary"
-                          : "border-[var(--border-color)]"
-                          }`}
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                          isSelected ? 'bg-primary border-primary' : 'border-[var(--border-color)]'
+                        }`}
                       >
-                        {isSelected && (
-                          <Check size={12} className="text-white" />
-                        )}
+                        {isSelected && <Check size={12} className="text-white" />}
                       </div>
                     </div>
                   );

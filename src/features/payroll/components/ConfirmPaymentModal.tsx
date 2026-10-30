@@ -32,11 +32,7 @@ const ConfirmPaymentModal: React.FC<ConfirmPaymentModalProps> = ({
       onClose={onClose}
       footer={
         <div className="flex gap-2">
-          <Button
-            variant="secondary"
-            onClick={onClose}
-            className="flex-1"
-          >
+          <Button variant="secondary" onClick={onClose} className="flex-1">
             Hủy
           </Button>
           <Button
@@ -53,7 +49,8 @@ const ConfirmPaymentModal: React.FC<ConfirmPaymentModalProps> = ({
     >
       <div className="space-y-3">
         <p className={`text-sm text-[var(--text-secondary)]`}>
-          Thanh toán {formatCurrency(selectedShiftsTotal)} cho {selectedEmployeeSummary?.employeeName}?
+          Thanh toán {formatCurrency(selectedShiftsTotal)} cho{' '}
+          {selectedEmployeeSummary?.employeeName}?
         </p>
         <div className={`p-3 hover:bg-[var(--border-color)] rounded-lg`}>
           <p className={`text-xs text-[var(--text-muted)] mb-1`}>Chi tiết:</p>

@@ -12,7 +12,11 @@ interface VerificationViewProps {
 }
 
 const VerificationView: React.FC<VerificationViewProps> = ({
-  currentUser, loading, onCheckVerification, onResendEmail, onLogout,
+  currentUser,
+  loading,
+  onCheckVerification,
+  onResendEmail,
+  onLogout,
 }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }}
@@ -45,12 +49,19 @@ const VerificationView: React.FC<VerificationViewProps> = ({
         Tôi đã xác thực
       </Button>
 
-      <button onClick={onResendEmail} disabled={loading} className="w-full py-2 text-xs font-medium text-[var(--text-secondary)] hover:text-primary transition-colors flex items-center justify-center gap-1">
+      <button
+        onClick={onResendEmail}
+        disabled={loading}
+        className="w-full py-2 text-xs font-medium text-[var(--text-secondary)] hover:text-primary transition-colors flex items-center justify-center gap-1"
+      >
         <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
         Gửi lại email
       </button>
 
-      <button onClick={onLogout} className="w-full py-2 text-xs font-medium text-red-500 hover:text-red-400 transition-colors flex items-center justify-center gap-1 border-t border-[var(--border-color)] mt-2 pt-3">
+      <button
+        onClick={onLogout}
+        className="w-full py-2 text-xs font-medium text-red-500 hover:text-red-400 transition-colors flex items-center justify-center gap-1 border-t border-[var(--border-color)] mt-2 pt-3"
+      >
         <LogOut size={12} /> Quay lại đăng nhập
       </button>
     </div>

@@ -21,15 +21,8 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
   events,
   locations,
 }) => {
-  
-
   return (
-    <Modal
-      title="Chi tiết thanh toán"
-      isOpen={isOpen}
-      onClose={onClose}
-      footer={null}
-    >
+    <Modal title="Chi tiết thanh toán" isOpen={isOpen} onClose={onClose} footer={null}>
       <div className="space-y-3">
         {/* Thông tin chung */}
         <div className={`p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg`}>
@@ -60,7 +53,9 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
             <div className="text-right">
               <span className={`text-xs text-[var(--text-muted)]`}>Thời gian</span>
               <p className={`text-sm font-medium text-[var(--text-secondary)]`}>
-                {selectedTransaction ? new Date(selectedTransaction.date).toLocaleString('vi-VN') : ''}
+                {selectedTransaction
+                  ? new Date(selectedTransaction.date).toLocaleString('vi-VN')
+                  : ''}
               </p>
             </div>
           </div>
@@ -73,37 +68,54 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
           )}
         </div>
 
-        <p className={`text-xs text-[var(--text-muted)] uppercase tracking-wide pt-2`}>Các ca làm việc</p>
+        <p className={`text-xs text-[var(--text-muted)] uppercase tracking-wide pt-2`}>
+          Các ca làm việc
+        </p>
         {transactionShifts.length === 0 ? (
           <div className={`py-4 text-center text-[var(--text-muted)]`}>
             <p className="text-sm">Không tìm thấy thông tin ca làm việc (Có thể đã bị xóa)</p>
           </div>
         ) : (
           transactionShifts.map((s) => {
-            const event = events.find(e => e.id === s.eventId);
+            const event = events.find((e) => e.id === s.eventId);
             return (
-              <div key={s.id} className={`flex justify-between items-center p-3 hover:bg-[var(--border-color)] border border-[var(--border-color)] rounded-lg`}>
+              <div
+                key={s.id}
+                className={`flex justify-between items-center p-3 hover:bg-[var(--border-color)] border border-[var(--border-color)] rounded-lg`}
+              >
                 <div className="flex items-center gap-3">
                   <Calendar size={16} className="text-[var(--text-muted)]" />
                   <div>
-                    <p className={`text-sm font-medium text-[var(--text-secondary)]`}>{event?.title || 'Không rõ sự kiện'}</p>
+                    <p className={`text-sm font-medium text-[var(--text-secondary)]`}>
+                      {event?.title || 'Không rõ sự kiện'}
+                    </p>
                     <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-medium ${s.session === 'morning' ? 'text-orange-500' : 'text-primary'
-                        }`}>
+                      <span
+                        className={`text-[10px] font-medium ${
+                          s.session === 'morning' ? 'text-orange-500' : 'text-primary'
+                        }`}
+                      >
                         {s.session === 'morning' ? 'Tiệc Sáng' : 'Tiệc Chiều'}
                       </span>
                       <span className={`text-[10px] text-[var(--text-muted)]`}>•</span>
-                      <span className={`text-[10px] text-[var(--text-muted)]`}>{formatDate(s.date)}</span>
+                      <span className={`text-[10px] text-[var(--text-muted)]`}>
+                        {formatDate(s.date)}
+                      </span>
                     </div>
                     {event?.locationId && (
-                      <p className={`text-[10px] text-[var(--text-muted)] mt-0.5 flex items-center gap-1`}>
+                      <p
+                        className={`text-[10px] text-[var(--text-muted)] mt-0.5 flex items-center gap-1`}
+                      >
                         <MapPin size={10} />
-                        {locations.find(l => l.id === event.locationId)?.name || 'Không rõ địa điểm'}
+                        {locations.find((l) => l.id === event.locationId)?.name ||
+                          'Không rõ địa điểm'}
                       </p>
                     )}
                   </div>
                 </div>
-                <p className={`text-sm font-medium text-[var(--text-secondary)]`}>{formatCurrency(s.amount)}</p>
+                <p className={`text-sm font-medium text-[var(--text-secondary)]`}>
+                  {formatCurrency(s.amount)}
+                </p>
               </div>
             );
           })

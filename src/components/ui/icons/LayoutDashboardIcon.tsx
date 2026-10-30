@@ -1,18 +1,20 @@
-import { forwardRef, useImperativeHandle } from "react";
-import type { AnimatedIconHandle, AnimatedIconProps } from "@/components/ui/icons/types";
-import { LayoutDashboard } from "lucide-react";
+import { forwardRef, useImperativeHandle } from 'react';
+import type { AnimatedIconHandle, AnimatedIconProps } from '@/components/ui/icons/types';
+import { LayoutDashboard } from 'lucide-react';
 
 const LayoutDashboardIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(
-  ({ size = 40, color = "currentColor", strokeWidth = 2, className = "" }, ref) => {
+  ({ size = 40, color = 'currentColor', strokeWidth = 2, className = '' }, ref) => {
     useImperativeHandle(ref, () => ({
       startAnimation: () => {},
       stopAnimation: () => {},
     }));
 
-    return <LayoutDashboard size={size} color={color} strokeWidth={strokeWidth} className={className} />;
-  },
+    return (
+      <LayoutDashboard size={size} color={color} strokeWidth={strokeWidth} className={className} />
+    );
+  }
 );
 
-LayoutDashboardIcon.displayName = "LayoutDashboardIcon";
+LayoutDashboardIcon.displayName = 'LayoutDashboardIcon';
 
 export default LayoutDashboardIcon;

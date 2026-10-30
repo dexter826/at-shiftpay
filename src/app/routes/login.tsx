@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, setPersistence, browserLocalPersistence, browserSessionPersistence, sendEmailVerification } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  sendEmailVerification,
+} from 'firebase/auth';
 import { AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 
@@ -32,7 +40,14 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [verificationEmail, setVerificationEmail] = useState('');
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
-  const { savedUser, saveUserInfo, clearSavedUserInfo, user: currentUser, refreshUser, logout } = useAuthStore();
+  const {
+    savedUser,
+    saveUserInfo,
+    clearSavedUserInfo,
+    user: currentUser,
+    refreshUser,
+    logout,
+  } = useAuthStore();
   const { showToast } = useToast();
 
   const [showQuickLogin, setShowQuickLogin] = useState<boolean>(false);
@@ -56,27 +71,55 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const validateEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!value) { setEmailError('Email không được để trống'); return false; }
-    if (!emailRegex.test(value)) { setEmailError('Email không hợp lệ'); return false; }
-    setEmailError(''); return true;
+    if (!value) {
+      setEmailError('Email không được để trống');
+      return false;
+    }
+    if (!emailRegex.test(value)) {
+      setEmailError('Email không hợp lệ');
+      return false;
+    }
+    setEmailError('');
+    return true;
   };
 
   const validatePassword = (value: string) => {
-    if (!value) { setPasswordError('Mật khẩu không được để trống'); return false; }
-    if (value.length < 6) { setPasswordError('Mật khẩu phải có ít nhất 6 ký tự'); return false; }
-    setPasswordError(''); return true;
+    if (!value) {
+      setPasswordError('Mật khẩu không được để trống');
+      return false;
+    }
+    if (value.length < 6) {
+      setPasswordError('Mật khẩu phải có ít nhất 6 ký tự');
+      return false;
+    }
+    setPasswordError('');
+    return true;
   };
 
   const validateFullName = (value: string) => {
-    if (!value.trim()) { setFullNameError('Họ tên không được để trống'); return false; }
-    if (value.trim().length < 2) { setFullNameError('Họ tên phải có ít nhất 2 ký tự'); return false; }
-    setFullNameError(''); return true;
+    if (!value.trim()) {
+      setFullNameError('Họ tên không được để trống');
+      return false;
+    }
+    if (value.trim().length < 2) {
+      setFullNameError('Họ tên phải có ít nhất 2 ký tự');
+      return false;
+    }
+    setFullNameError('');
+    return true;
   };
 
   const validateConfirmPassword = (value: string) => {
-    if (!value) { setConfirmPasswordError('Vui lòng xác nhận mật khẩu'); return false; }
-    if (value !== password) { setConfirmPasswordError('Mật khẩu không khớp'); return false; }
-    setConfirmPasswordError(''); return true;
+    if (!value) {
+      setConfirmPasswordError('Vui lòng xác nhận mật khẩu');
+      return false;
+    }
+    if (value !== password) {
+      setConfirmPasswordError('Mật khẩu không khớp');
+      return false;
+    }
+    setConfirmPasswordError('');
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,7 +148,10 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         setVerificationEmail(email);
         setVerificationSent(true);
       } else {
-        await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+        await setPersistence(
+          auth,
+          rememberMe ? browserLocalPersistence : browserSessionPersistence
+        );
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         if (!userCredential.user.emailVerified) {
           showToast('Tài khoản chưa được xác thực email.', 'warning');
@@ -114,7 +160,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         saveUserInfo({
           email: userCredential.user.email!,
           displayName: userCredential.user.displayName || 'Người dùng',
-          photoURL: userCredential.user.photoURL || undefined
+          photoURL: userCredential.user.photoURL || undefined,
         });
         onLogin();
       }
@@ -179,8 +225,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       setLoading(true);
       await sendEmailVerification(currentUser);
       showToast('Đã gửi lại email xác thực.', 'success');
-    } catch { showToast('Gửi lại email thất bại.', 'error'); }
-    finally { setLoading(false); }
+    } catch {
+      showToast('Gửi lại email thất bại.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCheckVerification = async () => {
@@ -191,8 +240,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         showToast('Xác thực thành công!', 'success');
         onLogin();
       } else showToast('Email vẫn chưa được xác thực.', 'warning');
-    } catch { showToast('Lỗi khi kiểm tra xác thực.', 'error'); }
-    finally { setLoading(false); }
+    } catch {
+      showToast('Lỗi khi kiểm tra xác thực.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const isUnverified = currentUser && !currentUser.emailVerified;
@@ -278,11 +330,21 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
         <p className="text-xs text-[var(--text-muted)] text-center mt-6 flex items-center justify-center gap-1.5">
           Made with <Heart size={11} className="text-red-500 fill-red-500" /> by
-          <a href="https://github.com/dexter826/dexter826" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:text-[#f0c654] transition-colors">MOB</a>
+          <a
+            href="https://github.com/dexter826/dexter826"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-primary hover:text-[#f0c654] transition-colors"
+          >
+            MOB
+          </a>
         </p>
       </div>
 
-      <ForgotPasswordModal isOpen={forgotPasswordOpen} onClose={() => setForgotPasswordOpen(false)} />
+      <ForgotPasswordModal
+        isOpen={forgotPasswordOpen}
+        onClose={() => setForgotPasswordOpen(false)}
+      />
     </div>
   );
 };

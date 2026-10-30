@@ -10,13 +10,7 @@ interface HistoryListProps {
   onSelectTransaction: (id: string) => void;
 }
 
-const HistoryList: React.FC<HistoryListProps> = ({
-  loading,
-  items,
-  onSelectTransaction,
-}) => {
-  
-
+const HistoryList: React.FC<HistoryListProps> = ({ loading, items, onSelectTransaction }) => {
   return (
     <AnimatePresence mode="wait">
       {loading ? (
@@ -53,12 +47,16 @@ const HistoryList: React.FC<HistoryListProps> = ({
                   className={`w-full p-3 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg hover:border-primary/50 transition-colors flex justify-between items-center group`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium hover:bg-[var(--border-color)] text-[var(--text-muted)]`}>
+                    <div
+                      className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium hover:bg-[var(--border-color)] text-[var(--text-muted)]`}
+                    >
                       <History size={16} />
                     </div>
                     <div className="text-left">
                       <div className="flex items-center gap-2">
-                        <p className={`text-sm font-medium text-[var(--text-secondary)]`}>{item.employeeName}</p>
+                        <p className={`text-sm font-medium text-[var(--text-secondary)]`}>
+                          {item.employeeName}
+                        </p>
                         {item.type === 'advance' && (
                           <span className="px-2 py-0.5 text-xs bg-transparent border border-orange-500 text-orange-500 rounded-full">
                             Ứng tiền
@@ -73,7 +71,11 @@ const HistoryList: React.FC<HistoryListProps> = ({
                       <div className="flex items-center gap-1">
                         <Clock size={12} className="text-[var(--text-muted)]" />
                         <p className={`text-xs text-[var(--text-muted)]`}>
-                          {new Date(item.date).toLocaleDateString('vi-VN')} {new Date(item.date).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(item.date).toLocaleDateString('vi-VN')}{' '}
+                          {new Date(item.date).toLocaleTimeString('vi-VN', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
                         </p>
                       </div>
                     </div>
@@ -89,7 +91,9 @@ const HistoryList: React.FC<HistoryListProps> = ({
               ))}
 
               {items.length > 0 && (
-                <p className={`text-center text-[11px] text-[var(--text-muted)] tracking-wide uppercase font-medium mt-6`}>
+                <p
+                  className={`text-center text-[11px] text-[var(--text-muted)] tracking-wide uppercase font-medium mt-6`}
+                >
                   Đã hiển thị toàn bộ {items.length} giao dịch
                 </p>
               )}

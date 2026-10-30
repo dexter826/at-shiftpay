@@ -4,7 +4,6 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { formatCurrency } from '@/utils/format';
 import { Wallet2 } from 'lucide-react';
 
-
 interface PayrollStatsProps {
   loading: boolean;
   totalEarned: number;
@@ -26,8 +25,6 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
   totalUnpaidShifts,
   totalAdvancedShifts,
 }) => {
-  
-
   return (
     <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
       {/* Mobile UI */}
@@ -126,7 +123,9 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                 </motion.p>
               )}
             </AnimatePresence>
-            <p className={`text-xs ${totalAdvanced > 0 ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}>
+            <p
+              className={`text-xs ${totalAdvanced > 0 ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}
+            >
               {totalAdvancedShifts} công
             </p>
           </div>
@@ -196,7 +195,9 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   </motion.p>
                 )}
               </AnimatePresence>
-              <p className={`text-xs mt-1 ${totalAdvanced > 0 ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}>
+              <p
+                className={`text-xs mt-1 ${totalAdvanced > 0 ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}
+              >
                 {totalAdvancedShifts} công
               </p>
             </div>

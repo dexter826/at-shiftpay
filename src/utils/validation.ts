@@ -37,10 +37,12 @@ export const EventSchema = z.object({
   note: z.string().optional(),
   amount: z.number().optional(),
   surcharge: z.number().optional(),
-  surchargeDistribution: z.object({
-    type: z.enum(['equal', 'selected']),
-    selectedEmployeeIds: z.array(z.string()).optional(),
-  }).optional(),
+  surchargeDistribution: z
+    .object({
+      type: z.enum(['equal', 'selected']),
+      selectedEmployeeIds: z.array(z.string()).optional(),
+    })
+    .optional(),
   locationId: z.string().optional(),
   userId: z.string(),
 });

@@ -11,7 +11,9 @@ const LoginIllustration: React.FC = () => (
       <img src="/logo_text.png" alt="ShiftPay" className="h-10 object-contain" />
 
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">Quản lý ca làm & tính công</h1>
+        <h1 className="text-2xl font-bold text-[var(--text-primary)]">
+          Quản lý ca làm & tính công
+        </h1>
         <p className="text-sm text-[var(--text-secondary)] max-w-xs leading-relaxed">
           Ứng dụng quản lý nhân sự và tính công lương theo ca làm việc
         </p>

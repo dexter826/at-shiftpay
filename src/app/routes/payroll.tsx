@@ -27,8 +27,13 @@ interface PayrollViewProps {
   loading?: boolean;
 }
 
-const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, locations, loading = false }) => {
-
+const PayrollView: React.FC<PayrollViewProps> = ({
+  shifts,
+  employees,
+  events,
+  locations,
+  loading = false,
+}) => {
   const [activeTab, setActiveTab] = useState<'payroll' | 'history'>('payroll');
   const [paymentHistory, setPaymentHistory] = useState<PaymentTransaction[]>([]);
 
@@ -52,7 +57,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
     searchTerm: payrollSearchTerm,
     setSearchTerm: setPayrollSearchTerm,
     sortBy: payrollSortBy,
-    setSortBy: setPayrollSortBy
+    setSortBy: setPayrollSortBy,
   } = usePayrollData({ shifts, employees, events });
 
   const {
@@ -62,7 +67,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
     totalShifts,
     totalUnpaidShifts,
     totalAdvancedShifts,
-    totalFees
+    totalFees,
   } = stats;
 
   // Reset phan trang khi doi tim kiem hoac tab
@@ -87,7 +92,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
   // Preload avatar nhân viên
   useEffect(() => {
     if (employees.length > 0) {
-      employees.forEach(emp => {
+      employees.forEach((emp) => {
         const empImage = emp.imageUrl || emp.avatar;
         if (empImage) {
           const img = new Image();
@@ -96,7 +101,6 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
       });
     }
   }, [employees]);
-
 
   const [payConfirm, setPayConfirm] = useState(false);
   const { showToast } = useToast();
@@ -114,25 +118,23 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
     if (selectedShiftIds.length === selectedUnpaidShifts.length) {
       setSelectedShiftIds([]);
     } else {
-      setSelectedShiftIds(selectedUnpaidShifts.map(shift => shift.id));
+      setSelectedShiftIds(selectedUnpaidShifts.map((shift) => shift.id));
     }
   };
 
   // Chọn/Bỏ chọn từng ca
   const handleSelectShift = (shiftId: string) => {
-    setSelectedShiftIds(prev =>
-      prev.includes(shiftId)
-        ? prev.filter(id => id !== shiftId)
-        : [...prev, shiftId]
+    setSelectedShiftIds((prev) =>
+      prev.includes(shiftId) ? prev.filter((id) => id !== shiftId) : [...prev, shiftId]
     );
   };
 
   const confirmPay = async () => {
     if (!selectedEmpId || selectedShiftIds.length === 0) return;
     try {
-      const selectedShifts = shifts.filter(s => selectedShiftIds.includes(s.id));
+      const selectedShifts = shifts.filter((s) => selectedShiftIds.includes(s.id));
       const totalAmount = selectedShifts.reduce((sum, s) => sum + s.amount, 0);
-      const employee = employees.find(e => e.id === selectedEmpId);
+      const employee = employees.find((e) => e.id === selectedEmpId);
 
       if (!employee) return;
 
@@ -144,7 +146,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
         shiftIds: selectedShiftIds,
         type: 'regular' as const,
         note: `Thanh toán ${selectedShiftIds.length} ca làm việc`,
-        userId: userId
+        userId: userId,
       };
 
       await paymentService.createPaymentTransaction(paymentData, selectedShiftIds);
@@ -159,30 +161,32 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
     }
   };
 
-  const selectedEmployeeSummary = selectedEmpId ? summary.find(s => s.employeeId === selectedEmpId) : null;
+  const selectedEmployeeSummary = selectedEmpId
+    ? summary.find((s) => s.employeeId === selectedEmpId)
+    : null;
   const selectedUnpaidShifts = useMemo(() => {
     if (!selectedEmpId) return [];
     return shifts
-      .filter(s => s.employeeId === selectedEmpId && s.status === 'unpaid')
+      .filter((s) => s.employeeId === selectedEmpId && s.status === 'unpaid')
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [selectedEmpId, shifts]);
 
   const selectedAdvancedShifts = useMemo(() => {
     if (!selectedEmpId) return [];
     return shifts
-      .filter(s => s.employeeId === selectedEmpId && s.status === 'advanced')
+      .filter((s) => s.employeeId === selectedEmpId && s.status === 'advanced')
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [selectedEmpId, shifts]);
 
   const selectedTransaction = useMemo(() => {
     if (!selectedTransactionId) return null;
-    return paymentHistory.find(p => p.id === selectedTransactionId);
+    return paymentHistory.find((p) => p.id === selectedTransactionId);
   }, [selectedTransactionId, paymentHistory]);
 
   // Tổng tiền các ca đã chọn
   const selectedShiftsTotal = useMemo(() => {
     return selectedUnpaidShifts
-      .filter(shift => selectedShiftIds.includes(shift.id))
+      .filter((shift) => selectedShiftIds.includes(shift.id))
       .reduce((sum, shift) => sum + shift.amount, 0);
   }, [selectedUnpaidShifts, selectedShiftIds]);
 
@@ -190,7 +194,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
   React.useEffect(() => {
     if (selectedEmpId && selectedUnpaidShifts.length > 0) {
       // Mặc định chọn tất cả khi mở modal
-      setSelectedShiftIds(selectedUnpaidShifts.map(shift => shift.id));
+      setSelectedShiftIds(selectedUnpaidShifts.map((shift) => shift.id));
     } else {
       setSelectedShiftIds([]);
     }
@@ -198,16 +202,21 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
 
   const transactionShifts = useMemo(() => {
     if (!selectedTransaction) return [];
-    return selectedTransaction.shiftIds?.map(shiftId =>
-      shifts.find(s => s.id === shiftId)
-    ).filter(Boolean) || [];
+    return (
+      selectedTransaction.shiftIds
+        ?.map((shiftId) => shifts.find((s) => s.id === shiftId))
+        .filter(Boolean) || []
+    );
   }, [selectedTransaction, shifts]);
 
   // Lịch sử giao dịch
   const filteredHistory = useMemo(() => {
-    return paymentHistory.filter(payment => {
+    return paymentHistory.filter((payment) => {
       const matchesSearch = payment.employeeName.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesDate = filterDate ? payment.date >= new Date(filterDate).getTime() && payment.date < new Date(filterDate).setMonth(new Date(filterDate).getMonth() + 1) : true;
+      const matchesDate = filterDate
+        ? payment.date >= new Date(filterDate).getTime() &&
+          payment.date < new Date(filterDate).setMonth(new Date(filterDate).getMonth() + 1)
+        : true;
       return matchesSearch && matchesDate;
     });
   }, [paymentHistory, searchTerm, filterDate]);
@@ -217,9 +226,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
       {/* Tiêu đề & Stats */}
       <div className={`py-4 px-4 md:px-6 border-b border-[var(--border-color)]`}>
         <div className="flex justify-between items-center">
-          {activeTab === 'payroll' && summary.length > 0 && (
-            null
-          )}
+          {activeTab === 'payroll' && summary.length > 0 && null}
         </div>
         <PayrollStats
           loading={loading}
@@ -297,7 +304,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
         selectedUnpaidShifts={selectedUnpaidShifts}
         selectedAdvancedShifts={selectedAdvancedShifts}
         onPayment={() => {
-          setSelectedShiftIds(selectedUnpaidShifts.map(s => s.id));
+          setSelectedShiftIds(selectedUnpaidShifts.map((s) => s.id));
           setShowPaymentModal(true);
         }}
         onSettlement={() => setShowSettlementModal(true)}
@@ -352,7 +359,7 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
         events={events}
         employees={employees}
         locations={locations}
-        onSuccess={() => { }}
+        onSuccess={() => {}}
       />
 
       {/* Modal quyết toán */}
@@ -366,10 +373,9 @@ const PayrollView: React.FC<PayrollViewProps> = ({ shifts, employees, events, lo
           paymentHistory={paymentHistory}
           events={events}
           locations={locations}
-          onSuccess={() => { }}
+          onSuccess={() => {}}
         />
       )}
-
     </div>
   );
 };

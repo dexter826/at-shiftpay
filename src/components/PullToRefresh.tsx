@@ -21,7 +21,8 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
 
     const handleTouchMoveRaw = (e: TouchEvent) => {
       // Chặn scroll mặc định để kéo refresh
-      if (startYRef.current === 0 || isRefreshing || document.body.style.overflow === 'hidden') return;
+      if (startYRef.current === 0 || isRefreshing || document.body.style.overflow === 'hidden')
+        return;
 
       const currentY = e.touches[0].clientY;
       const distance = currentY - startYRef.current;
@@ -49,7 +50,8 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (startYRef.current === 0 || isRefreshing || document.body.style.overflow === 'hidden') return;
+    if (startYRef.current === 0 || isRefreshing || document.body.style.overflow === 'hidden')
+      return;
 
     const currentY = e.touches[0].clientY;
     const distance = currentY - startYRef.current;
@@ -95,10 +97,12 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
         style={{
           top: -40,
           transform: `translateY(${pullDistance}px)`,
-          opacity: pullDistance / PULL_THRESHOLD
+          opacity: pullDistance / PULL_THRESHOLD,
         }}
       >
-        <div className={`bg-[var(--bg-secondary)] p-2 rounded-full shadow-lg border border-[var(--border-color)]`}>
+        <div
+          className={`bg-[var(--bg-secondary)] p-2 rounded-full shadow-lg border border-[var(--border-color)]`}
+        >
           <RefreshCw
             size={20}
             className={`text-primary ${isRefreshing ? 'animate-spin' : ''}`}

@@ -12,7 +12,7 @@ import {
   where,
   limit,
   writeBatch,
-  deleteField
+  deleteField,
 } from 'firebase/firestore';
 import { Location } from '@/types/index';
 import { createRealtimeSubscription } from '@/lib/api/firebaseService';
@@ -28,7 +28,17 @@ export const locationService = {
     return createRealtimeSubscription<Location>(q, callback, 'subscribeLocations', LocationSchema);
   },
 
-  async addLocation(data: { name: string; address?: string; latitude?: number; longitude?: number; review?: 'high' | 'low'; reviewNote?: string }, userId: string): Promise<string> {
+  async addLocation(
+    data: {
+      name: string;
+      address?: string;
+      latitude?: number;
+      longitude?: number;
+      review?: 'high' | 'low';
+      reviewNote?: string;
+    },
+    userId: string
+  ): Promise<string> {
     try {
       const cleanData = Object.fromEntries(
         Object.entries(data).filter(([_, v]) => v !== undefined)
@@ -42,7 +52,9 @@ export const locationService = {
       return docRef.id;
     } catch (error) {
       console.error('addLocation error:', error);
-      throw new Error(`Không thể thêm địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
+      throw new Error(
+        `Không thể thêm địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
     }
   },
 
@@ -55,7 +67,9 @@ export const locationService = {
       await updateDoc(docRef, updateData);
     } catch (error) {
       console.error('updateLocation error:', error);
-      throw new Error(`Không thể cập nhật địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
+      throw new Error(
+        `Không thể cập nhật địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
     }
   },
 
@@ -64,11 +78,17 @@ export const locationService = {
       await deleteDoc(doc(db, 'locations', id));
     } catch (error) {
       console.error('deleteLocation error:', error);
-      throw new Error(`Không thể xóa địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`);
+      throw new Error(
+        `Không thể xóa địa điểm: ${error instanceof Error ? error.message : 'Lỗi không xác định'}`
+      );
     }
   },
 
-  async findOrCreateLocation(userId: string, name: string, reviewData?: { review?: 'high' | 'low'; reviewNote?: string }): Promise<string> {
+  async findOrCreateLocation(
+    userId: string,
+    name: string,
+    reviewData?: { review?: 'high' | 'low'; reviewNote?: string }
+  ): Promise<string> {
     try {
       const q = query(
         collection(db, 'locations'),
@@ -91,13 +111,16 @@ export const locationService = {
       }
 
       // Tạo mới nếu chưa có
-      return await this.addLocation({
-        name,
-        ...reviewData
-      }, userId);
+      return await this.addLocation(
+        {
+          name,
+          ...reviewData,
+        },
+        userId
+      );
     } catch (error) {
       console.error('findOrCreateLocation error:', error);
       throw error;
     }
-  }
+  },
 };

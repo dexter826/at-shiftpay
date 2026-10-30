@@ -1,6 +1,15 @@
-import { motion } from "framer-motion";
-import React from "react";
-import { LayoutDashboard, CalendarRange, Users, Wallet, Settings, LogOut, Moon, Sun } from "lucide-react";
+import { motion } from 'framer-motion';
+import React from 'react';
+import {
+  LayoutDashboard,
+  CalendarRange,
+  Users,
+  Wallet,
+  Settings,
+  LogOut,
+  Moon,
+  Sun,
+} from 'lucide-react';
 import { useThemeStore } from '@/stores/themeStore';
 
 interface NavbarProps {
@@ -10,15 +19,15 @@ interface NavbarProps {
 }
 
 const navItems = [
-  { id: "dashboard", label: "Tổng quan", icon: LayoutDashboard },
-  { id: "calendar", label: "Lịch Tiệc", icon: CalendarRange },
-  { id: "employees", label: "Nhân Sự", icon: Users },
-  { id: "payroll", label: "Thanh Toán", icon: Wallet },
-  { id: "settings", label: "Cài đặt", icon: Settings },
+  { id: 'dashboard', label: 'Tổng quan', icon: LayoutDashboard },
+  { id: 'calendar', label: 'Lịch Tiệc', icon: CalendarRange },
+  { id: 'employees', label: 'Nhân Sự', icon: Users },
+  { id: 'payroll', label: 'Thanh Toán', icon: Wallet },
+  { id: 'settings', label: 'Cài đặt', icon: Settings },
 ];
 
 const NavItem: React.FC<{
-  item: typeof navItems[0];
+  item: (typeof navItems)[0];
   isActive: boolean;
   onClick: () => void;
   isMobile?: boolean;
@@ -28,11 +37,11 @@ const NavItem: React.FC<{
     onClick={onClick}
     className={`relative flex items-center transition-colors ${
       isMobile
-        ? "flex-1 flex-col gap-0.5 py-1.5 rounded-lg text-[11px] leading-tight justify-center"
-        : "gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium justify-start"
+        ? 'flex-1 flex-col gap-0.5 py-1.5 rounded-lg text-[11px] leading-tight justify-center'
+        : 'gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium justify-start'
     } ${
       isActive
-        ? "text-primary bg-primary/5"
+        ? 'text-primary bg-primary/5'
         : `text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--border-color)]`
     }`}
   >
@@ -40,7 +49,7 @@ const NavItem: React.FC<{
       <motion.div
         layoutId="nav-indicator-desktop"
         className="absolute left-0 top-2 bottom-2 w-[3px] bg-primary rounded-full"
-        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
       />
     )}
     <item.icon size={isMobile ? 20 : 18} />
@@ -50,7 +59,7 @@ const NavItem: React.FC<{
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) => {
   const { theme, toggleTheme } = useThemeStore();
-  const activeTabId = currentTab === "locations" ? "calendar" : currentTab;
+  const activeTabId = currentTab === 'locations' ? 'calendar' : currentTab;
 
   const handleSetTab = (id: string) => setTab(id);
 
@@ -61,8 +70,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
         <div className="p-5 border-b border-[var(--border-color)] flex flex-col items-center">
           <img src="/logo_text.png" alt="ShiftPay" className="h-8 object-contain" />
           <span className="text-[11px] text-[var(--text-muted)] mt-0.5">
-            Made by{" "}
-            <a href="https://github.com/dexter826/dexter826" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+            Made by{' '}
+            <a
+              href="https://github.com/dexter826/dexter826"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
               MOB
             </a>
           </span>
@@ -95,9 +109,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
             type="button"
             onClick={toggleTheme}
             className="flex items-center justify-center w-10 h-10 rounded-lg transition-colors text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--border-color)]"
-            title={theme === "dark" ? "Giao diện sáng" : "Giao diện tối"}
+            title={theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
           >
-            {theme === "dark" ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+            {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
           </button>
         </div>
       </div>
@@ -116,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout }) 
                 style={{ width: `${100 / navItems.length}%` }}
                 initial={false}
                 animate={{ x: `${idx * 100}%` }}
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
               >
                 <div className="w-8 h-[3px] bg-primary rounded-full" />
               </motion.div>

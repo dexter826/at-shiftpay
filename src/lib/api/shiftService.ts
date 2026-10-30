@@ -1,23 +1,26 @@
 import { db } from '@/lib/firebase';
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  Unsubscribe
-} from 'firebase/firestore';
+import { collection, query, where, orderBy, Unsubscribe } from 'firebase/firestore';
 import { Shift } from '@/types/index';
-import { buildMonthRangeQuery, createRealtimeSubscription, executeBatchQuery } from '@/lib/api/firebaseService';
+import {
+  buildMonthRangeQuery,
+  createRealtimeSubscription,
+  executeBatchQuery,
+} from '@/lib/api/firebaseService';
 import { ShiftSchema } from '@/utils/validation';
 
 export const shiftService = {
-  subscribeShiftsByMonth(userId: string, month: number, year: number, callback: (shifts: Shift[]) => void): Unsubscribe {
+  subscribeShiftsByMonth(
+    userId: string,
+    month: number,
+    year: number,
+    callback: (shifts: Shift[]) => void
+  ): Unsubscribe {
     const q = buildMonthRangeQuery({
       collectionName: 'shifts',
       dateField: 'date',
       month,
       year,
-      userId
+      userId,
     });
     return createRealtimeSubscription<Shift>(q, callback, 'subscribeShiftsByMonth', ShiftSchema);
   },
@@ -28,7 +31,7 @@ export const shiftService = {
       dateField: 'date',
       month: month - 1,
       year,
-      userId
+      userId,
     });
     return executeBatchQuery<Shift>(q, ShiftSchema);
   },
