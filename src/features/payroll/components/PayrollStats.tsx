@@ -35,7 +35,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
           <div className="flex items-center justify-center gap-2 mb-1">
             <Wallet size={16} className="text-ink-soft" />
             <p className="text-label font-medium text-ink-muted">Tổng đã làm</p>
-            <span className="w-1.5 h-1.5 rounded-xs bg-accent-ink" />
+            <span className="w-1.5 h-1.5 bg-accent-ink" />
           </div>
           <AnimatePresence mode="wait">
             {loading ? (
@@ -55,7 +55,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: DURATION_BASE }}
-                className="text-data font-semibold text-ink tabular-nums"
+                className="text-data font-semibold text-accent-ink tabular-nums"
               >
                 {formatCurrency(totalEarned)}
               </motion.p>
@@ -70,7 +70,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
         <div className="grid grid-cols-2 gap-3 pt-3 border-t border-line">
           <div className="text-center flex flex-col items-center">
             <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-xs bg-warning" />
+              <span className="w-1.5 h-1.5 bg-warning" />
               Tình hình lương
             </p>
             <AnimatePresence mode="wait">
@@ -98,12 +98,14 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                 </motion.p>
               )}
             </AnimatePresence>
-            <p className="text-label text-ink-soft tabular-nums">{totalUnpaidShifts} công</p>
+            <p className="text-label font-medium text-ink-soft tabular-nums">
+              {totalUnpaidShifts} công
+            </p>
           </div>
 
           <div className="text-center flex flex-col items-center">
             <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-xs bg-info" />
+              <span className="w-1.5 h-1.5 bg-info" />
               Đã ứng
             </p>
             <AnimatePresence mode="wait">
@@ -125,13 +127,17 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: DURATION_BASE }}
-                  className="text-title font-semibold text-ink mt-1 tabular-nums"
+                  className={`text-title font-semibold mt-1 tabular-nums ${totalAdvanced > 0 ? 'text-ink' : 'text-ink-muted'}`}
                 >
                   {formatCurrency(totalAdvanced)}
                 </motion.p>
               )}
             </AnimatePresence>
-            <p className="text-label text-ink-soft tabular-nums">{totalAdvancedShifts} công</p>
+            <p
+              className={`text-label font-medium tabular-nums ${totalAdvanced > 0 ? 'text-ink-soft' : 'text-ink-muted'}`}
+            >
+              {totalAdvancedShifts} công
+            </p>
           </div>
         </div>
       </div>
@@ -143,7 +149,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
             {/* Tình hình lương */}
             <div>
               <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-xs bg-warning" />
+                <span className="w-1.5 h-1.5 bg-warning" />
                 Tình hình lương
               </p>
               <AnimatePresence mode="wait">
@@ -171,13 +177,15 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                   </motion.p>
                 )}
               </AnimatePresence>
-              <p className="text-label text-ink-soft mt-1 tabular-nums">{totalUnpaidShifts} công</p>
+              <p className="text-label font-medium text-ink-soft mt-1 tabular-nums">
+                {totalUnpaidShifts} công
+              </p>
             </div>
 
             {/* Đã ứng */}
             <div>
               <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-xs bg-info" />
+                <span className="w-1.5 h-1.5 bg-info" />
                 Đã ứng
               </p>
               <AnimatePresence mode="wait">
@@ -199,13 +207,15 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: DURATION_BASE }}
-                    className="text-data font-semibold text-ink mt-1 tabular-nums"
+                    className={`text-data font-semibold mt-1 tabular-nums ${totalAdvanced > 0 ? 'text-ink' : 'text-ink-muted'}`}
                   >
                     {formatCurrency(totalAdvanced)}
                   </motion.p>
                 )}
               </AnimatePresence>
-              <p className="text-label text-ink-soft mt-1 tabular-nums">
+              <p
+                className={`text-label font-medium mt-1 tabular-nums ${totalAdvanced > 0 ? 'text-ink-soft' : 'text-ink-muted'}`}
+              >
                 {totalAdvancedShifts} công
               </p>
             </div>
@@ -213,7 +223,7 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
             {/* Tổng đã làm */}
             <div>
               <p className="text-label font-medium text-ink-muted flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-xs bg-accent-ink" />
+                <span className="w-1.5 h-1.5 bg-accent-ink" />
                 Tổng đã làm
               </p>
               <AnimatePresence mode="wait">
@@ -235,13 +245,13 @@ const PayrollStats: React.FC<PayrollStatsProps> = ({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: DURATION_BASE }}
-                    className="text-data font-semibold text-ink mt-1 tabular-nums"
+                    className="text-data font-semibold text-accent-ink mt-1 tabular-nums"
                   >
                     {formatCurrency(totalEarned)}
                   </motion.p>
                 )}
               </AnimatePresence>
-              <p className="text-label text-ink-soft mt-1 tabular-nums">
+              <p className="text-label font-medium text-ink-soft mt-1 tabular-nums">
                 {totalShifts} công{totalFees > 0 ? ` (+ ${formatCurrency(totalFees)} phụ phí)` : ''}
               </p>
             </div>

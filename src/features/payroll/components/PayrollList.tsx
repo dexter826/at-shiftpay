@@ -116,13 +116,12 @@ const PayrollList: React.FC<PayrollListProps> = ({
                             {item.employeeName}
                           </p>
                           {itemWithFees.totalFees && itemWithFees.totalFees > 0 && (
-                            <span className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-                              <span className="w-1.5 h-1.5 rounded-xs bg-info" />
+                            <span className="flex items-center px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
                               Có phụ phí
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-label tabular-nums">
+                        <div className="flex items-center gap-2 text-label font-medium tabular-nums">
                           {item.unpaidCount > 0 && (
                             <span className="text-warning">{item.unpaidCount} công chưa trả</span>
                           )}
@@ -144,7 +143,7 @@ const PayrollList: React.FC<PayrollListProps> = ({
                           {formatCurrency(item.totalUnpaid)}
                         </span>
                         {item.totalAdvanced > 0 && (
-                          <p className="text-label text-info">
+                          <p className="text-label font-medium text-info tabular-nums">
                             Đã ứng: {formatCurrency(item.totalAdvanced)}
                           </p>
                         )}

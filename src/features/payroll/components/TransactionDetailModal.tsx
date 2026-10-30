@@ -29,22 +29,22 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
           <div className="flex justify-between items-start mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className={`text-label text-ink-muted`}>Loại giao dịch</span>
+                <span className={`text-label font-medium text-ink-muted`}>Loại giao dịch</span>
                 {selectedTransaction?.type === 'advance' && (
-                  <span className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-                    <span className="w-1.5 h-1.5 rounded-xs bg-info" />
+                  <span className="flex items-center gap-1.5 px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
+                    <span className="w-1.5 h-1.5 bg-info" />
                     Ứng tiền
                   </span>
                 )}
                 {selectedTransaction?.type === 'settlement' && (
-                  <span className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-                    <span className="w-1.5 h-1.5 rounded-xs bg-accent-ink" />
+                  <span className="flex items-center gap-1.5 px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
+                    <span className="w-1.5 h-1.5 bg-accent-ink" />
                     Quyết toán
                   </span>
                 )}
                 {(!selectedTransaction?.type || selectedTransaction?.type === 'regular') && (
-                  <span className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-                    <span className="w-1.5 h-1.5 rounded-xs bg-success" />
+                  <span className="flex items-center gap-1.5 px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
+                    <span className="w-1.5 h-1.5 bg-success" />
                     Thanh toán thường
                   </span>
                 )}
@@ -54,7 +54,7 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
               </span>
             </div>
             <div className="text-right">
-              <span className={`text-label text-ink-muted`}>Thời gian</span>
+              <span className={`text-label font-medium text-ink-muted`}>Thời gian</span>
               <p className={`text-body-sm font-medium text-ink-soft tabular-nums`}>
                 {selectedTransaction
                   ? new Date(selectedTransaction.date).toLocaleString('vi-VN')
@@ -65,7 +65,7 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
 
           {selectedTransaction?.note && (
             <div className={`pt-2 border-t border-line`}>
-              <span className={`text-label text-ink-muted`}>Ghi chú:</span>
+              <span className={`text-label font-medium text-ink-muted`}>Ghi chú:</span>
               <p className={`text-body-sm text-ink-soft`}>{selectedTransaction.note}</p>
             </div>
           )}
@@ -91,20 +91,18 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
                       {event?.title || 'Không rõ sự kiện'}
                     </p>
                     <div className="flex items-center gap-2">
-                      <span
-                        className={`text-label font-medium ${
-                          s.session === 'morning' ? 'text-warning' : 'text-accent-ink'
-                        }`}
-                      >
+                      <span className={`text-label font-medium text-ink-soft`}>
                         {s.session === 'morning' ? 'Tiệc Sáng' : 'Tiệc Chiều'}
                       </span>
-                      <span className={`text-label text-ink-muted`}>•</span>
-                      <span className={`text-label text-ink-muted tabular-nums`}>
+                      <span className={`text-label font-medium text-ink-muted`}>•</span>
+                      <span className={`text-label font-medium text-ink-muted tabular-nums`}>
                         {formatDate(s.date)}
                       </span>
                     </div>
                     {event?.locationId && (
-                      <p className={`text-label text-ink-muted mt-0.5 flex items-center gap-1`}>
+                      <p
+                        className={`text-label font-medium text-ink-muted mt-0.5 flex items-center gap-1`}
+                      >
                         <MapPin size={12} className="shrink-0" />
                         {locations.find((l) => l.id === event.locationId)?.name ||
                           'Không rõ địa điểm'}

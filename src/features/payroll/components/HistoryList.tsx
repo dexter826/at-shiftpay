@@ -57,7 +57,7 @@ const HistoryList: React.FC<HistoryListProps> = ({
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-9 h-9 rounded-full flex items-center justify-center bg-surface-2 text-ink-soft`}
+                      className={`w-9 h-9 rounded-sm flex items-center justify-center bg-surface-2 text-ink-soft`}
                     >
                       <History size={16} />
                     </div>
@@ -67,21 +67,21 @@ const HistoryList: React.FC<HistoryListProps> = ({
                           {item.employeeName}
                         </p>
                         {item.type === 'advance' && (
-                          <span className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-                            <span className="w-1.5 h-1.5 rounded-xs bg-info" />
+                          <span className="flex items-center gap-1.5 px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
+                            <span className="w-1.5 h-1.5 bg-info" />
                             Ứng tiền
                           </span>
                         )}
                         {item.type === 'settlement' && (
-                          <span className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-xs bg-surface-2 text-label font-medium text-ink-soft">
-                            <span className="w-1.5 h-1.5 rounded-xs bg-accent-ink" />
+                          <span className="flex items-center gap-1.5 px-2 py-[3px] rounded-xs bg-surface-2 text-label font-medium text-ink-muted">
+                            <span className="w-1.5 h-1.5 bg-accent-ink" />
                             Quyết toán
                           </span>
                         )}
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock size={12} className="text-ink-muted" />
-                        <p className={`text-label text-ink-muted tabular-nums`}>
+                        <p className={`text-label font-medium text-ink-muted tabular-nums`}>
                           {new Date(item.date).toLocaleDateString('vi-VN')}{' '}
                           {new Date(item.date).toLocaleTimeString('vi-VN', {
                             hour: '2-digit',

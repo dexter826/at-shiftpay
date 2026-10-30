@@ -100,7 +100,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             </div>
             <div className="text-left">
               <p className={`text-body-sm font-semibold text-ink`}>Chỉ xuất sự kiện còn nợ</p>
-              <p className="text-label text-ink-muted">Lọc các sự kiện chưa thanh toán hết</p>
+              <p className="text-label font-medium text-ink-muted">
+                Lọc các sự kiện chưa thanh toán hết
+              </p>
             </div>
           </div>
           <div
@@ -124,7 +126,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
               }
             }}
             className={`
-                           col-span-3 py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border
+                           col-span-3 py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses}
                            ${
                              isAllSelected
                                ? 'bg-accent text-on-accent border-accent'
@@ -150,12 +152,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                   }
                 }}
                 className={`
-                            py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border
+                            py-2.5 rounded-sm text-body-sm font-semibold tabular-nums transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses}
                             ${
                               isSelected
                                 ? 'bg-accent text-on-accent border-accent'
                                 : `bg-surface-2 hover:bg-surface border-line text-ink-soft ${
-                                    isCurrentMonth ? 'border-accent/45 text-accent-ink' : ''
+                                    isCurrentMonth ? 'border-accent text-ink' : ''
                                   }`
                             }
                         `}

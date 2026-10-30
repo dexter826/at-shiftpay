@@ -200,7 +200,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   </p>
                 </div>
               ) : (
-                <p className={`text-label text-ink-soft italic`}>Chưa cập nhật ngân hàng</p>
+                <p className={`text-label font-medium text-ink-soft italic`}>
+                  Chưa cập nhật ngân hàng
+                </p>
               )}
             </div>
           </div>
@@ -215,22 +217,24 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               onClick={() => setPaymentType('regular')}
               aria-pressed={paymentType === 'regular'}
               className={`p-3 rounded-md border transition-colors duration-fast ease-standard relative text-center ${focusRingOnSurfaceClasses} ${
-                paymentType === 'regular' ? 'border-accent bg-surface-2' : 'border-line bg-surface'
+                paymentType === 'regular' ? 'border-success bg-surface-2' : 'border-line bg-surface'
               }`}
             >
               {paymentType === 'regular' && (
-                <div className="absolute top-2 right-2 w-5 h-5 bg-accent rounded-full flex items-center justify-center">
-                  <Check size={12} className="text-on-accent" />
+                <div className="absolute top-2 right-2 w-5 h-5 bg-success rounded-xs flex items-center justify-center">
+                  <Check size={12} className="text-on-accent" strokeWidth={3} />
                 </div>
               )}
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Banknote
                   size={16}
-                  className={paymentType === 'regular' ? 'text-accent-ink' : 'text-ink-muted'}
+                  className={paymentType === 'regular' ? 'text-success' : 'text-ink-muted'}
                 />
                 <span className={`text-body-sm font-semibold text-ink`}>Thanh toán</span>
               </div>
-              <p className={`text-label leading-tight text-ink-soft`}>Nguồn tiền tiệc</p>
+              <p className={`text-label font-medium leading-tight text-ink-soft`}>
+                Nguồn tiền tiệc
+              </p>
             </button>
 
             <button
@@ -238,22 +242,22 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               onClick={() => setPaymentType('advance')}
               aria-pressed={paymentType === 'advance'}
               className={`p-3 rounded-md border transition-colors duration-fast ease-standard relative text-center ${focusRingOnSurfaceClasses} ${
-                paymentType === 'advance' ? 'border-warning bg-surface-2' : 'border-line bg-surface'
+                paymentType === 'advance' ? 'border-info bg-surface-2' : 'border-line bg-surface'
               }`}
             >
               {paymentType === 'advance' && (
-                <div className="absolute top-2 right-2 w-5 h-5 bg-warning rounded-full flex items-center justify-center">
-                  <Check size={12} className="text-on-accent" />
+                <div className="absolute top-2 right-2 w-5 h-5 bg-info rounded-xs flex items-center justify-center">
+                  <Check size={12} className="text-on-accent" strokeWidth={3} />
                 </div>
               )}
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Wallet
                   size={16}
-                  className={paymentType === 'advance' ? 'text-warning' : 'text-ink-muted'}
+                  className={paymentType === 'advance' ? 'text-info' : 'text-ink-muted'}
                 />
                 <span className={`text-body-sm font-semibold text-ink`}>Ứng tiền</span>
               </div>
-              <p className={`text-label leading-tight text-ink-soft`}>Nguồn cá nhân</p>
+              <p className={`text-label font-medium leading-tight text-ink-soft`}>Nguồn cá nhân</p>
             </button>
           </div>
         </div>
@@ -284,19 +288,19 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   {qrError ? (
                     <>
                       <AlertTriangle size={32} className="mx-auto mb-2 text-warning" />
-                      <p className={`text-label text-ink-soft`}>{qrError}</p>
+                      <p className={`text-label font-medium text-ink-soft`}>{qrError}</p>
                     </>
                   ) : (
                     <>
                       <QrCode size={32} className="mx-auto mb-2 text-ink-muted" />
-                      <p className={`text-label text-ink-soft`}>Đang tạo mã QR...</p>
+                      <p className={`text-label font-medium text-ink-soft`}>Đang tạo mã QR...</p>
                     </>
                   )}
                 </div>
               </div>
             )}
 
-            <p className={`text-label text-ink-soft text-center italic`}>
+            <p className={`text-label font-medium text-ink-soft text-center italic`}>
               Nội dung: THANH TOAN TIEN LUONG {selectedShiftIds.length} CONG
             </p>
           </div>
@@ -317,7 +321,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         {/* Danh sách ca chọn */}
         <div className="space-y-3">
           <div className="flex justify-between items-center px-1">
-            <h4 className={`text-body-sm font-semibold text-ink`}>
+            <h4 className={`text-body-sm font-semibold text-ink tabular-nums`}>
               Ca được chọn ({selectedShiftIds.length})
             </h4>
             <button
@@ -356,7 +360,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     <p className={`text-body-sm font-medium text-ink truncate`}>
                       {event?.title || 'Không rõ'}
                     </p>
-                    <div className={`text-label text-ink-soft flex items-center gap-1 truncate`}>
+                    <div
+                      className={`text-label font-medium text-ink-soft flex items-center gap-1 truncate`}
+                    >
                       <MapPin size={12} className="shrink-0" />
                       <span className="truncate">
                         {locations.find((l) => l.id === event?.locationId)?.name ||
@@ -368,11 +374,11 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     <div className={`text-body-sm font-semibold text-ink tabular-nums`}>
                       {formatCurrency(shift.amount)}
                     </div>
-                    <div className={`text-label text-ink-soft mt-0.5 tabular-nums`}>
+                    <div className={`text-label font-medium text-ink-soft mt-0.5 tabular-nums`}>
                       {formatShiftDate(shift.date, shift.session)}
                     </div>
                     {breakdown.surcharge > 0 && (
-                      <div className={`text-label text-ink-soft tabular-nums`}>
+                      <div className={`text-label font-medium text-ink-soft tabular-nums`}>
                         {formatCurrency(breakdown.base)} + {formatCurrency(breakdown.surcharge)}
                       </div>
                     )}
@@ -387,7 +393,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         <div className={`p-4 bg-surface border border-line rounded-md space-y-4`}>
           <div className="flex justify-between items-center">
             <div>
-              <span className={`text-label text-ink-soft block`}>Tổng chưa thanh toán</span>
+              <span className={`text-label font-medium text-ink-soft block`}>
+                Tổng chưa thanh toán
+              </span>
               <span className={`text-label font-medium text-warning tabular-nums`}>
                 {employeeSummary.unpaidCount} ca làm việc
               </span>
@@ -399,7 +407,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
           <div className="flex justify-between items-center">
             <div>
-              <span className={`text-label text-ink-soft block`}>Tổng đã ứng</span>
+              <span className={`text-label font-medium text-ink-soft block`}>Tổng đã ứng</span>
               <span className={`text-label font-medium text-info tabular-nums`}>
                 {employeeSummary.advancedCount} ca làm việc
               </span>

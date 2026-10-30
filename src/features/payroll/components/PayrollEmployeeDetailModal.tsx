@@ -61,7 +61,7 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
             <div className="space-y-3">
               <div>
                 <span className="text-ink-muted">Tổng tiền đã làm:</span>
-                <p className={`text-data font-semibold text-ink tabular-nums`}>
+                <p className={`text-data font-semibold text-accent-ink tabular-nums`}>
                   {formatCurrency(
                     selectedEmployeeSummary.totalUnpaid + selectedEmployeeSummary.totalAdvanced
                   )}
@@ -107,18 +107,18 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
                           {event?.title || 'Không rõ sự kiện'}
                         </p>
                         <div className="flex items-center gap-2">
-                          <span
-                            className={`text-label font-medium ${s.session === 'morning' ? 'text-warning' : 'text-accent-ink'}`}
-                          >
+                          <span className={`text-label font-medium text-ink-soft`}>
                             {s.session === 'morning' ? 'Tiệc Sáng' : 'Tiệc Chiều'}
                           </span>
-                          <span className={`text-label text-ink-muted`}>•</span>
-                          <span className={`text-label text-ink-muted tabular-nums`}>
+                          <span className={`text-label font-medium text-ink-muted`}>•</span>
+                          <span className={`text-label font-medium text-ink-muted tabular-nums`}>
                             {formatDate(s.date)}
                           </span>
                         </div>
                         {event?.locationId && (
-                          <p className={`text-label text-ink-muted mt-0.5 flex items-center gap-1`}>
+                          <p
+                            className={`text-label font-medium text-ink-muted mt-0.5 flex items-center gap-1`}
+                          >
                             <MapPin size={12} />
                             {locations.find((l) => l.id === event.locationId)?.name ||
                               'Không rõ địa điểm'}
@@ -126,7 +126,7 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
                         )}
                       </div>
                     </div>
-                    <p className={`text-body-sm font-medium text-info tabular-nums`}>
+                    <p className={`text-body-sm font-semibold text-ink tabular-nums`}>
                       {formatCurrency(s.amount)}
                     </p>
                   </div>
@@ -158,18 +158,18 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
                         {event?.title || 'Không rõ sự kiện'}
                       </p>
                       <div className="flex items-center gap-2">
-                        <span
-                          className={`text-label font-medium ${s.session === 'morning' ? 'text-warning' : 'text-accent-ink'}`}
-                        >
+                        <span className={`text-label font-medium text-ink-soft`}>
                           {s.session === 'morning' ? 'Tiệc Sáng' : 'Tiệc Chiều'}
                         </span>
-                        <span className={`text-label text-ink-muted`}>•</span>
-                        <span className={`text-label text-ink-muted tabular-nums`}>
+                        <span className={`text-label font-medium text-ink-muted`}>•</span>
+                        <span className={`text-label font-medium text-ink-muted tabular-nums`}>
                           {formatDate(s.date)}
                         </span>
                       </div>
                       {event?.locationId && (
-                        <p className={`text-label text-ink-muted mt-0.5 flex items-center gap-1`}>
+                        <p
+                          className={`text-label font-medium text-ink-muted mt-0.5 flex items-center gap-1`}
+                        >
                           <MapPin size={12} />
                           {locations.find((l) => l.id === event.locationId)?.name ||
                             'Không rõ địa điểm'}

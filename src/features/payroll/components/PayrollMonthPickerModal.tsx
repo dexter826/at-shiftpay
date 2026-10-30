@@ -40,7 +40,7 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
       }
     >
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between items-center px-4 py-2 bg-surface-2 rounded-md border border-dashed border-line">
+        <div className="flex justify-between items-center px-2">
           <button
             type="button"
             onClick={() => setViewYear((prev) => prev - 1)}
@@ -49,7 +49,7 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
           >
             <ChevronLeft size={18} className="text-ink-soft" />
           </button>
-          <span className={`text-body font-semibold text-ink tabular-nums`}>Năm {viewYear}</span>
+          <span className={`text-body font-semibold text-ink tabular-nums`}>{viewYear}</span>
           <button
             type="button"
             onClick={() => setViewYear((prev) => prev + 1)}
@@ -76,10 +76,10 @@ const PayrollMonthPickerModal: React.FC<PayrollMonthPickerModalProps> = ({
                   setFilterDate(value);
                   onClose();
                 }}
-                className={`py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses} ${
+                className={`py-2.5 rounded-sm text-body-sm font-semibold tabular-nums transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses} ${
                   isSelected
                     ? 'bg-accent text-on-accent border-accent'
-                    : `bg-surface-2 hover:bg-surface border-line text-ink-soft ${isCurrentMonth ? 'border-accent/45 text-accent-ink' : ''}`
+                    : `bg-surface-2 hover:bg-surface border-line text-ink-soft ${isCurrentMonth ? 'border-accent text-ink' : ''}`
                 }`}
               >
                 Tháng {month}
