@@ -1,5 +1,10 @@
 import { Shift, Event, Employee, UserSettings, Location } from '@/types/index';
 
+function escapeCsvCell(cell: string): string {
+  const neutralized = /^[=+\-@\t\r]/.test(cell) ? `'${cell}` : cell;
+  return `"${neutralized.replace(/"/g, '""')}"`;
+}
+
 export const exportDetailedReport = (
   month: number,
   year: number,
@@ -120,9 +125,7 @@ export const exportDetailedReport = (
   });
 
   // Chuyển thành CSV string
-  const csvContent = csvRows
-    .map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(','))
-    .join('\n');
+  const csvContent = csvRows.map((row) => row.map(escapeCsvCell).join(',')).join('\n');
 
   // Thêm BOM để Excel hiển thị đúng tiếng Việt
   const BOM = '\uFEFF';
