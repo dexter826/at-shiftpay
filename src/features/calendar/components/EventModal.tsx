@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Employee,
   Shift,
@@ -84,7 +84,17 @@ export const EventModal: React.FC<EventModalProps> = ({
   const [initialState, setInitialState] = useState<any>(null);
   const [initialSelectedIds, setInitialSelectedIds] = useState<Set<string>>(new Set());
 
+  const initialStateRef = useRef<string | null>(null);
+
   useEffect(() => {
+    const initKey = `${existingEvent?.id ?? 'new'}:${date}:${locations.length > 0 ? 'loc' : 'noloc'}`;
+    if (!isOpen) {
+      initialStateRef.current = null;
+      return;
+    }
+    if (initialStateRef.current === initKey) return;
+    initialStateRef.current = initKey;
+
     if (isOpen) {
       if (existingEvent) {
         setTitle(existingEvent.title);
@@ -198,7 +208,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         setInitialState(null);
       }
     }
-  }, [isOpen, existingEvent, existingShifts, settings, locations]);
+  }, [isOpen, existingEvent, existingShifts, settings, locations, date]);
 
   const loadEmployeeShiftCounts = async () => {
     try {
