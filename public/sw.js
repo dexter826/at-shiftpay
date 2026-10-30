@@ -9,9 +9,7 @@ const urlsToCache = [
     '/manifest.json',
     '/brand/mark-reversed.svg',
     '/brand/lockup-white.svg',
-    '/logo_text.png',
-    '/avatar.png',
-    '/background.png'
+    '/avatar.png'
 ];
 
 // Install event - cache resources
