@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
-import { focusRingClasses } from '@/lib/utils';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface MonthPickerModalProps {
   isOpen: boolean;
@@ -66,7 +66,7 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
             Đóng
           </Button>
           <Button variant="primary" onClick={handleGoToCurrentMonth} className="flex-1 gap-1.5">
-            <Calendar size={16} className="text-on-accent" />
+            <Calendar size={16} />
             Tháng hiện tại
           </Button>
         </div>
@@ -79,7 +79,7 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
             type="button"
             onClick={() => setTempYear((prev) => prev - 1)}
             aria-label="Năm trước"
-            className={`flex h-9 w-9 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingClasses}`}
+            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
             <ChevronLeft size={18} className="text-ink-soft" />
           </button>
@@ -88,7 +88,7 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
             type="button"
             onClick={() => setTempYear((prev) => prev + 1)}
             aria-label="Năm sau"
-            className={`flex h-9 w-9 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingClasses}`}
+            className={`flex h-10 w-10 items-center justify-center rounded-sm hover:bg-surface transition-colors duration-fast ease-standard ${focusRingOnSurfaceClasses}`}
           >
             <ChevronRight size={18} className="text-ink-soft" />
           </button>
@@ -107,7 +107,7 @@ export const MonthPickerModal: React.FC<MonthPickerModalProps> = ({
                 key={index}
                 type="button"
                 onClick={() => handleSelectMonth(index)}
-                className={`py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border ${focusRingClasses} ${
+                className={`py-2.5 rounded-sm text-body-sm font-semibold transition-colors duration-fast ease-standard border ${focusRingOnSurfaceClasses} ${
                   isSelected
                     ? 'bg-accent text-on-accent border-accent'
                     : `bg-surface-2 hover:bg-surface border-line text-ink-soft ${isCurrentMonth ? 'border-accent/45 text-accent-ink' : ''}`

@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { CalendarRange, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PAYMENT_COLORS } from '@/config/colors';
-import { focusRingClasses } from '@/lib/utils';
+import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import ChartTooltip from '@/features/dashboard/components/ChartTooltip';
 
 interface ActivityChartProps {
@@ -32,7 +32,7 @@ const TrendIndicator = ({ value }: { value: number | null }) => {
   const isPositive = value >= 0;
   return (
     <span
-      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-xs text-label font-medium ${isPositive ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}
+      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-xs text-label font-medium ${isPositive ? 'bg-surface-2 text-success' : 'bg-surface-2 text-danger'}`}
     >
       {isPositive ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
       {isPositive ? '+' : ''}
@@ -56,7 +56,7 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
           <button
             type="button"
             onClick={onGoToToday}
-            className={`flex-1 sm:flex-none px-2 py-1 text-label font-medium text-ink-soft hover:text-ink rounded-xs transition-colors duration-fast ease-standard whitespace-nowrap ${focusRingClasses}`}
+            className={`flex-1 sm:flex-none px-3 min-h-10 text-label font-medium text-ink-soft hover:text-ink rounded-xs transition-colors duration-fast ease-standard whitespace-nowrap ${focusRingOnSurfaceClasses}`}
           >
             Hôm nay
           </button>
@@ -65,14 +65,14 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
             type="button"
             onClick={onPrevMonth}
             aria-label="Tháng trước"
-            className={`p-1 text-ink-muted hover:text-ink rounded-xs transition-colors duration-fast ease-standard shrink-0 ${focusRingClasses}`}
+            className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink rounded-xs transition-colors duration-fast ease-standard shrink-0 ${focusRingOnSurfaceClasses}`}
           >
             <ChevronLeft size={14} />
           </button>
           <button
             type="button"
             onClick={onMonthClick}
-            className={`flex-1 sm:flex-none text-label font-medium text-ink min-w-[80px] text-center px-1 whitespace-nowrap rounded-xs transition-colors duration-fast ease-standard hover:bg-surface-2 ${focusRingClasses}`}
+            className={`flex-1 sm:flex-none text-label font-medium text-ink min-w-20 min-h-10 text-center px-1 whitespace-nowrap rounded-xs transition-colors duration-fast ease-standard hover:bg-surface-2 ${focusRingOnSurfaceClasses}`}
           >
             {monthName}
           </button>
@@ -80,7 +80,7 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
             type="button"
             onClick={onNextMonth}
             aria-label="Tháng sau"
-            className={`p-1 text-ink-muted hover:text-ink rounded-xs transition-colors duration-fast ease-standard shrink-0 ${focusRingClasses}`}
+            className={`flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink rounded-xs transition-colors duration-fast ease-standard shrink-0 ${focusRingOnSurfaceClasses}`}
           >
             <ChevronRight size={14} />
           </button>
@@ -89,11 +89,17 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
 
       <div className="flex items-center gap-4 mb-3">
         <span className="flex items-center gap-1.5 text-label text-ink-muted">
-          <span className="w-2 h-2 rounded-xs bg-success" />
+          <span
+            className="w-1.5 h-1.5 rounded-xs"
+            style={{ backgroundColor: PAYMENT_COLORS.SUCCESS }}
+          />
           Sự kiện
         </span>
         <span className="flex items-center gap-1.5 text-label text-ink-muted">
-          <span className="w-2 h-2 rounded-xs bg-info" />
+          <span
+            className="w-1.5 h-1.5 rounded-xs"
+            style={{ backgroundColor: PAYMENT_COLORS.INFO }}
+          />
           Số công
         </span>
       </div>
@@ -116,7 +122,7 @@ const ActivityChart: React.FC<ActivityChartProps> = memo(
               />
               <Tooltip
                 content={<ChartTooltip />}
-                cursor={{ fill: 'color-mix(in oklch, var(--color-line), transparent 85%)' }}
+                cursor={{ fill: 'color-mix(in oklch, var(--color-line), transparent 60%)' }}
               />
               <Bar
                 dataKey="events"

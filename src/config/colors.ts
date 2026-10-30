@@ -3,14 +3,14 @@
 export const PAYMENT_COLORS = {
   PRIMARY: 'var(--color-accent)',
 
-  UNPAID: 'var(--color-accent)', // Còn cần trả
+  UNPAID: 'var(--color-warning)', // Còn cần trả
   PAID: 'var(--color-success)', // Đã thanh toán
-  ADVANCED: 'var(--color-warning)', // Đã ứng tiền
-  TOTAL_EARNED: 'var(--color-info)', // Tổng đã làm
+  ADVANCED: 'var(--color-info)', // Đã ứng tiền
+  TOTAL_EARNED: 'var(--color-accent-ink)', // Tổng đã làm
 
   REGULAR_PAYMENT: 'var(--color-success)',
-  ADVANCE_PAYMENT: 'var(--color-warning)',
-  SETTLEMENT: 'var(--color-info)',
+  ADVANCE_PAYMENT: 'var(--color-info)',
+  SETTLEMENT: 'var(--color-accent-ink)',
 
   SUCCESS: 'var(--color-success)',
   WARNING: 'var(--color-warning)',
@@ -19,20 +19,20 @@ export const PAYMENT_COLORS = {
 } as const;
 
 export const PAYMENT_COLOR_CLASSES = {
-  UNPAID_TEXT: 'text-accent-ink',
+  UNPAID_TEXT: 'text-warning',
   PAID_TEXT: 'text-success',
-  ADVANCED_TEXT: 'text-warning',
-  TOTAL_EARNED_TEXT: 'text-info',
+  ADVANCED_TEXT: 'text-info',
+  TOTAL_EARNED_TEXT: 'text-accent-ink',
 
-  UNPAID_BG: 'bg-accent/10',
+  UNPAID_BG: 'bg-warning/10',
   PAID_BG: 'bg-success/10',
-  ADVANCED_BG: 'bg-warning/10',
-  TOTAL_EARNED_BG: 'bg-info/10',
+  ADVANCED_BG: 'bg-info/10',
+  TOTAL_EARNED_BG: 'bg-accent/10',
 
-  UNPAID_BORDER: 'border-accent/20',
+  UNPAID_BORDER: 'border-warning/20',
   PAID_BORDER: 'border-success/20',
-  ADVANCED_BORDER: 'border-warning/20',
-  TOTAL_EARNED_BORDER: 'border-info/20',
+  ADVANCED_BORDER: 'border-info/20',
+  TOTAL_EARNED_BORDER: 'border-accent/20',
 } as const;
 
 export const getPaymentStatusColor = (status: 'unpaid' | 'paid' | 'advanced') => {

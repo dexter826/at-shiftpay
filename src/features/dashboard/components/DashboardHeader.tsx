@@ -23,7 +23,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ user, onOpenExport })
           />
           <div>
             <p className={`text-body-sm text-ink-soft`}>Xin chào,</p>
-            <h2 className={`text-title text-ink`}>
+            <h2 className={`text-title font-semibold text-ink`}>
               {user?.displayName || user?.email?.split('@')[0] || 'Người dùng'}
             </h2>
           </div>

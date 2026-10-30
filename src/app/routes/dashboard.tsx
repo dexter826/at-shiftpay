@@ -229,17 +229,20 @@ const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
               </div>
             </div>
-            <div className="p-4 md:p-6 space-y-4">
+            <div className="p-4 md:p-8 space-y-4">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="p-4 bg-surface border border-line rounded-md h-28">
+                  <div
+                    key={i}
+                    className="px-4 py-3.5 bg-surface border border-line rounded-md h-28"
+                  >
                     <Skeleton variant="text" width="60%" height={12} className="mb-3" />
                     <Skeleton variant="text" width="40%" height={28} />
                   </div>
                 ))}
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="p-4 bg-surface border border-line rounded-md h-[300px]">
+                <div className="p-4 bg-surface border border-line rounded-md min-h-[340px]">
                   <Skeleton variant="text" width="40%" height={20} className="mb-4" />
                   <Skeleton
                     variant="rectangular"
@@ -248,7 +251,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
                     className="rounded-md"
                   />
                 </div>
-                <div className="p-4 bg-surface border border-line rounded-md h-[300px]">
+                <div className="p-4 bg-surface border border-line rounded-md min-h-[340px]">
                   <Skeleton variant="text" width="40%" height={20} className="mb-4" />
                   <Skeleton
                     variant="rectangular"
@@ -269,7 +272,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
           >
             <DashboardHeader user={user} onOpenExport={onOpenExport} />
 
-            <div className="p-4 md:p-6 space-y-4">
+            <div className="p-4 md:p-8 space-y-4">
               <div className="md:hidden">
                 <Button
                   onClick={onOpenExport}

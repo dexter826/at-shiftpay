@@ -22,3 +22,13 @@
 - Dashboard header: avatar border moved from a 2px accent ring to a 1px `line`; greeting on the type scale.
 - Loading skeletons follow the same radii and surfaces. Axis ticks already read `--color-ink-muted`; tooltip cursor uses a `line` mix.
 - Composition, routes, and data flow untouched. Gates: `tsc` 0, `eslint` 0, `vite build` 0; grep finds no raw palette, hex, uppercase labels, shadows, or off-scale radii in the dashboard files.
+
+2026-10-30 — Review fixes.
+
+- Type weights restored next to the size tokens (`text-title font-semibold`, `text-data font-semibold tabular-nums`).
+- Month navigator and picker controls meet the 38px floor; rings use the surface-aware variant.
+- Trend chips dropped tinted pills for `surface-2` + status text; legend dots read from `PAYMENT_COLORS` so a series has one color source; markers standardized to 6px squares.
+- Tooltip sits on `surface-2` for a visible edge in light theme; the bar cursor mix is strong enough to see.
+- Desktop gutter is 32px and skeletons match the real card padding and min-heights.
+- Data series no longer use the accent: unpaid→warning, advanced→info, total earned→accent-ink.
+- Dead `row.color` field removed from the stats config.

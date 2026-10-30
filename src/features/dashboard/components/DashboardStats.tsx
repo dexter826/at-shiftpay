@@ -25,7 +25,6 @@ interface StatRow {
   key: StatKey | null;
   subtract?: boolean;
   currency?: boolean;
-  color?: string;
 }
 
 interface StatCard {
@@ -82,7 +81,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = memo(({ stats }) => (
       const Icon = card.icon;
       const mainValue = stats[card.value];
       return (
-        <div key={card.label} className="p-3.5 bg-surface border border-line rounded-md">
+        <div key={card.label} className="px-4 py-3.5 bg-surface border border-line rounded-md">
           <div className="flex items-center gap-2 mb-2.5">
             <div className="p-1.5 rounded-xs bg-surface-2 text-ink-soft">
               <Icon size={14} />
@@ -102,7 +101,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = memo(({ stats }) => (
               return (
                 <div key={row.label} className="flex justify-between text-label">
                   <span className="text-ink-soft">{row.label}</span>
-                  <span className={`font-semibold tabular-nums ${row.color || 'text-ink'}`}>
+                  <span className="font-semibold tabular-nums text-ink">
                     {row.currency ? formatCurrency(val) : val}
                   </span>
                 </div>

@@ -37,7 +37,9 @@ const PaymentChart: React.FC<PaymentChartProps> = memo(({ data }) => (
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-title text-ink">{data.reduce((a, c) => a + c.value, 0)}</span>
+              <span className="text-title font-semibold tabular-nums text-ink">
+                {data.reduce((a, c) => a + c.value, 0)}
+              </span>
               <span className="text-label font-medium text-ink-muted">Tổng</span>
             </div>
           </div>
@@ -49,7 +51,7 @@ const PaymentChart: React.FC<PaymentChartProps> = memo(({ data }) => (
                 className="flex items-center justify-between px-2.5 py-1.5 bg-surface-2 border border-line rounded-md"
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-xs" style={{ backgroundColor: item.color }} />
+                  <div className="w-1.5 h-1.5 rounded-xs" style={{ backgroundColor: item.color }} />
                   <span className="text-label text-ink-soft">{item.name}</span>
                 </div>
                 <span className="text-label font-semibold text-ink">{item.value}</span>

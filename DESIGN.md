@@ -123,7 +123,7 @@ components:
     backgroundColor: '{colors.surface-2}'
     textColor: '{colors.ink}'
     rounded: '{rounded.sm}'
-    padding: 9px 10px
+    padding: 10px 12px
   table-row:
     textColor: '{colors.ink}'
     typography: '{typography.body-sm}'
@@ -141,7 +141,7 @@ Semantic roles only. The accent is a signal, not a surface: it appears on the pr
 
 ## Typography
 
-One family — Be Vietnam Pro — chosen for Vietnamese diacritics. Display is 24px/600, data figures 26px/600 with tabular numerals, body 15px/400, labels 12px/500. These are theme text tokens: `text-display`, `text-title`, `text-body`, `text-body-sm`, `text-label`, `text-data`. Negative tracking is capped at -0.02em and used only on short numerals or headings; running Vietnamese text keeps normal spacing so diacritics never collide. No all-caps labels, no eyebrow labels.
+One family — Be Vietnam Pro — chosen for Vietnamese diacritics. Display is 24px/600, data figures 26px/600 with tabular numerals, body 15px/400, labels 12px/500. These are theme text tokens: `text-display`, `text-title`, `text-body`, `text-body-sm`, `text-label`, `text-data`; weight is not part of a size token, so each call-site pairs the size with `font-semibold` or `font-medium` as specified here. Negative tracking is capped at -0.02em and used only on short numerals or headings; running Vietnamese text keeps normal spacing so diacritics never collide. No all-caps labels, no eyebrow labels.
 
 ## Layout
 
