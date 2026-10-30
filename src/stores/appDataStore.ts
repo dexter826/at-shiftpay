@@ -127,6 +127,7 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
     set({ _activeUserId: userId });
 
     const reportLoadError = () => {
+      if (get().dataError) return;
       set({ dataError: 'Không thể tải dữ liệu. Kiểm tra kết nối và thử lại.' });
     };
 
