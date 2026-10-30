@@ -4,7 +4,7 @@
 
 **Blocked by:** 05 (commit `3ea134f`).
 
-**Status:** in-progress — static verified; dashboard visual sau auth chưa kiểm.
+Status: resolved
 
 ## Sự thật dữ liệu (đã audit)
 
@@ -113,7 +113,7 @@ Không sửa: shell, login, payroll/calendar, token/primitive, API.
 - Không browser test/screenshot theo yêu cầu; dashboard nằm sau auth, user tự đăng nhập kiểm.
 - Không có test suite/visual regression.
 - Tuần vắt qua tháng có thể thiếu ngày nếu store chỉ tải tháng hiện tại → hiển thị trống, không bịa.
-- Sổ lương chỉ hiển thị người có ca unpaid/advanced (paid không nằm trong summary), giống logic payroll hiện tại.
+- Sổ lương tháng hiển thị cả người chỉ có ca đã trả; cột Ca/Lương gồm paid, còn Còn lại chỉ tính unpaid (review 2026-10-31). Recharts vẫn cài nhưng không dùng; `charts-vendor` đã bỏ khỏi `manualChunks` nên bundle không còn chunk rỗng.
 
 
 2026-10-30 — Fix TaskPanel sau feedback: bỏ 3 dòng 0 việc + tag "Đã xong" lặp, bỏ số "00" và "0 việc"; panel chỉ hiện việc đang có count > 0, hoặc một empty state "Không có việc cần xử lý". Tách scope: "Sự kiện chưa xếp" theo tuần (khớp board/KPI), "Ca chưa thanh toán" và "Ca đã ứng" theo tháng (khớp Sổ lương). Count lấy từ payrollStats tháng thay vì shifts tuần.

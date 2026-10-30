@@ -1,10 +1,12 @@
 import React from 'react';
-import { Eye, EyeOff, Lock, X } from 'lucide-react';
+import { Lock, X } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
+import { PasswordToggle } from '@/components/ui/PasswordToggle';
 import { cn, focusRingClasses } from '@/lib/utils';
+import { getInitials } from '@/utils/initials';
 
 interface QuickLoginViewProps {
   savedUser: { email: string; displayName: string; photoURL?: string };
@@ -23,15 +25,6 @@ interface QuickLoginViewProps {
   setRememberMe: (value: boolean) => void;
   loading: boolean;
 }
-
-const getInitials = (name: string) =>
-  name
-    .trim()
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'SP';
 
 const QuickLoginView: React.FC<QuickLoginViewProps> = ({
   savedUser,
@@ -100,21 +93,11 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
         <Input
           leadingIcon={<Lock size={15} aria-hidden="true" />}
           trailingAction={
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-              className={cn(
-                'flex h-11 w-11 items-center justify-center rounded-sm text-ink-muted hover:text-ink',
-                focusRingClasses
-              )}
-            >
-              {showPassword ? (
-                <EyeOff size={16} aria-hidden="true" />
-              ) : (
-                <Eye size={16} aria-hidden="true" />
-              )}
-            </button>
+            <PasswordToggle
+              visible={showPassword}
+              onToggle={() => setShowPassword(!showPassword)}
+              label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+            />
           }
           type={showPassword ? 'text' : 'password'}
           value={password}

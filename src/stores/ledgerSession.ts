@@ -32,7 +32,7 @@ export interface LedgerHandlers {
     locations?: Location[];
     settings?: UserSettings;
   }) => void;
-  onLedger: (ledger: { events: Event[]; shifts: Shift[]; totalDebt: number }) => void;
+  onLedger: (ledger: { events: Event[]; shifts: Shift[] }) => void;
   onLoading: (loading: { isLoading?: boolean; isCalendarLoading?: boolean }) => void;
   onError: () => void;
 }
@@ -85,11 +85,8 @@ export const createLedgerSession = (): LedgerSession => {
 
     const events = Array.from(allEvents.values());
     const shifts = Array.from(allShifts.values());
-    const totalDebt = shifts
-      .filter((shift) => shift.status === 'unpaid')
-      .reduce((sum, shift) => sum + shift.amount, 0);
 
-    handlers?.onLedger({ events, shifts, totalDebt });
+    handlers?.onLedger({ events, shifts });
   };
 
   const scheduleUpdate = () => {

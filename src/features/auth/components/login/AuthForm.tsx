@@ -1,9 +1,10 @@
 import React from 'react';
-import { ChevronLeft, Eye, EyeOff, Lock, User } from 'lucide-react';
+import { ChevronLeft, Lock, User } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
+import { PasswordToggle } from '@/components/ui/PasswordToggle';
 import { cn, focusRingClasses } from '@/lib/utils';
 import type { SavedUser } from '@/stores/authStore';
 
@@ -40,24 +41,6 @@ interface AuthFormProps {
   loading: boolean;
   onSwitchMode: () => void;
 }
-
-const PasswordToggle: React.FC<{
-  visible: boolean;
-  onToggle: () => void;
-  label: string;
-}> = ({ visible, onToggle, label }) => (
-  <button
-    type="button"
-    onClick={onToggle}
-    aria-label={label}
-    className={cn(
-      'flex h-11 w-11 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:text-ink',
-      focusRingClasses
-    )}
-  >
-    {visible ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
-  </button>
-);
 
 const AuthForm: React.FC<AuthFormProps> = ({
   isSignUp,

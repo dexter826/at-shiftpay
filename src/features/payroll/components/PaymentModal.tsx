@@ -11,6 +11,7 @@ import { vietQRService } from '@/lib/api/vietqrService';
 import { roundAmount, sumShiftAmounts } from '@/utils/payrollMath';
 import { useAuthStore } from '@/stores/authStore';
 import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
+import { getInitials } from '@/utils/initials';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -21,16 +22,6 @@ interface PaymentModalProps {
   employees: Employee[];
   locations: Location[];
 }
-
-const getInitials = (name: string) =>
-  name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'NV';
 
 export const PaymentModal: React.FC<PaymentModalProps> = ({
   isOpen,
@@ -196,7 +187,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               />
             ) : (
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-body-sm font-semibold text-ink-soft">
-                {getInitials(employeeSummary.employeeName)}
+                {getInitials(employeeSummary.employeeName, 'NV')}
               </span>
             )}
             <div className="min-w-0">

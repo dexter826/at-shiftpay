@@ -4,7 +4,7 @@
 
 **Blocked by:** 09 (commit `803df8d`).
 
-**Status:** static verified — visual chưa kiểm; 5 điểm chốt đã duyệt (sổ dòng, tên trang, ca chưa trả theo tháng, chặn trùng SĐT, giữ quy tắc chặn xóa/không cascade).
+Status: resolved
 
 ## Audit hiện tại
 
@@ -138,6 +138,10 @@
 ## Giới hạn
 
 - Không browser test/screenshot theo yêu cầu; chưa kiểm visual 375/768/1024/1440 và chưa test Firebase Storage/upload/crop/VietQR runtime.
+
+## Comments
+
+2026-10-31 — Review nhánh độc lập: chặn xóa nhân viên còn ca `advanced` chưa quyết toán (trước đó chỉ chặn `unpaid` và ca từ hôm nay), tránh mất lịch sử ứng lương.
 - Không có test suite.
 - Unique SĐT chỉ ở UI, không có ràng buộc server; dữ liệu cũ có thể đã trùng.
 - Không có thao tác xóa ảnh đại diện (giữ nguyên hành vi cũ).

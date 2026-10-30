@@ -4,7 +4,7 @@
 
 **Blocked by:** 01 (đã xong).
 
-**Status:** done
+Status: resolved
 
 ## Ràng buộc
 

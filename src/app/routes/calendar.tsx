@@ -42,6 +42,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [viewingEvent, setViewingEvent] = useState<Event | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Event | null>(null);
+  const [blockedDelete, setBlockedDelete] = useState<{ name: string; count: number } | null>(null);
   const [isDeletingEvent, setIsDeletingEvent] = useState(false);
 
   const daysInMonth = useMemo(() => {
@@ -127,7 +128,20 @@ const CalendarView: React.FC<CalendarViewProps> = ({
 
   const handleDeleteEvent = (eventId: string) => {
     const event = events.find((item) => item.id === eventId);
-    if (event) setDeleteTarget(event);
+    if (!event) return;
+
+    const settledShifts = (shiftsByEvent[eventId] ?? []).filter(
+      (shift) => shift.status !== 'unpaid'
+    );
+    if (settledShifts.length > 0) {
+      setBlockedDelete({
+        name: event.title || 'Tiệc',
+        count: settledShifts.length,
+      });
+      return;
+    }
+
+    setDeleteTarget(event);
   };
 
   const confirmDeleteEvent = async () => {
@@ -242,6 +256,24 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               ? ` và ${deleteShiftCount} ca liên quan sẽ bị xóa.`
               : ' sẽ bị xóa.'}{' '}
             Không thể hoàn tác.
+          </p>
+        )}
+      </Modal>
+
+      <Modal
+        title="Không thể xóa sự kiện"
+        isOpen={!!blockedDelete}
+        onClose={() => setBlockedDelete(null)}
+        footer={
+          <Button variant="secondary" onClick={() => setBlockedDelete(null)} fullWidth>
+            Đã hiểu
+          </Button>
+        }
+      >
+        {blockedDelete && (
+          <p className="text-body-sm text-ink-soft">
+            “{blockedDelete.name}” có {blockedDelete.count} ca đã trả hoặc đã ứng. Không thể xóa để
+            giữ lịch sử lương.
           </p>
         )}
       </Modal>

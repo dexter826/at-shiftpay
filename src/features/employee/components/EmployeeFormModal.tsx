@@ -5,6 +5,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Field } from '@/components/ui/Field';
+import { FormSection } from '@/components/ui/FormSection';
 import { Input } from '@/components/ui/Input';
 import { useToast } from '@/components/ui/ToastProvider';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
@@ -29,16 +30,6 @@ interface EmployeeFormErrors {
 }
 
 const formatPhone = (value: string) => value.replace(/[^0-9]/g, '').slice(0, 11);
-
-const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({
-  title,
-  children,
-}) => (
-  <section className="space-y-3 border-t border-line pt-4">
-    <h3 className="font-mono text-mono-label text-ink-muted">{title}</h3>
-    {children}
-  </section>
-);
 
 const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
   isOpen,
@@ -264,7 +255,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
     <>
       <Modal
         title={editingEmployee ? 'Sửa hồ sơ' : 'Thêm nhân viên'}
-        isOpen={isOpen}
+        isOpen={isOpen && !cropperOpen}
         onClose={onClose}
         footer={
           <div className="space-y-2">

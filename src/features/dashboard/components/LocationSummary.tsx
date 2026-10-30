@@ -21,7 +21,7 @@ const LocationSummaryPanel: React.FC<LocationSummaryProps> = ({ rows, onOpenCale
           type="button"
           onClick={onOpenCalendar}
           className={cn(
-            'inline-flex items-center gap-1 text-label font-medium text-accent-ink hover:underline',
+            'inline-flex min-h-11 items-center gap-1 px-1 text-label font-medium text-accent-ink hover:underline',
             focusRingClasses
           )}
         >

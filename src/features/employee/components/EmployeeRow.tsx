@@ -3,6 +3,7 @@ import { Pencil, Phone, Trash2 } from 'lucide-react';
 import { Tag } from '@/components/ui/Tag';
 import { Employee } from '@/types/index';
 import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
+import { getInitials } from '@/utils/initials';
 
 interface EmployeeRowProps {
   employee: Employee;
@@ -11,16 +12,6 @@ interface EmployeeRowProps {
   onDelete: (employee: Employee) => void;
   onDetail: (employee: Employee) => void;
 }
-
-const getInitials = (name: string) =>
-  name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'NV';
 
 const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl }) => {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
@@ -38,7 +29,7 @@ const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl 
       aria-hidden="true"
       className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-surface-2 text-body-sm font-semibold text-ink-soft"
     >
-      {getInitials(name)}
+      {getInitials(name, 'NV')}
     </span>
   );
 };

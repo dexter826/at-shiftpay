@@ -66,12 +66,15 @@ const LoginLayout: React.FC<LoginLayoutProps> = ({ children }) => (
 
     <main className="flex min-h-dvh flex-col">
       <div className="lg:hidden">
-        <div className="flex items-center justify-between bg-brand px-5 py-5 text-on-brand">
-          <img
-            src="/brand/lockup-white.svg"
-            alt="ShiftPay"
-            className="h-9 w-auto max-w-[190px] object-contain"
-          />
+        <div className="flex items-center justify-between gap-4 bg-brand px-5 py-5 text-on-brand">
+          <div className="min-w-0">
+            <img
+              src="/brand/lockup-white.svg"
+              alt="ShiftPay"
+              className="h-9 w-auto max-w-[190px] object-contain"
+            />
+            <p className="mt-1 text-label text-on-brand/85">Ca làm rõ ràng. Lương minh bạch.</p>
+          </div>
           <ThemeButton onBrand />
         </div>
       </div>

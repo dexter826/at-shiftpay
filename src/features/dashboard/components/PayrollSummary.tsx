@@ -23,11 +23,15 @@ const PayrollSummaryPanel: React.FC<PayrollSummaryProps> = ({
   monthLabel,
   onOpenPayroll,
 }) => {
-  const dueRows = rows
-    .filter((row) => row.unpaidCount + row.advancedCount > 0)
-    .sort((a, b) => b.totalUnpaid + b.totalAdvanced - (a.totalUnpaid + a.totalAdvanced));
-  const desktopRows = dueRows.slice(0, 5);
-  const mobileRows = dueRows.slice(0, 3);
+  const ledgerRows = rows
+    .filter((row) => (row.unpaidCount ?? 0) + (row.advancedCount ?? 0) + (row.paidCount ?? 0) > 0)
+    .sort((a, b) => {
+      const openDiff = b.totalUnpaid + b.totalAdvanced - (a.totalUnpaid + a.totalAdvanced);
+      if (openDiff !== 0) return openDiff;
+      return (b.totalPaid ?? 0) - (a.totalPaid ?? 0);
+    });
+  const desktopRows = ledgerRows.slice(0, 5);
+  const mobileRows = ledgerRows.slice(0, 3);
 
   return (
     <section className="min-w-0 border border-line bg-surface">
@@ -37,7 +41,7 @@ const PayrollSummaryPanel: React.FC<PayrollSummaryProps> = ({
           type="button"
           onClick={onOpenPayroll}
           className={cn(
-            'inline-flex items-center gap-1 text-label font-medium text-accent-ink hover:underline',
+            'inline-flex min-h-11 items-center gap-1 px-1 text-label font-medium text-accent-ink hover:underline',
             focusRingClasses
           )}
         >
@@ -46,11 +50,11 @@ const PayrollSummaryPanel: React.FC<PayrollSummaryProps> = ({
         </button>
       </div>
 
-      {dueRows.length === 0 ? (
+      {ledgerRows.length === 0 ? (
         <EmptyState
           icon={<Wallet size={24} aria-hidden="true" />}
-          title="Chưa có ca cần thanh toán"
-          description="Không có ca nào chờ chốt hoặc trả lương trong tháng."
+          title="Chưa có ca trong tháng"
+          description="Chưa có ca nào được ghi nhận cho tháng này."
           className="py-8"
         />
       ) : (
@@ -88,10 +92,10 @@ const PayrollSummaryPanel: React.FC<PayrollSummaryProps> = ({
                         {row.employeeName}
                       </td>
                       <td className="px-2 py-2 text-right font-mono text-[11px] text-ink-muted">
-                        {row.unpaidCount + row.advancedCount}
+                        {(row.unpaidCount ?? 0) + (row.advancedCount ?? 0) + (row.paidCount ?? 0)}
                       </td>
                       <td className="px-2 py-2 text-right font-mono text-[11px] text-ink">
-                        {formatCurrency(row.totalUnpaid + row.totalAdvanced)}
+                        {formatCurrency(row.totalUnpaid + row.totalAdvanced + (row.totalPaid ?? 0))}
                       </td>
                       <td className="px-2 py-2 text-right font-mono text-[11px] text-info">
                         {formatCurrency(row.totalAdvanced)}
@@ -120,10 +124,11 @@ const PayrollSummaryPanel: React.FC<PayrollSummaryProps> = ({
                   </div>
                   <div className="mt-1 flex items-center justify-between gap-3">
                     <span className="font-mono text-mono-label text-ink-muted">
-                      {row.unpaidCount + row.advancedCount} ca
+                      {(row.unpaidCount ?? 0) + (row.advancedCount ?? 0) + (row.paidCount ?? 0)} ca
                     </span>
                     <span className="font-mono text-[11px] text-ink">
-                      còn lại {formatCurrency(row.totalUnpaid)}
+                      tổng{' '}
+                      {formatCurrency(row.totalUnpaid + row.totalAdvanced + (row.totalPaid ?? 0))}
                     </span>
                   </div>
                 </div>

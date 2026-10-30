@@ -11,7 +11,6 @@ const EventTile: React.FC<{
   <button
     type="button"
     onClick={onOpenCalendar}
-    aria-label={`Xem lịch sự kiện ${tile.event.title}`}
     className={cn(
       'flex w-full flex-col gap-0.5 border-l-2 px-1.5 py-1 text-left transition-colors duration-fast ease-standard',
       'min-h-16',
@@ -84,7 +83,10 @@ const WeekBoard: React.FC<{ board: WeekBoard; onOpenCalendar: () => void }> = ({
         <button
           type="button"
           onClick={onOpenCalendar}
-          className={cn('text-label font-medium text-accent-ink hover:underline', focusRingClasses)}
+          className={cn(
+            'inline-flex min-h-11 items-center px-1 text-label font-medium text-accent-ink hover:underline',
+            focusRingClasses
+          )}
         >
           Mở lịch
         </button>

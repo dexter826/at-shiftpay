@@ -93,6 +93,16 @@ const EmployeeView: React.FC<EmployeeViewProps> = ({ employees, shifts, loading 
       };
     }
 
+    const advancedShifts = shifts.filter(
+      (shift) => shift.employeeId === employee.id && shift.status === 'advanced'
+    );
+    if (advancedShifts.length > 0) {
+      return {
+        canDelete: false,
+        reason: `“${employee.name}” còn ${advancedShifts.length} ca đã ứng chưa quyết toán.`,
+      };
+    }
+
     const todayKey = toDateKey(new Date());
     const upcomingShifts = shifts.filter(
       (shift) => shift.employeeId === employee.id && shift.date >= todayKey

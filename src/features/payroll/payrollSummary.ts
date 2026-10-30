@@ -19,6 +19,8 @@ export const buildPayrollSummary = (
       totalUnpaid: 0,
       advancedCount: 0,
       totalAdvanced: 0,
+      paidCount: 0,
+      totalPaid: 0,
       netAmount: 0,
     };
   });
@@ -38,6 +40,9 @@ export const buildPayrollSummary = (
       employee.advancedCount += 1;
       employee.totalAdvanced += shift.amount;
       if (fee > 0) employee.totalFees = (employee.totalFees || 0) + fee;
+    } else if (shift.status === 'paid') {
+      employee.paidCount = (employee.paidCount || 0) + 1;
+      employee.totalPaid = (employee.totalPaid || 0) + shift.amount;
     }
   });
 

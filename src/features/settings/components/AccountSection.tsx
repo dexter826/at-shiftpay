@@ -9,22 +9,13 @@ import { ImageCropperModal } from '@/components/ImageCropperModal';
 import Button from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { focusRingOnSurfaceClasses } from '@/lib/utils';
+import { getInitials } from '@/utils/initials';
 import type { User as FirebaseUser } from 'firebase/auth';
 
 interface AccountSectionProps {
   user: FirebaseUser | null;
   onChangePassword: () => void;
 }
-
-const getInitials = (name: string) =>
-  name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'SP';
 
 const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword }) => {
   const { showToast } = useToast();

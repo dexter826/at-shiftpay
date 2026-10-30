@@ -4,7 +4,7 @@
 
 **Blocked by:** 07 (commit `8108382`).
 
-**Status:** static verified — visual chưa kiểm; 4 điểm chốt đã duyệt (đổi nav, giữ phân công khi đổi ca, bỏ shortcut địa điểm, sửa phạm vi xóa shift).
+Status: resolved
 
 ## Audit hiện tại
 
@@ -171,6 +171,17 @@
 ## Giới hạn
 
 - Không browser test/screenshot theo yêu cầu; chưa kiểm visual thật ở 375/768/1024/1440 và chưa test Firebase runtime.
+
+## Comments
+
+2026-10-31 — Review nhánh độc lập sửa an toàn dữ liệu sự kiện:
+
+- Chỉ shift `unpaid` được cập nhật/xóa khi sửa sự kiện; shift `paid`/`advanced` giữ nguyên.
+- Nhân viên đã có ca chốt lương trong sự kiện hiện thành tag `Đã chốt lương`, không thể chọn lại; không tạo shift trùng.
+- Sửa metadata sự kiện vẫn lưu được khi mọi ca đã chốt (bỏ yêu cầu chọn nhân viên trong trường hợp này).
+- `originalSession` lấy từ shift đang sửa được (không phải phần tử đầu tiên) để đổi ca xóa đúng ca `unpaid` cũ.
+- Khóa đổi ca khi sự kiện đã có ca chốt lương, kèm chú thích; tránh tạo sự kiện trộn ca mà lịch sử lương không phản ánh.
+- Xóa sự kiện có ca `paid`/`advanced` bị chặn bằng modal giải thích, giữ lịch sử lương.
 - Không có test suite.
 - Sự kiện ở ngày thuộc tháng kề chỉ hiện khi dữ liệu tháng đó đã được tải; chọn ngày sẽ chuyển tháng và tải.
 - Đánh giá địa điểm vẫn chỉ `high/low`; chọn "Thường" tương đương chưa đánh giá và không xóa được review cũ (giới hạn service hiện có, ngoài phạm vi UI).

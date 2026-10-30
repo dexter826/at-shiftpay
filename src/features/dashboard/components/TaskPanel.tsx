@@ -63,13 +63,13 @@ const TaskPanel: React.FC<TaskPanelProps> = ({
         <div>
           {tasks.map((task) => (
             <div key={task.key} className="border-b border-line px-3.5 py-3 last:border-b-0">
-              <div className="flex items-baseline justify-between gap-3">
+              <div className="flex items-center justify-between gap-3">
                 <span className="font-mono text-title text-ink">{task.count}</span>
                 <button
                   type="button"
                   onClick={task.onAction}
                   className={cn(
-                    'inline-flex items-center gap-1 text-label font-medium text-accent-ink hover:underline',
+                    'inline-flex min-h-11 items-center gap-1 px-1 text-label font-medium text-accent-ink hover:underline',
                     focusRingClasses
                   )}
                 >

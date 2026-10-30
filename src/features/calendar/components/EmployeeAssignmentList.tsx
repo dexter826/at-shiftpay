@@ -9,6 +9,7 @@ interface EmployeeAssignmentListProps {
   shiftCounts: Record<string, number>;
   assignments: Record<string, boolean>;
   initialSelectedIds: Set<string>;
+  lockedIds?: Set<string>;
   searchTerm: string;
   countsLoaded?: boolean;
   onToggle: (employeeId: string) => void;
@@ -19,6 +20,7 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
   shiftCounts,
   assignments,
   initialSelectedIds,
+  lockedIds,
   searchTerm,
   countsLoaded = false,
   onToggle,
@@ -29,6 +31,10 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
     return employees
       .filter((employee) => employee.name.toLowerCase().includes(term))
       .sort((a, b) => {
+        const aLocked = lockedIds?.has(a.id) ? 1 : 0;
+        const bLocked = lockedIds?.has(b.id) ? 1 : 0;
+        if (aLocked !== bLocked) return aLocked - bLocked;
+
         const aInitial = initialSelectedIds.has(a.id) ? 1 : 0;
         const bInitial = initialSelectedIds.has(b.id) ? 1 : 0;
         if (aInitial !== bInitial) return bInitial - aInitial;
@@ -38,7 +44,7 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
 
         return a.name.localeCompare(b.name, 'vi');
       });
-  }, [employees, searchTerm, initialSelectedIds, shiftCounts]);
+  }, [employees, searchTerm, initialSelectedIds, lockedIds, shiftCounts]);
 
   if (employees.length === 0) {
     return (
@@ -65,18 +71,23 @@ const EmployeeAssignmentList: React.FC<EmployeeAssignmentListProps> = ({
       {sortedEmployees.map((employee) => {
         const shiftCount = shiftCounts[employee.id] || 0;
         const isSelected = assignments[employee.id] || false;
+        const isLocked = lockedIds?.has(employee.id) ?? false;
 
         return (
           <div key={employee.id} className={cn('px-3', isSelected && 'bg-surface-2')}>
             <Checkbox
               id={`employee-${employee.id}`}
               checked={isSelected}
+              disabled={isLocked}
               onChange={() => onToggle(employee.id)}
             >
               <span className="flex min-w-0 items-center justify-between gap-2">
                 <span className="truncate text-body-sm text-ink">{employee.name}</span>
-                {countsLoaded && shiftCount > 0 && (
-                  <Tag className="shrink-0">{shiftCount} ca chưa trả</Tag>
+                {isLocked ? (
+                  <Tag className="shrink-0">Đã chốt lương</Tag>
+                ) : (
+                  countsLoaded &&
+                  shiftCount > 0 && <Tag className="shrink-0">{shiftCount} ca chưa trả</Tag>
                 )}
               </span>
             </Checkbox>

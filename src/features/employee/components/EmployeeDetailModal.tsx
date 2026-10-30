@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import { Tag } from '@/components/ui/Tag';
 import { Employee } from '@/types/index';
 import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
+import { getInitials } from '@/utils/initials';
 import BankCard from '@/features/employee/components/BankCard';
 
 interface EmployeeDetailModalProps {
@@ -13,16 +14,6 @@ interface EmployeeDetailModalProps {
   employee: Employee | null;
   onEditClick: (employee: Employee) => void;
 }
-
-const getInitials = (name: string) =>
-  name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'NV';
 
 const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl }) => {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
@@ -40,7 +31,7 @@ const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl 
       aria-hidden="true"
       className="flex h-24 w-24 items-center justify-center rounded-full border border-line bg-surface-2 text-data font-semibold text-ink-soft"
     >
-      {getInitials(name)}
+      {getInitials(name, 'NV')}
     </span>
   );
 };

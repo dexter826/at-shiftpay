@@ -45,7 +45,6 @@ export default defineConfig(() => {
               'firebase/auth',
               'firebase/storage',
             ],
-            'charts-vendor': ['recharts'],
             'icons-vendor': ['lucide-react'],
             'framer-motion-vendor': ['framer-motion'],
             'cropper-vendor': ['react-easy-crop'],

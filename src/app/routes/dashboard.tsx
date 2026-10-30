@@ -82,7 +82,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
               onOpenCalendar={openCalendar}
             />
 
-            <KpiStrip kpis={board.kpis} />
+            <KpiStrip kpis={board.kpis} onOpenCalendar={openCalendar} />
 
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_292px]">
               <WeekBoard board={board} onOpenCalendar={openCalendar} />

@@ -3,6 +3,7 @@ import { Calendar, MapPin } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { Tag } from '@/components/ui/Tag';
 import { formatCurrency, formatDate } from '@/utils/format';
+import { getPaymentTypeLabel } from '@/features/payroll/paymentType';
 import { PaymentTransaction, Shift, Event, Location } from '@/types/index';
 
 interface TransactionDetailModalProps {
@@ -14,12 +15,6 @@ interface TransactionDetailModalProps {
   locations: Location[];
 }
 
-const typeLabel = (type: PaymentTransaction['type']) => {
-  if (type === 'advance') return { label: 'Ứng lương', variant: 'info' as const };
-  if (type === 'settlement') return { label: 'Quyết toán', variant: 'highlight' as const };
-  return { label: 'Thanh toán', variant: 'neutral' as const };
-};
-
 const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
   isOpen,
   onClose,
@@ -29,7 +24,7 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
   locations,
 }) => {
   if (!selectedTransaction) return null;
-  const type = typeLabel(selectedTransaction.type);
+  const type = getPaymentTypeLabel(selectedTransaction.type);
 
   return (
     <Modal title="Giao dịch" isOpen={isOpen} onClose={onClose}>

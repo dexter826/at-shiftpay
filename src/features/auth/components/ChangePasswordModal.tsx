@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
+import { PasswordToggle } from '@/components/ui/PasswordToggle';
 import { useToast } from '@/components/ui/ToastProvider';
 import { auth } from '@/lib/firebase';
-import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -19,24 +18,6 @@ interface PasswordErrors {
   next?: string;
   confirm?: string;
 }
-
-const PasswordToggle: React.FC<{ visible: boolean; onToggle: () => void; label: string }> = ({
-  visible,
-  onToggle,
-  label,
-}) => (
-  <button
-    type="button"
-    onClick={onToggle}
-    aria-label={label}
-    className={cn(
-      'flex h-11 w-11 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:text-ink',
-      focusRingOnSurfaceClasses
-    )}
-  >
-    {visible ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
-  </button>
-);
 
 export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
   const { showToast } = useToast();

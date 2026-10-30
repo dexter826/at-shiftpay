@@ -4,7 +4,7 @@
 
 **Blocked by:** 02, 03 (đã xong).
 
-**Status:** in-progress — gallery chờ duyệt.
+Status: resolved
 
 ## Quyết định
 

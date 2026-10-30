@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { AlertTriangle, Eye, EyeOff } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { deleteUser, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
+import { PasswordToggle } from '@/components/ui/PasswordToggle';
 import { useToast } from '@/components/ui/ToastProvider';
 import { auth } from '@/lib/firebase';
 import { settingsService } from '@/lib/api/settingsService';
 import { useAuthStore } from '@/stores/authStore';
-import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface DeleteAccountModalProps {
   isOpen: boolean;
@@ -158,21 +158,11 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
               if (passwordError) setPasswordError('');
             }}
             trailingAction={
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                className={cn(
-                  'flex h-11 w-11 items-center justify-center rounded-sm text-ink-muted transition-colors duration-fast ease-standard hover:text-ink',
-                  focusRingOnSurfaceClasses
-                )}
-              >
-                {showPassword ? (
-                  <EyeOff size={16} aria-hidden="true" />
-                ) : (
-                  <Eye size={16} aria-hidden="true" />
-                )}
-              </button>
+              <PasswordToggle
+                visible={showPassword}
+                onToggle={() => setShowPassword(!showPassword)}
+                label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              />
             }
             autoComplete="current-password"
           />

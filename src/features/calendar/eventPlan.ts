@@ -69,7 +69,7 @@ export function planEventSave(
     const finalAmount = Math.round(draft.amount + (receivesSurcharge ? perPerson : 0));
 
     const previousShift = existingShifts.find(
-      (s) => s.employeeId === employeeId && s.session === draft.session
+      (s) => s.employeeId === employeeId && s.session === draft.session && s.status === 'unpaid'
     );
 
     if (previousShift) {
@@ -77,7 +77,11 @@ export function planEventSave(
         id: previousShift.id,
         data: { amount: finalAmount, employeeName: employee.name },
       });
-    } else {
+    } else if (
+      !existingShifts.some(
+        (s) => s.employeeId === employeeId && s.session === draft.session && s.status !== 'unpaid'
+      )
+    ) {
       create.push({
         eventId: '',
         date: draft.date,
@@ -96,6 +100,8 @@ export function planEventSave(
   const removedIds = new Set<string>();
 
   existingShifts.forEach((shift) => {
+    if (shift.status !== 'unpaid') return;
+
     if (shift.session === draft.session && !updatedIds.has(shift.id)) {
       removedIds.add(shift.id);
     }

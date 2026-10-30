@@ -8,6 +8,7 @@ import { Tag } from '@/components/ui/Tag';
 import { formatCurrency } from '@/utils/format';
 import { Employee, PayrollSummary } from '@/types/index';
 import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
+import { getInitials } from '@/utils/initials';
 
 interface PayrollListProps {
   loading: boolean;
@@ -21,16 +22,6 @@ interface PayrollListProps {
 }
 
 const GRID_CLASSES = 'lg:grid-cols-[minmax(0,1fr)_170px_170px_40px]';
-
-const getInitials = (name: string) =>
-  name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'NV';
 
 const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl }) => {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
@@ -48,7 +39,7 @@ const Avatar: React.FC<{ name: string; imageUrl?: string }> = ({ name, imageUrl 
       aria-hidden="true"
       className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-surface-2 text-label font-semibold text-ink-soft"
     >
-      {getInitials(name)}
+      {getInitials(name, 'NV')}
     </span>
   );
 };
@@ -158,7 +149,6 @@ const PayrollList: React.FC<PayrollListProps> = ({
                 key={item.employeeId}
                 type="button"
                 onClick={() => onSelectEmployee(item.employeeId)}
-                aria-label={`Xem công nợ của ${item.employeeName}`}
                 className={cn(
                   'grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2 border-b border-line px-4 py-3 text-left last:border-b-0 hover:bg-surface-2/60 lg:grid-cols-[minmax(0,1fr)_170px_170px_40px] lg:items-center lg:gap-3',
                   focusRingOnSurfaceClasses

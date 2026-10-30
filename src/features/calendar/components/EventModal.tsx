@@ -21,6 +21,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import { Field } from '@/components/ui/Field';
+import { FormSection } from '@/components/ui/FormSection';
 import { Input } from '@/components/ui/Input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import SearchInput from '@/components/ui/SearchInput';
@@ -102,16 +103,6 @@ const formatEventDate = (dateStr: string) =>
     year: 'numeric',
   }).format(parseDateOnly(dateStr));
 
-const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({
-  title,
-  children,
-}) => (
-  <section className="space-y-3 border-t border-line pt-4">
-    <h3 className="font-mono text-mono-label text-ink-muted">{title}</h3>
-    {children}
-  </section>
-);
-
 export const EventModal: React.FC<EventModalProps> = ({
   date,
   existingEvent,
@@ -130,7 +121,16 @@ export const EventModal: React.FC<EventModalProps> = ({
   const existingLocation = existingEvent
     ? locations.find((location) => location.id === existingEvent.locationId)
     : undefined;
-  const detectedSession = existingShifts[0]?.session ?? null;
+  const editableShifts = existingShifts.filter((shift) => shift.status === 'unpaid');
+  const settledShiftCount = existingShifts.length - editableShifts.length;
+  const detectedSession = editableShifts[0]?.session ?? existingShifts[0]?.session ?? null;
+  const initialSessionShifts = editableShifts.filter((shift) => shift.session === detectedSession);
+  const editableEmployeeIds = new Set(initialSessionShifts.map((shift) => shift.employeeId));
+  const settledEmployeeIds = new Set(
+    existingShifts
+      .filter((shift) => shift.status !== 'unpaid' && !editableEmployeeIds.has(shift.employeeId))
+      .map((shift) => shift.employeeId)
+  );
   const initialAmount = existingEvent?.amount || existingShifts[0]?.amount || settings.shiftRate;
   const initialReview = existingLocation?.review ?? undefined;
 
@@ -154,10 +154,10 @@ export const EventModal: React.FC<EventModalProps> = ({
   );
   const [selectedSession, setSelectedSession] = useState<ShiftSession | null>(detectedSession);
   const [assignments, setAssignments] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(existingShifts.map((shift) => [shift.employeeId, true]))
+    Object.fromEntries(initialSessionShifts.map((shift) => [shift.employeeId, true]))
   );
   const [initialSelectedIds] = useState(
-    () => new Set(existingShifts.map((shift) => shift.employeeId))
+    () => new Set(initialSessionShifts.map((shift) => shift.employeeId))
   );
   const [review, setReview] = useState<'high' | 'low' | undefined>(initialReview);
   const [reviewNote, setReviewNote] = useState(existingLocation?.reviewNote ?? '');
@@ -176,7 +176,7 @@ export const EventModal: React.FC<EventModalProps> = ({
     surcharge: existingEvent?.surcharge ?? 0,
     distributionType: existingEvent?.surchargeDistribution?.type ?? 'equal',
     surchargeIds: [...(existingEvent?.surchargeDistribution?.selectedEmployeeIds ?? [])].sort(),
-    assignmentIds: existingShifts.map((shift) => shift.employeeId).sort(),
+    assignmentIds: initialSessionShifts.map((shift) => shift.employeeId).sort(),
     session: detectedSession,
     review: initialReview,
     reviewNote: (existingLocation?.reviewNote ?? '').trim(),
@@ -269,6 +269,8 @@ export const EventModal: React.FC<EventModalProps> = ({
     setErrors((previous) => ({ ...previous, [key]: undefined }));
 
   const selectSession = (session: ShiftSession) => {
+    if (settledShiftCount > 0) return;
+
     if (selectedSession === session) {
       setSelectedSession(null);
       setAssignments({});
@@ -315,7 +317,9 @@ export const EventModal: React.FC<EventModalProps> = ({
 
     const nextErrors: EventFormErrors = {};
     if (!selectedSession) nextErrors.session = 'Chọn ca làm việc.';
-    if (assignedIds.length === 0) nextErrors.employees = 'Chọn ít nhất 1 nhân viên.';
+    if (assignedIds.length === 0 && (!existingEvent || editableShifts.length > 0)) {
+      nextErrors.employees = 'Chọn ít nhất 1 nhân viên.';
+    }
     if (surcharge > 0 && distributionType === 'selected' && selectedSurchargeIds.length === 0) {
       nextErrors.surcharge = 'Chọn ít nhất 1 người nhận phụ phí.';
     }
@@ -352,7 +356,7 @@ export const EventModal: React.FC<EventModalProps> = ({
           surchargeSelectedEmployees,
           assignments,
           session: selectedSession,
-          originalSession: existingShifts[0]?.session ?? null,
+          originalSession: detectedSession,
           userId,
         },
         employees,
@@ -456,7 +460,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                   setReview(match?.review ?? undefined);
                   setReviewNote(match?.reviewNote ?? '');
                 }}
-                placeholder="Ví dụ: Nhà hàng Anh Thư"
+                placeholder="Ví dụ: Nhà hàng Sen"
                 autoComplete="off"
               />
             </Field>
@@ -564,9 +568,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                   key={session}
                   type="button"
                   aria-pressed={isSelected}
+                  disabled={settledShiftCount > 0}
                   onClick={() => selectSession(session)}
                   className={cn(
-                    'flex min-h-11 items-center justify-center gap-1.5 rounded-sm border text-body-sm font-medium transition-colors duration-fast ease-standard',
+                    'flex min-h-11 items-center justify-center gap-1.5 rounded-sm border text-body-sm font-medium transition-colors duration-fast ease-standard disabled:cursor-not-allowed disabled:opacity-50',
                     isSelected
                       ? 'border-accent bg-accent-soft text-accent-ink'
                       : 'border-line text-ink-muted hover:border-line-strong',
@@ -586,7 +591,9 @@ export const EventModal: React.FC<EventModalProps> = ({
           )}
           {!errors.session && (
             <p className="text-label text-ink-muted">
-              Giờ bắt đầu tự điền theo ca; có thể sửa ở mục Thông tin.
+              {settledShiftCount > 0
+                ? 'Không thể đổi ca vì sự kiện đã có ca đã trả hoặc đã ứng.'
+                : 'Giờ bắt đầu tự điền theo ca; có thể sửa ở mục Thông tin.'}
             </p>
           )}
 
@@ -702,17 +709,27 @@ export const EventModal: React.FC<EventModalProps> = ({
             <div className="flex items-center justify-between gap-2">
               <p className="text-body-sm text-ink">Đang chọn {assignedIds.length} người</p>
             </div>
+            {settledShiftCount > 0 && (
+              <p className="text-label text-ink-muted">
+                {settledShiftCount} ca đã trả hoặc đã ứng được giữ nguyên khi sửa sự kiện.
+              </p>
+            )}
             <SearchInput
+              aria-label="Tìm nhân viên"
               placeholder="Tìm nhân viên"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               onClear={() => setSearchTerm('')}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') event.preventDefault();
+              }}
             />
             <EmployeeAssignmentList
               employees={employees}
               shiftCounts={employeeShiftCounts}
               assignments={assignments}
               initialSelectedIds={initialSelectedIds}
+              lockedIds={settledEmployeeIds}
               searchTerm={searchTerm}
               countsLoaded={countsLoaded}
               onToggle={toggleAssignment}

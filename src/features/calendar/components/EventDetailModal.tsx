@@ -100,7 +100,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
         <div className="flex items-start justify-between gap-3 border border-line p-3">
           <div>
             <p className="font-mono text-mono-label text-ink-muted">Tổng chi</p>
-            <p className="mt-1 text-data font-semibold tabular-nums text-ink">
+            <p className="mt-1 font-mono text-data font-semibold tabular-nums text-ink">
               {formatCurrency(total)}
             </p>
           </div>

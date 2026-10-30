@@ -4,7 +4,7 @@
 
 **Blocked by:** 11 (commit `e20f8aa`).
 
-**Status:** static verified — visual chưa kiểm; 6 điểm chốt đã duyệt (theme 3 lựa chọn, Vùng nguy hiểm, bỏ avatar.png, rewrite đổi mật khẩu, action bar luôn hiện, xác nhận xóa trim/uppercase).
+Status: resolved
 
 ## Audit hiện tại
 

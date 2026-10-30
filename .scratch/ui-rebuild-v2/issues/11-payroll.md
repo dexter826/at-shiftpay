@@ -4,7 +4,7 @@
 
 **Blocked by:** 10 (commit `fce863e`).
 
-**Status:** static verified — visual chưa kiểm; 6 điểm chốt đã duyệt (Sổ lương/KPI, bỏ auto-payment, fix quyết toán, CTA export, scope history, công nợ toàn thời gian).
+Status: resolved
 
 ## Audit hiện tại
 

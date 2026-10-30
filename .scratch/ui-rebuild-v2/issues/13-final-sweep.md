@@ -4,7 +4,7 @@
 
 **Blocked by:** 12 (commit `66f2ac1`).
 
-**Status:** static verified — visual/browser chưa kiểm; 6 điểm chốt đã duyệt.
+Status: resolved
 
 ## Audit (đã kiểm tra code)
 
@@ -122,3 +122,19 @@
 - SW precache phụ thuộc HTML build có asset `/assets/*`; nếu regex không khớp sẽ fallback network-first (không chặn app).
 - Google Fonts vẫn tải từ CDN; offline fallback system font.
 - Không có test suite; không audit dependency vulnerabilities trong scope này.
+
+## Comments
+
+2026-10-31 — Review nhánh độc lập trước PR; đã sửa toàn bộ phát hiện.
+
+- **Điều hướng:** thêm `Địa điểm` vào rail/bottom nav; active tab khớp route, bỏ ánh xạ `locations → calendar`.
+- **PWA:** meta `theme-color` đặt trước script chống nháy theme và được script cập nhật; `manifest.json` đồng bộ `#F2F4F0`; OG/Twitter dùng social card mới.
+- **An toàn dữ liệu:** chặn xóa nhân viên còn ca `advanced`; chặn xóa sự kiện có ca `paid`/`advanced`; sửa sự kiện chỉ đụng shift `unpaid`, giữ shift đã chốt, khóa nhân viên đã chốt, khóa đổi ca khi có ca chốt và vẫn lưu được metadata khi mọi ca đã chốt.
+- **Dashboard:** sổ lương tháng gồm cả người chỉ có ca đã trả; số ca và tổng lương gồm `paid`; empty state đổi thành “Chưa có ca trong tháng”.
+- **Accessibility:** KPI “Cần xếp” là nút mở lịch khi có việc; text action đạt 44px; bỏ aria-label che nội dung dòng/tile; ô tìm nhân viên không submit form.
+- **Dọn dẹp:** gom `getInitials`, `FormSection`, `PasswordToggle`, nhãn loại giao dịch; xóa state chết `totalDebt`; bỏ entry `charts-vendor` rỗng khỏi `manualChunks` (Recharts vẫn trong package theo spec nhưng không dùng).
+- **Phạm vi:** avatar rail là nhãn nhận diện tĩnh, không mở Cài đặt; Cài đặt vẫn là mục nav riêng.
+- **Placeholder tìm kiếm:** giữ dạng ví dụ (“Tên hoặc số điện thoại”, “Tìm địa điểm”) vì mỗi ô có label hiển thị và aria-label; không phải câu hướng dẫn.
+- **Trạng thái ticket:** chuẩn hóa `Status: resolved`; QA trình duyệt vẫn ngoài phạm vi theo chỉ đạo static-only của người dùng.
+
+Re-run sau khi sửa: `npm run lint`, `npx tsc --noEmit`, `npm run build`, `npm run format:check` đều pass; bundle không còn `charts-vendor`.

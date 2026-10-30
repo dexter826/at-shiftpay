@@ -4,7 +4,7 @@
 
 **Blocked by:** 02 (đã xong).
 
-**Status:** in-progress
+Status: resolved
 
 ## Ràng buộc
 

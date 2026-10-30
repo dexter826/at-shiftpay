@@ -4,7 +4,7 @@
 
 **Blocked by:** 06 (commit `dee5691`/`9090f7a`).
 
-**Status:** in-progress — static verified; login visual chưa kiểm.
+Status: resolved
 
 ## Audit hiện tại
 

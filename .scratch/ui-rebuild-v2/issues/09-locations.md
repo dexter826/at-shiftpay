@@ -4,7 +4,7 @@
 
 **Blocked by:** 08 (commit `e900dc3`).
 
-**Status:** static verified — visual chưa kiểm; 5 điểm chốt đã duyệt (sổ dòng, tên trang, lọc Thường, chặn trùng tên, không xóa sự kiện).
+Status: resolved
 
 ## Audit hiện tại
 

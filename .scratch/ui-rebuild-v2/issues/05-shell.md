@@ -4,7 +4,7 @@
 
 **Blocked by:** 04 (đã xong, commit `553ac4f`).
 
-**Status:** in-progress — static verified; shell visual sau auth chưa kiểm.
+Status: resolved
 
 ## Hiện trạng
 
@@ -81,7 +81,7 @@ Không sửa: screens, login, API/Firebase, business logic, gallery.
 
 2026-10-30 — Đã apply shell, chỉ kiểm static theo yêu cầu.
 
-- Rail desktop 76px nền `rail` tối, mark reversed, 5 nav label 9px, active chartreuse; đáy avatar 44 + theme 44 + logout 44. Mobile bottom nav 64px + safe area, active accent; main `md:pl-[var(--rail-width)]`, padding bottom mobile.
+- Rail desktop 76px nền `rail` tối, mark reversed, 6 nav label 9px (thêm Địa điểm sau review), active chartreuse; đáy avatar nhận diện 44 (không phải nút, `role="img"` + tên người dùng) + theme 44 + logout 44. Mobile bottom nav 64px + safe area, active accent; main `md:pl-[var(--rail-width)]`, padding bottom mobile.
 - Splash mới: nền `brand` teal, lockup white, 800ms / reduced 300ms; bỏ Lottie, `splashscreen.json`, `lottie-react` và chunk build. Subtitle `on-brand/90` = 5.28:1.
 - Offline banner mảnh, `role=status`, mono, `md:left` sau rail; PullToRefresh reduced-motion; ScrollToTop giữ token sẵn có.
 - PWA: copy favicon/apple-touch/icon-192/512/manifest từ kit; `sw.js` cache v3 + brand assets; `index.html` links cũ đã đúng nên không sửa.

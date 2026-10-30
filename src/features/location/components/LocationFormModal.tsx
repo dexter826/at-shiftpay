@@ -3,6 +3,7 @@ import { MapPin, Minus, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
+import { FormSection } from '@/components/ui/FormSection';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Location } from '@/types/index';
@@ -62,16 +63,6 @@ const REVIEW_OPTIONS = [
     active: 'border-danger/50 bg-danger/10 text-danger',
   },
 ];
-
-const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({
-  title,
-  children,
-}) => (
-  <section className="space-y-3 border-t border-line pt-4">
-    <h3 className="font-mono text-mono-label text-ink-muted">{title}</h3>
-    {children}
-  </section>
-);
 
 const LocationFormModal: React.FC<LocationFormModalProps> = ({
   isOpen,
@@ -308,7 +299,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
                 setName(event.target.value);
                 if (errors.name) setErrors((previous) => ({ ...previous, name: undefined }));
               }}
-              placeholder="Ví dụ: Nhà hàng Anh Thư"
+              placeholder="Ví dụ: Nhà hàng Sen"
               autoFocus
             />
           </Field>

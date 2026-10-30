@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { Tag } from '@/components/ui/Tag';
 import { PaymentTransaction } from '@/types/index';
 import { formatCurrency } from '@/utils/format';
+import { getPaymentTypeLabel } from '@/features/payroll/paymentType';
 import { cn, focusRingOnSurfaceClasses } from '@/lib/utils';
 
 interface HistoryListProps {
@@ -19,12 +20,6 @@ interface HistoryListProps {
 }
 
 const GRID_CLASSES = 'lg:grid-cols-[minmax(0,1fr)_120px_180px_140px]';
-
-const typeLabel = (type: PaymentTransaction['type']) => {
-  if (type === 'advance') return { label: 'Ứng lương', variant: 'info' as const };
-  if (type === 'settlement') return { label: 'Quyết toán', variant: 'highlight' as const };
-  return { label: 'Thanh toán', variant: 'neutral' as const };
-};
 
 const formatDateTime = (timestamp: number) =>
   new Date(timestamp).toLocaleString('vi-VN', {
@@ -105,7 +100,7 @@ const HistoryList: React.FC<HistoryListProps> = ({
     ) : (
       <>
         {items.map((item) => {
-          const type = typeLabel(item.type);
+          const type = getPaymentTypeLabel(item.type);
 
           return (
             <button
