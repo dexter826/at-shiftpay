@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Event, Location } from '@/types/index';
 import CalendarDay from '@/features/calendar/components/CalendarDay';
+import { toDateKey } from '@/utils/format';
 
 interface CalendarGridProps {
   daysInMonth: Date[];
@@ -63,13 +64,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
               className="grid grid-cols-7 gap-1 col-span-7 h-full w-full"
             >
               {daysInMonth.map((date) => {
-                // Chống lệch ngày khi hiển thị (tùy vào logic gốc, ở đây giả định date chuẩn)
-                // Trong CalendarView gốc có logic xử lý offset.
-                // Tuy nhiên daysInMonth thường đã là Date object.
-                // Logic so sánh dateStr:
-                const offset = date.getTimezoneOffset();
-                const localDate = new Date(date.getTime() - offset * 60 * 1000);
-                const dateStr = localDate.toISOString().split('T')[0];
+                const dateStr = toDateKey(date);
 
                 const dayEvents = eventsByDate[dateStr] || [];
                 const isSelected = selectedDate === dateStr;

@@ -6,6 +6,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import XIcon from '@/components/ui/icons/XIcon';
 import TrashIcon from '@/components/ui/icons/TrashIcon';
+import { toDateKey } from '@/utils/format';
 
 // Modals
 import { EventModal } from '@/features/calendar/components/EventModal';
@@ -104,10 +105,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     handleMonthChange(new Date(displayDate.getFullYear(), displayDate.getMonth() + 1, 1));
   const goToToday = () => {
     const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const todayStr = `${year}-${month}-${day}`;
+    const todayStr = toDateKey(today);
 
     const isSameMonth =
       displayDate.getFullYear() === today.getFullYear() &&
@@ -129,11 +127,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   }, [events]);
 
   const handleDateClick = (date: Date) => {
-    // Chống lệch ngày do múi giờ
-    const offset = date.getTimezoneOffset();
-    const localDate = new Date(date.getTime() - offset * 60 * 1000);
-    const dateStr = localDate.toISOString().split('T')[0];
-    setSelectedDate(dateStr);
+    setSelectedDate(toDateKey(date));
 
     if (date.getMonth() !== displayDate.getMonth()) {
       handleMonthChange(new Date(date.getFullYear(), date.getMonth(), 1));
