@@ -37,7 +37,7 @@ export const eventService = {
     const q = buildMonthRangeQuery({
       collectionName: 'events',
       dateField: 'date',
-      month: month - 1,
+      month,
       year,
       userId,
     });

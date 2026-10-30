@@ -142,10 +142,10 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
     const state = get();
     const { viewDate, _subscriptions, _dataCache } = state;
 
-    const month = viewDate.getMonth();
+    const month = viewDate.getMonth() + 1;
     const year = viewDate.getFullYear();
     const now = new Date();
-    const currentMonth = now.getMonth();
+    const currentMonth = now.getMonth() + 1;
     const currentYear = now.getFullYear();
 
     const targetKey = `${month}-${year}`;
@@ -198,8 +198,8 @@ export const useAppDataStore = create<AppDataState>((set, get) => ({
 
     const needed = [
       { m: month, y: year },
-      { m: month === 0 ? 11 : month - 1, y: month === 0 ? year - 1 : year },
-      { m: month === 11 ? 0 : month + 1, y: month === 11 ? year + 1 : year },
+      { m: month === 1 ? 12 : month - 1, y: month === 1 ? year - 1 : year },
+      { m: month === 12 ? 1 : month + 1, y: month === 12 ? year + 1 : year },
       { m: currentMonth, y: currentYear },
     ];
 

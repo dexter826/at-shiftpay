@@ -32,11 +32,8 @@ export function buildMonthRangeQuery({
   orderByField,
   orderDirection = 'desc',
 }: DateRangeQuery): Query {
-  let startDate: string;
-  let endDate: string;
-
-  if (month === -1 && year === 0) {
-    // Tất cả thời gian
+  // month 1-12; month 0 = cả năm; month 0 + year 0 = toàn bộ thời gian
+  if (month === 0 && year === 0) {
     return query(
       collection(db, collectionName),
       where('userId', '==', userId),
@@ -44,15 +41,12 @@ export function buildMonthRangeQuery({
     );
   }
 
-  if (month === -1) {
-    // Cả năm
-    startDate = new Date(year, 0, 1).toISOString();
-    endDate = new Date(year, 11, 31, 23, 59, 59).toISOString();
-  } else {
-    // Theo tháng
-    startDate = new Date(year, month, 1).toISOString();
-    endDate = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
-  }
+  const monthPart = String(month).padStart(2, '0');
+  const startDate = month === 0 ? `${year}-01-01` : `${year}-${monthPart}-01`;
+  const endDate =
+    month === 0
+      ? `${year}-12-31`
+      : `${year}-${monthPart}-${String(new Date(year, month, 0).getDate()).padStart(2, '0')}`;
 
   return query(
     collection(db, collectionName),

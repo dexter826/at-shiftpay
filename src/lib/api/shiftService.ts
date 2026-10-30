@@ -36,7 +36,7 @@ export const shiftService = {
     const q = buildMonthRangeQuery({
       collectionName: 'shifts',
       dateField: 'date',
-      month: month - 1,
+      month,
       year,
       userId,
     });
