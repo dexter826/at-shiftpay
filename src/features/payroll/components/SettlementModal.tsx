@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import { useThemeStore } from '@/stores/themeStore';
 import { Shift, PaymentTransaction, AdvanceBalance, Event, Location } from '@/types/index';
 import { formatCurrency, formatDate } from '@/utils/format';

@@ -6,7 +6,7 @@ import { Heart } from 'lucide-react';
 
 import { ForgotPasswordModal } from '@/features/auth/components/ForgotPasswordModal';
 import { useAuthStore } from '@/stores/authStore';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 
 import LoginHeader from '@/features/auth/components/login/LoginHeader';
 import VerificationView from '@/features/auth/components/login/VerificationView';

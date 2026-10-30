@@ -4,7 +4,7 @@ import { auth } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { imageService } from '@/lib/api/imageService';
 import { useAuthStore } from '@/stores/authStore';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
 import { DeleteAccountModal } from '@/features/settings/components/DeleteAccountModal';
 import KeyIcon from '@/components/ui/icons/key-icon';

@@ -4,7 +4,7 @@ import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Employee } from '@/types/index';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import { imageService } from '@/lib/api/imageService';
 import { employeeService } from '@/lib/api/employeeService';
 import { deleteField } from 'firebase/firestore';

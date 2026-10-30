@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, memo } from 'react';
 import { Employee, Shift } from '@/types/index';
 import { employeeService } from '@/lib/api/employeeService';
 import { Modal } from '@/components/ui/Modal';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import Button from '@/components/ui/Button';
 import { useAuthStore } from '@/stores/authStore';
 

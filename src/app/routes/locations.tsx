@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect, memo } from 'react';
 import ArrowNarrowLeftIcon from '@/components/ui/icons/arrow-narrow-left-icon';
 import { Location, Event } from '@/types/index';
 import { locationService } from '@/lib/api/locationService';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import Button from '@/components/ui/Button';

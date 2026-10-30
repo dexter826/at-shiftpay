@@ -28,7 +28,7 @@ import {
 import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { TimePicker } from "@/components/ui/TimePicker";
-import { useToast } from "@/components/ui/Toast";
+import { useToast } from "@/components/ui/ToastProvider";
 import SearchInput from "@/components/ui/SearchInput";
 import { areValuesEqual } from "@/utils/compare";
 import { useAuthStore } from '@/stores/authStore';

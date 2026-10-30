@@ -2,7 +2,7 @@ import React, { useMemo, useState, useCallback, useRef, useEffect, memo } from '
 import { Shift, PayrollSummary, PaymentTransaction, Event, Location } from '@/types/index';
 import { paymentService } from '@/lib/api/paymentService';
 
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import { PaymentModal } from '@/features/payroll/components/PaymentModal';
 import { SettlementModal } from '@/features/payroll/components/SettlementModal';
 import { useAuthStore } from '@/stores/authStore';

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import Loader from '@/components/ui/Loading';
+import Loader from '@/components/ui/Loader';
 import { Navbar } from '@/components/layouts/Navbar';
 import { OfflineIndicator } from '@/components/layouts/OfflineIndicator';
 import { Login } from '@/app/routes/login';
 import { Splashscreen } from '@/components/Splashscreen';
 import { PullToRefresh } from '@/components/PullToRefresh';
-import { AppRouter } from '@/app/router';
+import { AppRouter } from '@/app/AppRouter';
 import { ExportModal } from '@/features/payroll/components/ExportModal';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { ToastProvider } from '@/components/ui/Toast';
+import { ToastProvider } from '@/components/ui/ToastProvider';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
 import { useThemeStore } from '@/stores/themeStore';
 import { useAuthStore } from '@/stores/authStore';

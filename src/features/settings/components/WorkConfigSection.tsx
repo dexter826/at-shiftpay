@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, Save, Loader2 } from 'lucide-react';
 import { UserSettings } from '@/types/index';
 import { settingsService } from '@/lib/api/settingsService';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import Button from '@/components/ui/Button';
 import { TimePicker } from '@/components/ui/TimePicker';
 

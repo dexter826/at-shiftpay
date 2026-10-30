@@ -3,7 +3,7 @@ import { AlertTriangle, Trash2, Loader2 } from 'lucide-react';
 import { settingsService } from '@/lib/api/settingsService';
 import { auth } from '@/lib/firebase';
 import { deleteUser } from 'firebase/auth';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import Button from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { useAuthStore } from '@/stores/authStore';

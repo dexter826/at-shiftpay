@@ -1,7 +1,7 @@
 import React, { useState, useMemo, memo } from 'react';
 import { Event, Shift, Employee, UserSettings, Location } from '@/types/index';
 import { eventService } from '@/lib/api/eventService';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/components/ui/ToastProvider';
 import { Modal } from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import XIcon from '@/components/ui/icons/x-icon';
