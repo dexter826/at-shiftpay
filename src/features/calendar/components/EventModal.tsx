@@ -3,6 +3,8 @@ import { Employee, Shift, ShiftSession, Event, UserSettings, Location } from '@/
 import { shiftService } from '@/lib/api/shiftService';
 import { locationService } from '@/lib/api/locationService';
 import { eventService } from '@/lib/api/eventService';
+import { planEventSave, surchargePerPerson } from '@/features/calendar/eventPlan';
+import EmployeeAssignmentList from '@/features/calendar/components/EmployeeAssignmentList';
 import {
   Sun,
   Moon,
@@ -241,17 +243,13 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   const getSelectedCount = () => Object.values(assignments).filter(Boolean).length;
 
-  const getSurchargePerPerson = () => {
-    if (!surcharge || surcharge === 0) return 0;
-
-    if (surchargeDistributionType === 'equal') {
-      const totalPeople = getSelectedCount();
-      return totalPeople > 0 ? Math.round(surcharge / totalPeople) : 0;
-    } else {
-      const selectedCount = Object.values(surchargeSelectedEmployees).filter(Boolean).length;
-      return selectedCount > 0 ? Math.round(surcharge / selectedCount) : 0;
-    }
-  };
+  const getSurchargePerPerson = () =>
+    surchargePerPerson({
+      surcharge,
+      surchargeDistributionType,
+      assignments,
+      surchargeSelectedEmployees,
+    });
 
   const toggleSurchargeEmployee = (empId: string) => {
     setSurchargeSelectedEmployees((prev) => ({
@@ -267,27 +265,6 @@ export const EventModal: React.FC<EventModalProps> = ({
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     return `${dayOfWeek}, ${day}/${month}`;
-  };
-
-  const getSortedEmployees = () => {
-    const filteredEmployees = employees.filter((emp) =>
-      emp.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    return filteredEmployees.sort((a, b) => {
-      // Ưu tiên 0: Đã chọn ban đầu
-      const aInitial = initialSelectedIds.has(a.id) ? 1 : 0;
-      const bInitial = initialSelectedIds.has(b.id) ? 1 : 0;
-      if (aInitial !== bInitial) return bInitial - aInitial;
-
-      // Ưu tiên 1: Số ca giảm dần
-      const aCount = employeeShiftCounts[a.id] || 0;
-      const bCount = employeeShiftCounts[b.id] || 0;
-      if (aCount !== bCount) return bCount - aCount;
-
-      // Ưu tiên 2: Tên
-      return a.name.localeCompare(b.name);
-    });
   };
 
   const validateTitle = () => {
@@ -383,107 +360,35 @@ export const EventModal: React.FC<EventModalProps> = ({
       // Chuẩn bị dữ liệu
       const isEditing = !!existingEvent;
 
-      // Phân loại: Thêm, Sửa, Xóa
-      const shiftsToCreate: Omit<Shift, 'id'>[] = [];
-      const shiftsToUpdate: { id: string; data: Partial<Shift> }[] = [];
-      const shiftIdsToDelete: string[] = [];
-
-      // 1. Thêm & Sửa
-      Object.entries(assignments).forEach(([empId, isAssigned]) => {
-        if (!isAssigned) return;
-        const emp = employees.find((e) => e.id === empId);
-        if (!emp) return;
-
-        // Tính lương kèm phụ phí
-        let finalAmount = amount;
-        if (surcharge > 0) {
-          if (surchargeDistributionType === 'equal') {
-            finalAmount += getSurchargePerPerson();
-          } else if (
-            surchargeDistributionType === 'selected' &&
-            surchargeSelectedEmployees[empId]
-          ) {
-            finalAmount += getSurchargePerPerson();
-          }
-        }
-        finalAmount = Math.round(finalAmount);
-
-        const prevShift = existingShifts.find(
-          (s) => s.employeeId === empId && s.session === selectedSession
-        );
-
-        if (prevShift) {
-          // Cập nhật số tiền & tên
-          shiftsToUpdate.push({
-            id: prevShift.id,
-            data: {
-              amount: finalAmount,
-              employeeName: emp.name,
-            },
-          });
-        } else {
-          // Tạo ca mới
-          const shiftData: Omit<Shift, 'id'> = {
-            eventId: '',
-            date: date,
-            employeeId: empId,
-            employeeName: emp.name,
-            session: selectedSession!,
-            amount: finalAmount,
-            status: 'unpaid',
-            userId: userId,
-          };
-          shiftsToCreate.push(shiftData);
-        }
-      });
-
-      // 2. Xóa (ca bỏ chọn)
-
-      existingShifts.forEach((s) => {
-        const kept = shiftsToUpdate.find((upd) => upd.id === s.id);
-        if (!kept) {
-          shiftIdsToDelete.push(s.id);
-        }
-      });
-
-      const surchargeDistribution: Event['surchargeDistribution'] =
-        surcharge > 0
-          ? {
-              type: surchargeDistributionType,
-            }
-          : undefined;
-
-      if (surchargeDistribution && surchargeDistributionType === 'selected') {
-        surchargeDistribution.selectedEmployeeIds = Object.entries(surchargeSelectedEmployees)
-          .filter(([_, selected]) => selected)
-          .map(([id]) => id);
-      }
-
-      const eventData: Omit<Event, 'id'> = {
-        date,
-        title: finalTitle,
-        locationId,
-        note,
-        time,
-        amount,
-        surcharge,
-        userId: userId,
-      };
-
-      if (surchargeDistribution) {
-        eventData.surchargeDistribution = surchargeDistribution;
-      }
+      const plan = planEventSave(
+        {
+          date,
+          title: finalTitle,
+          locationId,
+          note,
+          time,
+          amount,
+          surcharge,
+          surchargeDistributionType,
+          surchargeSelectedEmployees,
+          assignments,
+          session: selectedSession,
+          userId,
+        },
+        employees,
+        existingShifts
+      );
 
       if (isEditing && existingEvent) {
         // Cập nhật thông minh
-        await eventService.batchUpdateEvent(existingEvent.id, eventData, {
-          create: shiftsToCreate,
-          update: shiftsToUpdate,
-          delete: shiftIdsToDelete,
+        await eventService.batchUpdateEvent(existingEvent.id, plan.eventData, {
+          create: plan.create,
+          update: plan.update,
+          delete: plan.remove,
         });
       } else {
         // Tạo mới (Atomic)
-        await eventService.createEventWithShifts(eventData, shiftsToCreate);
+        await eventService.createEventWithShifts(plan.eventData, plan.create);
       }
 
       showToast(isEditing ? 'Đã cập nhật sự kiện' : 'Đã tạo sự kiện mới', 'success');
@@ -916,58 +821,14 @@ export const EventModal: React.FC<EventModalProps> = ({
             />
 
             {/* Filtered Employees List */}
-            <div
-              className={`border rounded-lg divide-y max-h-48 overflow-y-auto border-[var(--border-color)] divide-[var(--border-color)]`}
-            >
-              {employees.length === 0 ? (
-                <div className={`p-3 text-center text-xs text-[var(--text-muted)]`}>
-                  Chưa có nhân viên
-                </div>
-              ) : getSortedEmployees().length === 0 ? (
-                <div className={`p-3 text-center text-xs text-[var(--text-muted)]`}>
-                  Không tìm thấy nhân viên
-                </div>
-              ) : (
-                getSortedEmployees().map((emp) => {
-                  const shiftCount = employeeShiftCounts[emp.id] || 0;
-                  const isSelected = assignments[emp.id] || false;
-
-                  return (
-                    <div
-                      key={emp.id}
-                      onClick={() => toggleAssignment(emp.id)}
-                      className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors hover:bg-primary/5 ${
-                        isSelected ? 'bg-primary/10' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 flex-1">
-                        <span
-                          className={`text-sm truncate text-[var(--text-secondary)] ${
-                            isSelected ? 'font-medium' : ''
-                          }`}
-                        >
-                          {emp.name}
-                        </span>
-                        {shiftCount > 0 && (
-                          <span
-                            className={`text-xs px-1.5 py-0.5 rounded-full bg-[var(--border-color)] text-[var(--text-muted)]`}
-                          >
-                            {shiftCount}
-                          </span>
-                        )}
-                      </div>
-                      <div
-                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                          isSelected ? 'bg-primary border-primary' : 'border-[var(--border-color)]'
-                        }`}
-                      >
-                        {isSelected && <Check size={12} className="text-white" />}
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
+            <EmployeeAssignmentList
+              employees={employees}
+              shiftCounts={employeeShiftCounts}
+              assignments={assignments}
+              initialSelectedIds={initialSelectedIds}
+              searchTerm={searchTerm}
+              onToggle={toggleAssignment}
+            />
           </div>
         )}
       </div>
