@@ -121,7 +121,7 @@ const GalleryContent: React.FC = () => {
           <div className="space-y-3">
             <p className="text-display">Chào buổi sáng, Minh</p>
             <p className="text-title">Bảng ca tuần 44</p>
-            <p className="text-body">Quản lý ca làm và lương của Anh Thư trong một màn hình.</p>
+            <p className="text-body">Quản lý ca làm và lương trong một màn hình.</p>
             <p className="text-body-sm text-ink-muted">
               Ca sáng bắt đầu lúc 08:00, cần thêm 2 phục vụ trước 17:00.
             </p>
@@ -149,7 +149,7 @@ const GalleryContent: React.FC = () => {
         <Section title="Form" description="Label, hint, error, hit area 44px.">
           <div className="grid gap-4">
             <Field label="Email" hint="Dùng email công ty.">
-              <Input type="email" placeholder="minh@anhthu.vn" />
+              <Input type="email" placeholder="minh@gmail.com" />
             </Field>
             <Field label="Mã địa điểm" error="Mã chỉ gồm chữ và số.">
               <Input defaultValue="Q1-!" />
