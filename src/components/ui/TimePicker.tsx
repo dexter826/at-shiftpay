@@ -39,7 +39,6 @@ function WheelPicker({
   return (
     <WheelPickerPrimitive.WheelPicker
       classNames={{
-        container: 'flex-1',
         optionItem: cn('text-base', 'text-[var(--text-muted)]'),
         highlightWrapper: cn(
           'font-bold text-lg',
