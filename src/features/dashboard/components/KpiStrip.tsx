@@ -48,7 +48,7 @@ const KpiStrip: React.FC<{ kpis: WeekBoard['kpis']; onOpenCalendar: () => void }
             >
               {card.label}
             </p>
-            <p className="mt-0.5 font-mono text-data text-current">{card.value}</p>
+            <p className="mt-0.5 font-mono text-base md:text-data text-current">{card.value}</p>
             <p
               className={cn(
                 'mt-0.5 text-label',

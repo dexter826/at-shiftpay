@@ -110,7 +110,7 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
         />
       </Field>
 
-      <div className="flex flex-wrap items-center justify-between gap-x-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <Checkbox checked={rememberMe} onChange={setRememberMe} label="Ghi nhớ đăng nhập" />
         <button
           type="button"

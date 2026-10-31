@@ -21,7 +21,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
 
   return (
     <header className="flex flex-col gap-3 border-b border-line pb-4 md:flex-row md:items-end md:justify-between">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p aria-live="polite" className="font-mono text-mono-label text-ink-muted">
             {monthLabel}

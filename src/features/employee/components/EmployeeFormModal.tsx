@@ -357,7 +357,7 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
           </FormSection>
 
           <FormSection title="Ngân hàng (tùy chọn)">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-label text-ink-muted">Dùng để chuyển khoản lương.</p>
               {(bankId || bankName || accountNumber || accountName) && (
                 <Button

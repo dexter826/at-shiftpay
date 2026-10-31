@@ -55,7 +55,11 @@ export const Modal: React.FC<ModalProps> = ({
 
             <div className="flex-1 overflow-y-auto p-4">{children}</div>
 
-            {footer && <div className="shrink-0 border-t border-line px-4 py-3">{footer}</div>}
+            {footer && (
+              <div className="shrink-0 border-t border-line px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                {footer}
+              </div>
+            )}
           </DialogPrimitive.Content>
         </div>
       </DialogPrimitive.Portal>

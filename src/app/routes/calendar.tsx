@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo, useRef, useState } from 'react';
 import { Event, Shift, Employee, UserSettings, Location } from '@/types/index';
 import { eventService } from '@/lib/api/eventService';
 import { useToast } from '@/components/ui/ToastProvider';
@@ -44,6 +44,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const [deleteTarget, setDeleteTarget] = useState<Event | null>(null);
   const [blockedDelete, setBlockedDelete] = useState<{ name: string; count: number } | null>(null);
   const [isDeletingEvent, setIsDeletingEvent] = useState(false);
+  const agendaRef = useRef<HTMLDivElement>(null);
 
   const daysInMonth = useMemo(() => {
     const year = displayDate.getFullYear();
@@ -114,6 +115,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     ) {
       setMonth(new Date(date.getFullYear(), date.getMonth(), 1));
     }
+
+    // Below xl the agenda stacks under the whole month grid; bring it into view.
+    agendaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   const handleAddEvent = () => {
@@ -191,16 +195,18 @@ const CalendarView: React.FC<CalendarViewProps> = ({
             />
           </section>
 
-          <DayAgenda
-            selectedDate={selectedDate}
-            events={selectedEvents}
-            shiftsByEvent={shiftsByEvent}
-            locations={locations}
-            loading={loading}
-            onEditEvent={handleEditEvent}
-            onDeleteEvent={handleDeleteEvent}
-            onViewEvent={setViewingEvent}
-          />
+          <div ref={agendaRef} className="min-w-0">
+            <DayAgenda
+              selectedDate={selectedDate}
+              events={selectedEvents}
+              shiftsByEvent={shiftsByEvent}
+              locations={locations}
+              loading={loading}
+              onEditEvent={handleEditEvent}
+              onDeleteEvent={handleDeleteEvent}
+              onViewEvent={setViewingEvent}
+            />
+          </div>
         </div>
       </div>
 

@@ -173,8 +173,8 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
           <div className="min-w-0 flex-1">
             {isEditingName ? (
               <div className="space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="min-w-40 flex-1">
                     <Input
                       value={editedName}
                       onChange={(event) => {
