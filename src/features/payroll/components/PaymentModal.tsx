@@ -204,7 +204,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2" role="group" aria-label="Hình thức chi trả">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2" role="group" aria-label="Hình thức chi trả">
             <button
               type="button"
               onClick={() => setPaymentType('regular')}
@@ -264,7 +264,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               </button>
             </div>
 
-            <div className="max-h-72 overflow-y-auto border border-line">
+            <div className="border border-line sm:max-h-72 sm:overflow-y-auto">
               {unpaidShifts.map((shift) => {
                 const event = events.find((item) => item.id === shift.eventId);
                 const locationName =

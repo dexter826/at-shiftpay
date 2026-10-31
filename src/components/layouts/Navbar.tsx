@@ -28,7 +28,7 @@ interface NavbarProps {
 
 const navItems = [
   { id: 'dashboard', label: 'Tổng quan', icon: LayoutDashboard },
-  { id: 'calendar', label: 'Lịch sự kiện', icon: CalendarRange },
+  { id: 'calendar', label: 'Lịch', icon: CalendarRange },
   { id: 'locations', label: 'Địa điểm', icon: MapPin },
   { id: 'employees', label: 'Nhân sự', icon: Users },
   { id: 'payroll', label: 'Thanh toán', icon: Wallet },
@@ -118,7 +118,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout, us
       </aside>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center border-t border-line bg-surface px-2 pb-safe md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 flex h-[calc(64px+env(safe-area-inset-bottom))] items-center border-t border-line bg-surface px-2 pb-[env(safe-area-inset-bottom)] md:hidden"
         aria-label="Điều hướng chính"
       >
         {navItems.map((item) => {
@@ -130,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setTab, onLogout, us
               onClick={() => setTab(item.id)}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'relative flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-sm text-[9px] font-medium transition-colors duration-fast ease-standard',
+                'relative flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-sm text-[10px] font-medium transition-colors duration-fast ease-standard',
                 isActive ? 'bg-highlight text-highlight-ink' : 'text-ink-muted hover:text-ink',
                 focusRingOnSurfaceClasses
               )}

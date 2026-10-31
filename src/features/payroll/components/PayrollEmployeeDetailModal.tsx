@@ -100,7 +100,7 @@ const PayrollEmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
                 variant="primary"
                 icon={<Banknote size={16} />}
               >
-                Thanh toán / Ứng
+                Thanh toán
               </Button>
             )}
             {hasAdvanced && (

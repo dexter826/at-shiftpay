@@ -18,7 +18,7 @@ const BankCard: React.FC<BankCardProps> = ({
     </div>
     <div className="mt-3">
       <p className="font-mono text-mono-label text-ink-muted">Số tài khoản</p>
-      <p className="mt-0.5 font-mono text-body font-semibold tracking-wide text-ink tabular-nums">
+      <p className="mt-0.5 font-mono text-body font-semibold tracking-wide text-ink tabular-nums break-all">
         {accountNumber}
       </p>
     </div>

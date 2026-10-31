@@ -8,7 +8,7 @@ const DashboardSkeleton: React.FC = () => (
         <Skeleton width={150} height={12} />
         <Skeleton width={200} height={30} />
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Skeleton width={110} height={44} />
         <Skeleton width={110} height={44} />
         <Skeleton width={100} height={44} />

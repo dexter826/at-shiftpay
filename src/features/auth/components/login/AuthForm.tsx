@@ -188,7 +188,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
         )}
 
         {!isSignUp && (
-          <div className="flex flex-wrap items-center justify-between gap-x-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <Checkbox checked={rememberMe} onChange={setRememberMe} label="Ghi nhớ đăng nhập" />
             <button
               type="button"
@@ -215,7 +215,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
             type="button"
             onClick={onSwitchMode}
             className={cn(
-              'min-h-11 rounded-sm font-medium text-accent-ink hover:underline',
+              'inline-flex items-center rounded-sm px-1 py-2 align-baseline font-medium text-accent-ink hover:underline',
               focusRingClasses
             )}
           >

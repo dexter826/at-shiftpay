@@ -238,6 +238,7 @@
     font-size: 1rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
   }
 
   *,
@@ -248,8 +249,10 @@
     transition-timing-function: var(--ease-standard);
   }
 
-  *:hover {
-    transition-duration: var(--duration-fast) !important;
+  @media (hover: hover) {
+    *:hover {
+      transition-duration: var(--duration-fast) !important;
+    }
   }
 
   button,

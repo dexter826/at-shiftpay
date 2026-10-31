@@ -63,7 +63,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={value}>
       <ToastPrimitive.Provider swipeDirection="right">
         {children}
-        <ToastPrimitive.Viewport className="fixed left-1/2 top-4 z-[100] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 flex-col gap-2 outline-none">
+        <ToastPrimitive.Viewport className="fixed left-1/2 top-[calc(1rem+env(safe-area-inset-top))] z-[100] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 flex-col gap-2 outline-none">
           {toasts.map((toast) => {
             const styles = toastStyles[toast.type];
             return (

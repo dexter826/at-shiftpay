@@ -23,7 +23,7 @@ const EventTile: React.FC<{
     <span className="line-clamp-2 text-[10px] font-semibold leading-tight">{tile.event.title}</span>
     <span
       className={cn(
-        'mt-auto line-clamp-1 font-mono text-[8.5px]',
+        'mt-auto line-clamp-1 font-mono text-[10px]',
         tile.assigned ? 'text-accent-ink' : 'text-highlight-ink/70'
       )}
     >
@@ -32,11 +32,11 @@ const EventTile: React.FC<{
     </span>
     <span
       className={cn(
-        'flex items-center gap-1 font-mono text-[8.5px]',
+        'flex items-center gap-1 font-mono text-[10px]',
         tile.assigned ? 'text-ink-muted' : 'text-highlight-ink/70'
       )}
     >
-      <Users size={9} aria-hidden="true" />
+      <Users size={10} aria-hidden="true" />
       {tile.assigned ? `${tile.staffCount} người` : 'Cần xếp'}
     </span>
   </button>
@@ -143,7 +143,7 @@ const WeekBoard: React.FC<{ board: WeekBoard; onOpenCalendar: () => void }> = ({
           </div>
 
           <div className="md:hidden">
-            <div className="grid grid-cols-7 gap-1 border-b border-line p-2">
+            <div className="grid grid-cols-7 gap-0.5 border-b border-line p-1">
               {board.week.days.map((day) => {
                 const isSelected = day.key === selectedKey;
                 return (

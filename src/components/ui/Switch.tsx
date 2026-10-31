@@ -33,6 +33,8 @@ const Switch: React.FC<SwitchProps> = ({
         'data-[state=checked]:border-accent data-[state=checked]:bg-accent',
         'data-[state=unchecked]:bg-surface-2',
         'disabled:cursor-not-allowed disabled:opacity-50',
+        // Bare switch (no label wrapper): extend the hit area to >= 40px tall
+        !label && 'after:absolute after:-inset-2 after:content-[""]',
         focusRingClasses,
         className
       )}

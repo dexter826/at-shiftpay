@@ -438,7 +438,6 @@ export const EventModal: React.FC<EventModalProps> = ({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               placeholder="Ví dụ: Tiệc cưới nhà anh Minh"
-              autoFocus
             />
           </Field>
 
