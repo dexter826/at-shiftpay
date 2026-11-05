@@ -8,6 +8,8 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
   sendEmailVerification,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { motion, useReducedMotion } from 'framer-motion';
 
@@ -33,6 +35,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -59,7 +62,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const validateEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!value) {
-      setEmailError('Email không được để trống.');
+      setEmailError('');
       return false;
     }
     if (!emailRegex.test(value)) {
@@ -70,12 +73,12 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     return true;
   };
 
-  const validatePassword = (value: string) => {
+  const validatePassword = (value: string, forSignUp = isSignUp) => {
     if (!value) {
-      setPasswordError('Mật khẩu không được để trống.');
+      setPasswordError('');
       return false;
     }
-    if (value.length < 6) {
+    if (forSignUp && value.length < 6) {
       setPasswordError('Mật khẩu phải có ít nhất 6 ký tự.');
       return false;
     }
@@ -85,7 +88,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const validateFullName = (value: string) => {
     if (!value.trim()) {
-      setFullNameError('Họ tên không được để trống.');
+      setFullNameError('');
       return false;
     }
     if (value.trim().length < 2) {
@@ -98,7 +101,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const validateConfirmPassword = (value: string) => {
     if (!value) {
-      setConfirmPasswordError('Vui lòng xác nhận mật khẩu.');
+      setConfirmPasswordError('');
       return false;
     }
     if (value !== password) {
@@ -115,14 +118,23 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
     const effectiveEmail = !isSignUp && showQuickLogin && savedUser ? savedUser.email : email;
 
-    const isEmailValid = validateEmail(effectiveEmail);
-    const isPasswordValid = validatePassword(password);
-
     if (isSignUp) {
+      if (!fullName.trim() || !effectiveEmail || !password || !confirmPassword) {
+        setError('Vui lòng điền đầy đủ thông tin.');
+        return;
+      }
+      const isEmailValid = validateEmail(effectiveEmail);
+      const isPasswordValid = validatePassword(password);
       const isFullNameValid = validateFullName(fullName);
       const isConfirmPasswordValid = validateConfirmPassword(confirmPassword);
       if (!isEmailValid || !isPasswordValid || !isFullNameValid || !isConfirmPasswordValid) return;
     } else {
+      if (!effectiveEmail || !password) {
+        setError('Vui lòng nhập email và mật khẩu.');
+        return;
+      }
+      const isEmailValid = validateEmail(effectiveEmail);
+      const isPasswordValid = validatePassword(password, false);
       if (!isEmailValid || !isPasswordValid) return;
     }
 
@@ -163,6 +175,42 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       setError(messages[code] || 'Không thể đăng nhập. Thử lại.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setGoogleLoading(true);
+
+    try {
+      await setPersistence(
+        auth,
+        rememberMe ? browserLocalPersistence : browserSessionPersistence
+      );
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+
+      saveUserInfo({
+        email: user.email || '',
+        displayName: user.displayName || 'Người dùng',
+        photoURL: user.photoURL || undefined,
+      });
+      onLogin();
+    } catch (err) {
+      const code = (err as { code?: string }).code ?? '';
+      const messages: Record<string, string> = {
+        'auth/popup-closed-by-user': 'Đã đóng cửa sổ đăng nhập Google.',
+        'auth/cancelled-popup-request': 'Thao tác đăng nhập Google đã bị hủy.',
+        'auth/popup-blocked':
+          'Trình duyệt đã chặn cửa sổ đăng nhập. Vui lòng bật quyền mở popup rồi thử lại.',
+        'auth/account-exists-with-different-credential':
+          'Email này đã được liên kết với phương thức đăng nhập khác.',
+        'auth/network-request-failed': 'Lỗi kết nối mạng. Kiểm tra đường truyền rồi thử lại.',
+      };
+      setError(messages[code] || 'Không thể đăng nhập bằng Google. Thử lại sau.');
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -279,6 +327,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
               showQuickLogin={showQuickLogin}
               onBackToQuickLogin={handleBackToQuickLogin}
               onSubmit={handleSubmit}
+              onGoogleSignIn={handleGoogleSignIn}
+              googleLoading={googleLoading}
               email={email}
               onEmailChange={handleEmailChange}
               onValidateEmail={validateEmail}

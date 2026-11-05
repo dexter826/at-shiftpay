@@ -8,6 +8,7 @@ import { useToast } from '@/components/ui/ToastProvider';
 import { ImageCropperModal } from '@/components/ImageCropperModal';
 import Button from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import GoogleIcon from '@/components/icons/GoogleIcon';
 import { focusRingOnSurfaceClasses } from '@/lib/utils';
 import { getInitials } from '@/utils/initials';
 import type { User as FirebaseUser } from 'firebase/auth';
@@ -32,6 +33,13 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
   const [cropperOpen, setCropperOpen] = useState(false);
   const [tempImage, setTempImage] = useState<string | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const hasPasswordProvider = Boolean(
+    user?.providerData?.some((p) => p.providerId === 'password')
+  );
+  const hasGoogleProvider = Boolean(
+    user?.providerData?.some((p) => p.providerId === 'google.com')
+  );
 
   const syncAuthUser = () => {
     const currentUser = auth.currentUser;
@@ -241,22 +249,36 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user, onChangePassword 
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={onChangePassword}
-          className={`flex min-h-11 w-full items-center justify-between p-4 text-left transition-colors duration-fast ease-standard hover:bg-surface-2 ${focusRingOnSurfaceClasses}`}
-        >
-          <span className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-surface-2 text-ink-muted">
-              <Key size={18} aria-hidden="true" />
+        {hasPasswordProvider ? (
+          <button
+            type="button"
+            onClick={onChangePassword}
+            className={`flex min-h-11 w-full items-center justify-between p-4 text-left transition-colors duration-fast ease-standard hover:bg-surface-2 ${focusRingOnSurfaceClasses}`}
+          >
+            <span className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-surface-2 text-ink-muted">
+                <Key size={18} aria-hidden="true" />
+              </span>
+              <span>
+                <span className="block text-body-sm font-medium text-ink">Đổi mật khẩu</span>
+                <span className="block text-label text-ink-muted">Cập nhật mật khẩu đăng nhập</span>
+              </span>
             </span>
-            <span>
-              <span className="block text-body-sm font-medium text-ink">Đổi mật khẩu</span>
-              <span className="block text-label text-ink-muted">Cập nhật mật khẩu đăng nhập</span>
+            <ChevronRight size={18} aria-hidden="true" className="text-ink-muted" />
+          </button>
+        ) : hasGoogleProvider ? (
+          <div className="flex min-h-11 w-full items-center justify-between p-4">
+            <span className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-surface-2 text-ink-muted">
+                <GoogleIcon size={18} />
+              </span>
+              <span>
+                <span className="block text-body-sm font-medium text-ink">Đăng nhập bằng Google</span>
+                <span className="block text-label text-ink-muted">Tài khoản này được xác thực qua Google</span>
+              </span>
             </span>
-          </span>
-          <ChevronRight size={18} aria-hidden="true" className="text-ink-muted" />
-        </button>
+          </div>
+        ) : null}
       </div>
 
       {tempImage && (
