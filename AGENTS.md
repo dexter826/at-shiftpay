@@ -1,84 +1,93 @@
 # AGENTS.md
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+Quy chuẩn hành vi nhằm giảm thiểu các lỗi lập trình phổ biến của LLM. Kết hợp với các hướng dẫn riêng của từng dự án khi cần.
 
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+**Đánh đổi (Tradeoff):** Bộ quy chuẩn này ưu tiên sự cẩn trọng hơn tốc độ. Với các tác vụ đơn giản, hãy linh hoạt đánh giá.
 
-## 1. Think Before Coding
+## 1. Tư duy trước khi viết code (Think Before Coding)
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+**Không giả định. Không giấu chỗ chưa rõ. Làm rõ các đánh đổi.**
 
-Before implementing:
+Trước khi bắt tay vào thực hiện:
 
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+- Nêu rõ các giả định của bạn. Nếu chưa chắc chắn, hãy hỏi.
+- Nếu có nhiều cách hiểu khác nhau, hãy trình bày ra — đừng tự ý chọn một cách trong im lặng.
+- Nếu có cách tiếp cận đơn giản hơn, hãy nêu ra. Chủ động phản biện khi thấy cần thiết.
+- Nếu có điểm chưa rõ, hãy dừng lại. Chỉ rõ điểm gây thắc mắc và đặt câu hỏi.
 
-## 2. Simplicity First
+## 2. Ưu tiên sự đơn giản (Simplicity First)
 
-**Minimum code that solves the problem. Nothing speculative.**
+**Lượng code tối thiểu đủ để giải quyết vấn đề. Không suy đoán viển vông.**
 
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
+- Không thêm tính năng ngoài phạm vi yêu cầu.
+- Không tạo abstraction (lớp trừu tượng) cho code chỉ dùng một lần.
+- Không tự ý thêm tính "linh hoạt" hay "khả năng cấu hình" khi chưa được yêu cầu.
+- Không viết xử lý lỗi cho các kịch bản không thể xảy ra.
+- Nếu viết 200 dòng trong khi 50 dòng là đủ, hãy viết lại.
 
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+Tự hỏi: "Một kỹ sư cấp cao có thấy đoạn code này bị phức tạp hóa quá mức không?" Nếu có, hãy đơn giản hóa.
 
-## 3. Surgical Changes
+## 3. Thay đổi chuẩn xác (Surgical Changes)
 
-**Touch only what you must. Clean up only your own mess.**
+**Chỉ chạm vào những gì bắt buộc. Chỉ dọn rác do chính mình tạo ra.**
 
-When editing existing code:
+Khi chỉnh sửa code hiện có:
 
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
+- Không "tiện tay cải thiện" code lân cận, comment hay định dạng (formatting).
+- Không refactor những phần đang chạy ổn định.
+- Bám sát phong cách code sẵn có, kể cả khi bạn muốn viết theo cách khác.
+- Nếu phát hiện code thừa (dead code) không liên quan, hãy nêu ra — không tự ý xóa.
 
-When your changes create orphans:
+Khi thay đổi của bạn tạo ra code thừa:
 
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
+- Xóa các import / biến / hàm trở nên vô dụng do chính thay đổi của bạn gây ra.
+- Không xóa code thừa có sẵn từ trước trừ khi được yêu cầu.
 
-The test: Every changed line should trace directly to the user's request.
+Thước đo: Mỗi dòng code thay đổi đều phải truy nguyên được trực tiếp từ yêu cầu của người dùng.
 
-## 4. Goal-Driven Execution
+## 4. Thực thi theo mục tiêu (Goal-Driven Execution)
 
-**Define success criteria. Loop until verified.**
+**Xác định tiêu chí thành công. Lặp lại cho đến khi được kiểm chứng.**
 
-Transform tasks into verifiable goals:
+Chuyển đổi tác vụ thành các mục tiêu có thể kiểm chứng được:
 
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
+- "Thêm validation" → "Viết test cho input không hợp lệ, rồi làm cho test pass"
+- "Sửa bug" → "Viết test tái hiện lại lỗi đó, rồi sửa code cho test pass"
+- "Refactor X" → "Đảm bảo test pass cả trước và sau khi refactor"
 
-For multi-step tasks, state a brief plan:
+Với các tác vụ nhiều bước, hãy nêu kế hoạch ngắn gọn:
 
 ```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
+1. [Bước] → kiểm chứng: [tiêu chí kiểm tra]
+2. [Bước] → kiểm chứng: [tiêu chí kiểm tra]
+3. [Bước] → kiểm chứng: [tiêu chí kiểm tra]
 ```
 
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+Tiêu chí thành công rõ ràng giúp bạn tự chủ trong việc lặp lại quy trình. Tiêu chí mơ hồ ("làm cho nó chạy được") sẽ đòi hỏi phải liên tục hỏi lại.
+
+## 5. Tuân thủ tài liệu đặc tả (Spec Compliance)
+
+**Tôn trọng hợp đồng có sẵn. Không tự tạo phong cách riêng.**
+
+Khi thao tác với giao diện hoặc văn bản:
+
+- **Giao diện (UI):** Đối chiếu `DESIGN.md` làm chuẩn đích (source of truth) cho kiểu dáng, thông số và component.
+- **Văn bản (Copy):** Đối chiếu `COPY.md` làm chuẩn đích (source of truth) cho câu chữ, ngữ cảnh và giọng điệu.
 
 ---
 
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+**Bộ quy chuẩn này phát huy hiệu quả khi:** diff có ít thay đổi thừa hơn, ít phải viết lại code do làm quá phức tạp, và các câu hỏi làm rõ xuất hiện trước khi lập trình thay vì sau khi xảy ra sai sót.
 
-## Agent skills
+## Kỹ năng của agent (Agent skills)
 
 ### Issue tracker
 
-Issues and specs live as markdown files under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+Các issue và tài liệu đặc tả (spec) được lưu dưới dạng file markdown trong `.scratch/<feature>/`. Xem `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
-Default five-role vocabulary, each label string equal to its role name. See `docs/agents/triage-labels.md`.
+Tập nhãn mặc định gồm 5 vai trò, mỗi chuỗi nhãn trùng với tên vai trò tương ứng. Xem `docs/agents/triage-labels.md`.
 
 ### Domain docs
 
-Single-context: `GLOSSARY.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+Ngữ cảnh đơn lẻ: `GLOSSARY.md` + `docs/adr/` tại thư mục gốc của repository. Xem `docs/agents/domain.md`.
