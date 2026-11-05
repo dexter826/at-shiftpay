@@ -1,42 +1,50 @@
-# ShiftPay — Glossary
+# ShiftPay
 
-Thuật ngữ dùng trong UI, code và tài liệu. Khi một khái niệm đã có ở đây, dùng đúng từ này; không tạo từ đồng nghĩa mới trong màn hình.
+Quản lý lịch sự kiện, xếp ca làm việc và thanh toán thù lao cho nhân sự sự kiện.
 
-## Thương hiệu
+## Language
 
-- **ShiftPay** — tên hiển thị duy nhất của sản phẩm. Không hiển thị tên công ty trong UI; “AT” chỉ là chi tiết trong mark.
-- **Bảng ca** — tên hướng thiết kế và màn Tổng quan; cũng là cách gọi bảng tuần 2 ca.
-- **Sổ** — cách gọi danh sách dạng dòng phẳng: Sổ địa điểm, Sổ nhân sự, Sổ lương.
+**Sự kiện (Event)**:
+Một buổi tổ chức hoặc tiệc diễn ra tại một địa điểm vào một ngày cụ thể, bao gồm tối đa hai ca làm việc.
+_Avoid_: Buổi tiệc, công việc, show
 
-## Nghiệp vụ
+**Ca làm (Shift)**:
+Đơn vị làm việc được phân công cho một nhân viên trong một buổi của sự kiện, gồm ca sáng hoặc ca chiều.
+_Avoid_: Giờ làm, suất làm, slot, buổi làm
 
-- **Ca** — một lượt làm việc của một nhân viên trong một sự kiện. Chỉ có **Ca sáng** và **Ca chiều**. Đơn vị đếm là **ca**, không dùng “công”.
-- **Sự kiện** — một buổi tiệc/việc có ngày, giờ, địa điểm, mức lương và danh sách ca. Tên mặc định khi để trống là **“Tiệc”**.
-- **Lịch sự kiện** — màn tháng + agenda ngày.
-- **Cần xếp** — sự kiện chưa có ca nào được phân công.
-- **Phân công** — gán nhân viên vào ca của sự kiện.
-- **Chưa trả** — ca có `status = unpaid`, chưa được chi trả.
-- **Đã ứng** — ca có `status = advanced`, nhân viên đã nhận tiền trước.
-- **Đã trả** — ca có `status = paid`, đã chốt.
-- **Công nợ** — tổng tiền của các ca chưa trả và đã ứng của nhân viên. Đây là nghĩa duy nhất được dùng “công”.
-- **Quyết toán ứng lương** — chốt các khoản ứng và đưa toàn bộ ca đang mở của nhân viên về đã trả; phần còn lại ghi vào lịch sử.
-- **Thanh toán** — chi trả các ca chưa trả và chuyển chúng sang `paid`.
-- **Ứng lương** — chi trước các ca đã chọn; ca chuyển sang `advanced`, chờ quyết toán.
-- **Địa điểm** — nơi diễn ra sự kiện; có đánh giá Tốt/Thường/Kém và ghi chú dùng lại.
-- **Nhân sự** — người làm ca; có thể có SĐT, ảnh, tài khoản ngân hàng.
-- **Tài khoản ngân hàng** — bank BIN/tên, số tài khoản, chủ tài khoản; dùng để tạo QR chuyển khoản.
+**Nhân viên (Employee)**:
+Người tham gia làm việc theo ca sự kiện và nhận thù lao từ người quản lý.
+_Avoid_: Nhân sự, người làm, cộng tác viên, account
 
-## Trạng thái & phạm vi
+**Địa điểm (Location)**:
+Nơi tổ chức sự kiện, chứa thông tin địa chỉ và ghi chú đánh giá độ thuận tiện phục vụ xếp lịch.
+_Avoid_: Nhà hàng, sảnh, venue
 
-- **Chưa có** — chưa có dữ liệu (ví dụ “Chưa có địa điểm”).
-- **Không tìm thấy** — có dữ liệu nhưng bộ lọc/tìm kiếm không khớp.
-- **Không có** — hàng đợi/hạng mục đã sạch (ví dụ “Không có công nợ”).
-- **Tháng này / tuần này / hiện tại** — phải nêu rõ khi một màn trộn nhiều phạm vi.
-- **0 ca** — số thật; trong bảng có thể hiển thị `—` kèm aria “Không có ca chưa trả”, không dùng leading zero.
+**Phụ phí (Surcharge)**:
+Khoản tiền bổ sung ngoài lương cơ bản của sự kiện, được chia đều hoặc chỉ định cho nhân viên cụ thể.
+_Avoid_: Thưởng, tiền tip, hoa hồng, bonus
 
-## Ngày, tiền, đơn vị
+**Thanh toán (Payment)**:
+Giao dịch chi trả thù lao cho các ca làm việc chưa thanh toán của nhân viên.
+_Avoid_: Trả lương, gửi tiền, giải ngân
 
-- Ngày hiển thị `dd/mm` hoặc `dd/mm/yyyy`; ngày lưu `YYYY-MM-DD`; giờ `HH:mm`.
-- Tiền dùng VND, định dạng `vi-VN` (`250.000 ₫`); tính toán từ `shift.amount`, làm tròn khi chốt.
-- Lương mỗi ca là mức mặc định cho ca mới; có thể sửa từng sự kiện.
-- Phụ phí là thành phần đã nằm trong `shift.amount`, không cộng thêm lần nữa.
+**Ứng lương (Advance)**:
+Giao dịch chi trả trước tiền công cho ca làm việc trước kỳ thanh toán chính thức.
+_Avoid_: Tạm ứng, vay, mượn
+
+**Quyết toán (Settlement)**:
+Giao dịch chốt sổ nhằm cấn trừ các khoản ứng lương và tất toán thù lao tồn đọng.
+_Avoid_: Thanh lý, tất toán sổ, chốt lương
+
+**Sổ lương (Payroll)**:
+Bảng tổng hợp thù lao chưa trả, tiền đã ứng và số tiền thực nhận của toàn bộ nhân viên.
+_Avoid_: Bảng lương, danh sách lương
+
+**Thù lao chưa trả (Unpaid Earnings)**:
+Số tiền người quản lý còn phải trả cho nhân viên từ các ca làm việc đã hoàn thành.
+_Avoid_: Công nợ, nợ lương, nợ tồn
+
+**Dư nợ ứng (Advance Debt)**:
+Khoản tiền nhân viên đã ứng vượt quá tổng thù lao kiếm được, cần hoàn trả hoặc cấn trừ vào các ca sau.
+_Avoid_: Nợ xấu, tiền phạt
+
