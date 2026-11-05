@@ -184,7 +184,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   aria-controls={listboxId}
                   aria-autocomplete="list"
                   aria-activedescendant={activeId}
-                  aria-label={ariaLabel ? `${ariaLabel} — tìm kiếm` : searchPlaceholder}
+                  aria-label={ariaLabel ? `${ariaLabel} (tìm kiếm)` : searchPlaceholder}
                   placeholder={searchPlaceholder}
                   value={searchTerm}
                   onChange={(event) => {

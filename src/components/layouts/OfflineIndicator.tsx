@@ -52,7 +52,7 @@ export const OfflineIndicator: React.FC = () => {
               <WifiOff size={14} aria-hidden="true" className="text-danger" />
             )}
             <span className="font-mono text-mono-label text-ink-muted">
-              {isOnline ? 'Đã kết nối lại' : 'Đang ngoại tuyến — dữ liệu có thể chưa được cập nhật'}
+              {isOnline ? 'Đã kết nối lại' : 'Đang ngoại tuyến, dữ liệu có thể chưa được cập nhật'}
             </span>
           </div>
         </motion.div>

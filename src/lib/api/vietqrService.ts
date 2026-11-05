@@ -123,7 +123,7 @@ export class VietQRService {
     }
 
     if (accountNumber.length < 6 || accountNumber.length > 20) {
-      return { valid: false, error: 'Số tài khoản phải từ 6-20 chữ số' };
+      return { valid: false, error: 'Số tài khoản phải từ 6–20 chữ số' };
     }
 
     if (!accountName || accountName.trim() === '') {

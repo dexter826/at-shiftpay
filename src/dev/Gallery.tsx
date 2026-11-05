@@ -126,7 +126,7 @@ const GalleryContent: React.FC = () => {
               Ca sáng bắt đầu lúc 08:00, cần thêm 2 phục vụ trước 17:00.
             </p>
             <p className="text-label text-ink-muted">NHÃN · 12PX</p>
-            <p className="text-mono-label font-mono text-ink-muted">08:00 — 12:00 · Q1</p>
+            <p className="text-mono-label font-mono text-ink-muted">08:00 – 12:00 · Q1</p>
             <p className="text-data font-mono">24.850.000đ</p>
           </div>
         </Section>
