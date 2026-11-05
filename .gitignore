@@ -30,7 +30,4 @@ dist-ssr
 # Firebase
 .firebase/
 
-# Agents Skills
-.agents/
-
 
