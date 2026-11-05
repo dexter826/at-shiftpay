@@ -79,7 +79,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen
               setEmail(event.target.value);
               if (error) setError('');
             }}
-            placeholder="ten@gmail.com"
+            placeholder="anhthu@shiftpay.vn"
             autoComplete="email"
             autoFocus
           />

@@ -105,6 +105,7 @@ const QuickLoginView: React.FC<QuickLoginViewProps> = ({
             setPassword(event.target.value);
             if (passwordError) onValidatePassword(event.target.value);
           }}
+          placeholder="••••••••"
           autoComplete="current-password"
           autoFocus
         />

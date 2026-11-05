@@ -5,6 +5,7 @@ import Checkbox from '@/components/ui/Checkbox';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
 import { PasswordToggle } from '@/components/ui/PasswordToggle';
+import GoogleIcon from '@/components/icons/GoogleIcon';
 import { cn, focusRingClasses } from '@/lib/utils';
 import type { SavedUser } from '@/stores/authStore';
 
@@ -14,6 +15,8 @@ interface AuthFormProps {
   showQuickLogin: boolean;
   onBackToQuickLogin: () => void;
   onSubmit: (e: React.FormEvent) => Promise<void>;
+  onGoogleSignIn: () => Promise<void>;
+  googleLoading: boolean;
   email: string;
   onEmailChange: (value: string) => void;
   onValidateEmail: (value: string) => boolean;
@@ -48,6 +51,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
   showQuickLogin,
   onBackToQuickLogin,
   onSubmit,
+  onGoogleSignIn,
+  googleLoading,
   email,
   onEmailChange,
   onValidateEmail,
@@ -91,23 +96,20 @@ const AuthForm: React.FC<AuthFormProps> = ({
         </button>
       )}
 
-      <div className="mb-5">
+      <div className="mb-4">
         <h1 className="text-display text-ink">{isSignUp ? 'Tạo tài khoản' : 'Đăng nhập'}</h1>
-        <p className="mt-1 text-body-sm text-ink-muted">
-          {isSignUp ? 'Bắt đầu quản lý ca làm và lương.' : 'Tiếp tục vào bảng ca của bạn.'}
-        </p>
       </div>
 
       {error && (
         <div
           role="alert"
-          className="mb-4 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-body-sm text-danger"
+          className="mb-3 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-body-sm text-danger"
         >
           {error}
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="space-y-4" noValidate>
+      <form onSubmit={onSubmit} className="space-y-3" noValidate>
         {isSignUp && (
           <Field label="Họ và tên" error={fullNameError}>
             <Input
@@ -118,7 +120,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 setFullName(event.target.value);
                 if (fullNameError) onValidateFullName(event.target.value);
               }}
-              onBlur={() => onValidateFullName(fullName)}
               placeholder="Nguyễn Minh Anh"
               autoComplete="name"
               autoFocus
@@ -131,9 +132,11 @@ const AuthForm: React.FC<AuthFormProps> = ({
             leadingIcon={<User size={15} aria-hidden="true" />}
             type="email"
             value={email}
-            onChange={(event) => onEmailChange(event.target.value)}
-            onBlur={() => onValidateEmail(email)}
-            placeholder="ten@gmail.com"
+            onChange={(event) => {
+              onEmailChange(event.target.value);
+              if (emailError) onValidateEmail(event.target.value);
+            }}
+            placeholder="anhthu@shiftpay.vn"
             autoComplete="email"
             autoFocus={!isSignUp}
           />
@@ -159,7 +162,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               setPassword(event.target.value);
               if (passwordError) onValidatePassword(event.target.value);
             }}
-            onBlur={() => onValidatePassword(password)}
+            placeholder="••••••••"
             autoComplete={isSignUp ? 'new-password' : 'current-password'}
           />
         </Field>
@@ -181,7 +184,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 setConfirmPassword(event.target.value);
                 if (confirmPasswordError) onValidateConfirmPassword(event.target.value);
               }}
-              onBlur={() => onValidateConfirmPassword(confirmPassword)}
+              placeholder="••••••••"
               autoComplete="new-password"
             />
           </Field>
@@ -194,7 +197,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               type="button"
               onClick={onForgotPassword}
               className={cn(
-                'min-h-11 rounded-sm text-label font-medium text-accent-ink hover:underline',
+                'min-h-9 rounded-sm text-label font-medium text-accent-ink hover:underline',
                 focusRingClasses
               )}
             >
@@ -203,19 +206,43 @@ const AuthForm: React.FC<AuthFormProps> = ({
           </div>
         )}
 
-        <Button type="submit" disabled={loading} fullWidth aria-busy={loading || undefined}>
-          {loading ? 'Đang đăng nhập...' : isSignUp ? 'Tạo tài khoản' : 'Đăng nhập'}
-        </Button>
+        <div className="space-y-2.5 pt-0.5">
+          <Button
+            type="submit"
+            disabled={loading || googleLoading}
+            fullWidth
+            aria-busy={loading || undefined}
+          >
+            {loading ? 'Đang đăng nhập...' : isSignUp ? 'Tạo tài khoản' : 'Đăng nhập'}
+          </Button>
+
+          <div className="relative flex items-center justify-center py-1">
+            <div className="w-full border-t border-line" />
+            <span className="absolute bg-surface px-3 text-label text-ink-muted">hoặc</span>
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            fullWidth
+            onClick={onGoogleSignIn}
+            disabled={loading || googleLoading}
+            loading={googleLoading}
+            icon={<GoogleIcon size={18} />}
+          >
+            Đăng nhập bằng Google
+          </Button>
+        </div>
       </form>
 
-      <div className="mt-6 border-t border-line pt-4 text-center">
+      <div className="mt-3.5 text-center">
         <p className="text-body-sm text-ink-muted">
           {isSignUp ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}{' '}
           <button
             type="button"
             onClick={onSwitchMode}
             className={cn(
-              'inline-flex items-center rounded-sm px-1 py-2 align-baseline font-medium text-accent-ink hover:underline',
+              'inline-flex items-center rounded-sm px-1 py-1 align-baseline font-medium text-accent-ink hover:underline',
               focusRingClasses
             )}
           >
