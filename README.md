@@ -2,7 +2,7 @@
   <img src="public/brand/lockup.svg" alt="ShiftPay" width="360" />
   <h1>ShiftPay</h1>
   <p><strong>Ca làm rõ ràng. Lương minh bạch.</strong></p>
-  <p>Lịch sự kiện, phân công ca và thanh toán trong một cuốn sổ vận hành duy nhất.</p>
+  <p>Hệ thống quản lý lịch sự kiện, phân công ca làm việc và quyết toán tiền lương.</p>
 
   <p>
     <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
@@ -34,14 +34,14 @@
 
 ## Giới thiệu
 
-Công việc làm ca thường nằm rải rác giữa bảng tính, tin nhắn và sổ tay. Người quản lý phải mở nhiều nơi mới biết hôm nay ai làm, sự kiện nào còn thiếu người và ai chưa nhận lương.
+Quy trình quản lý nhân sự thời vụ thường bị phân tán giữa bảng tính và tin nhắn nhóm, dẫn đến khó khăn trong việc kiểm soát quân số, theo dõi lịch sự kiện và đối soát tiền lương.
 
-ShiftPay gom những việc đó vào một chỗ:
+ShiftPay hợp nhất toàn bộ quy trình vận hành:
 
-- Lịch sự kiện theo tháng, kèm danh sách ca của từng ngày.
-- Phân công ca sáng/chiều và nhìn ngay sự kiện nào còn trống.
-- Theo dõi công nợ, tiền đã ứng và thanh toán theo từng nhân viên.
-- Dữ liệu cập nhật realtime; cài được lên thiết bị và dùng theme theo hệ thống.
+- Lịch sự kiện trực quan: theo dõi toàn bộ sự kiện trong tháng và các ca làm việc cần bố trí.
+- Phân công nhân sự: gán nhân viên vào từng ca làm và cảnh báo sự kiện còn thiếu người.
+- Quản lý lương & tạm ứng: theo dõi công nợ, ghi nhận tạm ứng và quyết toán lương minh bạch.
+- Tích hợp thanh toán VietQR: tạo mã chuyển khoản thanh toán trực tiếp cho nhân sự.
 
 <img src="docs/images/mockup.jpg" alt="Lịch sự kiện và Sổ lương của ShiftPay trên mobile" width="100%" />
 
@@ -53,11 +53,11 @@ Xem cả tháng trong một lưới gọn. Chọn một ngày để xem sự ki�
 
 ### Phân công ca
 
-Mỗi sự kiện có ca sáng và ca chiều. Chọn nhân viên, xem số ca chưa trả của họ và lưu phân công trong một lần.
+Gán nhân viên vào từng ca làm việc, kiểm tra lịch sử công việc và cập nhật danh sách phân công nhanh chóng.
 
 ### Sổ lương
 
-Theo dõi từng người còn bao nhiêu ca chưa trả, đã ứng bao nhiêu và cần thanh toán bao nhiêu. Thanh toán, ứng lương và quyết toán được thực hiện ngay trong sổ.
+Theo dõi tổng số ca làm việc, các khoản đã tạm ứng và số dư thực nhận của từng nhân sự.
 
 ### Thanh toán QR
 
@@ -81,7 +81,7 @@ Cài ShiftPay lên màn hình chính, dùng theme theo hệ thống hoặc chọ
 
 - Nhà hàng và đơn vị tiệc lưu động cần xếp ca theo từng sự kiện.
 - Đội vận hành phải theo dõi nhân sự, địa điểm và lương trong cùng một luồng.
-- Người quản lý muốn biết chính xác ai còn ca chưa trả và đã ứng bao nhiêu.
+- Quản lý cần đối soát chính xác công nợ, tạm ứng và quyết toán tiền lương theo thời gian thực.
 
 ## Kiến trúc
 
