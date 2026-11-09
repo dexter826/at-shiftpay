@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>ShiftPay · Quản lý ca làm</title>
+    <title>ShiftPay · Quản lý nhân viên sự kiện</title>
+    <meta
+      name="description"
+      content="ShiftPay là ứng dụng dành cho người quản lý đội ngũ nhân viên làm việc theo ca tại các sự kiện, giúp công việc điều hành rõ ràng và có tổ chức."
+    />
+    <link rel="canonical" href="https://at-shiftpay.web.app/" />
     <meta name="theme-color" content="#F2F4F0" />
 
     <!-- Apply the saved theme (or system preference) before first paint. -->
@@ -42,7 +47,9 @@
 
     <!-- Favicon and Apple Touch Icon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,29 +62,59 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="ShiftPay" />
+    <meta property="og:url" content="https://at-shiftpay.web.app/" />
+    <meta property="og:site_name" content="ShiftPay" />
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:title" content="ShiftPay · Quản lý nhân viên sự kiện" />
     <meta
       property="og:description"
-      content="Quản lý ca làm, lịch sự kiện và thanh toán cho đội ngũ vận hành."
+      content="ShiftPay là ứng dụng dành cho người quản lý đội ngũ nhân viên làm việc theo ca tại các sự kiện, giúp công việc điều hành rõ ràng và có tổ chức."
     />
-    <meta property="og:image" content="/social-card.png" />
+    <meta property="og:image" content="https://at-shiftpay.web.app/social-card.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta
-      name="description"
-      content="Quản lý ca làm, lịch sự kiện và thanh toán cho đội ngũ vận hành."
+      property="og:image:alt"
+      content="ShiftPay — Ca làm rõ ràng. Lương minh bạch. Quản lý ca làm, lịch sự kiện và thanh toán."
     />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ShiftPay" />
+    <meta name="twitter:title" content="ShiftPay · Quản lý nhân viên sự kiện" />
     <meta
       name="twitter:description"
-      content="Quản lý ca làm, lịch sự kiện và thanh toán cho đội ngũ vận hành."
+      content="ShiftPay là ứng dụng dành cho người quản lý đội ngũ nhân viên làm việc theo ca tại các sự kiện, giúp công việc điều hành rõ ràng và có tổ chức."
     />
-    <meta name="twitter:image" content="/social-card.png" />
+    <meta name="twitter:image" content="https://at-shiftpay.web.app/social-card.png" />
+    <meta
+      name="twitter:image:alt"
+      content="ShiftPay — Ca làm rõ ràng. Lương minh bạch. Quản lý ca làm, lịch sự kiện và thanh toán."
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "ShiftPay · Quản lý nhân viên sự kiện",
+        "description": "ShiftPay là ứng dụng dành cho người quản lý đội ngũ nhân viên làm việc theo ca tại các sự kiện, giúp công việc điều hành rõ ràng và có tổ chức.",
+        "url": "https://at-shiftpay.web.app/",
+        "inLanguage": "vi-VN",
+        "image": "https://at-shiftpay.web.app/social-card.png",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "ShiftPay",
+          "url": "https://at-shiftpay.web.app/"
+        }
+      }
+    </script>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static fallback; React replaces this content on mount. -->
+      <h1 class="sr-only">ShiftPay · Quản lý nhân viên sự kiện</h1>
+    </div>
     <script type="module" src="/src/index.tsx"></script>
 
     <!-- PWA Service Worker Registration -->
