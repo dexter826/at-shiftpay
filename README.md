@@ -1,6 +1,7 @@
 <div align="center">
   <img src="public/brand/lockup.svg" alt="ShiftPay" width="360" />
   <h1>ShiftPay</h1>
+  <p><strong>Niềm tin bắt đầu từ sự minh bạch.</strong></p>
   <p>Hệ thống quản lý lịch sự kiện, phân công ca làm và thanh toán thù lao cho nhân viên.</p>
 
   <p>
