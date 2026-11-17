@@ -13,10 +13,14 @@ concurrency:
 
 jobs:
   deploy:
+    environment:
+      name: production
+      url: https://at-shiftpay.web.app
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      deployments: write
 
     env:
       VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
